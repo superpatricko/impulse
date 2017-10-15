@@ -1,0 +1,590 @@
+PROCEDURE "NDB_TV"."IFRS_R1.BELLTV.NDB_BELLTV::SP_TV_CUST" 
+(IN IP_EFF_DT DATE,OUT OP_STATUS NVARCHAR(100)) 
+LANGUAGE SQLSCRIPT
+	SQL SECURITY INVOKER
+	AS
+BEGIN 
+--------------------------------------------------------------------------------------------------
+-- Procedure Title : SP_TV_CUST 
+-- Created By      : BC_EY96106       
+-- Create Date     : 03-17-2017
+-- Description     : Data Inserted using Calculation View - CA_TV_CUST
+--                   To NDB Table - TV_CUST Using this stored procedure.
+-- Project         : Bell Canada
+-- Release         : R1 / IFRS
+--------------------------------------------------------------------------------------------------
+--   M O D I F I C A T I O N   H I S T O R Y
+--------------------------------------------------------------------------------------------------
+-- Date        | User ID          | Modification History/Release
+--------------------------------------------------------------------------------------------------
+--             |                  | 
+--------------------------------------------------------------------------------------------------
+-- Description Of the changes 
+--------------------------------------------------------------------------------------------------
+-- Modification Number          : <Assign Some Number> 
+-- Description of Changes Made> : <Description of Changes>       
+--------------------------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------------------------
+-- Global Variables Declaration
+--------------------------------------------------------------------------------------------------
+
+DECLARE LC_ERROR_TEXT 		NVARCHAR(70) DEFAULT 'OUT STATUS IS 1 : INSERT/UPDATE FOR ONE OR MORE RECORD FAILED';
+DECLARE LC_SUCCESS_TEXT 	NVARCHAR(70) DEFAULT 'OUT STATUS IS 0 : INSERT/UPDATE EXECUTION SUCCESSFUL';
+DECLARE LV_ERROR_FLAG 		NVARCHAR(1) := 'N';
+DECLARE LV_CUR_UTC 			TIMESTAMP := CURRENT_TIMESTAMP;
+DECLARE ERROR_TAB 			TABLE (ERROR_CODE NVARCHAR(100));
+DECLARE i					INTEGER;
+DECLARE RECORD_COUNT		INTEGER;
+DECLARE CURRENT_ERROR		NVARCHAR(100);
+
+-- New variables for version sequence check
+DECLARE LV_LOOP_ERROR_FLAG        INTEGER := 0;
+DECLARE LV_PREV_ACCT_NUM		  NVARCHAR(16) := NULL;
+DECLARE LV_PREV_CONT_TERM         INTEGER := NULL;
+DECLARE LV_PREV_CONTR_END_DT	  DATE;
+DECLARE LV_PREV_COMIT_TY          NVARCHAR(20) := NULL;
+
+--------------------------------------------------------------------------------------------------
+-- Cursors Declaration
+--------------------------------------------------------------------------------------------------
+DECLARE CURSOR CUR_CUST FOR 
+
+			    SELECT
+		              "TERM_MONTHS",
+		              "CAMPAIGN_CD",
+		              "PRM_ACCT_NUM",
+		              "ACCT_NUM",
+		              "CUST_PSTL_CD",
+		              "BILL_CYCL",
+		              "PRIN_NUM",
+		              "AGNT_NUM",
+		              "CUST_TY",
+		              "CUST_NM",
+		              "CONNECT_DATE",
+		              "CONTR_STRT_DT",
+		              "SUBS_EFF_DT",
+		              "CONTR_TY",
+		              "CUST_LOC_ID",
+		              "NETWK_TY",
+		              "CO_CD",
+		              "ORIGINAL_CAMPAIGN_CD",
+		              "PROCESS_IND",
+		              "EXTERNAL_STATUS_CD",
+	             	  "CONTR_TERM",
+		              "CONTR_END_DT",
+		              "COMIT_TY",
+		              "REFERENCE_EFFECTIVE_DT",
+		              "REFERENCE_EXPIRY_DT",
+		              "CUST_ST",
+		              "TAX_JURISD_CD",
+		              "KUNNR_SID",
+		              "OB_BAN",
+		              "ERROR_STATUS",
+		 			  "ERROR_CODE",
+		 			  "FLAG_EXISTING_RECORD",
+		 			  "REFERENCE_EXPIRY_DT_UPDATE",
+		 			  "INST_CRD_IND",
+		 			  "INST_CHRG_IND",
+		 			  "MIN_SPD_CRE_IND",
+		 			  "MIN_SPD_MOD_IND"
+                FROM "_SYS_BIC"."IFRS_R1.BELLTV.NDB_BELLTV/CA_TV_CUST"
+                (PLACEHOLDER."$$IP_EFF_DT$$" => :IP_EFF_DT)
+                ORDER BY "ACCT_NUM","SUBS_EFF_DT";
+                                   
+--------------------------------------------------------------------------------------------------
+-- Local Temporary Tables Declaration
+-------------------------------------------------------------------------------------------------- 
+
+CREATE LOCAL TEMPORARY TABLE #UPDATE_TV_CUST ("ACCT_NUM" NVARCHAR(16), "SUBS_EFF_DT" DATE);
+CREATE LOCAL TEMPORARY TABLE #UPDATE_EH_DELETION ("ACCT_NUM" NVARCHAR(16), "SUBS_EFF_DT" DATE);
+
+--------------------------------------------------------------------------------------------------
+-- Cursors Loop
+-------------------------------------------------------------------------------------------------- 
+
+FOR C_CUST AS CUR_CUST DO
+
+
+--  Define Exit Handler
+	DECLARE EXIT HANDLER FOR SQLEXCEPTION 
+	BEGIN AUTONOMOUS TRANSACTION 
+	
+		--  Define Exit Handler
+		DECLARE EXIT HANDLER FOR SQLEXCEPTION 
+		BEGIN AUTONOMOUS TRANSACTION 
+		
+	    END;
+  		
+	 -- Insert record into error table
+	   	INSERT INTO "NDB_TV"."IFRS_R1.BELLTV.NDB_BELLTV::TV_CUSTOMER_EH"(
+				 	 "PRM_ACCT_NUM",
+					 "ACCT_NUM",
+					 "CUST_LOC_ID",
+					 "CUST_PSTL_CD",
+					 "BILL_CYCL",
+					 "PRIN_NUM",
+					 "AGNT_NUM",
+					 "NETWK_TY",
+					 "CO_CD",
+					 "TAX_JURISD_CD",
+					 "CUST_TY",
+					 "KUNNR_SID",
+					 "OB_BAN",
+					 "CUST_NM",
+					 "CUST_ST",
+					 "CONNECT_DATE",
+					 "CONTR_TERM",
+					 "CONTR_TY",
+					 "CONTR_STRT_DT",
+					 "CONTR_END_DT",
+					 "COMIT_TY",
+					 "REFERENCE_EXPIRY_DT",
+					 "REFERENCE_EFFECTIVE_DT",
+					 "INST_CRD_IND",
+		 			 "INST_CHRG_IND",
+		 			 "MIN_SPD_CRE_IND",
+		 			 "MIN_SPD_MOD_IND",
+					 "INSRT_TS",
+					 "ERROR_CODE",
+					 "TECHNICAL_MESSAGE",
+					 "ERROR_CREATE_TS") 
+					 VALUES (
+					 "C_CUST"."PRM_ACCT_NUM",
+					 "C_CUST"."ACCT_NUM",
+					 "C_CUST"."CUST_LOC_ID",
+					 "C_CUST"."CUST_PSTL_CD",
+					 "C_CUST"."BILL_CYCL",
+					 "C_CUST"."PRIN_NUM",
+					 "C_CUST"."AGNT_NUM",
+					 "C_CUST"."NETWK_TY",
+					 "C_CUST"."CO_CD",
+					 "C_CUST"."TAX_JURISD_CD",
+					 "C_CUST"."CUST_TY",
+					 "C_CUST"."KUNNR_SID",
+					 "C_CUST"."OB_BAN",
+					 "C_CUST"."CUST_NM",
+					 "C_CUST"."CUST_ST",
+					 "C_CUST"."CONNECT_DATE",
+					 "C_CUST"."CONTR_TERM",
+					 "C_CUST"."CONTR_TY",
+					 "C_CUST"."CONTR_STRT_DT",
+					 "C_CUST"."CONTR_END_DT",
+					 "C_CUST"."COMIT_TY",
+					 "C_CUST"."REFERENCE_EXPIRY_DT",
+					 "C_CUST"."SUBS_EFF_DT",
+					 "C_CUST"."INST_CRD_IND",
+		 			 "C_CUST"."INST_CHRG_IND",
+		 			 "C_CUST"."MIN_SPD_CRE_IND",
+		 			 "C_CUST"."MIN_SPD_MOD_IND",
+					 LV_CUR_UTC,
+					 ::SQL_ERROR_CODE,
+					 ::SQL_ERROR_MESSAGE,
+					 LV_CUR_UTC);   
+	   
+				  	 LV_ERROR_FLAG := 'Y';
+				  	 LV_LOOP_ERROR_FLAG := 1;
+	  	     
+    END;
+    
+ -----------------------------------------------------------------------------------------------   
+    
+-- For Clearing the variables
+
+	IF (LV_PREV_ACCT_NUM IS NULL OR C_CUST."ACCT_NUM" != LV_PREV_ACCT_NUM) THEN
+
+		LV_LOOP_ERROR_FLAG := 0;
+		LV_PREV_ACCT_NUM := "C_CUST"."ACCT_NUM";
+		LV_PREV_CONT_TERM := NULL;
+		LV_PREV_CONTR_END_DT := NULL;
+		LV_PREV_COMIT_TY := NULL;
+			 	   
+    END IF;
+
+ -----------------------------------------------------------------------------------------------
+  
+--  Check the Error Status of the Record. If Record is with Error, then send to Error Table
+	IF C_CUST.ERROR_STATUS = 1  THEN
+	
+	
+	--  Call the Stored Procedure to split the concatenated Error Messages into Error Rows
+		CALL "NDB_COMMON"."IFRS_R1.COMMON_COMP.EH::SP_EH_SPLIT_ERRORS"(C_CUST."ERROR_CODE", ERROR_TAB, RECORD_COUNT);
+
+     -- Loop through the Error Records
+		FOR i IN 1 .. :RECORD_COUNT DO
+			
+		 -- Fetch the Error Code
+			CURRENT_ERROR = :ERROR_TAB."ERROR_CODE"[:i];
+			
+		         -- Insert into the Error Table
+		         INSERT INTO "NDB_TV"."IFRS_R1.BELLTV.NDB_BELLTV::TV_CUSTOMER_EH"(
+		 				 	 "PRM_ACCT_NUM",
+							 "ACCT_NUM",
+							 "CUST_LOC_ID",
+							 "CUST_PSTL_CD",
+							 "BILL_CYCL",
+							 "PRIN_NUM",
+							 "AGNT_NUM",
+							 "NETWK_TY",
+							 "CO_CD",
+							 "TAX_JURISD_CD",
+							 "CUST_TY",
+							 "KUNNR_SID",
+							 "OB_BAN",
+							 "CUST_NM",
+							 "CUST_ST",
+							 "CONNECT_DATE",
+							 "CONTR_TERM",
+							 "CONTR_TY",
+							 "CONTR_STRT_DT",
+							 "CONTR_END_DT",
+							 "COMIT_TY",
+							 "REFERENCE_EXPIRY_DT",
+							 "REFERENCE_EFFECTIVE_DT",
+							 "INST_CRD_IND",
+		 			  		 "INST_CHRG_IND",
+		 			  		 "MIN_SPD_CRE_IND",
+		 			  		 "MIN_SPD_MOD_IND",
+							 "INSRT_TS",
+							 "ERROR_CODE",
+							 "ERROR_CREATE_TS") 
+							 VALUES (
+							 "C_CUST"."PRM_ACCT_NUM",
+							 "C_CUST"."ACCT_NUM",
+							 "C_CUST"."CUST_LOC_ID",
+							 "C_CUST"."CUST_PSTL_CD",
+							 "C_CUST"."BILL_CYCL",
+							 "C_CUST"."PRIN_NUM",
+							 "C_CUST"."AGNT_NUM",
+							 "C_CUST"."NETWK_TY",
+							 "C_CUST"."CO_CD",
+							 "C_CUST"."TAX_JURISD_CD",
+							 "C_CUST"."CUST_TY",
+							 "C_CUST"."KUNNR_SID",
+							 "C_CUST"."OB_BAN",
+							 "C_CUST"."CUST_NM",
+							 "C_CUST"."CUST_ST",
+							 "C_CUST"."CONNECT_DATE",
+							 "C_CUST"."CONTR_TERM",
+							 "C_CUST"."CONTR_TY",
+							 "C_CUST"."CONTR_STRT_DT",
+							 "C_CUST"."CONTR_END_DT",
+							 "C_CUST"."COMIT_TY",
+							 "C_CUST"."REFERENCE_EXPIRY_DT",
+							 "C_CUST"."SUBS_EFF_DT",
+							 "C_CUST"."INST_CRD_IND",
+		 			  		 "C_CUST"."INST_CHRG_IND",
+		 			  		 "C_CUST"."MIN_SPD_CRE_IND",
+		 			  		 "C_CUST"."MIN_SPD_MOD_IND",
+							 LV_CUR_UTC,
+							 :CURRENT_ERROR,
+							 LV_CUR_UTC);  
+				     
+         	
+			
+		END FOR;
+		
+		-- Set Error Flag				        
+	    LV_ERROR_FLAG := 'Y';
+		LV_LOOP_ERROR_FLAG := 1;
+	
+-- Processing for Successful Records
+   ELSE 
+         IF C_CUST.ERROR_STATUS = '0' THEN
+	    
+	             IF LV_LOOP_ERROR_FLAG = 1 THEN
+	        
+			         INSERT INTO "NDB_TV"."IFRS_R1.BELLTV.NDB_BELLTV::TV_CUSTOMER_EH"(
+							 	 "PRM_ACCT_NUM",
+								 "ACCT_NUM",
+								 "CUST_LOC_ID",
+								 "CUST_PSTL_CD",
+								 "BILL_CYCL",
+								 "PRIN_NUM",
+								 "AGNT_NUM",
+								 "NETWK_TY",
+								 "CO_CD",
+								 "TAX_JURISD_CD",
+								 "CUST_TY",
+								 "KUNNR_SID",
+								 "OB_BAN",
+								 "CUST_NM",
+								 "CUST_ST",
+								 "CONNECT_DATE",
+								 "CONTR_TERM",
+								 "CONTR_TY",
+								 "CONTR_STRT_DT",
+								 "CONTR_END_DT",
+								 "COMIT_TY",
+								 "REFERENCE_EXPIRY_DT",
+								 "REFERENCE_EFFECTIVE_DT",
+								 "INST_CRD_IND",
+		 			  		 	 "INST_CHRG_IND",
+		 			  		 	 "MIN_SPD_CRE_IND",
+		 			  		 	 "MIN_SPD_MOD_IND",
+								 "INSRT_TS",
+								 "ERROR_CODE",
+								 "ERROR_CREATE_TS") 
+								 VALUES (
+								 "C_CUST"."PRM_ACCT_NUM",
+								 "C_CUST"."ACCT_NUM",
+								 "C_CUST"."CUST_LOC_ID",
+								 "C_CUST"."CUST_PSTL_CD",
+								 "C_CUST"."BILL_CYCL",
+								 "C_CUST"."PRIN_NUM",
+								 "C_CUST"."AGNT_NUM",
+								 "C_CUST"."NETWK_TY",
+								 "C_CUST"."CO_CD",
+								 "C_CUST"."TAX_JURISD_CD",
+								 "C_CUST"."CUST_TY",
+								 "C_CUST"."KUNNR_SID",
+								 "C_CUST"."OB_BAN",
+								 "C_CUST"."CUST_NM",
+								 "C_CUST"."CUST_ST",
+								 "C_CUST"."CONNECT_DATE",
+								 "C_CUST"."CONTR_TERM",
+								 "C_CUST"."CONTR_TY",
+								 "C_CUST"."CONTR_STRT_DT",
+								 "C_CUST"."CONTR_END_DT",
+								 "C_CUST"."COMIT_TY",
+								 "C_CUST"."REFERENCE_EXPIRY_DT",
+								 "C_CUST"."SUBS_EFF_DT",
+								 "C_CUST"."INST_CRD_IND",
+		 			  		 	 "C_CUST"."INST_CHRG_IND",
+		 			  		 	 "C_CUST"."MIN_SPD_CRE_IND",
+		 			  		 	 "C_CUST"."MIN_SPD_MOD_IND",
+								 LV_CUR_UTC,
+								 'PREVIOUS VERSION IN ERROR',
+								 LV_CUR_UTC); 
+	        
+	             ELSE
+	        
+--         If Record exists in the Target NDB Table
+           IF C_CUST.FLAG_EXISTING_RECORD = 'U' THEN
+	    	
+	           BEGIN AUTONOMOUS TRANSACTION
+	
+	--         Update Fields for which Transactions Exists and TRANS_COMPLETION_IND is Yes
+		       UPDATE "NDB_TV"."IFRS_R1.BELLTV.NDB_BELLTV::TV_CUSTOMER" AS NDB 
+		          SET REFERENCE_EXPIRY_DT      =  	 	C_CUST."REFERENCE_EXPIRY_DT_UPDATE",
+		              MODIFIED_TS              =  	 	LV_CUR_UTC 
+			    WHERE NDB."ACCT_NUM"           =  	 	C_CUST."ACCT_NUM"
+			      AND NDB.REFERENCE_EXPIRY_DT='9999-12-31';		  
+			  
+	--           Insert the new records having FLAG_EXISTING_RECORD = 'U'
+	             INSERT INTO "NDB_TV"."IFRS_R1.BELLTV.NDB_BELLTV::TV_CUSTOMER"(
+			   	  			 "PRM_ACCT_NUM",
+							 "ACCT_NUM",
+							 "CUST_LOC_ID",
+							 "CUST_PSTL_CD",
+							 "BILL_CYCL",
+							 "PRIN_NUM",
+							 "AGNT_NUM",
+							 "NETWK_TY",
+							 "CO_CD",
+							 "TAX_JURISD_CD",
+							 "CUST_TY",
+							 "KUNNR_SID",
+							 "OB_BAN",
+							 "CUST_NM",
+							 "CUST_ST",
+							 "CONNECT_DATE",
+							 "CONTR_TERM",
+							 "CONTR_TY",
+							 "CONTR_STRT_DT",
+							 "CONTR_END_DT",
+							 "COMIT_TY",
+							 "REFERENCE_EXPIRY_DT",
+							 "REFERENCE_EFFECTIVE_DT",
+							 "INST_CRD_IND",
+		 			  		 "INST_CHRG_IND",
+		 			  		 "MIN_SPD_CRE_IND",
+		 			  		 "MIN_SPD_MOD_IND",
+							 "INSRT_TS") 
+							 VALUES (
+							 "C_CUST"."PRM_ACCT_NUM",
+							 "C_CUST"."ACCT_NUM",
+							 "C_CUST"."CUST_LOC_ID",
+							 "C_CUST"."CUST_PSTL_CD",
+							 "C_CUST"."BILL_CYCL",
+							 "C_CUST"."PRIN_NUM",
+							 "C_CUST"."AGNT_NUM",
+							 "C_CUST"."NETWK_TY",
+							 "C_CUST"."CO_CD",
+							 "C_CUST"."TAX_JURISD_CD",
+							 "C_CUST"."CUST_TY",
+							 "C_CUST"."KUNNR_SID",
+							 "C_CUST"."OB_BAN",
+							 "C_CUST"."CUST_NM",
+							 "C_CUST"."CUST_ST",
+							 "C_CUST"."CONNECT_DATE",
+							 IFNULL("C_CUST"."CONTR_TERM",LV_PREV_CONT_TERM),
+							 "C_CUST"."CONTR_TY",
+							 "C_CUST"."CONTR_STRT_DT",
+							 IFNULL("C_CUST"."CONTR_END_DT",LV_PREV_CONTR_END_DT),
+							 IFNULL("C_CUST"."COMIT_TY",LV_PREV_COMIT_TY),
+							 "C_CUST"."REFERENCE_EXPIRY_DT",
+							 "C_CUST"."REFERENCE_EFFECTIVE_DT",
+							 "C_CUST"."INST_CRD_IND",
+		 			  		 "C_CUST"."INST_CHRG_IND",
+		 			  		 "C_CUST"."MIN_SPD_CRE_IND",
+		 			  		 "C_CUST"."MIN_SPD_MOD_IND",
+							 LV_CUR_UTC
+							 ); 
+	              
+				             LV_PREV_CONT_TERM    :=   IFNULL("C_CUST"."CONTR_TERM",LV_PREV_CONT_TERM);
+				             LV_PREV_CONTR_END_DT :=   IFNULL("C_CUST"."CONTR_END_DT",LV_PREV_CONTR_END_DT);
+				             LV_PREV_COMIT_TY     :=   IFNULL("C_CUST"."COMIT_TY",LV_PREV_COMIT_TY);
+	           
+	             END;			
+	             		 
+	--         Insert PK of successfully processed Records into Local Temp Tables 
+	--         for Updating NDB_TS in corresponding Landing Tables records
+			   INSERT INTO #UPDATE_TV_CUST
+						   ("ACCT_NUM",
+						    "SUBS_EFF_DT") 
+				    VALUES ("C_CUST"."ACCT_NUM",
+					 	   	"C_CUST"."SUBS_EFF_DT");
+						   					   	    		
+			   INSERT INTO #UPDATE_EH_DELETION
+						   ("ACCT_NUM",
+						    "SUBS_EFF_DT") 
+				    VALUES ("C_CUST"."ACCT_NUM",
+					 	   	"C_CUST"."SUBS_EFF_DT");           
+                    	
+    ELSE
+    
+        BEGIN AUTONOMOUS TRANSACTION
+
+--       Insert Records into the target NDB table
+         INSERT INTO "NDB_TV"."IFRS_R1.BELLTV.NDB_BELLTV::TV_CUSTOMER"(
+	   	  			 "PRM_ACCT_NUM",
+					 "ACCT_NUM",
+					 "CUST_LOC_ID",
+					 "CUST_PSTL_CD",
+					 "BILL_CYCL",
+					 "PRIN_NUM",
+					 "AGNT_NUM",
+					 "NETWK_TY",
+					 "CO_CD",
+					 "TAX_JURISD_CD",
+					 "CUST_TY",
+					 "KUNNR_SID",
+					 "OB_BAN",
+					 "CUST_NM",
+					 "CUST_ST",
+					 "CONNECT_DATE",
+					 "CONTR_TERM",
+					 "CONTR_TY",
+					 "CONTR_STRT_DT",
+					 "CONTR_END_DT",
+					 "COMIT_TY",
+					 "REFERENCE_EXPIRY_DT",
+					 "REFERENCE_EFFECTIVE_DT",
+					 "INST_CRD_IND",
+		 			 "INST_CHRG_IND",
+		 			 "MIN_SPD_CRE_IND",
+		 			 "MIN_SPD_MOD_IND",
+					 "INSRT_TS") 
+					 VALUES (
+					 "C_CUST"."PRM_ACCT_NUM",
+					 "C_CUST"."ACCT_NUM",
+					 "C_CUST"."CUST_LOC_ID",
+					 "C_CUST"."CUST_PSTL_CD",
+					 "C_CUST"."BILL_CYCL",
+					 "C_CUST"."PRIN_NUM",
+					 "C_CUST"."AGNT_NUM",
+					 "C_CUST"."NETWK_TY",
+					 "C_CUST"."CO_CD",
+					 "C_CUST"."TAX_JURISD_CD",
+					 "C_CUST"."CUST_TY",
+					 "C_CUST"."KUNNR_SID",
+					 "C_CUST"."OB_BAN",
+					 "C_CUST"."CUST_NM",
+					 "C_CUST"."CUST_ST",
+					 "C_CUST"."CONNECT_DATE",
+					 "C_CUST"."CONTR_TERM",
+					 "C_CUST"."CONTR_TY",
+					 "C_CUST"."CONTR_STRT_DT",
+					 "C_CUST"."CONTR_END_DT",
+					 "C_CUST"."COMIT_TY",
+					 "C_CUST"."REFERENCE_EXPIRY_DT",
+					 "C_CUST"."REFERENCE_EFFECTIVE_DT",
+					 "C_CUST"."INST_CRD_IND",
+		 			 "C_CUST"."INST_CHRG_IND",
+		 			 "C_CUST"."MIN_SPD_CRE_IND",
+		 			 "C_CUST"."MIN_SPD_MOD_IND",
+					 LV_CUR_UTC ); 
+             	             	  
+	             	 LV_PREV_CONT_TERM    :=   IFNULL("C_CUST"."CONTR_TERM",LV_PREV_CONT_TERM);
+	                 LV_PREV_CONTR_END_DT :=   IFNULL("C_CUST"."CONTR_END_DT",LV_PREV_CONTR_END_DT);
+	                 LV_PREV_COMIT_TY     :=   IFNULL("C_CUST"."COMIT_TY",LV_PREV_COMIT_TY);
+             	
+             END;	
+					 
+--         Insert PK of successfully processed Records into Local Temp Tables 
+--         for Updating NDB_TS in corresponding Landing Tables records
+		    INSERT INTO #UPDATE_TV_CUST
+					   ("ACCT_NUM",
+					    "SUBS_EFF_DT") 
+			    VALUES ("C_CUST"."ACCT_NUM",
+				 	   	"C_CUST"."SUBS_EFF_DT");
+					   					   	    		
+		   INSERT INTO #UPDATE_EH_DELETION
+					   ("ACCT_NUM",
+					    "SUBS_EFF_DT") 
+			    VALUES ("C_CUST"."ACCT_NUM",
+				 	   	"C_CUST"."SUBS_EFF_DT");  
+					   	 
+           END IF;
+    
+        END IF; 
+  
+     END IF; 
+ 
+   END IF;
+
+END FOR;					   			    
+
+--------------------------------------------------------------------------------------------------
+-- Update Landing Tables
+-------------------------------------------------------------------------------------------------- \
+
+ 	        UPDATE "NDB_TV"."IFRS_R1.BELLTV.NDB_BELLTV::TV_SUBSCRIBER_HIST"  A 
+	          FROM "NDB_TV"."IFRS_R1.BELLTV.NDB_BELLTV::TV_SUBSCRIBER_HIST"  A
+	    INNER JOIN #UPDATE_TV_CUST  B
+	            ON A."ACCT_NUM"	 	=	 	B."ACCT_NUM"
+	           AND A."EFF_DT"	 	=	 	B."SUBS_EFF_DT"
+		       SET SP_TV_CUST_TS	=	 	LV_CUR_UTC
+		     WHERE SP_TV_CUST_TS IS NULL; 
+			
+--------------------------------------------------------------------------------------------------
+-- Update Error Table
+--------------------------------------------------------------------------------------------------
+
+	        UPDATE "NDB_TV"."IFRS_R1.BELLTV.NDB_BELLTV::TV_CUSTOMER_EH" A
+  	          FROM "NDB_TV"."IFRS_R1.BELLTV.NDB_BELLTV::TV_CUSTOMER_EH" A 
+ 	    INNER JOIN #UPDATE_EH_DELETION B
+                ON A."ACCT_NUM"	 	                =	 	B."ACCT_NUM"
+	           AND A."REFERENCE_EFFECTIVE_DT"	 	=	 	B."SUBS_EFF_DT"
+   	           SET (DELETE_DATE, DELETED)           =       (LV_CUR_UTC, 1);
+   	           
+
+--------------------------------------------------------------------------------------------------
+-- Set Overall Status
+-------------------------------------------------------------------------------------------------- 
+
+--  STATUS 0: Send the success message to scheduling tool to confirm this procedure has been
+--  executed successfully
+    IF(LV_ERROR_FLAG = 'Y') THEN		
+
+     OP_STATUS := LC_ERROR_TEXT; 
+			
+    ELSE
+
+  	 OP_STATUS := LC_SUCCESS_TEXT; 	
+				
+	END IF;
+	
+
+END;

@@ -1,0 +1,769 @@
+PROCEDURE "NDB_TV"."IFRS_R1.BELLTV.NDB_BELLTV::SP_TV_SUBSCRIBER_HIST" (
+IN IP_EFF_DT DATE,OUT OP_STATUS NVARCHAR(100)) 
+	LANGUAGE SQLSCRIPT
+	SQL SECURITY INVOKER
+	AS 
+	
+BEGIN
+--------------------------------------------------------------------------------------------------
+-- Procedure Title : SP_TV_SUBSCRIBER_HIST
+-- Created By      : BC_EY96106 (SANDEEP ADAGAL)       
+-- Create Date     : 05-10-2017
+-- Description     : Data Inserted using Calculation View - CA_TV_SUB_HIST
+--                   to NDB Table - TV_SUBSCRIBER_HIST Using this stored procedure.
+--                   			
+-- Project         : Bell Canada
+-- Release         : R1 / IFRS
+--------------------------------------------------------------------------------------------------
+--   M O D I F I C A T I O N   H I S T O R Y
+--------------------------------------------------------------------------------------------------
+-- Date        | User ID          | Modification History/Release
+--------------------------------------------------------------------------------------------------
+--             |                  | 
+--------------------------------------------------------------------------------------------------
+-- Description Of the changes 
+--------------------------------------------------------------------------------------------------
+-- Modification Number          : <Assign Some Number>
+-- Description of Changes Made> : <Description of Changes>    
+--------------------------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------------------------
+-- Local Variables Declaration
+--------------------------------------------------------------------------------------------------
+
+DECLARE LC_ERROR_TEXT 		NVARCHAR(70) DEFAULT 'OUT STATUS IS 1 : INSERT/UPDATE FOR ONE OR MORE RECORD FAILED';
+DECLARE LC_SUCCESS_TEXT 	NVARCHAR(70) DEFAULT 'OUT STATUS IS 0 : INSERT/UPDATE EXECUTION SUCCESSFUL';
+DECLARE LV_ERROR_FLAG 		NVARCHAR(1) := 'N';
+DECLARE LV_CUR_UTC 			TIMESTAMP := CURRENT_TIMESTAMP;
+DECLARE ERROR_TAB 			TABLE (ERROR_CODE NVARCHAR(100));
+DECLARE i					INTEGER;
+DECLARE RECORD_COUNT		INTEGER;
+DECLARE CURRENT_ERROR		NVARCHAR(100);
+
+--------------------------------------------------------------------------------------------------
+-- Cursors Declaration
+-------------------------------------------------------------------------------------------------- 
+
+   DECLARE CURSOR CUR_SUB FOR
+			SELECT ACCT_NUM,
+                   EFF_DT,
+                   EXPIRY_DT,
+                   ODS_SYST_CD,
+                   SYSTEM_NO,
+                   PRIN_NUM,
+                   AGNT_NUM,
+                   HOUSE_KEY,
+                   SALUTATION_CD,
+                   NAME,
+                   HOME_PHONE,
+                   BUSINESS_PHONE,
+                   BILL_TO_SALUTATION_CD,
+                   BILL_TO_NAME,
+                   BILL_TO_ADDR_1,
+                   BILL_TO_ADDR_2,
+                   BILL_TO_CITY,
+                   BILL_TO_PROVINCE_CD,
+                   BILL_TO_POSTAL_CODE,
+                   CURRENT_BALANCE,
+                   LAST_PAYMENT_AMT,
+                   LAST_PAYMENT_DATE,
+                   LAST_MONETARY_TXN_DATE,
+                   LAST_MONETARY_TXN_CD,
+                   PAYMENT_HISTORY,
+                   BILL_FROM_DT,
+                   BILL_TO_DT,
+                   DELQ_AMT,
+                   DELQ_DAYS,
+                   CYCLES_DELQ,
+                   LAST_STMT_BALANCE,
+                   LAST_STMT_DATE,
+                   DISCONNECT_DATE,
+                   DISCONNECT_WO_REASON_CD,
+                   FIXED_PAYMENT_AMT,
+                   EXTERNAL_STATUS_CD,
+                   DELQ_STATUS_CD,
+                   INTERNAL_STATUS_CD,
+                   VIP_CD,
+                   BILL_CREATE_DAY_OF_MONTH,
+                   ID_NO,
+                   CYCLE_SPREAD_CD,
+                   STMT_HOLD_IND,
+                   MDU_ID,
+                   DEP_DATE,
+                   DEP_AMT,
+                   CONNECT_DATE,
+                   SALES_REP_NO,
+                   NO_OF_MONTH_BILLING_PERIOD,
+                   TAX_METHOD_CD,
+                   ORIGINAL_CAMPAIGN_CD,
+                   CURRENT_CAMPAIGN_CD,
+                   CREDIT_LINE,
+                   PREV_YEAR_DELQ_1_CYCLE,
+                   PREV_YEAR_DELQ_2_CYCLE,
+                   PREV_YEAR_DELQ_3_CYCLE,
+                   LATE_CHARGE_YTD_STMTED,
+                   TIMES_SUBS_DELQ_1_CYCLE,
+                   TIMES_SUBS_DELQ_2_CYCLE,
+                   TIMES_SUBS_DELQ_3_CYCLE,
+                   DISCOUNT_CD,
+                   PROMISE_TO_PAY_DATE,
+                   PROMISE_TO_PAY_DAYS,
+                   RECURRING_CC_TYPE_CD,
+                   RECURRING_CC_SUSPEND_IND,
+                   RECURRING_USE_CC_IND,
+                   CREDIT_RISK_SCORE,
+                   DECISION_CD,
+                   SCORE_DATE,
+                   CREATION_DATE,
+                   COLLECTION_AGENCY_ID,
+                   COLLECTION_AGENCY_DATE,
+                   TAX_ID_NO,
+                   TAX_ID_TYPE_CD,
+                   CURRENT_PPV_TOTAL,
+                   FORCE_ADDR_CD,
+                   TRANSFER_ACCT_NO,
+                   TRANSFER_STATUS_CD,
+                   PROCESS_IND,
+                   CYCL_ID,
+                   SRC_TS,
+                   FLAG_EXISTING_RECORD,
+                   REFERENCE_EXPIRY_DT,
+                   REFERENCE_EXPIRY_DT_UPDATE
+              FROM "_SYS_BIC"."IFRS_R1.BELLTV.NDB_BELLTV/CA_TV_SUBSCRIBER_HIST"
+              (PLACEHOLDER."$$IP_EFF_DT$$"=> IFNULL(:IP_EFF_DT,'9999-12-31'))
+              ORDER BY FLAG_EXISTING_RECORD,EFF_DT;
+                 
+--------------------------------------------------------------------------------------------------
+-- Local Temporary Tables Declaration
+-------------------------------------------------------------------------------------------------- 
+
+CREATE LOCAL TEMPORARY TABLE #UPDATE_TV_SUBSCRIBER_HIST("ACCT_NUM" NVARCHAR(16),"EFF_DT" DATE);
+CREATE LOCAL TEMPORARY TABLE #UPDATE_EH_DELETION   ("ACCT_NUM" NVARCHAR(16),"EFF_DT" DATE);
+        	  
+--------------------------------------------------------------------------------------------------
+-- Cursors Loop
+--------------------------------------------------------------------------------------------------  
+
+FOR C_SUB AS CUR_SUB DO
+
+--  Define Exit Handler
+	DECLARE EXIT HANDLER FOR SQLEXCEPTION 
+	BEGIN AUTONOMOUS TRANSACTION 
+	
+--    Define Exit Handler
+	  DECLARE EXIT HANDLER FOR SQLEXCEPTION 
+	  BEGIN AUTONOMOUS TRANSACTION 	
+	   
+	-- Do Nothing. Exception Handled to ensure SP does not get terminated 
+	
+ 	  END;
+ 	  
+			     -- Insert record into error table
+			   	    INSERT INTO "NDB_TV"."IFRS_R1.BELLTV.NDB_BELLTV::TV_SUBSCRIBER_HIST_EH"
+			   	              ( ACCT_NUM,
+                                EFF_DT,
+                                EXPIRY_DT,
+                                ODS_SYST_CD,
+                                SYSTEM_NO,
+                                PRIN_NUM,
+                                AGNT_NUM,
+                                HOUSE_KEY,
+                                SALUTATION_CD,
+                                NAME,
+                                HOME_PHONE,
+                                BUSINESS_PHONE,
+                                BILL_TO_SALUTATION_CD,
+                                BILL_TO_NAME,
+                                BILL_TO_ADDR_1,
+                                BILL_TO_ADDR_2,
+                                BILL_TO_CITY,
+                                BILL_TO_PROVINCE_CD,
+                                BILL_TO_POSTAL_CODE,
+                                CURRENT_BALANCE,
+                                LAST_PAYMENT_AMT,
+                                LAST_PAYMENT_DATE,
+                                LAST_MONETARY_TXN_DATE,
+                                LAST_MONETARY_TXN_CD,
+                                PAYMENT_HISTORY,
+                                BILL_FROM_DT,
+                                BILL_TO_DT,
+                                DELQ_AMT,
+                                DELQ_DAYS,
+                                CYCLES_DELQ,
+                                LAST_STMT_BALANCE,
+                                LAST_STMT_DATE,
+                                DISCONNECT_DATE,
+                                DISCONNECT_WO_REASON_CD,
+                                FIXED_PAYMENT_AMT,
+                                EXTERNAL_STATUS_CD,
+                                DELQ_STATUS_CD,
+                                INTERNAL_STATUS_CD,
+                                VIP_CD,
+                                BILL_CREATE_DAY_OF_MONTH,
+                                ID_NO,
+                                CYCLE_SPREAD_CD,
+                                STMT_HOLD_IND,
+                                MDU_ID,
+                                DEP_DATE,
+                                DEP_AMT,
+                                CONNECT_DATE,
+                                SALES_REP_NO,
+                                NO_OF_MONTH_BILLING_PERIOD,
+                                TAX_METHOD_CD,
+                                ORIGINAL_CAMPAIGN_CD,
+                                CURRENT_CAMPAIGN_CD,
+                                CREDIT_LINE,
+                                PREV_YEAR_DELQ_1_CYCLE,
+                                PREV_YEAR_DELQ_2_CYCLE,
+                                PREV_YEAR_DELQ_3_CYCLE,
+                                LATE_CHARGE_YTD_STMTED,
+                                TIMES_SUBS_DELQ_1_CYCLE,
+                                TIMES_SUBS_DELQ_2_CYCLE,
+                                TIMES_SUBS_DELQ_3_CYCLE,
+                                DISCOUNT_CD,
+                                PROMISE_TO_PAY_DATE,
+                                PROMISE_TO_PAY_DAYS,
+                                RECURRING_CC_TYPE_CD,
+                                RECURRING_CC_SUSPEND_IND,
+                                RECURRING_USE_CC_IND,
+                                CREDIT_RISK_SCORE,
+                                DECISION_CD,
+                                SCORE_DATE,
+                                CREATION_DATE,
+                                COLLECTION_AGENCY_ID,
+                                COLLECTION_AGENCY_DATE,
+                                TAX_ID_NO,
+                                TAX_ID_TYPE_CD,
+                                CURRENT_PPV_TOTAL,
+                                FORCE_ADDR_CD,
+                                TRANSFER_ACCT_NO,
+                                TRANSFER_STATUS_CD,
+                                PROCESS_IND,
+                                CYCL_ID,
+                                INSRT_TS,
+                                SRC_TS,
+				                "ERROR_CODE",
+				                "TECHNICAL_MESSAGE",
+				                "ERROR_CREATE_TS")
+		       		    VALUES( C_SUB.ACCT_NUM,
+                                C_SUB.EFF_DT,
+                                C_SUB.EXPIRY_DT,
+                                C_SUB.ODS_SYST_CD,
+                                C_SUB.SYSTEM_NO,
+                                C_SUB.PRIN_NUM,
+                                C_SUB.AGNT_NUM,
+                                C_SUB.HOUSE_KEY,
+                                C_SUB.SALUTATION_CD,
+                                C_SUB.NAME,
+                                C_SUB.HOME_PHONE,
+                                C_SUB.BUSINESS_PHONE,
+                                C_SUB.BILL_TO_SALUTATION_CD,
+                                C_SUB.BILL_TO_NAME,
+                                C_SUB.BILL_TO_ADDR_1,
+                                C_SUB.BILL_TO_ADDR_2,
+                                C_SUB.BILL_TO_CITY,
+                                C_SUB.BILL_TO_PROVINCE_CD,
+                                C_SUB.BILL_TO_POSTAL_CODE,
+                                C_SUB.CURRENT_BALANCE,
+                                C_SUB.LAST_PAYMENT_AMT,
+                                C_SUB.LAST_PAYMENT_DATE,
+			                    C_SUB.LAST_MONETARY_TXN_DATE,
+			                    C_SUB.LAST_MONETARY_TXN_CD,
+			                    C_SUB.PAYMENT_HISTORY,
+			                    C_SUB.BILL_FROM_DT,
+			                    C_SUB.BILL_TO_DT,
+			                    C_SUB.DELQ_AMT,
+			                    C_SUB.DELQ_DAYS,
+			                    C_SUB.CYCLES_DELQ,
+			                    C_SUB.LAST_STMT_BALANCE,
+			                    C_SUB.LAST_STMT_DATE,
+			                    C_SUB.DISCONNECT_DATE,
+			                    C_SUB.DISCONNECT_WO_REASON_CD,
+			                    C_SUB.FIXED_PAYMENT_AMT,
+			                    C_SUB.EXTERNAL_STATUS_CD,
+			                    C_SUB.DELQ_STATUS_CD,
+			                    C_SUB.INTERNAL_STATUS_CD,
+			                    C_SUB.VIP_CD,
+			                    C_SUB.BILL_CREATE_DAY_OF_MONTH,
+			                    C_SUB.ID_NO,
+			                    C_SUB.CYCLE_SPREAD_CD,
+			                    C_SUB.STMT_HOLD_IND,
+			                    C_SUB.MDU_ID,
+			                    C_SUB.DEP_DATE,
+			                    C_SUB.DEP_AMT,
+			                    C_SUB.CONNECT_DATE,
+			                    C_SUB.SALES_REP_NO,
+			                    C_SUB.NO_OF_MONTH_BILLING_PERIOD,
+			                    C_SUB.TAX_METHOD_CD,
+			                    C_SUB.ORIGINAL_CAMPAIGN_CD,
+			                    C_SUB.CURRENT_CAMPAIGN_CD,
+			                    C_SUB.CREDIT_LINE,
+			                    C_SUB.PREV_YEAR_DELQ_1_CYCLE,
+			                    C_SUB.PREV_YEAR_DELQ_2_CYCLE,
+			                    C_SUB.PREV_YEAR_DELQ_3_CYCLE,
+			                    C_SUB.LATE_CHARGE_YTD_STMTED,
+			                    C_SUB.TIMES_SUBS_DELQ_1_CYCLE,
+			                    C_SUB.TIMES_SUBS_DELQ_2_CYCLE,
+			                    C_SUB.TIMES_SUBS_DELQ_3_CYCLE,
+			                    C_SUB.DISCOUNT_CD,
+			                    C_SUB.PROMISE_TO_PAY_DATE,
+			                    C_SUB.PROMISE_TO_PAY_DAYS,
+			                    C_SUB.RECURRING_CC_TYPE_CD,
+			                    C_SUB.RECURRING_CC_SUSPEND_IND,
+			                    C_SUB.RECURRING_USE_CC_IND,
+			                    C_SUB.CREDIT_RISK_SCORE,
+			                    C_SUB.DECISION_CD,
+			                    C_SUB.SCORE_DATE,
+			                    C_SUB.CREATION_DATE,
+			                    C_SUB.COLLECTION_AGENCY_ID,
+			                    C_SUB.COLLECTION_AGENCY_DATE,
+			                    C_SUB.TAX_ID_NO,
+			                    C_SUB.TAX_ID_TYPE_CD,
+			                    C_SUB.CURRENT_PPV_TOTAL,
+			                    C_SUB.FORCE_ADDR_CD,
+			                    C_SUB.TRANSFER_ACCT_NO,
+			                    C_SUB.TRANSFER_STATUS_CD,
+			                    C_SUB.PROCESS_IND,
+			                    C_SUB.CYCL_ID,
+			                    LV_CUR_UTC,
+			                    C_SUB.SRC_TS,
+							    ::SQL_ERROR_CODE,
+							    ::SQL_ERROR_MESSAGE,
+							    LV_CUR_UTC); 
+
+	  			                LV_ERROR_FLAG := 'Y';
+  		  
+  	END;	  
+    
+--   If Record exists in the Target NDB Table
+     IF C_SUB.FLAG_EXISTING_RECORD = 'U' THEN
+     
+     	BEGIN AUTONOMOUS TRANSACTION 
+
+ --     Update the target NDB table
+			UPDATE "NDB_TV"."IFRS_R1.BELLTV.NDB_BELLTV::TV_SUBSCRIBER_HIST" NDB
+	 		    SET NDB."EXPIRY_DT"                 = C_SUB.REFERENCE_EXPIRY_DT_UPDATE,
+	 		        NDB."MODIFIED_TS"               = LV_CUR_UTC 
+		      WHERE NDB."ACCT_NUM"	 		        = C_SUB."ACCT_NUM"
+				AND NDB."EXPIRY_DT" ='9999.12.31' ;
+
+--      Insert the Incoming new record
+ 		     INSERT INTO "NDB_TV"."IFRS_R1.BELLTV.NDB_BELLTV::TV_SUBSCRIBER_HIST"
+					   ( ACCT_NUM,
+						 EFF_DT,
+						 EXPIRY_DT,
+						 ODS_SYST_CD,
+						 SYSTEM_NO,
+						 PRIN_NUM,
+						 AGNT_NUM,
+						 HOUSE_KEY,
+						 SALUTATION_CD,
+						 NAME,
+						 HOME_PHONE,
+						 BUSINESS_PHONE,
+						 BILL_TO_SALUTATION_CD,
+						 BILL_TO_NAME,
+						 BILL_TO_ADDR_1,
+						 BILL_TO_ADDR_2,
+						 BILL_TO_CITY,
+						 BILL_TO_PROVINCE_CD,
+						 BILL_TO_POSTAL_CODE,
+						 CURRENT_BALANCE,
+						 LAST_PAYMENT_AMT,
+						 LAST_PAYMENT_DATE,
+						 LAST_MONETARY_TXN_DATE,
+						 LAST_MONETARY_TXN_CD,
+						 PAYMENT_HISTORY,
+						 BILL_FROM_DT,
+						 BILL_TO_DT,
+						 DELQ_AMT,
+						 DELQ_DAYS,
+						 CYCLES_DELQ,
+						 LAST_STMT_BALANCE,
+						 LAST_STMT_DATE,
+						 DISCONNECT_DATE,
+						 DISCONNECT_WO_REASON_CD,
+						 FIXED_PAYMENT_AMT,
+						 EXTERNAL_STATUS_CD,
+						 DELQ_STATUS_CD,
+						 INTERNAL_STATUS_CD,
+						 VIP_CD,
+						 BILL_CREATE_DAY_OF_MONTH,
+						 ID_NO,
+						 CYCLE_SPREAD_CD,
+						 STMT_HOLD_IND,
+						 MDU_ID,
+						 DEP_DATE,
+						 DEP_AMT,
+						 CONNECT_DATE,
+						 SALES_REP_NO,
+						 NO_OF_MONTH_BILLING_PERIOD,
+						 TAX_METHOD_CD,
+						 ORIGINAL_CAMPAIGN_CD,
+						 CURRENT_CAMPAIGN_CD,
+						 CREDIT_LINE,
+						 PREV_YEAR_DELQ_1_CYCLE,
+						 PREV_YEAR_DELQ_2_CYCLE,
+						 PREV_YEAR_DELQ_3_CYCLE,
+						 LATE_CHARGE_YTD_STMTED,
+						 TIMES_SUBS_DELQ_1_CYCLE,
+						 TIMES_SUBS_DELQ_2_CYCLE,
+						 TIMES_SUBS_DELQ_3_CYCLE,
+						 DISCOUNT_CD,
+						 PROMISE_TO_PAY_DATE,
+						 PROMISE_TO_PAY_DAYS,
+						 RECURRING_CC_TYPE_CD,
+						 RECURRING_CC_SUSPEND_IND,
+						 RECURRING_USE_CC_IND,
+						 CREDIT_RISK_SCORE,
+						 DECISION_CD,
+						 SCORE_DATE,
+						 CREATION_DATE,
+						 COLLECTION_AGENCY_ID,
+						 COLLECTION_AGENCY_DATE,
+						 TAX_ID_NO,
+						 TAX_ID_TYPE_CD,
+						 CURRENT_PPV_TOTAL,
+						 FORCE_ADDR_CD,
+						 TRANSFER_ACCT_NO,
+						 TRANSFER_STATUS_CD,
+						 PROCESS_IND,
+						 CYCL_ID,
+						 INSRT_TS,
+						 SRC_TS )
+				 VALUES( C_SUB."ACCT_NUM",
+						 C_SUB."EFF_DT",
+						 C_SUB."REFERENCE_EXPIRY_DT",
+						 C_SUB."ODS_SYST_CD",
+						 C_SUB."SYSTEM_NO",
+						 C_SUB."PRIN_NUM",
+						 C_SUB."AGNT_NUM",
+						 C_SUB."HOUSE_KEY",
+						 C_SUB."SALUTATION_CD",
+						 C_SUB."NAME",
+						 C_SUB."HOME_PHONE",
+						 C_SUB."BUSINESS_PHONE",
+						 C_SUB."BILL_TO_SALUTATION_CD",
+						 C_SUB."BILL_TO_NAME",
+						 C_SUB."BILL_TO_ADDR_1",
+						 C_SUB."BILL_TO_ADDR_2",
+						 C_SUB."BILL_TO_CITY",
+						 C_SUB."BILL_TO_PROVINCE_CD",
+						 C_SUB."BILL_TO_POSTAL_CODE",
+						 C_SUB."CURRENT_BALANCE",
+						 C_SUB."LAST_PAYMENT_AMT",
+						 C_SUB."LAST_PAYMENT_DATE",
+						 C_SUB."LAST_MONETARY_TXN_DATE",
+						 C_SUB."LAST_MONETARY_TXN_CD",
+						 C_SUB."PAYMENT_HISTORY",
+						 C_SUB."BILL_FROM_DT",
+						 C_SUB."BILL_TO_DT",
+						 C_SUB."DELQ_AMT",
+						 C_SUB."DELQ_DAYS",
+						 C_SUB."CYCLES_DELQ",
+						 C_SUB."LAST_STMT_BALANCE",
+						 C_SUB."LAST_STMT_DATE",
+						 C_SUB."DISCONNECT_DATE",
+						 C_SUB."DISCONNECT_WO_REASON_CD",
+						 C_SUB."FIXED_PAYMENT_AMT",
+						 C_SUB."EXTERNAL_STATUS_CD",
+						 C_SUB."DELQ_STATUS_CD",
+						 C_SUB."INTERNAL_STATUS_CD",
+						 C_SUB."VIP_CD",
+						 C_SUB."BILL_CREATE_DAY_OF_MONTH",
+						 C_SUB."ID_NO",
+						 C_SUB."CYCLE_SPREAD_CD",
+						 C_SUB."STMT_HOLD_IND",
+						 C_SUB."MDU_ID",
+						 C_SUB."DEP_DATE",
+						 C_SUB."DEP_AMT",
+						 C_SUB."CONNECT_DATE",
+						 C_SUB."SALES_REP_NO",
+						 C_SUB."NO_OF_MONTH_BILLING_PERIOD",
+						 C_SUB."TAX_METHOD_CD",
+						 C_SUB."ORIGINAL_CAMPAIGN_CD",
+						 C_SUB."CURRENT_CAMPAIGN_CD",
+						 C_SUB."CREDIT_LINE",
+						 C_SUB."PREV_YEAR_DELQ_1_CYCLE",
+						 C_SUB."PREV_YEAR_DELQ_2_CYCLE",
+						 C_SUB."PREV_YEAR_DELQ_3_CYCLE",
+						 C_SUB."LATE_CHARGE_YTD_STMTED",
+						 C_SUB."TIMES_SUBS_DELQ_1_CYCLE",
+						 C_SUB."TIMES_SUBS_DELQ_2_CYCLE",
+						 C_SUB."TIMES_SUBS_DELQ_3_CYCLE",
+						 C_SUB."DISCOUNT_CD",
+						 C_SUB."PROMISE_TO_PAY_DATE",
+						 C_SUB."PROMISE_TO_PAY_DAYS",
+						 C_SUB."RECURRING_CC_TYPE_CD",
+						 C_SUB."RECURRING_CC_SUSPEND_IND",
+						 C_SUB."RECURRING_USE_CC_IND",
+						 C_SUB."CREDIT_RISK_SCORE",
+						 C_SUB."DECISION_CD",
+						 C_SUB."SCORE_DATE",
+						 C_SUB."CREATION_DATE",
+						 C_SUB."COLLECTION_AGENCY_ID",
+						 C_SUB."COLLECTION_AGENCY_DATE",
+						 C_SUB."TAX_ID_NO",
+						 C_SUB."TAX_ID_TYPE_CD",
+						 C_SUB."CURRENT_PPV_TOTAL",
+						 C_SUB."FORCE_ADDR_CD",
+						 C_SUB."TRANSFER_ACCT_NO",
+						 C_SUB."TRANSFER_STATUS_CD",
+						 C_SUB."PROCESS_IND",
+						 C_SUB."CYCL_ID",
+						 LV_CUR_UTC,
+						 C_SUB."SRC_TS" );
+					 
+	END;		 
+						 
+--         Insert PK of successfully processed Records into Local Temp Tables 
+--         for Updating NDB_TS in corresponding Landing Tables records	
+		   INSERT INTO #UPDATE_TV_SUBSCRIBER_HIST
+					   ("ACCT_NUM",
+					    "EFF_DT" ) 
+			    VALUES (C_SUB."ACCT_NUM",
+	 			 	    C_SUB."EFF_DT");
+					   					   	    		
+		   INSERT INTO #UPDATE_EH_DELETION
+					   ("ACCT_NUM",
+					    "EFF_DT" ) 
+			    VALUES (C_SUB."ACCT_NUM",
+	 			 	    C_SUB."EFF_DT");
+					   	
+   ELSEIF C_SUB.FLAG_EXISTING_RECORD = 'I' THEN
+
+          BEGIN AUTONOMOUS TRANSACTION 
+          
+            -- Insert Records into the target NDB table			   	
+		    INSERT INTO "NDB_TV"."IFRS_R1.BELLTV.NDB_BELLTV::TV_SUBSCRIBER_HIST"
+					   ( ACCT_NUM,
+						 EFF_DT,
+						 EXPIRY_DT,
+						 ODS_SYST_CD,
+						 SYSTEM_NO,
+						 PRIN_NUM,
+						 AGNT_NUM,
+						 HOUSE_KEY,
+						 SALUTATION_CD,
+						 NAME,
+						 HOME_PHONE,
+						 BUSINESS_PHONE,
+						 BILL_TO_SALUTATION_CD,
+						 BILL_TO_NAME,
+						 BILL_TO_ADDR_1,
+						 BILL_TO_ADDR_2,
+						 BILL_TO_CITY,
+						 BILL_TO_PROVINCE_CD,
+						 BILL_TO_POSTAL_CODE,
+						 CURRENT_BALANCE,
+						 LAST_PAYMENT_AMT,
+						 LAST_PAYMENT_DATE,
+						 LAST_MONETARY_TXN_DATE,
+						 LAST_MONETARY_TXN_CD,
+						 PAYMENT_HISTORY,
+						 BILL_FROM_DT,
+						 BILL_TO_DT,
+						 DELQ_AMT,
+						 DELQ_DAYS,
+						 CYCLES_DELQ,
+						 LAST_STMT_BALANCE,
+						 LAST_STMT_DATE,
+						 DISCONNECT_DATE,
+						 DISCONNECT_WO_REASON_CD,
+						 FIXED_PAYMENT_AMT,
+						 EXTERNAL_STATUS_CD,
+						 DELQ_STATUS_CD,
+						 INTERNAL_STATUS_CD,
+						 VIP_CD,
+						 BILL_CREATE_DAY_OF_MONTH,
+						 ID_NO,
+						 CYCLE_SPREAD_CD,
+						 STMT_HOLD_IND,
+						 MDU_ID,
+						 DEP_DATE,
+						 DEP_AMT,
+						 CONNECT_DATE,
+						 SALES_REP_NO,
+						 NO_OF_MONTH_BILLING_PERIOD,
+						 TAX_METHOD_CD,
+						 ORIGINAL_CAMPAIGN_CD,
+						 CURRENT_CAMPAIGN_CD,
+						 CREDIT_LINE,
+						 PREV_YEAR_DELQ_1_CYCLE,
+						 PREV_YEAR_DELQ_2_CYCLE,
+						 PREV_YEAR_DELQ_3_CYCLE,
+						 LATE_CHARGE_YTD_STMTED,
+						 TIMES_SUBS_DELQ_1_CYCLE,
+						 TIMES_SUBS_DELQ_2_CYCLE,
+						 TIMES_SUBS_DELQ_3_CYCLE,
+						 DISCOUNT_CD,
+						 PROMISE_TO_PAY_DATE,
+						 PROMISE_TO_PAY_DAYS,
+						 RECURRING_CC_TYPE_CD,
+						 RECURRING_CC_SUSPEND_IND,
+						 RECURRING_USE_CC_IND,
+						 CREDIT_RISK_SCORE,
+						 DECISION_CD,
+						 SCORE_DATE,
+						 CREATION_DATE,
+						 COLLECTION_AGENCY_ID,
+						 COLLECTION_AGENCY_DATE,
+						 TAX_ID_NO,
+						 TAX_ID_TYPE_CD,
+						 CURRENT_PPV_TOTAL,
+						 FORCE_ADDR_CD,
+						 TRANSFER_ACCT_NO,
+						 TRANSFER_STATUS_CD,
+						 PROCESS_IND,
+						 CYCL_ID,
+						 INSRT_TS,
+						 SRC_TS )
+				 VALUES( C_SUB."ACCT_NUM",
+						 C_SUB."EFF_DT",
+						 C_SUB."REFERENCE_EXPIRY_DT",
+						 C_SUB."ODS_SYST_CD",
+						 C_SUB."SYSTEM_NO",
+						 C_SUB."PRIN_NUM",
+						 C_SUB."AGNT_NUM",
+						 C_SUB."HOUSE_KEY",
+						 C_SUB."SALUTATION_CD",
+						 C_SUB."NAME",
+						 C_SUB."HOME_PHONE",
+						 C_SUB."BUSINESS_PHONE",
+						 C_SUB."BILL_TO_SALUTATION_CD",
+						 C_SUB."BILL_TO_NAME",
+						 C_SUB."BILL_TO_ADDR_1",
+						 C_SUB."BILL_TO_ADDR_2",
+						 C_SUB."BILL_TO_CITY",
+						 C_SUB."BILL_TO_PROVINCE_CD",
+						 C_SUB."BILL_TO_POSTAL_CODE",
+						 C_SUB."CURRENT_BALANCE",
+						 C_SUB."LAST_PAYMENT_AMT",
+						 C_SUB."LAST_PAYMENT_DATE",
+						 C_SUB."LAST_MONETARY_TXN_DATE",
+						 C_SUB."LAST_MONETARY_TXN_CD",
+						 C_SUB."PAYMENT_HISTORY",
+						 C_SUB."BILL_FROM_DT",
+						 C_SUB."BILL_TO_DT",
+						 C_SUB."DELQ_AMT",
+						 C_SUB."DELQ_DAYS",
+						 C_SUB."CYCLES_DELQ",
+						 C_SUB."LAST_STMT_BALANCE",
+						 C_SUB."LAST_STMT_DATE",
+						 C_SUB."DISCONNECT_DATE",
+						 C_SUB."DISCONNECT_WO_REASON_CD",
+						 C_SUB."FIXED_PAYMENT_AMT",
+						 C_SUB."EXTERNAL_STATUS_CD",
+						 C_SUB."DELQ_STATUS_CD",
+						 C_SUB."INTERNAL_STATUS_CD",
+						 C_SUB."VIP_CD",
+						 C_SUB."BILL_CREATE_DAY_OF_MONTH",
+						 C_SUB."ID_NO",
+						 C_SUB."CYCLE_SPREAD_CD",
+						 C_SUB."STMT_HOLD_IND",
+						 C_SUB."MDU_ID",
+						 C_SUB."DEP_DATE",
+						 C_SUB."DEP_AMT",
+						 C_SUB."CONNECT_DATE",
+						 C_SUB."SALES_REP_NO",
+						 C_SUB."NO_OF_MONTH_BILLING_PERIOD",
+						 C_SUB."TAX_METHOD_CD",
+						 C_SUB."ORIGINAL_CAMPAIGN_CD",
+						 C_SUB."CURRENT_CAMPAIGN_CD",
+						 C_SUB."CREDIT_LINE",
+						 C_SUB."PREV_YEAR_DELQ_1_CYCLE",
+						 C_SUB."PREV_YEAR_DELQ_2_CYCLE",
+						 C_SUB."PREV_YEAR_DELQ_3_CYCLE",
+						 C_SUB."LATE_CHARGE_YTD_STMTED",
+						 C_SUB."TIMES_SUBS_DELQ_1_CYCLE",
+						 C_SUB."TIMES_SUBS_DELQ_2_CYCLE",
+						 C_SUB."TIMES_SUBS_DELQ_3_CYCLE",
+						 C_SUB."DISCOUNT_CD",
+						 C_SUB."PROMISE_TO_PAY_DATE",
+						 C_SUB."PROMISE_TO_PAY_DAYS",
+						 C_SUB."RECURRING_CC_TYPE_CD",
+						 C_SUB."RECURRING_CC_SUSPEND_IND",
+						 C_SUB."RECURRING_USE_CC_IND",
+						 C_SUB."CREDIT_RISK_SCORE",
+						 C_SUB."DECISION_CD",
+						 C_SUB."SCORE_DATE",
+						 C_SUB."CREATION_DATE",
+						 C_SUB."COLLECTION_AGENCY_ID",
+						 C_SUB."COLLECTION_AGENCY_DATE",
+						 C_SUB."TAX_ID_NO",
+						 C_SUB."TAX_ID_TYPE_CD",
+						 C_SUB."CURRENT_PPV_TOTAL",
+						 C_SUB."FORCE_ADDR_CD",
+						 C_SUB."TRANSFER_ACCT_NO",
+						 C_SUB."TRANSFER_STATUS_CD",
+						 C_SUB."PROCESS_IND",
+						 C_SUB."CYCL_ID",
+						 LV_CUR_UTC,
+						 C_SUB."SRC_TS" );
+           
+           END;
+           
+--         Insert PK of successfully processed Records into Local Temp Tables 
+--         for Updating NDB_TS in corresponding Landing Tables records 
+		   INSERT INTO #UPDATE_TV_SUBSCRIBER_HIST
+					   ("ACCT_NUM",
+					    "EFF_DT" ) 
+			    VALUES (C_SUB."ACCT_NUM",
+	 			 	    C_SUB."EFF_DT");
+					   					   	    		
+		   INSERT INTO #UPDATE_EH_DELETION
+					   ("ACCT_NUM",
+					    "EFF_DT" ) 
+			    VALUES (C_SUB."ACCT_NUM",
+	 			 	    C_SUB."EFF_DT");				   	
+		
+		
+					   	
+   END IF;  
+
+END FOR;					   			    
+
+--------------------------------------------------------------------------------------------------
+-- Update Landing Tables
+-------------------------------------------------------------------------------------------------- 
+
+-- Update Landing Table IFRS_R1.LAND::TV_SUBSCRIBER_HIST
+            UPDATE "LAND"."IFRS_R1.LAND::TV_SUBSCRIBER_HIST" A
+              FROM "LAND"."IFRS_R1.LAND::TV_SUBSCRIBER_HIST" A 
+        INNER JOIN #UPDATE_TV_SUBSCRIBER_HIST B 
+                ON A."ACCT_NO"                   =	 	B."ACCT_NUM"
+               AND A."EFF_DT"                    =	 	B."EFF_DT"
+               SET SP_SUBSCRIBER_HIST_TS         =	 	LV_CUR_UTC
+             WHERE A.SP_SUBSCRIBER_HIST_TS IS NULL;
+
+--------------------------------------------------------------------------------------------------
+-- Update Error Table
+--------------------------------------------------------------------------------------------------
+
+-- Update NDB EH table TV_SUBSCRIBER_HIST_EH
+           UPDATE "NDB_TV"."IFRS_R1.BELLTV.NDB_BELLTV::TV_SUBSCRIBER_HIST_EH" A
+             FROM "NDB_TV"."IFRS_R1.BELLTV.NDB_BELLTV::TV_SUBSCRIBER_HIST_EH" A 
+       INNER JOIN #UPDATE_EH_DELETION B
+               ON  A."ACCT_NUM"                  =	 	 B."ACCT_NUM"
+              AND  A."EFF_DT"                    =	 	 B."EFF_DT"
+              SET (DELETE_DATE, DELETED)         =       (CURRENT_DATE, 1);
+
+--------------------------------------------------------------------------------------------------
+-- Set Overall Status
+-------------------------------------------------------------------------------------------------- 
+
+--  STATUS 0: Send the success message to scheduling tool to confirm this procedure has been
+--  executed successfully
+    IF(LV_ERROR_FLAG = 'Y') THEN		
+
+     OP_STATUS := LC_ERROR_TEXT;
+			
+    ELSE
+
+  	 OP_STATUS := LC_SUCCESS_TEXT; 	
+				
+	END IF;
+		
+END;
+
+

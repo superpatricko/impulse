@@ -1,0 +1,942 @@
+	PROCEDURE "NDB_COMMON"."IFRS_R1.COMMON_COMP.NDB_COMMON::SP_P77_TRANS_ACSY"  
+	(IN IP_CYCL_ID NVARCHAR(3),
+	OUT OP_STATUS NVARCHAR(100))  
+	LANGUAGE SQLSCRIPT
+	SQL SECURITY INVOKER
+	AS
+	BEGIN 
+--------------------------------------------------------------------------------------------------
+-- Procedure Title : SP_P77_TRANS_ACSY
+-- Created By      : BC_EY96106       
+-- Create Date     : 03-17-2017
+-- Description     : Data Inserted using Calculation View - CA_P77_TRANS_ACSY
+--                   To NDB Table - P77_TRANS_ACSY Using this stored procedure.
+-- Project         : Bell Canada
+-- Release         : R1 / IFRS
+--------------------------------------------------------------------------------------------------
+--   M O D I F I C A T I O N   H I S T O R Y
+--------------------------------------------------------------------------------------------------
+-- Date        | User ID          | Modification History/Release
+--------------------------------------------------------------------------------------------------
+--             |                  | 
+--------------------------------------------------------------------------------------------------
+-- Description Of the changes 
+--------------------------------------------------------------------------------------------------
+-- Modification Number          : <Assign Some Number> 
+-- Description of Changes Made> : <Description of Changes>       
+--------------------------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------------------------
+-- Global Variables Declaration
+--------------------------------------------------------------------------------------------------
+ 
+DECLARE LC_ERROR_TEXT 				   NVARCHAR(70) DEFAULT 'OUT STATUS IS 1 : INSERT/UPDATE FOR ONE OR MORE RECORD FAILED';
+DECLARE LC_SUCCESS_TEXT 	           NVARCHAR(70) DEFAULT 'OUT STATUS IS 0 : INSERT/UPDATE EXECUTION SUCCESSFUL';
+DECLARE LV_ERROR_FLAG 		           NVARCHAR(1) := 'N';
+DECLARE LV_CUR_UTC 			           TIMESTAMP := CURRENT_TIMESTAMP;
+DECLARE ERROR_TAB 			           TABLE (ERROR_CODE NVARCHAR(100));
+DECLARE i					           INTEGER;
+DECLARE RECORD_COUNT		           INTEGER;
+DECLARE CURRENT_ERROR		           NVARCHAR(100);
+-- New Variable added
+DECLARE LV_LOOP_ERROR_FLAG             INTEGER := 0;
+DECLARE LV_PREV_CC_CONCAT_PRIMARY_KEY  NVARCHAR(100):= NULL; 
+
+ 
+--------------------------------------------------------------------------------------------------
+-- Cursors Declaration
+--------------------------------------------------------------------------------------------------
+	  DECLARE CURSOR CUR_ACSY FOR 
+			  SELECT
+	 			 "TRANSACTION_ID",
+	 			 "CONTRACT_UNIQUE_ID",
+	 			 "TRANSACTION_LN_ID",
+	 			 "ART_NUM",
+	 			 "ITM_GRP_CD",
+	 			 "MER_CTGRY",
+	 			 "TRANS_PRC",
+	 			 "DEVICE_TRANS_PRC",
+	 			 "STDALN_SLNG_PRC",
+	 			 "DEVICE_STDALN_SLNG_PRC",
+	 			 "DIST_CHANNEL",
+	 			 "SALES_DOC_TYP",
+	 			 "ORD_REASON_CD",
+	 			 "FINAL_TRANS_PRC",
+	 			 "CURRN",
+	 			 "CONS_BLD_AMT",
+	 			 "BANNER",
+	 			 "COMPANY_CD",
+	 			 "LEGAL_ENTITY",
+	 			 "DEALER",
+	 			 "TAX_JURIS_CD",
+	 			 "VERISIGN_AUTH_AMT",
+	 			 "STORE",
+	 			 "ACCTNG_DT",
+	 			 "ITEM_FINAL_TRANS_PRC",
+	 			 "ITEM_CONS_BLD_AMT",
+	 			 "CONTR_INCPTN",
+	 			 "DEALER_PRC",
+	 			 "SUB_MERC_CTGRY",
+	 			 "INCENTIVES",
+	 			 "RFND_CD",
+	 			 "RFND_AMT",
+			 	 "PROMO_CD",
+	 			 "DEFRD_GL_FLG",
+	 			 "BRND_CD",
+	 			 "TRANS_TYP_CD",
+	 			 "ITEM_QUANTITY",
+	 			 "ITEM_DSCT_AMT",
+	 			 "PROFIT_CENTRE",
+	 			 "REVNU_GL",
+	 			 "REV_AMT",
+	 			 "DOC_NUM",
+			 	 "ACT_POST_DT",
+	 			 "ACT_DOC_DT",
+	 			 "ACT_DOC_TY",
+	 			 "ACT_ACCT_PD",
+	 			 "TRANS_COMPLETION_INDICATOR",
+	 			 "SRC_FILE_NAME",
+	 			 "SCENARIO_IDENTIFIER",
+	 			 "REC_EFFECTIVE_DT",
+	 			 "REC_EXPIRY_DT",
+	 			 "CYCLE_NUM",
+	 			 "ERROR_STATUS",
+	 			 "ERROR_CODE",
+	 			 "FLAG_EXISTING_RECORD",
+	 			 "REC_EXPIRY_DT_UPDATE",
+	 			 "SER_NUM_PRIMARY_KEY",
+	 			 "SRC_TS",
+	 			 "ITEM_PRIMARY_KEY",
+	 			 "CC_CONCAT_PRIMARY_KEY",
+	 			 "TRANS_COMPLETION_INDICATOR_NDB"
+	 			 FROM "_SYS_BIC"."IFRS_R1.COMMON_COMP.NDB_COMMON/CA_P77_TRANS_ACSY"
+			  (PLACEHOLDER."$$IP_CYCL_ID$$" => :IP_CYCL_ID)
+			  ORDER BY "TRANSACTION_ID","TRANSACTION_LN_ID","ART_NUM","DIST_CHANNEL", 
+			  "CYCLE_NUM","FLAG_EXISTING_RECORD","CONTR_INCPTN","ACCTNG_DT";
+			           
+                                   
+--------------------------------------------------------------------------------------------------
+-- Local Temporary Tables Declaration
+-------------------------------------------------------------------------------------------------- 
+
+CREATE LOCAL TEMPORARY TABLE #UPDATE_P77_TRANS_ACSY ("TRANSACTION_ID" NVARCHAR(20), "TRANSACTION_LN_ID" NVARCHAR(6),"DIST_CHANNEL" NVARCHAR(2),"SER_NUM_PRIMARY_KEY" NVARCHAR(70),"ITEM_PRIMARY_KEY" NVARCHAR(100), "SRC_FILE_NAME" NVARCHAR(10),"CYCLE_NUM" NVARCHAR(3));
+CREATE LOCAL TEMPORARY TABLE #UPDATE_EH_DELETION ("TRANSACTION_ID" NVARCHAR(20), "TRANSACTION_LN_ID" NVARCHAR(6),"DIST_CHANNEL" NVARCHAR(2),"ART_NUM" NVARCHAR(18));
+
+--------------------------------------------------------------------------------------------------
+-- Cursors Loop
+-------------------------------------------------------------------------------------------------- 
+
+	FOR C_ACSY AS CUR_ACSY DO
+
+--  Define Exit Handler
+	DECLARE EXIT HANDLER FOR SQLEXCEPTION 
+	BEGIN AUTONOMOUS TRANSACTION 
+	
+--  Define Exit Handler
+	DECLARE EXIT HANDLER FOR SQLEXCEPTION 
+	BEGIN AUTONOMOUS TRANSACTION 
+	
+    END;
+  		
+ -- Insert record into error table
+   	INSERT INTO "NDB_COMMON"."IFRS_R1.COMMON_COMP.NDB_COMMON::P77_TRANS_ACSY_EH"(
+			 	 "TRANSACTION_ID",
+ 	         	 "CONTRACT_UNIQUE_ID",
+   	         	 "TRANSACTION_LN_ID",
+             	 "ART_NUM",
+             	 "ITM_GRP_CD",
+             	 "MER_CTGRY",
+       	     	 "TRANS_PRC",
+       	     	 "DEVICE_TRANS_PRC",
+       	     	 "STDALN_SLNG_PRC",
+       	     	 "DEVICE_STDALN_SLNG_PRC",
+             	 "DIST_CHANNEL",
+             	 "SALES_DOC_TYP",
+             	 "ORD_REASON_CD",
+             	 "FINAL_TRANS_PRC",
+             	 "CURRN",
+             	 "CONS_BLD_AMT",
+             	 "BANNER",
+            	  "COMPANY_CD",
+             	 "LEGAL_ENTITY",
+             	 "DEALER",
+             	 "TAX_JURIS_CD",
+             	 "VERISIGN_AUTH_AMT",
+             	 "STORE",
+             	 "ACCTNG_DT",
+             	 "ITEM_FINAL_TRANS_PRC",
+             	 "ITEM_CONS_BLD_AMT",
+             	 "CONTR_INCPTN",
+             	 "DEALER_PRC",
+             	 "SUB_MERC_CTGRY",
+             	 "INCENTIVES",
+             	 "RFND_CD",
+ 	         	 "RFND_AMT",
+             	 "PROMO_CD",
+             	 "DEFRD_GL_FLG",
+             	 "BRND_CD",
+             	 "TRANS_TYP_CD",
+             	 "ITEM_QUANTITY",
+ 	         	 "ITEM_DSCT_AMT",
+             	 "PROFIT_CENTRE",
+             	 "REVNU_GL",
+             	 "REV_AMT",
+            	  "DOC_NUM",
+             	 "ACT_POST_DT",
+             	 "ACT_DOC_DT",
+             	 "ACT_DOC_TY",
+             	 "ACT_ACCT_PD",
+             	 "TRANS_COMPLETION_INDICATOR",
+             	 "SRC_FILE_NAME",
+             	 "SCENARIO_IDENTIFIER",
+             	 "REC_EFFECTIVE_DT",
+             	 "REC_EXPIRY_DT", 
+             	 "CYCLE_NUM",
+				 "ERROR_CODE",
+				 "TECHNICAL_MESSAGE",
+				 "ERROR_CREATE_TS",
+				 "INSERT_TS") 
+				 VALUES (
+				 C_ACSY."TRANSACTION_ID",
+ 	         	 C_ACSY."CONTRACT_UNIQUE_ID",
+   	        	 C_ACSY."TRANSACTION_LN_ID",
+             	 C_ACSY."ART_NUM",
+             	 C_ACSY."ITM_GRP_CD",
+             	 C_ACSY."MER_CTGRY",
+       	     	 C_ACSY."TRANS_PRC",
+       	     	 C_ACSY."DEVICE_TRANS_PRC",
+       	     	 C_ACSY."STDALN_SLNG_PRC",
+       	     	 C_ACSY."DEVICE_STDALN_SLNG_PRC",
+             	 C_ACSY."DIST_CHANNEL",
+             	 C_ACSY."SALES_DOC_TYP",
+             	 C_ACSY."ORD_REASON_CD",
+             	 C_ACSY."FINAL_TRANS_PRC",
+            	 C_ACSY."CURRN",
+             	 C_ACSY."CONS_BLD_AMT",
+             	 C_ACSY."BANNER",
+             	 C_ACSY."COMPANY_CD",
+             	 C_ACSY."LEGAL_ENTITY",
+             	 C_ACSY."DEALER",
+             	 C_ACSY."TAX_JURIS_CD",
+             	 C_ACSY."VERISIGN_AUTH_AMT",
+             	 C_ACSY."STORE",
+             	 C_ACSY."ACCTNG_DT",
+             	 C_ACSY."ITEM_FINAL_TRANS_PRC",
+             	 C_ACSY."ITEM_CONS_BLD_AMT",
+             	 C_ACSY."CONTR_INCPTN",
+             	 C_ACSY."DEALER_PRC",
+             	 C_ACSY."SUB_MERC_CTGRY",
+             	 C_ACSY."INCENTIVES",
+             	 C_ACSY."RFND_CD",
+ 	         	 C_ACSY."RFND_AMT",
+            	 C_ACSY."PROMO_CD",
+             	 C_ACSY."DEFRD_GL_FLG",
+             	 C_ACSY."BRND_CD",
+             	 C_ACSY."TRANS_TYP_CD",
+             	 C_ACSY."ITEM_QUANTITY",
+ 	         	 C_ACSY."ITEM_DSCT_AMT",
+             	 C_ACSY."PROFIT_CENTRE",
+            	 C_ACSY."REVNU_GL",
+             	 C_ACSY."REV_AMT",
+             	 C_ACSY."DOC_NUM",
+             	 C_ACSY."ACT_POST_DT",
+             	 C_ACSY."ACT_DOC_DT",
+             	 C_ACSY."ACT_DOC_TY",
+             	 C_ACSY."ACT_ACCT_PD",
+             	 C_ACSY."TRANS_COMPLETION_INDICATOR",
+            	 C_ACSY."SRC_FILE_NAME",
+             	 C_ACSY."SCENARIO_IDENTIFIER",
+             	 C_ACSY."REC_EFFECTIVE_DT",
+             	 C_ACSY."REC_EXPIRY_DT", 
+             	 C_ACSY."CYCLE_NUM", 
+				 ::SQL_ERROR_CODE,
+				 ::SQL_ERROR_MESSAGE,
+				 LV_CUR_UTC,
+				 LV_CUR_UTC);   
+   
+	  	 	     LV_ERROR_FLAG := 'Y';
+	  	 		 LV_LOOP_ERROR_FLAG := 1;
+    
+    	 END;
+    
+    
+	   --For Clearing the Variables  
+		 IF (LV_PREV_CC_CONCAT_PRIMARY_KEY IS NULL OR C_ACSY.CC_CONCAT_PRIMARY_KEY != LV_PREV_CC_CONCAT_PRIMARY_KEY) THEN
+	     
+	     LV_LOOP_ERROR_FLAG := 0;
+	     LV_PREV_CC_CONCAT_PRIMARY_KEY := "C_ACSY"."CC_CONCAT_PRIMARY_KEY";
+	     
+	     END IF;
+
+--  	Check the Error Status of the Record. If Record is with Error, then send to Error Table
+		IF C_ACSY.ERROR_STATUS = '1' THEN
+	
+	--  Call the Stored Procedure to split the concatenated Error Messages into Error Rows
+		CALL "NDB_COMMON"."IFRS_R1.COMMON_COMP.EH::SP_EH_SPLIT_ERRORS"(C_ACSY."ERROR_CODE", ERROR_TAB, RECORD_COUNT);
+
+     -- Loop through the Error Records
+		FOR i IN 1 .. :RECORD_COUNT DO
+			
+	 -- Fetch the Error Code
+		CURRENT_ERROR = :ERROR_TAB."ERROR_CODE"[:i];
+			
+	 -- Insert into the Error Table
+	    INSERT INTO  "NDB_COMMON"."IFRS_R1.COMMON_COMP.NDB_COMMON::P77_TRANS_ACSY_EH"(
+	 	             "TRANSACTION_ID",
+ 	   	             "CONTRACT_UNIQUE_ID",
+   	   	             "TRANSACTION_LN_ID",
+       	             "ART_NUM",
+       	             "ITM_GRP_CD",
+         	         "MER_CTGRY",
+       	             "TRANS_PRC",
+       	             "DEVICE_TRANS_PRC",
+       	             "STDALN_SLNG_PRC",
+       	             "DEVICE_STDALN_SLNG_PRC",
+                     "DIST_CHANNEL",
+                     "SALES_DOC_TYP",
+                     "ORD_REASON_CD",
+                     "FINAL_TRANS_PRC",
+                     "CURRN",
+                     "CONS_BLD_AMT",
+                     "BANNER",
+                     "COMPANY_CD",
+                     "LEGAL_ENTITY",
+                     "DEALER",
+                     "TAX_JURIS_CD",
+                     "VERISIGN_AUTH_AMT",
+                     "STORE",
+                     "ACCTNG_DT",
+                     "ITEM_FINAL_TRANS_PRC",
+                     "ITEM_CONS_BLD_AMT",
+                     "CONTR_INCPTN",
+                     "DEALER_PRC",
+                     "SUB_MERC_CTGRY",
+                     "INCENTIVES",
+                     "RFND_CD",
+ 	                 "RFND_AMT",
+                     "PROMO_CD",
+                     "DEFRD_GL_FLG",
+                     "BRND_CD",
+                     "TRANS_TYP_CD",
+                     "ITEM_QUANTITY",
+ 	                 "ITEM_DSCT_AMT",
+                     "PROFIT_CENTRE",
+                     "REVNU_GL",
+                     "REV_AMT",
+                     "DOC_NUM",
+                     "ACT_POST_DT",
+                     "ACT_DOC_DT",
+                     "ACT_DOC_TY",
+                     "ACT_ACCT_PD",
+                     "TRANS_COMPLETION_INDICATOR",
+                     "SRC_FILE_NAME",
+                     "SCENARIO_IDENTIFIER",
+                     "REC_EFFECTIVE_DT",
+                     "REC_EXPIRY_DT", 
+                     "CYCLE_NUM",
+			         "ERROR_CODE",
+				     "ERROR_CREATE_TS",
+				     "INSERT_TS") 
+				      VALUES (
+			 	      C_ACSY."TRANSACTION_ID",
+ 	         	      C_ACSY."CONTRACT_UNIQUE_ID",
+   	         	      C_ACSY."TRANSACTION_LN_ID",
+             	      C_ACSY."ART_NUM",
+             	      C_ACSY."ITM_GRP_CD",
+             	      C_ACSY."MER_CTGRY",
+       	     	      C_ACSY."TRANS_PRC",
+       	     	      C_ACSY."DEVICE_TRANS_PRC",
+       	     	      C_ACSY."STDALN_SLNG_PRC",
+       	     	      C_ACSY."DEVICE_STDALN_SLNG_PRC",
+             	      C_ACSY."DIST_CHANNEL",
+             	      C_ACSY."SALES_DOC_TYP",
+             	      C_ACSY."ORD_REASON_CD",
+             	      C_ACSY."FINAL_TRANS_PRC",
+             	      C_ACSY."CURRN",
+             	      C_ACSY."CONS_BLD_AMT",
+             	      C_ACSY."BANNER",
+             	      C_ACSY."COMPANY_CD",
+             	      C_ACSY."LEGAL_ENTITY",
+             	      C_ACSY."DEALER",
+             	      C_ACSY."TAX_JURIS_CD",
+             	      C_ACSY."VERISIGN_AUTH_AMT",
+             	      C_ACSY."STORE",
+            	      C_ACSY."ACCTNG_DT",
+            	      C_ACSY."ITEM_FINAL_TRANS_PRC",
+             	      C_ACSY."ITEM_CONS_BLD_AMT",
+             	      C_ACSY."CONTR_INCPTN",
+             	      C_ACSY."DEALER_PRC",
+             	      C_ACSY."SUB_MERC_CTGRY",
+             	      C_ACSY."INCENTIVES",
+             	      C_ACSY."RFND_CD",
+ 	         	      C_ACSY."RFND_AMT",
+             	      C_ACSY."PROMO_CD",
+             	      C_ACSY."DEFRD_GL_FLG",
+             	      C_ACSY."BRND_CD",
+             	      C_ACSY."TRANS_TYP_CD",
+             	      C_ACSY."ITEM_QUANTITY",
+ 	         	      C_ACSY."ITEM_DSCT_AMT",
+             	      C_ACSY."PROFIT_CENTRE",
+             	      C_ACSY."REVNU_GL",
+             	      C_ACSY."REV_AMT",
+             	      C_ACSY."DOC_NUM",
+            	      C_ACSY."ACT_POST_DT",
+             	      C_ACSY."ACT_DOC_DT",
+             	      C_ACSY."ACT_DOC_TY",
+             	      C_ACSY."ACT_ACCT_PD",
+             	      C_ACSY."TRANS_COMPLETION_INDICATOR",
+             	      C_ACSY."SRC_FILE_NAME",
+             	      C_ACSY."SCENARIO_IDENTIFIER",
+             	      C_ACSY."REC_EFFECTIVE_DT",
+             	      C_ACSY."REC_EXPIRY_DT", 
+             	      C_ACSY."CYCLE_NUM", 
+				     :CURRENT_ERROR,
+			 	      LV_CUR_UTC,
+			 	      LV_CUR_UTC);  
+				  	  END FOR; 
+				    
+           	      -- Set Error Flag				        
+					  LV_ERROR_FLAG := 'Y';
+      				  LV_LOOP_ERROR_FLAG := 1;
+		  
+
+
+   		ELSE
+     --Processing the Successful Records 
+        IF C_ACSY.ERROR_STATUS= '0' THEN
+   
+   		IF LV_LOOP_ERROR_FLAG = 1   THEN
+   
+   
+        INSERT INTO  "NDB_COMMON"."IFRS_R1.COMMON_COMP.NDB_COMMON::P77_TRANS_ACSY_EH"(
+			         "TRANSACTION_ID",
+ 	                 "CONTRACT_UNIQUE_ID",
+   	                 "TRANSACTION_LN_ID",
+                     "ART_NUM",
+                     "ITM_GRP_CD",
+                     "MER_CTGRY",
+       	             "TRANS_PRC",
+       	             "DEVICE_TRANS_PRC",
+       	             "STDALN_SLNG_PRC",
+       	             "DEVICE_STDALN_SLNG_PRC",
+                     "DIST_CHANNEL",
+                     "SALES_DOC_TYP",
+                     "ORD_REASON_CD",
+                     "FINAL_TRANS_PRC",
+                     "CURRN",
+                     "CONS_BLD_AMT",
+             	     "BANNER",
+             	     "COMPANY_CD",
+             	     "LEGAL_ENTITY",
+             	     "DEALER",
+             	     "TAX_JURIS_CD",
+             	     "VERISIGN_AUTH_AMT",
+             	     "STORE",
+             	     "ACCTNG_DT",
+             	     "ITEM_FINAL_TRANS_PRC",
+             	     "ITEM_CONS_BLD_AMT",
+             	     "CONTR_INCPTN",
+             	     "DEALER_PRC",
+             	     "SUB_MERC_CTGRY",
+             	     "INCENTIVES",
+             	     "RFND_CD",
+ 	         	     "RFND_AMT",
+             	     "PROMO_CD",
+             	     "DEFRD_GL_FLG",
+             	     "BRND_CD",
+             	     "TRANS_TYP_CD",
+             	     "ITEM_QUANTITY",
+ 	         	     "ITEM_DSCT_AMT",
+             	     "PROFIT_CENTRE",
+             	     "REVNU_GL",
+             	     "REV_AMT",
+             	     "DOC_NUM",
+             	     "ACT_POST_DT",
+             	     "ACT_DOC_DT",
+             	     "ACT_DOC_TY",
+             	     "ACT_ACCT_PD",
+             	     "TRANS_COMPLETION_INDICATOR",
+             	     "SRC_FILE_NAME",
+             	     "SCENARIO_IDENTIFIER",
+             	     "REC_EFFECTIVE_DT",
+             	     "REC_EXPIRY_DT", 
+             	     "CYCLE_NUM",
+				 	 "ERROR_CODE",
+				 	 "ERROR_CREATE_TS",
+				 	 "INSERT_TS") 
+				 	  VALUES (
+			 	 	  C_ACSY."TRANSACTION_ID",
+ 	         	 	  C_ACSY."CONTRACT_UNIQUE_ID",
+   	         	 	  C_ACSY."TRANSACTION_LN_ID",
+             	 	  C_ACSY."ART_NUM",
+             	 	  C_ACSY."ITM_GRP_CD",
+             	 	  C_ACSY."MER_CTGRY",
+       	     	 	  C_ACSY."TRANS_PRC",
+       	     	 	  C_ACSY."DEVICE_TRANS_PRC",
+       	     	 	  C_ACSY."STDALN_SLNG_PRC",
+       	     	 	  C_ACSY."DEVICE_STDALN_SLNG_PRC",
+             	 	  C_ACSY."DIST_CHANNEL",
+             	 	  C_ACSY."SALES_DOC_TYP",
+             	 	  C_ACSY."ORD_REASON_CD",
+             	 	  C_ACSY."FINAL_TRANS_PRC",
+             	 	  C_ACSY."CURRN",
+             	 	  C_ACSY."CONS_BLD_AMT",
+             	 	  C_ACSY."BANNER",
+             	 	  C_ACSY."COMPANY_CD",
+             	 	  C_ACSY."LEGAL_ENTITY",
+             	 	  C_ACSY."DEALER",
+             	 	  C_ACSY."TAX_JURIS_CD",
+             	 	  C_ACSY."VERISIGN_AUTH_AMT",
+             	 	  C_ACSY."STORE",
+            	 	  C_ACSY."ACCTNG_DT",
+            	 	  C_ACSY."ITEM_FINAL_TRANS_PRC",
+             	 	  C_ACSY."ITEM_CONS_BLD_AMT",
+             	 	  C_ACSY."CONTR_INCPTN",
+             	 	  C_ACSY."DEALER_PRC",
+             	 	  C_ACSY."SUB_MERC_CTGRY",
+             	 	  C_ACSY."INCENTIVES",
+             	 	  C_ACSY."RFND_CD",
+ 	         	 	  C_ACSY."RFND_AMT",
+             	 	  C_ACSY."PROMO_CD",
+             	 	  C_ACSY."DEFRD_GL_FLG",
+             	 	  C_ACSY."BRND_CD",
+             	 	  C_ACSY."TRANS_TYP_CD",
+             	 	  C_ACSY."ITEM_QUANTITY",
+ 	         	 	  C_ACSY."ITEM_DSCT_AMT",
+             	 	  C_ACSY."PROFIT_CENTRE",
+             	 	  C_ACSY."REVNU_GL",
+             	 	  C_ACSY."REV_AMT",
+             	 	  C_ACSY."DOC_NUM",
+            	 	  C_ACSY."ACT_POST_DT",
+             	 	  C_ACSY."ACT_DOC_DT",
+             	 	  C_ACSY."ACT_DOC_TY",
+             	 	  C_ACSY."ACT_ACCT_PD",
+             	 	  C_ACSY."TRANS_COMPLETION_INDICATOR",
+             	 	  C_ACSY."SRC_FILE_NAME",
+             	 	  C_ACSY."SCENARIO_IDENTIFIER",
+             	 	  C_ACSY."REC_EFFECTIVE_DT",
+             	 	  C_ACSY."REC_EXPIRY_DT", 
+             	 	  C_ACSY."CYCLE_NUM", 
+					 'PREVIOUS VERSION IN ERROR',
+			 	 	  LV_CUR_UTC,
+			 	 	  LV_CUR_UTC);
+
+		  ELSE
+
+	--   If Record exists in the Target NDB Table
+   		  IF C_ACSY.FLAG_EXISTING_RECORD = 'U'  THEN
+
+     	  BEGIN AUTONOMOUS TRANSACTION
+
+    --   Update Fields for which Transactions Exists and TRANS_COMPLETION_IND is Yes
+	     UPDATE "NDB_COMMON"."IFRS_R1.COMMON_COMP.NDB_COMMON::P77_TRANS_ACSY" AS NDB 
+	     	SET  REC_EXPIRY_DT =  C_ACSY."REC_EXPIRY_DT_UPDATE",
+	    	 MODIFIED_TS  = LV_CUR_UTC 
+		  WHERE NDB.TRANSACTION_ID=C_ACSY.TRANSACTION_ID 
+		    AND NDB.TRANSACTION_LN_ID=C_ACSY.TRANSACTION_LN_ID 
+		    AND NDB.DIST_CHANNEL=C_ACSY.DIST_CHANNEL 
+		    AND NDB.ART_NUM=C_ACSY.ART_NUM 
+		    AND NDB."TRANS_COMPLETION_INDICATOR"<>'Y'
+		    AND NDB.REC_EXPIRY_DT='9999-12-31';		  
+		    
+		    END;	
+		  
+--      Insert the new records having FLAG_EXISTING_RECORD = 'U'
+        INSERT INTO "NDB_COMMON"."IFRS_R1.COMMON_COMP.NDB_COMMON::P77_TRANS_ACSY"(
+   	  			    "TRANSACTION_ID",
+ 	         		"CONTRACT_UNIQUE_ID",
+   	         		"TRANSACTION_LN_ID",
+             		"ART_NUM",
+             		"ITM_GRP_CD",
+             		"MER_CTGRY",
+       	     		"TRANS_PRC",
+       	     		"DEVICE_TRANS_PRC",
+       	     		"STDALN_SLNG_PRC",
+       	     		"DEVICE_STDALN_SLNG_PRC",
+             		"DIST_CHANNEL",
+             		"SALES_DOC_TYP",
+             		"ORD_REASON_CD",
+             		"FINAL_TRANS_PRC",
+            		"CURRN",
+             		"CONS_BLD_AMT",
+             		"BANNER",
+             		"COMPANY_CD",
+             		"LEGAL_ENTITY",
+             		"DEALER",
+             		"TAX_JURIS_CD",
+             		"VERISIGN_AUTH_AMT",
+             		"STORE",
+             		"ACCTNG_DT",
+             		"ITEM_FINAL_TRANS_PRC",
+             		"ITEM_CONS_BLD_AMT",
+             		"CONTR_INCPTN",
+             		"DEALER_PRC",
+             		"SUB_MERC_CTGRY",
+             		"INCENTIVES",
+             		"RFND_CD",
+ 	         		"RFND_AMT",
+             		"PROMO_CD",
+             		"DEFRD_GL_FLG",
+             		"BRND_CD",
+             		"TRANS_TYP_CD",
+             		"ITEM_QUANTITY",
+ 	         		"ITEM_DSCT_AMT",
+             		"PROFIT_CENTRE",
+             		"REVNU_GL",
+             		"REV_AMT",
+             		"DOC_NUM",
+             		"ACT_POST_DT",
+             		"ACT_DOC_DT",
+             		"ACT_DOC_TY",
+             		"ACT_ACCT_PD",
+             		"TRANS_COMPLETION_INDICATOR",
+             		"SRC_FILE_NAME",
+             		"SCENARIO_IDENTIFIER",
+             		"REC_EFFECTIVE_DT",
+            		"REC_EXPIRY_DT", 
+             		"CYCLE_NUM",
+             		"INSERT_TS") 
+					VALUES ( 
+					C_ACSY."TRANSACTION_ID",
+ 	         		C_ACSY."CONTRACT_UNIQUE_ID",
+   	         		C_ACSY."TRANSACTION_LN_ID",
+             		C_ACSY."ART_NUM",
+             		C_ACSY."ITM_GRP_CD",
+             		C_ACSY."MER_CTGRY",
+       	     		C_ACSY."TRANS_PRC",
+       	     		C_ACSY."DEVICE_TRANS_PRC",
+       	     		C_ACSY."STDALN_SLNG_PRC",
+       	     		C_ACSY."DEVICE_STDALN_SLNG_PRC",
+             		C_ACSY."DIST_CHANNEL",
+             		C_ACSY."SALES_DOC_TYP",
+             		C_ACSY."ORD_REASON_CD",
+             		C_ACSY."FINAL_TRANS_PRC",
+             		C_ACSY."CURRN",
+             		C_ACSY."CONS_BLD_AMT",
+            		C_ACSY."BANNER",
+             		C_ACSY."COMPANY_CD",
+             		C_ACSY."LEGAL_ENTITY",
+             		C_ACSY."DEALER",
+             		C_ACSY."TAX_JURIS_CD",
+             		C_ACSY."VERISIGN_AUTH_AMT",
+             		C_ACSY."STORE",
+             		C_ACSY."ACCTNG_DT",
+             		C_ACSY."ITEM_FINAL_TRANS_PRC",
+             		C_ACSY."ITEM_CONS_BLD_AMT",
+             		C_ACSY."CONTR_INCPTN",
+             		C_ACSY."DEALER_PRC",
+             		C_ACSY."SUB_MERC_CTGRY",
+             		C_ACSY."INCENTIVES",
+             		C_ACSY."RFND_CD",
+ 	         		C_ACSY."RFND_AMT",
+             		C_ACSY."PROMO_CD",
+            		C_ACSY."DEFRD_GL_FLG",
+             		C_ACSY."BRND_CD",
+             		C_ACSY."TRANS_TYP_CD",
+             		C_ACSY."ITEM_QUANTITY",
+ 	         		C_ACSY."ITEM_DSCT_AMT",
+             		C_ACSY."PROFIT_CENTRE",
+             		C_ACSY."REVNU_GL",
+             		C_ACSY."REV_AMT",
+             		C_ACSY."DOC_NUM",
+             		C_ACSY."ACT_POST_DT",
+             		C_ACSY."ACT_DOC_DT",
+             		C_ACSY."ACT_DOC_TY",
+             		C_ACSY."ACT_ACCT_PD",
+             		C_ACSY."TRANS_COMPLETION_INDICATOR",
+             		C_ACSY."SRC_FILE_NAME",
+             		C_ACSY."SCENARIO_IDENTIFIER",
+             		C_ACSY."SRC_TS",
+             		C_ACSY."REC_EXPIRY_DT", 
+             		C_ACSY."CYCLE_NUM",
+             		LV_CUR_UTC);
+             		
+			
+                  
+             		
+             		 
+--         Insert PK of successfully processed Records into Local Temp Tables 
+--         for Updating NDB_TS in corresponding Landing Tables records
+	   INSERT INTO #UPDATE_P77_TRANS_ACSY
+	   		       ("TRANSACTION_ID",
+				   	"TRANSACTION_LN_ID",
+				   	"DIST_CHANNEL",
+				  	"SER_NUM_PRIMARY_KEY",
+				  	"ITEM_PRIMARY_KEY",
+				  	"SRC_FILE_NAME",
+				   	"CYCLE_NUM")
+		    VALUES ("C_ACSY"."TRANSACTION_ID",
+			 	   	"C_ACSY"."TRANSACTION_LN_ID",
+			 	   	"C_ACSY"."DIST_CHANNEL",
+				   	"C_ACSY"."SER_NUM_PRIMARY_KEY",
+				   	"C_ACSY"."ITEM_PRIMARY_KEY",
+				   	"C_ACSY"."SRC_FILE_NAME",
+				   	"C_ACSY"."CYCLE_NUM");
+					   					   	    		
+	   INSERT INTO #UPDATE_EH_DELETION
+				   ("TRANSACTION_ID",
+			 	   	"TRANSACTION_LN_ID",
+			 	   	"DIST_CHANNEL",
+				   	"ART_NUM") 
+		    VALUES ("C_ACSY"."TRANSACTION_ID",
+			 	   	"C_ACSY"."TRANSACTION_LN_ID",
+			 	   	"C_ACSY"."DIST_CHANNEL",
+				   	"C_ACSY"."ART_NUM");           
+                    	
+    	    ELSEIF C_ACSY.FLAG_EXISTING_RECORD = 'UR' 
+    	    THEN
+    	  --         Insert PK of successfully processed Records into Local Temp Tables 
+--         for Updating NDB_TS in corresponding Landing Tables records
+	   INSERT INTO #UPDATE_P77_TRANS_ACSY
+	   		       ("TRANSACTION_ID",
+				   	"TRANSACTION_LN_ID",
+				   	"DIST_CHANNEL",
+				  	"SER_NUM_PRIMARY_KEY",
+				  	"ITEM_PRIMARY_KEY",
+				  	"SRC_FILE_NAME",
+				   	"CYCLE_NUM")
+		    VALUES ("C_ACSY"."TRANSACTION_ID",
+			 	   	"C_ACSY"."TRANSACTION_LN_ID",
+			 	   	"C_ACSY"."DIST_CHANNEL",
+				   	"C_ACSY"."SER_NUM_PRIMARY_KEY",
+				   	"C_ACSY"."ITEM_PRIMARY_KEY",
+				   	"C_ACSY"."SRC_FILE_NAME",
+				   	"C_ACSY"."CYCLE_NUM");
+					   					   	    		
+	   INSERT INTO #UPDATE_EH_DELETION
+				   ("TRANSACTION_ID",
+			 	   	"TRANSACTION_LN_ID",
+			 	   	"DIST_CHANNEL",
+				   	"ART_NUM") 
+		    VALUES ("C_ACSY"."TRANSACTION_ID",
+			 	   	"C_ACSY"."TRANSACTION_LN_ID",
+			 	   	"C_ACSY"."DIST_CHANNEL",
+				   	"C_ACSY"."ART_NUM");           
+    	    
+    	
+				    	 
+    	 
+    	    
+    	    ELSE
+    
+    	BEGIN AUTONOMOUS TRANSACTION
+--      Insert Records into the target NDB table
+        INSERT INTO "NDB_COMMON"."IFRS_R1.COMMON_COMP.NDB_COMMON::P77_TRANS_ACSY"(
+   	  			    "TRANSACTION_ID",
+ 	         		"CONTRACT_UNIQUE_ID",
+   	         		"TRANSACTION_LN_ID",
+             		"ART_NUM",
+             		"ITM_GRP_CD",
+             		"MER_CTGRY",
+       	     		"TRANS_PRC",
+       	     		"DEVICE_TRANS_PRC",
+       	     		"STDALN_SLNG_PRC",
+       	     		"DEVICE_STDALN_SLNG_PRC",
+             		"DIST_CHANNEL",
+             		"SALES_DOC_TYP",
+             		"ORD_REASON_CD",
+             		"FINAL_TRANS_PRC",
+            		"CURRN",
+             		"CONS_BLD_AMT",
+             		"BANNER",
+             		"COMPANY_CD",
+             		"LEGAL_ENTITY",
+             		"DEALER",
+             		"TAX_JURIS_CD",
+             		"VERISIGN_AUTH_AMT",
+             		"STORE",
+             		"ACCTNG_DT",
+             		"ITEM_FINAL_TRANS_PRC",
+             		"ITEM_CONS_BLD_AMT",
+             		"CONTR_INCPTN",
+             		"DEALER_PRC",
+             		"SUB_MERC_CTGRY",
+             		"INCENTIVES",
+             		"RFND_CD",
+ 	         		"RFND_AMT",
+             		"PROMO_CD",
+             		"DEFRD_GL_FLG",
+             		"BRND_CD",
+             		"TRANS_TYP_CD",
+             		"ITEM_QUANTITY",
+ 	         		"ITEM_DSCT_AMT",
+             		"PROFIT_CENTRE",
+             		"REVNU_GL",
+             		"REV_AMT",
+             		"DOC_NUM",
+             		"ACT_POST_DT",
+             		"ACT_DOC_DT",
+             		"ACT_DOC_TY",
+             		"ACT_ACCT_PD",
+             		"TRANS_COMPLETION_INDICATOR",
+             		"SRC_FILE_NAME",
+             		"SCENARIO_IDENTIFIER",
+             		"REC_EFFECTIVE_DT",
+            		"REC_EXPIRY_DT", 
+             		"CYCLE_NUM",
+             		"INSERT_TS") 
+					VALUES ( 
+					C_ACSY."TRANSACTION_ID",
+ 	         		C_ACSY."CONTRACT_UNIQUE_ID",
+   	         		C_ACSY."TRANSACTION_LN_ID",
+             		C_ACSY."ART_NUM",
+             		C_ACSY."ITM_GRP_CD",
+             		C_ACSY."MER_CTGRY",
+       	     		C_ACSY."TRANS_PRC",
+       	     		C_ACSY."DEVICE_TRANS_PRC",
+       	     		C_ACSY."STDALN_SLNG_PRC",
+       	     		C_ACSY."DEVICE_STDALN_SLNG_PRC",
+             		C_ACSY."DIST_CHANNEL",
+             		C_ACSY."SALES_DOC_TYP",
+             		C_ACSY."ORD_REASON_CD",
+             		C_ACSY."FINAL_TRANS_PRC",
+             		C_ACSY."CURRN",
+             		C_ACSY."CONS_BLD_AMT",
+            		C_ACSY."BANNER",
+             		C_ACSY."COMPANY_CD",
+             		C_ACSY."LEGAL_ENTITY",
+             		C_ACSY."DEALER",
+             		C_ACSY."TAX_JURIS_CD",
+             		C_ACSY."VERISIGN_AUTH_AMT",
+             		C_ACSY."STORE",
+             		C_ACSY."ACCTNG_DT",
+             		C_ACSY."ITEM_FINAL_TRANS_PRC",
+             		C_ACSY."ITEM_CONS_BLD_AMT",
+             		C_ACSY."CONTR_INCPTN",
+             		C_ACSY."DEALER_PRC",
+             		C_ACSY."SUB_MERC_CTGRY",
+             		C_ACSY."INCENTIVES",
+             		C_ACSY."RFND_CD",
+ 	         		C_ACSY."RFND_AMT",
+             		C_ACSY."PROMO_CD",
+            		C_ACSY."DEFRD_GL_FLG",
+             		C_ACSY."BRND_CD",
+             		C_ACSY."TRANS_TYP_CD",
+             		C_ACSY."ITEM_QUANTITY",
+ 	         		C_ACSY."ITEM_DSCT_AMT",
+             		C_ACSY."PROFIT_CENTRE",
+             		C_ACSY."REVNU_GL",
+             		C_ACSY."REV_AMT",
+             		C_ACSY."DOC_NUM",
+             		C_ACSY."ACT_POST_DT",
+             		C_ACSY."ACT_DOC_DT",
+             		C_ACSY."ACT_DOC_TY",
+             		C_ACSY."ACT_ACCT_PD",
+             		C_ACSY."TRANS_COMPLETION_INDICATOR",
+             		C_ACSY."SRC_FILE_NAME",
+             		C_ACSY."SCENARIO_IDENTIFIER",
+             		C_ACSY."REC_EFFECTIVE_DT",
+             		C_ACSY."REC_EXPIRY_DT", 
+             		C_ACSY."CYCLE_NUM",
+             		LV_CUR_UTC);
+             		
+			
+             	
+     		END;
+					 
+--         Insert PK of successfully processed Records into Local Temp Tables 
+--         for Updating NDB_TS in corresponding Landing Tables records
+	 INSERT INTO #UPDATE_P77_TRANS_ACSY
+	  		     ("TRANSACTION_ID",
+			   	  "TRANSACTION_LN_ID",
+		 	   	  "DIST_CHANNEL",
+				  "SER_NUM_PRIMARY_KEY",
+				  "ITEM_PRIMARY_KEY",
+				  "SRC_FILE_NAME",
+				  "CYCLE_NUM") 
+	      VALUES ("C_ACSY"."TRANSACTION_ID",
+			   	  "C_ACSY"."TRANSACTION_LN_ID",
+				  "C_ACSY"."DIST_CHANNEL",
+				  "C_ACSY"."SER_NUM_PRIMARY_KEY",
+				  "C_ACSY"."ITEM_PRIMARY_KEY",
+			   	  "C_ACSY"."SRC_FILE_NAME",
+			   	  "C_ACSY"."CYCLE_NUM");
+					   					   	    		
+	 INSERT INTO  #UPDATE_EH_DELETION
+				  ("TRANSACTION_ID",
+				   "TRANSACTION_LN_ID",
+				   "DIST_CHANNEL",
+			   	   "ART_NUM") 
+		  VALUES ( "C_ACSY"."TRANSACTION_ID",
+		 	 	   "C_ACSY"."TRANSACTION_LN_ID",
+			       "C_ACSY"."DIST_CHANNEL",
+				   "C_ACSY"."ART_NUM");  
+					   	 
+     END IF;
+    
+     END IF;
+   
+     END IF;
+  
+     END IF;  
+
+     END FOR;					   			    
+
+--------------------------------------------------------------------------------------------------
+-- Update Landing Tables
+-------------------------------------------------------------------------------------------------- \
+
+ 	 UPDATE "LAND"."IFRS_R1.LAND::P77_TRANS_HDR"  A 
+	   FROM "LAND"."IFRS_R1.LAND::P77_TRANS_HDR"  A
+ INNER JOIN #UPDATE_P77_TRANS_ACSY  B
+	     ON  A."TRANS_ID" = B."TRANSACTION_ID"
+	    AND  A."CONTR_TY" = B."DIST_CHANNEL"
+	    AND  A."CYCL_ID" = B."CYCLE_NUM"
+	    AND  A."SRC_FILE" = B."SRC_FILE_NAME"
+		SET  ACSY_TS= LV_CUR_UTC
+		WHERE ACSY_TS IS NULL; 
+			
+ 	  UPDATE "LAND"."IFRS_R1.LAND::P77_TRANS_ITEM"  A 
+	    FROM  "LAND"."IFRS_R1.LAND::P77_TRANS_ITEM"  A
+  INNER JOIN 	#UPDATE_P77_TRANS_ACSY B
+	      ON A."ITEM_PRIMARY_KEY" = B."ITEM_PRIMARY_KEY"
+		 SET ACSY_TS= LV_CUR_UTC 
+	   WHERE ACSY_TS IS NULL;
+		
+	  UPDATE "LAND"."IFRS_R1.LAND::P77_TRANS_DSCT"  A 
+	    FROM "LAND"."IFRS_R1.LAND::P77_TRANS_DSCT"  A
+  INNER JOIN #UPDATE_P77_TRANS_ACSY B
+	      ON  A."TRANS_ID" = B."TRANSACTION_ID"
+	     AND  A."TRANS_LINE_ID" = B."TRANSACTION_LN_ID"
+	     AND  A."CYCL_ID" = B."CYCLE_NUM"
+	     AND  A."SRC_FILE" = B."SRC_FILE_NAME"
+		 SET  ACSY_TS= LV_CUR_UTC 
+	   WHERE  ACSY_TS IS NULL;
+		
+	  UPDATE  "LAND"."IFRS_R1.LAND::P77_TRANS_SER_NUM"  A 
+	    FROM  "LAND"."IFRS_R1.LAND::P77_TRANS_SER_NUM"  A
+  INNER JOIN  #UPDATE_P77_TRANS_ACSY B
+	      ON   A."SER_NUM_PRIMARY_KEY" = B."SER_NUM_PRIMARY_KEY"
+		 SET   ACSY_TS= LV_CUR_UTC 
+	   WHERE   ACSY_TS IS NULL; 
+			
+--------------------------------------------------------------------------------------------------
+-- Update Error Table
+--------------------------------------------------------------------------------------------------
+
+      UPDATE "NDB_COMMON"."IFRS_R1.COMMON_COMP.NDB_COMMON::P77_TRANS_ACSY_EH" A
+  	    FROM "NDB_COMMON"."IFRS_R1.COMMON_COMP.NDB_COMMON::P77_TRANS_ACSY_EH" A 
+  INNER JOIN #UPDATE_EH_DELETION B
+          ON A."TRANSACTION_ID" = B."TRANSACTION_ID" 
+         AND A."TRANSACTION_LN_ID" = B."TRANSACTION_LN_ID" 
+         AND A."DIST_CHANNEL" = B."DIST_CHANNEL" 
+         AND A."ART_NUM" = B."ART_NUM" 
+   	     SET (DELETE_DATE, DELETED) = (LV_CUR_UTC, 1);
+
+--------------------------------------------------------------------------------------------------
+-- Set Overall Status
+-------------------------------------------------------------------------------------------------- 
+
+--  STATUS 0: Send the success message to scheduling tool to confirm this procedure has been
+--  executed successfully
+     IF(LV_ERROR_FLAG = 'Y') THEN		
+
+     OP_STATUS := LC_ERROR_TEXT; 
+			
+    ELSE
+
+  	 OP_STATUS := LC_SUCCESS_TEXT; 	
+				
+	END IF;
+		
+    END;

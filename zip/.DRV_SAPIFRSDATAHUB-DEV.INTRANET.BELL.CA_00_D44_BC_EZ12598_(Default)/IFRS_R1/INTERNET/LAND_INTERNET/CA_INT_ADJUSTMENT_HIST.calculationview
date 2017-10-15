@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:AccessControl="http://www.sap.com/ndb/SQLCoreModelAccessControl.ecore" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" xmlns:Variable="http://www.sap.com/ndb/BiModelVariable.ecore" schemaVersion="2.3" id="CA_INT_ADJUSTMENT_HIST" applyPrivilegeType="NONE" checkAnalyticPrivileges="false" defaultClient="$$client$$" defaultLanguage="$$language$$" hierarchiesSQLEnabled="false" historyEnabled="false" translationRelevant="true" visibility="internal" calculationScenarioType="TREE_BASED" dataCategory="DIMENSION" enforceSqlExecution="false" executionSemantic="UNDEFINED" outputViewType="Projection">
+  <descriptions defaultDescription="Landing View - Table INT_ADJUSTMENT_HIST"/>
+  <localVariables>
+    <variable id="IP_EFF_DT" parameter="true">
+      <descriptions defaultDescription="IP_EFF_DT"/>
+      <variableProperties datatype="DATE" defaultValue="99991231" mandatory="false">
+        <valueDomain type="Date"/>
+        <selection multiLine="false" type="SingleValue"/>
+      </variableProperties>
+    </variable>
+  </localVariables>
+  <variableMappings>
+    <mapping xsi:type="Variable:ConstantVariableMapping" dataSource="#CA_EH_ERROR_TABLE" value="1376">
+      <targetVariable name="IP_JOB_ID" resourceUri="/IFRS_R1.LAND.EH/calculationviews/CA_EH_ERROR_TABLE"/>
+    </mapping>
+  </variableMappings>
+  <informationModelLayout relativeWidthScenario="43"/>
+  <dataSources>
+    <DataSource id="IFRS_R1.LAND::INT_ADJUSTMENT_HIST" type="DATA_BASE_TABLE">
+      <viewAttributes allViewAttributes="true"/>
+      <columnObject schemaName="LAND" columnObjectName="IFRS_R1.LAND::INT_ADJUSTMENT_HIST"/>
+    </DataSource>
+    <DataSource id="CA_EH_ERROR_TABLE" type="CALCULATION_VIEW">
+      <viewAttributes allViewAttributes="true"/>
+      <resourceUri>/IFRS_R1.LAND.EH/calculationviews/CA_EH_ERROR_TABLE</resourceUri>
+    </DataSource>
+  </dataSources>
+  <calculationViews>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_INT_ADJUSTMENT_HIST" filterExpressionLanguage="COLUMN_ENGINE">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="BAN"/>
+        <viewAttribute id="ENT_SEQ_NO"/>
+        <viewAttribute id="ACTV_SEQ_NO"/>
+        <viewAttribute id="NDB_TS"/>
+        <viewAttribute id="PRODUCT_TYPE"/>
+        <viewAttribute id="EFF_DT"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CC_VERSION_CHECK" length="200" expressionLanguage="COLUMN_ENGINE">
+          <formula>string(&quot;BAN&quot;)+'|'+string(&quot;ENT_SEQ_NO&quot;)+'|'+string(&quot;ACTV_SEQ_NO&quot;)</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#IFRS_R1.LAND::INT_ADJUSTMENT_HIST">
+        <mapping xsi:type="Calculation:AttributeMapping" target="BAN" source="BAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ENT_SEQ_NO" source="ENT_SEQ_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACTV_SEQ_NO" source="ACTV_SEQ_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NDB_TS" source="NDB_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT_TYPE" source="PRODUCT_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFF_DT" source="EFF_DT"/>
+      </input>
+      <filter>(isNull(&quot;NDB_TS&quot;))  and (&quot;EFF_DT&quot;&lt;='$$IP_EFF_DT$$')</filter>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_ETL_ERROR">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="PARENT_KEY"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#CA_EH_ERROR_TABLE">
+        <mapping xsi:type="Calculation:AttributeMapping" target="PARENT_KEY" source="PARENT_KEY"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="JOIN_EH" joinOrder="OUTSIDE_IN" joinType="leftOuter">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="BAN"/>
+        <viewAttribute id="ENT_SEQ_NO"/>
+        <viewAttribute id="ACTV_SEQ_NO"/>
+        <viewAttribute id="NDB_TS"/>
+        <viewAttribute id="PRODUCT_TYPE"/>
+        <viewAttribute id="EFF_DT"/>
+        <viewAttribute id="CC_VERSION_CHECK"/>
+        <viewAttribute id="PARENT_KEY_ERROR"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#PROJ_INT_ADJUSTMENT_HIST">
+        <mapping xsi:type="Calculation:AttributeMapping" target="BAN" source="BAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ENT_SEQ_NO" source="ENT_SEQ_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACTV_SEQ_NO" source="ACTV_SEQ_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NDB_TS" source="NDB_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT_TYPE" source="PRODUCT_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFF_DT" source="EFF_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_VERSION_CHECK" source="CC_VERSION_CHECK"/>
+      </input>
+      <input node="#PROJ_ETL_ERROR">
+        <mapping xsi:type="Calculation:AttributeMapping" target="PARENT_KEY_ERROR" source="PARENT_KEY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_VERSION_CHECK" source="PARENT_KEY"/>
+      </input>
+      <joinAttribute name="CC_VERSION_CHECK"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_ERROR_FILTER">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="BAN"/>
+        <viewAttribute id="ENT_SEQ_NO"/>
+        <viewAttribute id="ACTV_SEQ_NO"/>
+        <viewAttribute id="NDB_TS"/>
+        <viewAttribute id="PRODUCT_TYPE"/>
+        <viewAttribute id="EFF_DT"/>
+        <viewAttribute id="CC_VERSION_CHECK"/>
+        <viewAttribute id="PARENT_KEY_ERROR">
+          <filter xsi:type="AccessControl:SingleValueFilter" operator="NL" including="true"/>
+        </viewAttribute>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#JOIN_EH">
+        <mapping xsi:type="Calculation:AttributeMapping" target="BAN" source="BAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ENT_SEQ_NO" source="ENT_SEQ_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACTV_SEQ_NO" source="ACTV_SEQ_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NDB_TS" source="NDB_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT_TYPE" source="PRODUCT_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFF_DT" source="EFF_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_VERSION_CHECK" source="CC_VERSION_CHECK"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PARENT_KEY_ERROR" source="PARENT_KEY_ERROR"/>
+      </input>
+    </calculationView>
+  </calculationViews>
+  <logicalModel id="PROJ_ERROR_FILTER">
+    <descriptions/>
+    <attributes>
+      <attribute id="BAN" order="1" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="BAN"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="BAN"/>
+      </attribute>
+      <attribute id="ENT_SEQ_NO" order="2" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ENT_SEQ_NO"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="ENT_SEQ_NO"/>
+      </attribute>
+      <attribute id="ACTV_SEQ_NO" order="3" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ACTV_SEQ_NO"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="ACTV_SEQ_NO"/>
+      </attribute>
+      <attribute id="PRODUCT_TYPE" order="4" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="PRODUCT_TYPE"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="PRODUCT_TYPE"/>
+      </attribute>
+      <attribute id="EFF_DT" order="5" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="EFF_DT"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="EFF_DT"/>
+      </attribute>
+      <attribute id="CC_VERSION_CHECK" order="6" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CC_VERSION_CHECK"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="CC_VERSION_CHECK"/>
+      </attribute>
+    </attributes>
+    <calculatedAttributes/>
+    <privateDataFoundation>
+      <tableProxies/>
+      <joins/>
+      <layout>
+        <shapes/>
+      </layout>
+    </privateDataFoundation>
+    <baseMeasures/>
+    <calculatedMeasures/>
+    <restrictedMeasures/>
+    <localDimensions/>
+  </logicalModel>
+  <layout>
+    <shapes>
+      <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+        <upperLeftCorner x="99" y="87"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_INT_ADJUSTMENT_HIST" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="22" y="339"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_ETL_ERROR" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="176" y="339"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="JOIN_EH" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="99" y="243"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_ERROR_FILTER" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="99" y="165"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+    </shapes>
+  </layout>
+</Calculation:scenario>

@@ -1,0 +1,427 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:AccessControl="http://www.sap.com/ndb/SQLCoreModelAccessControl.ecore" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" xmlns:Variable="http://www.sap.com/ndb/BiModelVariable.ecore" schemaVersion="2.3" id="CA_PS_JRNL_DATA" applyPrivilegeType="NONE" checkAnalyticPrivileges="false" defaultClient="$$client$$" defaultLanguage="$$language$$" hierarchiesSQLEnabled="false" historyEnabled="false" translationRelevant="true" visibility="internal" calculationScenarioType="TREE_BASED" dataCategory="DIMENSION" enforceSqlExecution="false" executionSemantic="UNDEFINED" outputViewType="Projection">
+  <descriptions defaultDescription="Landing View - Table PS_JRNL_DATA"/>
+  <localVariables>
+    <variable id="IP_POST_DT" parameter="true">
+      <descriptions defaultDescription="IP_POST_DT"/>
+      <variableProperties datatype="DATE" defaultValue="99991231" mandatory="false">
+        <valueDomain type="Date"/>
+        <selection multiLine="false" type="SingleValue"/>
+      </variableProperties>
+    </variable>
+  </localVariables>
+  <variableMappings>
+    <mapping xsi:type="Variable:ConstantVariableMapping" dataSource="#CA_EH_ERROR_TABLE" value="1041">
+      <targetVariable name="IP_JOB_ID" resourceUri="/IFRS_R1.LAND.EH/calculationviews/CA_EH_ERROR_TABLE"/>
+    </mapping>
+  </variableMappings>
+  <informationModelLayout relativeWidthScenario="37"/>
+  <dataSources>
+    <DataSource id="IFRS_R1.LAND::PS_JRNL_DATA" type="DATA_BASE_TABLE">
+      <viewAttributes allViewAttributes="true"/>
+      <columnObject schemaName="LAND" columnObjectName="IFRS_R1.LAND::PS_JRNL_DATA"/>
+    </DataSource>
+    <DataSource id="CA_EH_ERROR_TABLE" type="CALCULATION_VIEW">
+      <viewAttributes allViewAttributes="true"/>
+      <resourceUri>/IFRS_R1.LAND.EH/calculationviews/CA_EH_ERROR_TABLE</resourceUri>
+    </DataSource>
+  </dataSources>
+  <calculationViews>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_PS_JRNL_DATA" filterExpressionLanguage="COLUMN_ENGINE">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="ALLOCATION"/>
+        <viewAttribute id="AMT"/>
+        <viewAttribute id="CO_CD"/>
+        <viewAttribute id="COST_CENT"/>
+        <viewAttribute id="CURRN"/>
+        <viewAttribute id="CUST_ID"/>
+        <viewAttribute id="DOC_DT"/>
+        <viewAttribute id="DOC_HDR_TEXT"/>
+        <viewAttribute id="FISC_YR"/>
+        <viewAttribute id="INVC_NO"/>
+        <viewAttribute id="LGL_ENTT"/>
+        <viewAttribute id="ORD_ID"/>
+        <viewAttribute id="POST_DT"/>
+        <viewAttribute id="POST_PD"/>
+        <viewAttribute id="PROD_ID"/>
+        <viewAttribute id="PS_CR_GL_ACCT"/>
+        <viewAttribute id="PS_DB_GL_ACCT"/>
+        <viewAttribute id="REF_FLD"/>
+        <viewAttribute id="SERV_PRVD"/>
+        <viewAttribute id="SUB_MKT"/>
+        <viewAttribute id="TAX_JURISD_CD"/>
+        <viewAttribute id="TEXT_LINE_ITEM"/>
+        <viewAttribute id="TRDG_PTNR"/>
+        <viewAttribute id="NDB_TS"/>
+        <viewAttribute id="NDB_MART"/>
+        <viewAttribute id="CYCL_ID"/>
+        <viewAttribute id="INSRT_TS"/>
+        <viewAttribute id="JRNL_PRIMARY_KEY"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CC_CAL_REF_FLD" length="2" expressionLanguage="SQL">
+          <formula>substring (&quot;REF_FLD&quot;,1,2)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CC_VERSION_CHECK" length="200" expressionLanguage="COLUMN_ENGINE">
+          <formula>&quot;JRNL_PRIMARY_KEY&quot;</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#IFRS_R1.LAND::PS_JRNL_DATA">
+        <mapping xsi:type="Calculation:AttributeMapping" target="ALLOCATION" source="ALLOCATION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AMT" source="AMT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CO_CD" source="CO_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="COST_CENT" source="COST_CENT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CURRN" source="CURRN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUST_ID" source="CUST_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DOC_DT" source="DOC_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DOC_HDR_TEXT" source="DOC_HDR_TEXT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FISC_YR" source="FISC_YR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INVC_NO" source="INVC_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LGL_ENTT" source="LGL_ENTT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ORD_ID" source="ORD_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="POST_DT" source="POST_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="POST_PD" source="POST_PD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROD_ID" source="PROD_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PS_CR_GL_ACCT" source="PS_CR_GL_ACCT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PS_DB_GL_ACCT" source="PS_DB_GL_ACCT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REF_FLD" source="REF_FLD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SERV_PRVD" source="SERV_PRVD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUB_MKT" source="SUB_MKT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TAX_JURISD_CD" source="TAX_JURISD_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TEXT_LINE_ITEM" source="TEXT_LINE_ITEM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRDG_PTNR" source="TRDG_PTNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NDB_TS" source="NDB_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NDB_MART" source="NDB_MART"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INSRT_TS" source="INSRT_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="JRNL_PRIMARY_KEY" source="JRNL_PRIMARY_KEY"/>
+      </input>
+      <filter>(isNull(&quot;NDB_TS&quot;) and (&quot;POST_DT&quot; &lt;= '$$IP_POST_DT$$'))</filter>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_ERROR_TABLE">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="PARENT_KEY"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#CA_EH_ERROR_TABLE">
+        <mapping xsi:type="Calculation:AttributeMapping" target="PARENT_KEY" source="PARENT_KEY"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="JOIN" joinOrder="OUTSIDE_IN" joinType="leftOuter">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="ALLOCATION"/>
+        <viewAttribute id="AMT"/>
+        <viewAttribute id="CO_CD"/>
+        <viewAttribute id="COST_CENT"/>
+        <viewAttribute id="CURRN"/>
+        <viewAttribute id="CUST_ID"/>
+        <viewAttribute id="DOC_DT"/>
+        <viewAttribute id="DOC_HDR_TEXT"/>
+        <viewAttribute id="FISC_YR"/>
+        <viewAttribute id="INVC_NO"/>
+        <viewAttribute id="LGL_ENTT"/>
+        <viewAttribute id="ORD_ID"/>
+        <viewAttribute id="POST_DT"/>
+        <viewAttribute id="POST_PD"/>
+        <viewAttribute id="PROD_ID"/>
+        <viewAttribute id="PS_CR_GL_ACCT"/>
+        <viewAttribute id="PS_DB_GL_ACCT"/>
+        <viewAttribute id="REF_FLD"/>
+        <viewAttribute id="SERV_PRVD"/>
+        <viewAttribute id="SUB_MKT"/>
+        <viewAttribute id="TAX_JURISD_CD"/>
+        <viewAttribute id="TEXT_LINE_ITEM"/>
+        <viewAttribute id="TRDG_PTNR"/>
+        <viewAttribute id="NDB_TS"/>
+        <viewAttribute id="NDB_MART"/>
+        <viewAttribute id="CYCL_ID"/>
+        <viewAttribute id="CC_CAL_REF_FLD"/>
+        <viewAttribute id="CC_PARENT_KEY"/>
+        <viewAttribute id="PARENT_KEY_ERROR"/>
+        <viewAttribute id="INSRT_TS"/>
+        <viewAttribute id="JRNL_PRIMARY_KEY"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#PROJ_PS_JRNL_DATA">
+        <mapping xsi:type="Calculation:AttributeMapping" target="ALLOCATION" source="ALLOCATION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AMT" source="AMT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CO_CD" source="CO_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="COST_CENT" source="COST_CENT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CURRN" source="CURRN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUST_ID" source="CUST_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DOC_DT" source="DOC_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DOC_HDR_TEXT" source="DOC_HDR_TEXT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FISC_YR" source="FISC_YR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INVC_NO" source="INVC_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LGL_ENTT" source="LGL_ENTT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ORD_ID" source="ORD_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="POST_DT" source="POST_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="POST_PD" source="POST_PD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROD_ID" source="PROD_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PS_CR_GL_ACCT" source="PS_CR_GL_ACCT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PS_DB_GL_ACCT" source="PS_DB_GL_ACCT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REF_FLD" source="REF_FLD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SERV_PRVD" source="SERV_PRVD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUB_MKT" source="SUB_MKT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TAX_JURISD_CD" source="TAX_JURISD_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TEXT_LINE_ITEM" source="TEXT_LINE_ITEM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRDG_PTNR" source="TRDG_PTNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NDB_TS" source="NDB_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NDB_MART" source="NDB_MART"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_CAL_REF_FLD" source="CC_CAL_REF_FLD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_PARENT_KEY" source="CC_VERSION_CHECK"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INSRT_TS" source="INSRT_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="JRNL_PRIMARY_KEY" source="JRNL_PRIMARY_KEY"/>
+      </input>
+      <input node="#PROJ_ERROR_TABLE">
+        <mapping xsi:type="Calculation:AttributeMapping" target="PARENT_KEY_ERROR" source="PARENT_KEY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_PARENT_KEY" source="PARENT_KEY"/>
+      </input>
+      <joinAttribute name="CC_PARENT_KEY"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_ERROR_FILTER">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="ALLOCATION"/>
+        <viewAttribute id="AMT"/>
+        <viewAttribute id="CO_CD"/>
+        <viewAttribute id="COST_CENT"/>
+        <viewAttribute id="CURRN"/>
+        <viewAttribute id="CUST_ID"/>
+        <viewAttribute id="DOC_DT"/>
+        <viewAttribute id="DOC_HDR_TEXT"/>
+        <viewAttribute id="FISC_YR"/>
+        <viewAttribute id="INVC_NO"/>
+        <viewAttribute id="LGL_ENTT"/>
+        <viewAttribute id="ORD_ID"/>
+        <viewAttribute id="POST_DT"/>
+        <viewAttribute id="POST_PD"/>
+        <viewAttribute id="PROD_ID"/>
+        <viewAttribute id="PS_CR_GL_ACCT"/>
+        <viewAttribute id="PS_DB_GL_ACCT"/>
+        <viewAttribute id="REF_FLD"/>
+        <viewAttribute id="SERV_PRVD"/>
+        <viewAttribute id="SUB_MKT"/>
+        <viewAttribute id="TAX_JURISD_CD"/>
+        <viewAttribute id="TEXT_LINE_ITEM"/>
+        <viewAttribute id="TRDG_PTNR"/>
+        <viewAttribute id="NDB_TS"/>
+        <viewAttribute id="NDB_MART"/>
+        <viewAttribute id="CYCL_ID"/>
+        <viewAttribute id="CC_CAL_REF_FLD"/>
+        <viewAttribute id="PARENT_KEY_ERROR">
+          <filter xsi:type="AccessControl:SingleValueFilter" operator="NL" including="true"/>
+        </viewAttribute>
+        <viewAttribute id="CC_VERSION_CHECK"/>
+        <viewAttribute id="INSRT_TS"/>
+        <viewAttribute id="JRNL_PRIMARY_KEY"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#JOIN">
+        <mapping xsi:type="Calculation:AttributeMapping" target="ALLOCATION" source="ALLOCATION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AMT" source="AMT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CO_CD" source="CO_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="COST_CENT" source="COST_CENT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CURRN" source="CURRN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUST_ID" source="CUST_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DOC_DT" source="DOC_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DOC_HDR_TEXT" source="DOC_HDR_TEXT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FISC_YR" source="FISC_YR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INVC_NO" source="INVC_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LGL_ENTT" source="LGL_ENTT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ORD_ID" source="ORD_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="POST_DT" source="POST_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="POST_PD" source="POST_PD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROD_ID" source="PROD_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PS_CR_GL_ACCT" source="PS_CR_GL_ACCT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PS_DB_GL_ACCT" source="PS_DB_GL_ACCT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REF_FLD" source="REF_FLD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SERV_PRVD" source="SERV_PRVD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUB_MKT" source="SUB_MKT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TAX_JURISD_CD" source="TAX_JURISD_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TEXT_LINE_ITEM" source="TEXT_LINE_ITEM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRDG_PTNR" source="TRDG_PTNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NDB_TS" source="NDB_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NDB_MART" source="NDB_MART"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_CAL_REF_FLD" source="CC_CAL_REF_FLD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PARENT_KEY_ERROR" source="PARENT_KEY_ERROR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_VERSION_CHECK" source="CC_PARENT_KEY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INSRT_TS" source="INSRT_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="JRNL_PRIMARY_KEY" source="JRNL_PRIMARY_KEY"/>
+      </input>
+    </calculationView>
+  </calculationViews>
+  <logicalModel id="PROJ_ERROR_FILTER">
+    <descriptions/>
+    <attributes>
+      <attribute id="ALLOCATION" order="1" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ALLOCATION"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="ALLOCATION"/>
+      </attribute>
+      <attribute id="AMT" order="2" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="AMT"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="AMT"/>
+      </attribute>
+      <attribute id="CO_CD" order="3" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CO_CD"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="CO_CD"/>
+      </attribute>
+      <attribute id="COST_CENT" order="4" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="COST_CENT"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="COST_CENT"/>
+      </attribute>
+      <attribute id="CURRN" order="5" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CURRN"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="CURRN"/>
+      </attribute>
+      <attribute id="CUST_ID" order="6" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CUST_ID"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="CUST_ID"/>
+      </attribute>
+      <attribute id="DOC_DT" order="7" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="DOC_DT"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="DOC_DT"/>
+      </attribute>
+      <attribute id="DOC_HDR_TEXT" order="8" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="DOC_HDR_TEXT"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="DOC_HDR_TEXT"/>
+      </attribute>
+      <attribute id="FISC_YR" order="9" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="FISC_YR"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="FISC_YR"/>
+      </attribute>
+      <attribute id="INVC_NO" order="10" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="INVC_NO"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="INVC_NO"/>
+      </attribute>
+      <attribute id="LGL_ENTT" order="11" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="LGL_ENTT"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="LGL_ENTT"/>
+      </attribute>
+      <attribute id="ORD_ID" order="12" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ORD_ID"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="ORD_ID"/>
+      </attribute>
+      <attribute id="POST_DT" order="13" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="POST_DT"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="POST_DT"/>
+      </attribute>
+      <attribute id="POST_PD" order="14" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="POST_PD"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="POST_PD"/>
+      </attribute>
+      <attribute id="PROD_ID" order="15" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="PROD_ID"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="PROD_ID"/>
+      </attribute>
+      <attribute id="PS_CR_GL_ACCT" order="16" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="PS_CR_GL_ACCT"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="PS_CR_GL_ACCT"/>
+      </attribute>
+      <attribute id="PS_DB_GL_ACCT" order="17" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="PS_DB_GL_ACCT"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="PS_DB_GL_ACCT"/>
+      </attribute>
+      <attribute id="REF_FLD" order="18" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="REF_FLD"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="REF_FLD"/>
+      </attribute>
+      <attribute id="SERV_PRVD" order="19" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SERV_PRVD"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="SERV_PRVD"/>
+      </attribute>
+      <attribute id="SUB_MKT" order="20" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SUB_MKT"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="SUB_MKT"/>
+      </attribute>
+      <attribute id="TAX_JURISD_CD" order="21" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="TAX_JURISD_CD"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="TAX_JURISD_CD"/>
+      </attribute>
+      <attribute id="TEXT_LINE_ITEM" order="22" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="TEXT_LINE_ITEM"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="TEXT_LINE_ITEM"/>
+      </attribute>
+      <attribute id="TRDG_PTNR" order="23" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="TRDG_PTNR"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="TRDG_PTNR"/>
+      </attribute>
+      <attribute id="CYCL_ID" order="24" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CYCL_ID"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="CYCL_ID"/>
+      </attribute>
+      <attribute id="CAL_REF_FLD" order="25" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CAL_REF_FLD"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="CC_CAL_REF_FLD"/>
+      </attribute>
+      <attribute id="CC_VERSION_CHECK" order="26" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CC_VERSION_CHECK"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="CC_VERSION_CHECK"/>
+      </attribute>
+      <attribute id="NDB_TS" order="27" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="NDB_TS"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="NDB_TS"/>
+      </attribute>
+      <attribute id="INSRT_TS" order="28" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="INSRT TS"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="INSRT_TS"/>
+      </attribute>
+      <attribute id="NDB_MART" order="29" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="NDB_MART"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="NDB_MART"/>
+      </attribute>
+      <attribute id="JRNL_PRIMARY_KEY" order="31" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="JRNL PRIMARY KEY"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="JRNL_PRIMARY_KEY"/>
+      </attribute>
+    </attributes>
+    <calculatedAttributes>
+      <calculatedAttribute id="CC_COUNT" hidden="false" order="30" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CC_COUNT"/>
+        <keyCalculation datatype="INTEGER" expressionLanguage="COLUMN_ENGINE">
+          <formula>1</formula>
+        </keyCalculation>
+      </calculatedAttribute>
+    </calculatedAttributes>
+    <privateDataFoundation>
+      <tableProxies/>
+      <joins/>
+      <layout>
+        <shapes/>
+      </layout>
+    </privateDataFoundation>
+    <baseMeasures/>
+    <calculatedMeasures/>
+    <restrictedMeasures/>
+    <localDimensions/>
+  </logicalModel>
+  <layout>
+    <shapes>
+      <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+        <upperLeftCorner x="99" y="87"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_PS_JRNL_DATA" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="22" y="339"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_ERROR_TABLE" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="176" y="339"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="JOIN" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="99" y="243"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_ERROR_FILTER" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="99" y="165"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+    </shapes>
+  </layout>
+</Calculation:scenario>

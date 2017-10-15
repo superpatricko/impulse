@@ -1,0 +1,364 @@
+PROCEDURE "NDB_MOBILITY"."IFRS_R1.MOBILITY.NDB_MOBILITY::SP_EDWMOB_EQINV_HIST" 
+(IN IP_EFF_DT DATE,
+OUT OP_STATUS NVARCHAR(100))
+	LANGUAGE SQLSCRIPT
+	SQL SECURITY INVOKER 
+	--DEFAULT SCHEMA <default_schema_name>
+	--READS SQL DATA
+	 AS
+BEGIN  
+
+----------------------------------------------------------------------
+-- Procedure Title : SP_EDWMOB_FEATURE_HIST
+--
+-- Created By      : BC_EZ17904(VIJAY SHANKAR)          Date : 27/09/2017
+-- 
+-- Procedure Description : It is used to Upsert data in NDB Table.
+--                         NDB_TS is updated in Landing Table         
+--                         after data is loaded in NDB.
+--Project :Bell Canada
+--
+--
+----------------------------------------------------------------------
+--   M O D I F I C A T I O N   H I S T O R Y
+----------------------------------------------------------------------
+-- Date        | User ID          | Modification History/Release
+----------------------------------------------------------------------
+
+----------------------------------------------------------------------
+
+	DECLARE LC_ERROR_TEXT 		NVARCHAR(70) DEFAULT 'OUT STATUS IS 1 : INSERT/UPDATE FOR ONE OR MORE RECORD FAILED';
+	DECLARE LC_SUCCESS_TEXT 	NVARCHAR(70) DEFAULT 'OUT STATUS IS 0 : INSERT/UPDATE EXECUTION SUCCESSFUL';
+	DECLARE LV_ERROR_FLAG 		NVARCHAR(1) := 'N';
+	DECLARE LV_CUR_UTC 			TIMESTAMP := CURRENT_TIMESTAMP;
+	DECLARE ERROR_TAB 			TABLE (ERROR_CODE NVARCHAR(100));
+	DECLARE i					INTEGER;
+	DECLARE RECORD_COUNT		INTEGER;
+	DECLARE CURRENT_ERROR		NVARCHAR(100);
+
+	-- New variables for version sequence check
+	DECLARE LV_LOOP_ERROR_FLAG      INTEGER := 0;
+	DECLARE LV_PREV_ESN		 	NVARCHAR(20) := NULL;
+	
+	
+	DECLARE CURSOR CA_EDW_REF_EQINV_HIST FOR
+	SELECT
+	 "EFF_DT",
+	 "ORIGINAL_DEALER",
+	 "ACTV_DEALER_CODE",
+	 "INVENTORY_STATUS",
+	 "INV_STAT_DATE",
+	 "DEAC_REASON_CD",
+	 "IMSI",
+	 "NETWORK_SUB_TYPE",
+	 "SIM_BRAND_CD",
+	 "IS_20402701",
+	 "ESN",
+	 "FLAG_EXISTING_RECORD",
+	 "CC_EFFECTIVE_DATE_PREV_DAY",
+	 "ERROR_CODE",
+	 "ERROR_STATUS",
+	 "CYCL_ID",
+	 "REFERENCE_EXPIRY_DT",
+	 "REFERENCE_EFFECTIVE_DT" 	 
+	 FROM "_SYS_BIC"."IFRS_R1.MOBILITY.NDB_MOBILITY/CA_NM1_EDW_REF_EQINV_HIST"	 
+	(PLACEHOLDER."$$IP_EFF_DT$$"=> :IP_EFF_DT)
+	ORDER BY "ESN","REFERENCE_EFFECTIVE_DT";
+
+--------------------------------------------------------------------------------------------------
+-- Local Temporary Tables Declaration
+--------------------------------------------------------------------------------------------------  	
+	CREATE LOCAL TEMPORARY TABLE #UPDATE_NM1_EDW_REF_EQINV_HIST(ESN NVARCHAR(20), "EFF_DT" DATE);
+    CREATE LOCAL TEMPORARY TABLE #UPDATE_EH_DELETION(ESN NVARCHAR(100),"REFERENCE_EFFECTIVE_DT" NVARCHAR(100));
+--------------------------------------------------------------------------------------------------
+-- Cursors Loop
+-------------------------------------------------------------------------------------------------- 		
+
+	FOR CUR_EQINV AS CA_EDW_REF_EQINV_HIST DO
+		
+		-- Define Exit Handler
+		DECLARE EXIT HANDLER FOR SQLEXCEPTION 
+		BEGIN AUTONOMOUS TRANSACTION
+			-- Define Exit Handler
+			DECLARE EXIT HANDLER FOR SQLEXCEPTION 
+			BEGIN AUTONOMOUS TRANSACTION 
+			END;
+			
+			INSERT INTO "NDB_MOBILITY"."IFRS_R1.MOBILITY.NDB_MOBILITY::MOBL_POST_EQINV_HIST_EH" (
+			 "REFERENCE_EFFECTIVE_DT",
+             "ESN",
+             "DEAC_REASON_CD",
+             "INVENTORY_STATUS",
+             "NETWORK_SUB_TYPE",
+             "ORIGINAL_DEALER",
+             "ACTV_DEALER_CODE",
+             "IMSI",
+             "INV_STAT_DATE",
+             "SIM_BRAND_CD",
+             "REFERENCE_EXPIRY_DT",
+             "ERROR_CODE",
+             "TECHNICAL_MESSAGE",
+             "ERROR_CREATE_TS"
+			 ) VALUES (
+			 CUR_EQINV."REFERENCE_EFFECTIVE_DT",
+			 CUR_EQINV.ESN,
+			 CUR_EQINV.DEAC_REASON_CD,
+			 CUR_EQINV.INVENTORY_STATUS,
+			 CUR_EQINV.NETWORK_SUB_TYPE,
+			 CUR_EQINV.ORIGINAL_DEALER,
+			 CUR_EQINV.ACTV_DEALER_CODE,
+			 CUR_EQINV.IMSI,
+			 CUR_EQINV.INV_STAT_DATE,
+			 CUR_EQINV.SIM_BRAND_CD,			 
+			 CUR_EQINV."REFERENCE_EXPIRY_DT",
+			 ::SQL_ERROR_CODE,
+			 ::SQL_ERROR_MESSAGE,
+		  	 LV_CUR_UTC);			
+			LV_ERROR_FLAG := 'Y';
+			
+			-- New code for version sequence check 
+			LV_LOOP_ERROR_FLAG := 1;
+		END;
+		
+		-- New code for version sequence check
+		-- FOR CLEARING THE VARIABLES
+		IF ( LV_PREV_ESN IS NULL OR CUR_EQINV."ESN" != LV_PREV_ESN) THEN	
+			LV_LOOP_ERROR_FLAG := 0;
+			LV_PREV_ESN := "CUR_EQINV"."ESN";
+	    END IF;
+	    
+	     
+	    --  Check the Error Status of the Record. If Record is with Error, then send to Error Table
+	IF CUR_EQINV.ERROR_STATUS = 1  THEN
+	
+	
+	--  Call the Stored Procedure to split the concatenated Error Messages into Error Rows
+		CALL "NDB_COMMON"."IFRS_R1.COMMON_COMP.EH::SP_EH_SPLIT_ERRORS"(CUR_EQINV."ERROR_CODE", ERROR_TAB, RECORD_COUNT);
+
+     -- Loop through the Error Records
+		FOR i IN 1 .. :RECORD_COUNT DO
+			
+		 -- Fetch the Error Code
+			CURRENT_ERROR = :ERROR_TAB."ERROR_CODE"[:i];
+			
+		 -- Insert into the Error Table
+		 		INSERT INTO "NDB_MOBILITY"."IFRS_R1.MOBILITY.NDB_MOBILITY::MOBL_POST_EQINV_HIST_EH" (
+			 REFERENCE_EFFECTIVE_DT,
+			 ESN,
+			 DEAC_REASON_CD,
+			 INVENTORY_STATUS,
+			 NETWORK_SUB_TYPE,
+			 ORIGINAL_DEALER,
+			 ACTV_DEALER_CODE,
+			 IMSI,
+			 INV_STAT_DATE,
+			 SIM_BRAND_CD,
+			 REFERENCE_EXPIRY_DT,				
+			 "ERROR_CODE",
+			 "TECHNICAL_MESSAGE",
+			 "ERROR_CREATE_TS"
+			 ) VALUES (
+			 CUR_EQINV."REFERENCE_EFFECTIVE_DT",
+			 CUR_EQINV.ESN,
+			 CUR_EQINV.DEAC_REASON_CD,
+			 CUR_EQINV.INVENTORY_STATUS,
+			 CUR_EQINV.NETWORK_SUB_TYPE,
+			 CUR_EQINV.ORIGINAL_DEALER,
+			 CUR_EQINV.ACTV_DEALER_CODE,
+			 CUR_EQINV.IMSI,
+			 CUR_EQINV.INV_STAT_DATE,
+			 CUR_EQINV.SIM_BRAND_CD,			 
+             CUR_EQINV."REFERENCE_EXPIRY_DT",
+				 :CURRENT_ERROR,
+				 'PREVIOUS VERSION IN ERROR',
+				 LV_CUR_UTC
+				 );
+		
+	    END FOR ;
+	    
+	    -- Set Error Flag				        
+			LV_ERROR_FLAG := 'Y';
+		    LV_LOOP_ERROR_FLAG := 1;
+	    
+	    
+			-- Checking older record having same Feat_CD has some issue in loading then other records should be send to Error Handling table.
+			--If ERROR_STATUS = ‘0’ and previous record went to error table then present record will go to error table with ERROR_CODE = 'PREVIOUS VERSION IN ERROR'
+			
+			ELSE 
+         
+         IF CUR_EQINV.ERROR_STATUS = '0' THEN
+			
+			IF LV_LOOP_ERROR_FLAG = 1 THEN
+				
+				INSERT INTO "NDB_MOBILITY"."IFRS_R1.MOBILITY.NDB_MOBILITY::MOBL_POST_EQINV_HIST_EH" (
+			 REFERENCE_EFFECTIVE_DT,
+			 ESN,
+			 DEAC_REASON_CD,
+			 INVENTORY_STATUS,
+			 NETWORK_SUB_TYPE,
+			 ORIGINAL_DEALER,
+			 ACTV_DEALER_CODE,
+			 IMSI,
+			 INV_STAT_DATE,
+			 SIM_BRAND_CD,
+			 REFERENCE_EXPIRY_DT,				
+			 "ERROR_CODE",
+			 "ERROR_CREATE_TS"
+			 ) VALUES (
+			 CUR_EQINV."REFERENCE_EFFECTIVE_DT",
+			 CUR_EQINV.ESN,
+			 CUR_EQINV.DEAC_REASON_CD,
+			 CUR_EQINV.INVENTORY_STATUS,
+			 CUR_EQINV.NETWORK_SUB_TYPE,
+			 CUR_EQINV.ORIGINAL_DEALER,
+			 CUR_EQINV.ACTV_DEALER_CODE,
+			 CUR_EQINV.IMSI,
+			 CUR_EQINV.INV_STAT_DATE,
+			 CUR_EQINV.SIM_BRAND_CD,		 
+			 CUR_EQINV."REFERENCE_EXPIRY_DT",
+				 'PREVIOUS VERSION IN ERROR',
+				 LV_CUR_UTC
+				 );
+				 
+				 
+				ELSE
+			
+					IF CUR_EQINV.FLAG_EXISTING_RECORD = 'U' THEN
+					
+							BEGIN AUTONOMOUS TRANSACTION
+			     			UPDATE "NDB_MOBILITY"."IFRS_R1.MOBILITY.NDB_MOBILITY::MOBL_POST_EQINV_HIST" A 
+							SET REFERENCE_EXPIRY_DT = CUR_EQINV.CC_EFFECTIVE_DATE_PREV_DAY
+							WHERE A.ESN=CUR_EQINV.ESN
+							AND A.REFERENCE_EXPIRY_DT = '99991231';
+							
+							INSERT INTO "NDB_MOBILITY"."IFRS_R1.MOBILITY.NDB_MOBILITY::MOBL_POST_EQINV_HIST" (
+							 "REFERENCE_EFFECTIVE_DT",
+                             "REFERENCE_EXPIRY_DT",
+							 "ESN",
+							 "DEAC_REASON_CD",
+							 "INVENTORY_STATUS",
+							 "NETWORK_SUB_TYPE",
+							 "ORIGINAL_DEALER",
+							 "ACTV_DEALER_CODE",
+						     "IMSI",
+							 "INV_STAT_DATE",
+							 "SIM_BRAND_CD"
+                              ) VALUES (
+							 CUR_EQINV."REFERENCE_EFFECTIVE_DT",
+							 CUR_EQINV.REFERENCE_EXPIRY_DT,
+							 CUR_EQINV.ESN,
+							 CUR_EQINV.DEAC_REASON_CD,
+							 CUR_EQINV.INVENTORY_STATUS,
+							 CUR_EQINV.NETWORK_SUB_TYPE,
+							 CUR_EQINV.ORIGINAL_DEALER,
+							 CUR_EQINV.ACTV_DEALER_CODE,
+							 CUR_EQINV.IMSI,
+							 CUR_EQINV.INV_STAT_DATE,
+							 CUR_EQINV.SIM_BRAND_CD			 
+							 );
+											 
+							 
+							 END;
+					 	
+					 	
+			     			 INSERT INTO #UPDATE_NM1_EDW_REF_EQINV_HIST 
+ 			 										   (ESN,
+ 			                                           EFF_DT 			                                           
+ 			                                           ) VALUES (
+ 			                                           CUR_EQINV."ESN",
+ 			                                           CUR_EQINV."EFF_DT");
+ 			                                          
+			     			 INSERT INTO #UPDATE_EH_DELETION
+								    				  (ESN,					    				  
+										              REFERENCE_EFFECTIVE_DT
+										              ) VALUES (   
+			 	     	  					        	CUR_EQINV."ESN",
+								 	               	    CUR_EQINV.REFERENCE_EFFECTIVE_DT);
+		     			
+		     		ELSEIF CUR_EQINV.FLAG_EXISTING_RECORD = 'I' THEN
+		    			
+						BEGIN AUTONOMOUS TRANSACTION     		
+		     			INSERT INTO "NDB_MOBILITY"."IFRS_R1.MOBILITY.NDB_MOBILITY::MOBL_POST_EQINV_HIST" (
+							 "REFERENCE_EFFECTIVE_DT",
+                             "REFERENCE_EXPIRY_DT",
+							 "ESN",
+							 "DEAC_REASON_CD",
+							 "INVENTORY_STATUS",
+							 "NETWORK_SUB_TYPE",
+							 "ORIGINAL_DEALER",
+							 "ACTV_DEALER_CODE",
+						     "IMSI",
+							 "INV_STAT_DATE",
+							 "SIM_BRAND_CD",
+							 "INSERT_TS"
+                              ) VALUES (
+							 CUR_EQINV."REFERENCE_EFFECTIVE_DT",
+							 CUR_EQINV.REFERENCE_EXPIRY_DT,
+							 CUR_EQINV.ESN,
+							 CUR_EQINV.DEAC_REASON_CD,
+							 CUR_EQINV.INVENTORY_STATUS,
+							 CUR_EQINV.NETWORK_SUB_TYPE,
+							 CUR_EQINV.ORIGINAL_DEALER,
+							 CUR_EQINV.ACTV_DEALER_CODE,
+							 CUR_EQINV.IMSI,
+							 CUR_EQINV.INV_STAT_DATE,
+							 CUR_EQINV.SIM_BRAND_CD,
+							 LV_CUR_UTC	
+							 );
+						 
+						 
+						 
+					 	END;
+					 
+						 INSERT INTO #UPDATE_NM1_EDW_REF_EQINV_HIST (ESN,
+		     			                                           EFF_DT
+		     			                                           
+		     			                                           ) VALUES (
+		     			                                           CUR_EQINV."ESN",
+		     			                                           CUR_EQINV."EFF_DT"  );
+		     			                                         
+						 INSERT INTO #UPDATE_EH_DELETION
+							    				  (ESN,					    				  
+									              REFERENCE_EFFECTIVE_DT)     
+		 	     	  					  VALUES (CUR_EQINV.ESN,
+							 	                  CUR_EQINV.REFERENCE_EFFECTIVE_DT);
+		     			
+		     		END IF;
+		        END IF;
+		      END IF ; 
+		    END IF ;   
+		        
+	END FOR;
+	
+	
+	-- Update NDB Timestamp in landing table After Processing	
+	UPDATE "LAND"."IFRS_R1.LAND::NM1_EDW_REF_EQINV_HIST" A 
+	FROM "LAND"."IFRS_R1.LAND::NM1_EDW_REF_EQINV_HIST" A
+	INNER JOIN #UPDATE_NM1_EDW_REF_EQINV_HIST B
+	ON A.ESN = B.ESN
+	AND A.EFF_DT = B.EFF_DT
+	SET A.NDB_TS = LV_CUR_UTC 
+	WHERE A.NDB_TS IS NULL;
+	
+	
+--------------------------------------------------------------------------------------------------
+-- Update Error Table
+--------------------------------------------------------------------------------------------------
+
+	UPDATE "NDB_MOBILITY"."IFRS_R1.MOBILITY.NDB_MOBILITY::MOBL_POST_EQINV_HIST_EH" A
+    FROM "NDB_MOBILITY"."IFRS_R1.MOBILITY.NDB_MOBILITY::MOBL_POST_EQINV_HIST_EH" A 
+    INNER JOIN #UPDATE_EH_DELETION B       
+    ON A."ESN" = B."ESN"  
+    AND A."REFERENCE_EFFECTIVE_DT" = B."REFERENCE_EFFECTIVE_DT"   
+    SET (DELETE_DATE, DELETED) = (CURRENT_DATE, 1);	
+--------------------------------------------------------------------------------------------------
+	-- Set Overall Status
+-------------------------------------------------------------------------------------------------- 
+	--  STATUS 0: Send the success message to scheduling tool to confirm this procedure has been
+	--  executed successfully
+    IF(LV_ERROR_FLAG = 'Y') THEN
+    	OP_STATUS := LC_ERROR_TEXT; 			
+    ELSE
+  		OP_STATUS := LC_SUCCESS_TEXT;				
+	END IF;	
+END; 

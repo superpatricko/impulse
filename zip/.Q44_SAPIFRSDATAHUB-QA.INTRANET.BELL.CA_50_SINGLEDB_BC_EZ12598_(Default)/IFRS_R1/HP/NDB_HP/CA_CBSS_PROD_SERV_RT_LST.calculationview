@@ -1,0 +1,506 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:AccessControl="http://www.sap.com/ndb/SQLCoreModelAccessControl.ecore" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" xmlns:Variable="http://www.sap.com/ndb/BiModelVariable.ecore" schemaVersion="2.3" id="CA_CBSS_PROD_SERV_RT_LST" applyPrivilegeType="NONE" checkAnalyticPrivileges="false" defaultClient="$$client$$" defaultLanguage="$$language$$" hierarchiesSQLEnabled="false" translationRelevant="true" visibility="internal" calculationScenarioType="TREE_BASED" dataCategory="DIMENSION" enforceSqlExecution="false" executionSemantic="UNDEFINED" outputViewType="Projection">
+  <descriptions defaultDescription="CA_CBSS_PROD_SERV_RT_LST"/>
+  <localVariables>
+    <variable id="IP_CYCL_ID" parameter="true">
+      <descriptions defaultDescription="IP_CYCL_ID"/>
+      <variableProperties datatype="NVARCHAR" defaultValue="999" length="3" mandatory="false">
+        <valueDomain type="empty"/>
+        <selection multiLine="false" type="SingleValue"/>
+      </variableProperties>
+    </variable>
+  </localVariables>
+  <variableMappings>
+    <mapping xsi:type="Variable:VariableMapping" dataSource="#CA_CBSS_PROD_SERV_RT_LST">
+      <targetVariable name="IP_CYCL_ID" resourceUri="/IFRS_R1.HP.LAND_HP/calculationviews/CA_CBSS_PROD_SERV_RT_LST"/>
+      <localVariable>#IP_CYCL_ID</localVariable>
+    </mapping>
+  </variableMappings>
+  <informationModelLayout relativeWidthScenario="46"/>
+  <dataSources>
+    <DataSource id="CA_CBSS_PROD_SERV_RT_LST" type="CALCULATION_VIEW">
+      <viewAttributes allViewAttributes="true"/>
+      <resourceUri>/IFRS_R1.HP.LAND_HP/calculationviews/CA_CBSS_PROD_SERV_RT_LST</resourceUri>
+    </DataSource>
+    <DataSource id="IFRS_R1.HP.NDB_HP::HP_PRICING" type="DATA_BASE_TABLE">
+      <viewAttributes allViewAttributes="true"/>
+      <columnObject schemaName="NDB_HP" columnObjectName="IFRS_R1.HP.NDB_HP::HP_PRICING"/>
+    </DataSource>
+    <DataSource id="IFRS_R1.HP.NDB_HP::HP_PRICING_EH" type="DATA_BASE_TABLE">
+      <viewAttributes allViewAttributes="true"/>
+      <columnObject schemaName="NDB_HP" columnObjectName="IFRS_R1.HP.NDB_HP::HP_PRICING_EH"/>
+    </DataSource>
+  </dataSources>
+  <calculationViews>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_CBSS_PROD_SERV_RT_LST">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="MIN_CHARGE_AMT"/>
+        <viewAttribute id="PROD_SVC_BAS_RT"/>
+        <viewAttribute id="CYCL_ID"/>
+        <viewAttribute id="PS_VAR_RATE_CD"/>
+        <viewAttribute id="TAB_ENT_REV_DT"/>
+        <viewAttribute id="REF_JRNL_ACT_CD"/>
+        <viewAttribute id="TAB_ENT_EFFV_DT"/>
+        <viewAttribute id="TYPE_OF_ACCOUNT"/>
+        <viewAttribute id="RT_GROUPING_CD"/>
+        <viewAttribute id="PRODSERV_CODE"/>
+        <viewAttribute id="RATE_STATE"/>
+        <viewAttribute id="COMPANY_CODE"/>
+        <viewAttribute id="SEQ_ID"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#CA_CBSS_PROD_SERV_RT_LST">
+        <mapping xsi:type="Calculation:AttributeMapping" target="MIN_CHARGE_AMT" source="MIN_CHARGE_AMT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROD_SVC_BAS_RT" source="PROD_SVC_BAS_RT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PS_VAR_RATE_CD" source="PS_VAR_RATE_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TAB_ENT_REV_DT" source="TAB_ENT_REV_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REF_JRNL_ACT_CD" source="REF_JRNL_ACT_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TAB_ENT_EFFV_DT" source="TAB_ENT_EFFV_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TYPE_OF_ACCOUNT" source="TYPE_OF_ACCOUNT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RT_GROUPING_CD" source="RT_GROUPING_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRODSERV_CODE" source="PRODSERV_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RATE_STATE" source="RATE_STATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="COMPANY_CODE" source="COMPANY_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SEQ_ID" source="SEQ_ID"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_NDB">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="COMPANY_CODE"/>
+        <viewAttribute id="RATE_STATE"/>
+        <viewAttribute id="PRODSERV_CODE"/>
+        <viewAttribute id="RT_GROUPING_CD"/>
+        <viewAttribute id="TYPE_OF_ACCOUNT"/>
+        <viewAttribute id="TAB_ENT_EFFV_DT"/>
+        <viewAttribute id="REF_JRNL_ACT_CD"/>
+        <viewAttribute id="PROD_SVC_BAS_RT"/>
+        <viewAttribute id="TAB_ENT_REV_DT"/>
+        <viewAttribute id="MIN_CHARGE_AMT"/>
+        <viewAttribute id="PS_VAR_RATE_CD"/>
+        <viewAttribute id="EXECUTION_ID"/>
+        <viewAttribute id="INSERT_TS"/>
+        <viewAttribute id="MODIFIED_TS"/>
+        <viewAttribute id="BATCH_ID"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#IFRS_R1.HP.NDB_HP::HP_PRICING">
+        <mapping xsi:type="Calculation:AttributeMapping" target="COMPANY_CODE" source="COMPANY_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RATE_STATE" source="RATE_STATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRODSERV_CODE" source="PRODSERV_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RT_GROUPING_CD" source="RT_GROUPING_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TYPE_OF_ACCOUNT" source="TYPE_OF_ACCOUNT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TAB_ENT_EFFV_DT" source="TAB_ENT_EFFV_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REF_JRNL_ACT_CD" source="REF_JRNL_ACT_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROD_SVC_BAS_RT" source="PROD_SVC_BAS_RT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TAB_ENT_REV_DT" source="TAB_ENT_REV_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MIN_CHARGE_AMT" source="MIN_CHARGE_AMT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PS_VAR_RATE_CD" source="PS_VAR_RATE_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXECUTION_ID" source="EXECUTION_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INSERT_TS" source="INSERT_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MODIFIED_TS" source="MODIFIED_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BATCH_ID" source="BATCH_ID"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_EH">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="COMPANY_CODE"/>
+        <viewAttribute id="RATE_STATE"/>
+        <viewAttribute id="PRODSERV_CODE"/>
+        <viewAttribute id="RT_GROUPING_CD"/>
+        <viewAttribute id="TYPE_OF_ACCOUNT"/>
+        <viewAttribute id="TAB_ENT_EFFV_DT"/>
+        <viewAttribute id="PROD_SVC_BAS_RT"/>
+        <viewAttribute id="TAB_ENT_REV_DT"/>
+        <viewAttribute id="DELETED">
+          <filter xsi:type="AccessControl:SingleValueFilter" operator="NL" including="true"/>
+        </viewAttribute>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#IFRS_R1.HP.NDB_HP::HP_PRICING_EH">
+        <mapping xsi:type="Calculation:AttributeMapping" target="COMPANY_CODE" source="COMPANY_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RATE_STATE" source="RATE_STATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRODSERV_CODE" source="PRODSERV_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RT_GROUPING_CD" source="RT_GROUPING_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TYPE_OF_ACCOUNT" source="TYPE_OF_ACCOUNT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TAB_ENT_EFFV_DT" source="TAB_ENT_EFFV_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROD_SVC_BAS_RT" source="PROD_SVC_BAS_RT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TAB_ENT_REV_DT" source="TAB_ENT_REV_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DELETED" source="DELETED"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="JOIN_EH" cardinality="C1_1" joinType="leftOuter">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="MIN_CHARGE_AMT"/>
+        <viewAttribute id="PROD_SVC_BAS_RT"/>
+        <viewAttribute id="CYCL_ID"/>
+        <viewAttribute id="PS_VAR_RATE_CD"/>
+        <viewAttribute id="TAB_ENT_REV_DT"/>
+        <viewAttribute id="REF_JRNL_ACT_CD"/>
+        <viewAttribute id="TAB_ENT_EFFV_DT"/>
+        <viewAttribute id="TYPE_OF_ACCOUNT"/>
+        <viewAttribute id="RT_GROUPING_CD"/>
+        <viewAttribute id="PRODSERV_CODE"/>
+        <viewAttribute id="RATE_STATE"/>
+        <viewAttribute id="COMPANY_CODE"/>
+        <viewAttribute id="SEQ_ID"/>
+        <viewAttribute id="COMPANY_CODE_RIGHT"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="IS_20301801" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isNull(&quot;COMPANY_CODE_RIGHT&quot;),'0','1')</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#PROJ_CBSS_PROD_SERV_RT_LST">
+        <mapping xsi:type="Calculation:AttributeMapping" target="MIN_CHARGE_AMT" source="MIN_CHARGE_AMT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROD_SVC_BAS_RT" source="PROD_SVC_BAS_RT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PS_VAR_RATE_CD" source="PS_VAR_RATE_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TAB_ENT_REV_DT" source="TAB_ENT_REV_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REF_JRNL_ACT_CD" source="REF_JRNL_ACT_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TAB_ENT_EFFV_DT" source="TAB_ENT_EFFV_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TYPE_OF_ACCOUNT" source="TYPE_OF_ACCOUNT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RT_GROUPING_CD" source="RT_GROUPING_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRODSERV_CODE" source="PRODSERV_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RATE_STATE" source="RATE_STATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="COMPANY_CODE" source="COMPANY_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SEQ_ID" source="SEQ_ID"/>
+      </input>
+      <input node="#PROJ_EH">
+        <mapping xsi:type="Calculation:AttributeMapping" target="COMPANY_CODE_RIGHT" source="COMPANY_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="COMPANY_CODE" source="COMPANY_CODE"/>
+      </input>
+      <joinAttribute name="COMPANY_CODE"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="JOIN_SRC_NDB" joinType="leftOuter">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="COMPANY_CODE_RIGHT"/>
+        <viewAttribute id="MIN_CHARGE_AMT"/>
+        <viewAttribute id="PROD_SVC_BAS_RT"/>
+        <viewAttribute id="CYCL_ID"/>
+        <viewAttribute id="PS_VAR_RATE_CD"/>
+        <viewAttribute id="TAB_ENT_REV_DT"/>
+        <viewAttribute id="REF_JRNL_ACT_CD"/>
+        <viewAttribute id="TAB_ENT_EFFV_DT"/>
+        <viewAttribute id="TYPE_OF_ACCOUNT"/>
+        <viewAttribute id="RT_GROUPING_CD"/>
+        <viewAttribute id="PRODSERV_CODE"/>
+        <viewAttribute id="RATE_STATE"/>
+        <viewAttribute id="COMPANY_CODE"/>
+        <viewAttribute id="SEQ_ID"/>
+        <viewAttribute id="IS_20301801"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#JOIN_EH">
+        <mapping xsi:type="Calculation:AttributeMapping" target="MIN_CHARGE_AMT" source="MIN_CHARGE_AMT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROD_SVC_BAS_RT" source="PROD_SVC_BAS_RT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PS_VAR_RATE_CD" source="PS_VAR_RATE_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TAB_ENT_REV_DT" source="TAB_ENT_REV_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REF_JRNL_ACT_CD" source="REF_JRNL_ACT_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TAB_ENT_EFFV_DT" source="TAB_ENT_EFFV_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TYPE_OF_ACCOUNT" source="TYPE_OF_ACCOUNT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RT_GROUPING_CD" source="RT_GROUPING_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRODSERV_CODE" source="PRODSERV_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RATE_STATE" source="RATE_STATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="COMPANY_CODE" source="COMPANY_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SEQ_ID" source="SEQ_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20301801" source="IS_20301801"/>
+      </input>
+      <input node="#PROJ_NDB">
+        <mapping xsi:type="Calculation:AttributeMapping" target="COMPANY_CODE_RIGHT" source="COMPANY_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="COMPANY_CODE" source="COMPANY_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RATE_STATE" source="RATE_STATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRODSERV_CODE" source="PRODSERV_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RT_GROUPING_CD" source="RT_GROUPING_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TYPE_OF_ACCOUNT" source="TYPE_OF_ACCOUNT"/>
+      </input>
+      <joinAttribute name="COMPANY_CODE"/>
+      <joinAttribute name="RATE_STATE"/>
+      <joinAttribute name="PRODSERV_CODE"/>
+      <joinAttribute name="RT_GROUPING_CD"/>
+      <joinAttribute name="TYPE_OF_ACCOUNT"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:RankView" id="RANK_INSERT_UPDATE">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="MIN_CHARGE_AMT"/>
+        <viewAttribute id="PROD_SVC_BAS_RT"/>
+        <viewAttribute id="CYCL_ID"/>
+        <viewAttribute id="PS_VAR_RATE_CD"/>
+        <viewAttribute id="TAB_ENT_REV_DT"/>
+        <viewAttribute id="REF_JRNL_ACT_CD"/>
+        <viewAttribute id="TAB_ENT_EFFV_DT"/>
+        <viewAttribute id="TYPE_OF_ACCOUNT"/>
+        <viewAttribute id="RT_GROUPING_CD"/>
+        <viewAttribute id="PRODSERV_CODE"/>
+        <viewAttribute id="RATE_STATE"/>
+        <viewAttribute id="COMPANY_CODE"/>
+        <viewAttribute id="COMPANY_CODE_RIGHT"/>
+        <viewAttribute id="SEQ_ID"/>
+        <viewAttribute id="IS_20301801"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#JOIN_SRC_NDB">
+        <mapping xsi:type="Calculation:AttributeMapping" target="MIN_CHARGE_AMT" source="MIN_CHARGE_AMT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROD_SVC_BAS_RT" source="PROD_SVC_BAS_RT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PS_VAR_RATE_CD" source="PS_VAR_RATE_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TAB_ENT_REV_DT" source="TAB_ENT_REV_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REF_JRNL_ACT_CD" source="REF_JRNL_ACT_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TAB_ENT_EFFV_DT" source="TAB_ENT_EFFV_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TYPE_OF_ACCOUNT" source="TYPE_OF_ACCOUNT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RT_GROUPING_CD" source="RT_GROUPING_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRODSERV_CODE" source="PRODSERV_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RATE_STATE" source="RATE_STATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="COMPANY_CODE" source="COMPANY_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="COMPANY_CODE_RIGHT" source="COMPANY_CODE_RIGHT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SEQ_ID" source="SEQ_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20301801" source="IS_20301801"/>
+      </input>
+      <windowFunction>
+        <partitionViewAttributeName>RT_GROUPING_CD</partitionViewAttributeName>
+        <partitionViewAttributeName>TYPE_OF_ACCOUNT</partitionViewAttributeName>
+        <partitionViewAttributeName>PRODSERV_CODE</partitionViewAttributeName>
+        <partitionViewAttributeName>RATE_STATE</partitionViewAttributeName>
+        <partitionViewAttributeName>COMPANY_CODE</partitionViewAttributeName>
+        <order byViewAttributeName="TAB_ENT_EFFV_DT" direction="ASC"/>
+        <rankViewAttributeName>RANK_COL</rankViewAttributeName>
+      </windowFunction>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_INSERT_UPDATE">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="MIN_CHARGE_AMT"/>
+        <viewAttribute id="PROD_SVC_BAS_RT"/>
+        <viewAttribute id="CYCL_ID"/>
+        <viewAttribute id="PS_VAR_RATE_CD"/>
+        <viewAttribute id="TAB_ENT_REV_DT"/>
+        <viewAttribute id="REF_JRNL_ACT_CD"/>
+        <viewAttribute id="TAB_ENT_EFFV_DT"/>
+        <viewAttribute id="TYPE_OF_ACCOUNT"/>
+        <viewAttribute id="RT_GROUPING_CD"/>
+        <viewAttribute id="PRODSERV_CODE"/>
+        <viewAttribute id="RATE_STATE"/>
+        <viewAttribute id="COMPANY_CODE"/>
+        <viewAttribute id="COMPANY_CODE_RIGHT"/>
+        <viewAttribute id="SEQ_ID"/>
+        <viewAttribute id="RANK_COL"/>
+        <viewAttribute id="IS_20301801"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CC_EXISTING_RECORD" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>if((isNull(&quot;COMPANY_CODE_RIGHT&quot;) AND &quot;RANK_COL&quot; = 1),'I','U')</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CC_CONCAT_PK" length="100" expressionLanguage="COLUMN_ENGINE">
+          <formula>string(&quot;COMPANY_CODE&quot;) +'|'+ string(&quot;RATE_STATE&quot;) +'|'+ string(&quot;PRODSERV_CODE&quot;) +'|'+ string(&quot;RT_GROUPING_CD&quot;) +'|'+ string( &quot;TYPE_OF_ACCOUNT&quot;) +'|'+ string(&quot;PROD_SVC_BAS_RT&quot;)</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#RANK_INSERT_UPDATE">
+        <mapping xsi:type="Calculation:AttributeMapping" target="MIN_CHARGE_AMT" source="MIN_CHARGE_AMT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROD_SVC_BAS_RT" source="PROD_SVC_BAS_RT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PS_VAR_RATE_CD" source="PS_VAR_RATE_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TAB_ENT_REV_DT" source="TAB_ENT_REV_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REF_JRNL_ACT_CD" source="REF_JRNL_ACT_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TAB_ENT_EFFV_DT" source="TAB_ENT_EFFV_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TYPE_OF_ACCOUNT" source="TYPE_OF_ACCOUNT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RT_GROUPING_CD" source="RT_GROUPING_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRODSERV_CODE" source="PRODSERV_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RATE_STATE" source="RATE_STATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="COMPANY_CODE" source="COMPANY_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="COMPANY_CODE_RIGHT" source="COMPANY_CODE_RIGHT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SEQ_ID" source="SEQ_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RANK_COL" source="RANK_COL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20301801" source="IS_20301801"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="ERROR_SEMANTICS">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="COMPANY_CODE"/>
+        <viewAttribute id="RATE_STATE"/>
+        <viewAttribute id="PRODSERV_CODE"/>
+        <viewAttribute id="RT_GROUPING_CD"/>
+        <viewAttribute id="TYPE_OF_ACCOUNT"/>
+        <viewAttribute id="TAB_ENT_EFFV_DT"/>
+        <viewAttribute id="REF_JRNL_ACT_CD"/>
+        <viewAttribute id="PROD_SVC_BAS_RT"/>
+        <viewAttribute id="TAB_ENT_REV_DT"/>
+        <viewAttribute id="MIN_CHARGE_AMT"/>
+        <viewAttribute id="PS_VAR_RATE_CD"/>
+        <viewAttribute id="CYCL_ID"/>
+        <viewAttribute id="FLAG_EXISTING_RECORD"/>
+        <viewAttribute id="SEQ_ID"/>
+        <viewAttribute id="RANK_COL"/>
+        <viewAttribute id="IS_20301801"/>
+        <viewAttribute id="CC_CONCAT_PK"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="ERROR_STATUS" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>if((&quot;IS_20301801&quot;='1') ,'1','0')</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="ERROR_CODE" length="500" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(&quot;IS_20301801&quot;='1','20301801||','')</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#PROJ_INSERT_UPDATE">
+        <mapping xsi:type="Calculation:AttributeMapping" target="COMPANY_CODE" source="COMPANY_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RATE_STATE" source="RATE_STATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRODSERV_CODE" source="PRODSERV_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RT_GROUPING_CD" source="RT_GROUPING_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TYPE_OF_ACCOUNT" source="TYPE_OF_ACCOUNT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TAB_ENT_EFFV_DT" source="TAB_ENT_EFFV_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REF_JRNL_ACT_CD" source="REF_JRNL_ACT_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROD_SVC_BAS_RT" source="PROD_SVC_BAS_RT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TAB_ENT_REV_DT" source="TAB_ENT_REV_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MIN_CHARGE_AMT" source="MIN_CHARGE_AMT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PS_VAR_RATE_CD" source="PS_VAR_RATE_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FLAG_EXISTING_RECORD" source="CC_EXISTING_RECORD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SEQ_ID" source="SEQ_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RANK_COL" source="RANK_COL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20301801" source="IS_20301801"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_CONCAT_PK" source="CC_CONCAT_PK"/>
+      </input>
+    </calculationView>
+  </calculationViews>
+  <logicalModel id="ERROR_SEMANTICS">
+    <descriptions/>
+    <attributes>
+      <attribute id="COMPANY_CODE" order="1" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="COMPANY_CODE"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="COMPANY_CODE"/>
+      </attribute>
+      <attribute id="RATE_STATE" order="2" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="RATE_STATE"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="RATE_STATE"/>
+      </attribute>
+      <attribute id="PRODSERV_CODE" order="3" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="PRODSERV_CODE"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="PRODSERV_CODE"/>
+      </attribute>
+      <attribute id="RT_GROUPING_CD" order="4" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="RT_GROUPING_CD"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="RT_GROUPING_CD"/>
+      </attribute>
+      <attribute id="TYPE_OF_ACCOUNT" order="5" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="TYPE_OF_ACCOUNT"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="TYPE_OF_ACCOUNT"/>
+      </attribute>
+      <attribute id="TAB_ENT_EFFV_DT" order="6" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="TAB_ENT_EFFV_DT"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="TAB_ENT_EFFV_DT"/>
+      </attribute>
+      <attribute id="REF_JRNL_ACT_CD" order="7" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="REF_JRNL_ACT_CD"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="REF_JRNL_ACT_CD"/>
+      </attribute>
+      <attribute id="PROD_SVC_BAS_RT" order="8" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="PROD_SVC_BAS_RT"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="PROD_SVC_BAS_RT"/>
+      </attribute>
+      <attribute id="TAB_ENT_REV_DT" order="9" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="TAB_ENT_REV_DT"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="TAB_ENT_REV_DT"/>
+      </attribute>
+      <attribute id="MIN_CHARGE_AMT" order="10" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="MIN_CHARGE_AMT"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="MIN_CHARGE_AMT"/>
+      </attribute>
+      <attribute id="PS_VAR_RATE_CD" order="11" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="PS_VAR_RATE_CD"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="PS_VAR_RATE_CD"/>
+      </attribute>
+      <attribute id="CYCL_ID" order="12" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CYCL_ID"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="CYCL_ID"/>
+      </attribute>
+      <attribute id="FLAG_EXISTING_RECORD" order="13" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="FLAG_EXISTING_RECORD"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="FLAG_EXISTING_RECORD"/>
+      </attribute>
+      <attribute id="SEQ_ID" order="14" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SEQ_ID"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="SEQ_ID"/>
+      </attribute>
+      <attribute id="RANK_COL" order="15" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="RANK_COL"/>
+      </attribute>
+      <attribute id="IS_20301801" order="16" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="IS_20301801"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="IS_20301801"/>
+      </attribute>
+      <attribute id="ERROR_STATUS" order="17" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ERROR_STATUS"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="ERROR_STATUS"/>
+      </attribute>
+      <attribute id="ERROR_CODE" order="18" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ERROR_CODE"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="ERROR_CODE"/>
+      </attribute>
+      <attribute id="CC_CONCAT_PK" hidden="false" order="19" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CC_CONCAT_PK"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="CC_CONCAT_PK"/>
+      </attribute>
+    </attributes>
+    <calculatedAttributes/>
+    <privateDataFoundation>
+      <tableProxies/>
+      <joins/>
+      <layout>
+        <shapes/>
+      </layout>
+    </privateDataFoundation>
+    <baseMeasures/>
+    <calculatedMeasures/>
+    <restrictedMeasures/>
+    <localDimensions/>
+  </logicalModel>
+  <layout>
+    <shapes>
+      <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+        <upperLeftCorner x="99" y="87"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_CBSS_PROD_SERV_RT_LST" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="99" y="591"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_NDB" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="22" y="495"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_EH" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="253" y="591"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="JOIN_EH" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="176" y="495"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+      <shape expanded="true" modelObjectName="JOIN_SRC_NDB" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="99" y="399"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="RANK_INSERT_UPDATE" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="99" y="321"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_INSERT_UPDATE" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="99" y="243"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="ERROR_SEMANTICS" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="99" y="165"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+    </shapes>
+  </layout>
+</Calculation:scenario>

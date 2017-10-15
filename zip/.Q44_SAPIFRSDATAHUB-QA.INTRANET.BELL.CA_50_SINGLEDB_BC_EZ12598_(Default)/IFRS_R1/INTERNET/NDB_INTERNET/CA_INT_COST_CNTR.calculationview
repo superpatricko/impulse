@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" schemaVersion="2.3" id="CA_INT_COST_CNTR" applyPrivilegeType="NONE" checkAnalyticPrivileges="false" defaultClient="$$client$$" defaultLanguage="$$language$$" hierarchiesSQLEnabled="false" translationRelevant="true" visibility="internal" calculationScenarioType="TREE_BASED" dataCategory="DIMENSION" enforceSqlExecution="false" executionSemantic="UNDEFINED" outputViewType="Projection">
+  <descriptions defaultDescription="CA_INT_CST_CNTR"/>
+  <localVariables/>
+  <variableMappings/>
+  <informationModelLayout relativeWidthScenario="36"/>
+  <dataSources>
+    <DataSource id="IFRS_R1.INTERNET.NDB_INTERNET::INT_CUST" type="DATA_BASE_TABLE">
+      <viewAttributes allViewAttributes="true"/>
+      <columnObject schemaName="NDB_INTERNET" columnObjectName="IFRS_R1.INTERNET.NDB_INTERNET::INT_CUST"/>
+    </DataSource>
+    <DataSource id="ZINTERNET_ENSMBL" type="DATA_BASE_TABLE">
+      <viewAttributes allViewAttributes="true"/>
+      <columnObject schemaName="SDA" columnObjectName="ZINTERNET_ENSMBL"/>
+    </DataSource>
+  </dataSources>
+  <calculationViews>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_NDB_CUST">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="CUST_LOC_ID"/>
+        <viewAttribute id="REFERENCE_EFFECTIVE_DT"/>
+        <viewAttribute id="PRM_CONTR_CUST"/>
+        <viewAttribute id="ALTN_CONTR_NUM"/>
+        <viewAttribute id="PRDCT_TYP"/>
+        <viewAttribute id="SERV_STRT_DT"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#IFRS_R1.INTERNET.NDB_INTERNET::INT_CUST">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUST_LOC_ID" source="CUST_LOC_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_EFFECTIVE_DT" source="REFERENCE_EFFECTIVE_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRM_CONTR_CUST" source="PRM_CONTR_CUST"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ALTN_CONTR_NUM" source="ALTN_CONTR_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRDCT_TYP" source="PRDCT_TYP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SERV_STRT_DT" source="SERV_STRT_DT"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_SDA">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="PROVINCE"/>
+        <viewAttribute id="KOSTL"/>
+        <viewAttribute id="VALID_FROM"/>
+        <viewAttribute id="VALID_TO"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CC_CST_CNTR" length="20" expressionLanguage="COLUMN_ENGINE">
+          <formula>&quot;KOSTL&quot;</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CC_CUST_LOC_ID" length="30" expressionLanguage="COLUMN_ENGINE">
+          <formula>&quot;PROVINCE&quot;</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#ZINTERNET_ENSMBL">
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROVINCE" source="PROVINCE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KOSTL" source="KOSTL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VALID_FROM" source="VALID_FROM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VALID_TO" source="VALID_TO"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="JOIN" joinOrder="OUTSIDE_IN" joinType="inner">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="CST_CNTR"/>
+        <viewAttribute id="CUST_LOC_ID"/>
+        <viewAttribute id="VALID_FROM"/>
+        <viewAttribute id="VALID_TO"/>
+        <viewAttribute id="REFERENCE_EFFECTIVE_DT"/>
+        <viewAttribute id="PRM_CONTR_CUST"/>
+        <viewAttribute id="ALTN_CONTR_NUM"/>
+        <viewAttribute id="PRDCT_TYP"/>
+        <viewAttribute id="SERV_STRT_DT"/>
+        <viewAttribute hidden="true" id="JOIN$CUST_LOC_ID$PROVINCE"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="DATE" id="CC_VALID_FROM" expressionLanguage="COLUMN_ENGINE">
+          <formula>&quot;VALID_FROM&quot;</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="DATE" id="CC_VALID_TO" expressionLanguage="COLUMN_ENGINE">
+          <formula>&quot;VALID_TO&quot;</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#PROJ_NDB_CUST">
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_EFFECTIVE_DT" source="REFERENCE_EFFECTIVE_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRM_CONTR_CUST" source="PRM_CONTR_CUST"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ALTN_CONTR_NUM" source="ALTN_CONTR_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRDCT_TYP" source="PRDCT_TYP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SERV_STRT_DT" source="SERV_STRT_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$CUST_LOC_ID$PROVINCE" source="CUST_LOC_ID"/>
+      </input>
+      <input node="#PROJ_SDA">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CST_CNTR" source="CC_CST_CNTR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUST_LOC_ID" source="CC_CUST_LOC_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VALID_FROM" source="VALID_FROM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VALID_TO" source="VALID_TO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$CUST_LOC_ID$PROVINCE" source="PROVINCE"/>
+      </input>
+      <joinAttribute name="JOIN$CUST_LOC_ID$PROVINCE"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_FILTER" filterExpressionLanguage="COLUMN_ENGINE">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="CST_CNTR"/>
+        <viewAttribute id="CUST_LOC_ID"/>
+        <viewAttribute id="CC_VALID_FROM"/>
+        <viewAttribute id="CC_VALID_TO"/>
+        <viewAttribute id="REFERENCE_EFFECTIVE_DT"/>
+        <viewAttribute id="PRM_CONTR_CUST"/>
+        <viewAttribute id="ALTN_CONTR_NUM"/>
+        <viewAttribute id="PRDCT_TYP"/>
+        <viewAttribute id="SERV_STRT_DT"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#JOIN">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CST_CNTR" source="CST_CNTR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUST_LOC_ID" source="CUST_LOC_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_VALID_FROM" source="CC_VALID_FROM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_VALID_TO" source="CC_VALID_TO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_EFFECTIVE_DT" source="REFERENCE_EFFECTIVE_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRM_CONTR_CUST" source="PRM_CONTR_CUST"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ALTN_CONTR_NUM" source="ALTN_CONTR_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRDCT_TYP" source="PRDCT_TYP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SERV_STRT_DT" source="SERV_STRT_DT"/>
+      </input>
+      <filter>(&quot;SERV_STRT_DT&quot;>= &quot;CC_VALID_FROM&quot;) and&#xD;
+(&quot;SERV_STRT_DT&quot;&lt;= &quot;CC_VALID_TO&quot;)</filter>
+    </calculationView>
+  </calculationViews>
+  <logicalModel id="PROJ_FILTER">
+    <descriptions/>
+    <attributes>
+      <attribute id="CST_CNTR" order="1" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CST_CNTR"/>
+        <keyMapping columnObjectName="PROJ_FILTER" columnName="CST_CNTR"/>
+      </attribute>
+      <attribute id="CUST_LOC_ID" order="2" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CUST_LOC_ID"/>
+        <keyMapping columnObjectName="PROJ_FILTER" columnName="CUST_LOC_ID"/>
+      </attribute>
+      <attribute id="PRM_CONTR_CUST" order="3" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="PRM_CONTR_CUST"/>
+        <keyMapping columnObjectName="PROJ_FILTER" columnName="PRM_CONTR_CUST"/>
+      </attribute>
+      <attribute id="ALTN_CONTR_NUM" order="4" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ALTN_CONTR_NUM"/>
+        <keyMapping columnObjectName="PROJ_FILTER" columnName="ALTN_CONTR_NUM"/>
+      </attribute>
+      <attribute id="PRDCT_TYP" order="5" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="PRDCT_TYP"/>
+        <keyMapping columnObjectName="PROJ_FILTER" columnName="PRDCT_TYP"/>
+      </attribute>
+      <attribute id="REFERENCE_EFFECTIVE_DT" order="6" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="REFERENCE_EFFECTIVE_DT"/>
+        <keyMapping columnObjectName="PROJ_FILTER" columnName="REFERENCE_EFFECTIVE_DT"/>
+      </attribute>
+    </attributes>
+    <calculatedAttributes/>
+    <privateDataFoundation>
+      <tableProxies/>
+      <joins/>
+      <layout>
+        <shapes/>
+      </layout>
+    </privateDataFoundation>
+    <baseMeasures/>
+    <calculatedMeasures/>
+    <restrictedMeasures/>
+    <localDimensions/>
+  </logicalModel>
+  <layout>
+    <shapes>
+      <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+        <upperLeftCorner x="99" y="87"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_NDB_CUST" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="22" y="339"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_SDA" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="176" y="339"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="JOIN" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="99" y="243"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_FILTER" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="99" y="165"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+    </shapes>
+  </layout>
+</Calculation:scenario>

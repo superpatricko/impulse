@@ -1,0 +1,488 @@
+PROCEDURE "NDB_MOBILITY"."IFRS_R1.MOBILITY.NDB_MOBILITY::SP_NGCCREF_EPC_PROD"
+(IN  IP_CYCL_ID NVARCHAR(3),
+ OUT OP_STATUS NVARCHAR(1000)) 
+	LANGUAGE SQLSCRIPT
+	SQL SECURITY INVOKER
+	AS
+
+BEGIN
+--------------------------------------------------------------------------------------------------
+-- Procedure Title : SP_NGCCREF_EPC_PROD
+-- Created By      : BC_EZ03139(Mohammad Jamilish)       
+-- Create Date     : 11-05-2017
+-- Description     : Data Inserted using Calculation View - CA_NGCCREF_EPC_PROD_VW
+--                   To NDB Table - PPD_NGCCREF_EPC_PROD Using this stored procedure.		
+-- Project         : Bell Canada
+-- Release         : R1 / IFRS
+--------------------------------------------------------------------------------------------------
+--   M O D I F I C A T I O N   H I S T O R Y
+--------------------------------------------------------------------------------------------------
+-- Date        | User ID          | Modification History/Release
+--------------------------------------------------------------------------------------------------
+--             |                  | 
+--------------------------------------------------------------------------------------------------
+-- Description Of the changes 
+--------------------------------------------------------------------------------------------------
+-- Modification Number          : <Assign Some Number> 
+-- Description of Changes Made> : <Description of Changes>       
+--------------------------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------------------------
+-- Global Variables Declaration
+--------------------------------------------------------------------------------------------------
+
+DECLARE LC_ERROR_TEXT 		NVARCHAR(70) DEFAULT 'OUT STATUS IS 1 : INSERT/UPDATE FOR ONE OR MORE RECORD FAILED';
+DECLARE LC_SUCCESS_TEXT 	NVARCHAR(70) DEFAULT 'OUT STATUS IS 0 : INSERT/UPDATE EXECUTION SUCCESSFUL';
+DECLARE LV_ERROR_FLAG 		NVARCHAR(1) := 'N';
+DECLARE LV_CUR_UTC 			TIMESTAMP := CURRENT_TIMESTAMP;
+DECLARE ERROR_TAB 			TABLE (ERROR_CODE NVARCHAR(100));
+DECLARE i					INTEGER;
+DECLARE RECORD_COUNT		INTEGER;
+DECLARE CURRENT_ERROR		NVARCHAR(100);
+DECLARE LV_LOOP_ERROR_FLAG  INTEGER := 0;
+DECLARE LV_PREV_OFFER_ID	NVARCHAR(27) := NULL;
+  
+--------------------------------------------------------------------------------------------------
+-- Cursors Declaration
+-------------------------------------------------------------------------------------------------- 
+  
+DECLARE CURSOR C_NGCCREF_EPC_PROD FOR
+	SELECT
+		 "OFFER_ID",
+		 "PACKAGE_ID",
+		 "ITEM_ID",
+		 "REFERENCE_EFFECTIVE_DT",
+		 "REFERENCE_EXPIRY_DT",
+		 "EFF_SALE_DATE",
+		 "EXP_SALE_DATE",
+		 "OFFER_NAME",
+		 "OFFER_TYPE",
+		 "CURRENCY_CODE",
+		 "PACKAGE_NAME",
+		 "ITEM_TYPE",
+		 "ITEM_ROLE",
+		 "PROCESS_ID",
+		 "SRC_TS",
+		 "CYCL_ID",
+		 "SEQ_ID",
+		 "ERROR_STATUS",
+		 "ERROR_CODE",
+		 "FLAG_EXISTING_RECORD",
+		 "RECORD_TYPE",
+		 "ITEM_PARAM_ATTR_NAME",
+		 "PARAM_ITEM_DIMENTION",
+		 "EXPIRY_DT",
+		 "PREV_DAY",
+		 "EFF_DT",
+		 "EPC_ITEM_PRIMARY_KEY",
+		 "EPC_LINK_PRIMARY_KEY",
+		 "EPC_OFR_PRIMARY_KEY",
+		 "EPC_PKG_PRIMARY_KEY"
+	FROM "_SYS_BIC"."IFRS_R1.MOBILITY.NDB_MOBILITY/CA_NGCCREF_EPC_PROD"
+	     (PLACEHOLDER."$$IP_CYCL_ID$$" => :IP_CYCL_ID) 
+	ORDER BY OFFER_ID,PACKAGE_ID,ITEM_ID,EFF_DT,CYCL_ID, SEQ_ID;
+
+--------------------------------------------------------------------------------------------------
+-- Local Temporary Tables Declaration
+--------------------------------------------------------------------------------------------------  
+
+CREATE LOCAL TEMPORARY TABLE #UPDATE_NGCC_EPC_LNK(EPC_LINK_PRIMARY_KEY NVARCHAR(50));
+CREATE LOCAL TEMPORARY TABLE #UPDATE_NGCC_EPC_OFFR(EPC_OFR_PRIMARY_KEY NVARCHAR(50));
+CREATE LOCAL TEMPORARY TABLE #UPDATE_NGCC_EPC_PKG(EPC_PKG_PRIMARY_KEY NVARCHAR(50));
+CREATE LOCAL TEMPORARY TABLE #UPDATE_NGCC_EPC_ITEM( EPC_ITEM_PRIMARY_KEY NVARCHAR(50));
+CREATE LOCAL TEMPORARY TABLE #UPDATE_EH_DELETION(OFFER_ID NVARCHAR(9), PACKAGE_ID NVARCHAR(9), ITEM_ID NVARCHAR(9));	
+
+--------------------------------------------------------------------------------------------------
+-- Cursors Loop
+-------------------------------------------------------------------------------------------------- 
+FOR REC_NGCCREF_EPC_PROD AS C_NGCCREF_EPC_PROD DO 
+--  Define Exit Handler
+	DECLARE EXIT HANDLER FOR SQLEXCEPTION 
+	BEGIN AUTONOMOUS TRANSACTION 
+
+--    Define Exit Handler
+	  DECLARE EXIT HANDLER FOR SQLEXCEPTION 
+	  BEGIN AUTONOMOUS TRANSACTION 
+	
+      -- Do Nothing. Exception Handled to ensure SP does not get terminated
+	
+	  END; 
+
+   -- Insert into the Error Table
+   INSERT INTO "NDB_MOBILITY"."IFRS_R1.MOBILITY.NDB_MOBILITY::PPD_NGCCREF_EPC_PROD_EH"(
+	   		   "OFFER_ID",
+	   		   "PACKAGE_ID",
+	   		   "ITEM_ID",
+	   		   "REFERENCE_EFFECTIVE_DT",
+	   		   "REFERENCE_EXPIRY_DT",
+	   		   "EFF_SALE_DATE",
+	   		   "EXP_SALE_DATE",
+	   		   "OFFER_NAME",
+	   		   "OFFER_TYPE",
+	   		   "CURRENCY_CODE",
+	   		   "PACKAGE_NAME",
+	   		   "ITEM_TYPE",
+	   		   "ITEM_ROLE",
+	   		   "PROCESS_ID",
+	   		   "ERROR_CODE",
+	   		   "TECHNICAL_MESSAGE",
+	   		   "ERROR_CREATE_TS") 
+	VALUES    (REC_NGCCREF_EPC_PROD."OFFER_ID",
+	   		   REC_NGCCREF_EPC_PROD."PACKAGE_ID",
+	   		   REC_NGCCREF_EPC_PROD."ITEM_ID",
+	   		   REC_NGCCREF_EPC_PROD."EFF_DT", 
+	   		   REC_NGCCREF_EPC_PROD."EXPIRY_DT", 
+	   		   REC_NGCCREF_EPC_PROD."EFF_SALE_DATE",
+	   		   REC_NGCCREF_EPC_PROD."EXP_SALE_DATE",
+	   		   REC_NGCCREF_EPC_PROD."OFFER_NAME",
+	   		   REC_NGCCREF_EPC_PROD."OFFER_TYPE",
+	   		   REC_NGCCREF_EPC_PROD."CURRENCY_CODE",
+	   		   REC_NGCCREF_EPC_PROD."PACKAGE_NAME",
+	   		   REC_NGCCREF_EPC_PROD."ITEM_TYPE",
+	   		   REC_NGCCREF_EPC_PROD."ITEM_ROLE",
+	   		   REC_NGCCREF_EPC_PROD."PROCESS_ID", 
+			   ::SQL_ERROR_CODE,
+			   ::SQL_ERROR_MESSAGE,
+			   LV_CUR_UTC);   
+   
+	  	LV_ERROR_FLAG := 'Y';
+	  	LV_LOOP_ERROR_FLAG := 1;
+    
+   END; 
+
+ -----------------------------------------------------------------------------------------------   
+    
+-- FOR CLEARING THE VARIABLES
+
+	IF ((REC_NGCCREF_EPC_PROD."OFFER_ID" || REC_NGCCREF_EPC_PROD."PACKAGE_ID" || REC_NGCCREF_EPC_PROD."ITEM_ID") != LV_PREV_OFFER_ID) THEN
+
+		LV_LOOP_ERROR_FLAG := 0;
+		LV_PREV_OFFER_ID := (REC_NGCCREF_EPC_PROD."OFFER_ID" || REC_NGCCREF_EPC_PROD."PACKAGE_ID" || REC_NGCCREF_EPC_PROD."ITEM_ID");	   
+    END IF;
+
+ -----------------------------------------------------------------------------------------------
+
+--  Check the Error Status of the Record. If Record is with Error, then send to Error Table
+	IF REC_NGCCREF_EPC_PROD.ERROR_STATUS = '1' THEN
+	
+	--  Call the Stored Procedure to split the concatenated Error Messages into Error Rows
+		CALL "NDB_COMMON"."IFRS_R1.COMMON_COMP.EH::SP_EH_SPLIT_ERRORS"(REC_NGCCREF_EPC_PROD."ERROR_CODE", ERROR_TAB, RECORD_COUNT);
+
+     -- Loop through the Error Records
+		FOR i IN 1 .. :RECORD_COUNT DO
+			
+		 -- Fetch the Error Code
+			CURRENT_ERROR = :ERROR_TAB."ERROR_CODE"[:i];
+			
+		 -- Insert into the Error Table
+		 INSERT INTO "NDB_MOBILITY"."IFRS_R1.MOBILITY.NDB_MOBILITY::PPD_NGCCREF_EPC_PROD_EH"(
+	   		   "OFFER_ID",
+	   		   "PACKAGE_ID",
+	   		   "ITEM_ID",
+	   		   "REFERENCE_EFFECTIVE_DT",
+	   		   "REFERENCE_EXPIRY_DT",
+	   		   "EFF_SALE_DATE",
+	   		   "EXP_SALE_DATE",
+	   		   "OFFER_NAME",
+	   		   "OFFER_TYPE",
+	   		   "CURRENCY_CODE",
+	   		   "PACKAGE_NAME",
+	   		   "ITEM_TYPE",
+	   		   "ITEM_ROLE",
+	   		   "PROCESS_ID",
+	   		   ERROR_CODE,
+	   		   ERROR_CREATE_TS)
+	VALUES    (REC_NGCCREF_EPC_PROD."OFFER_ID",
+	   		   REC_NGCCREF_EPC_PROD."PACKAGE_ID",
+	   		   REC_NGCCREF_EPC_PROD."ITEM_ID",
+	   		   REC_NGCCREF_EPC_PROD."EFF_DT", 
+	   		   REC_NGCCREF_EPC_PROD."EXPIRY_DT", 
+	   		   REC_NGCCREF_EPC_PROD."EFF_SALE_DATE",
+	   		   REC_NGCCREF_EPC_PROD."EXP_SALE_DATE",
+	   		   REC_NGCCREF_EPC_PROD."OFFER_NAME",
+	   		   REC_NGCCREF_EPC_PROD."OFFER_TYPE",
+	   		   REC_NGCCREF_EPC_PROD."CURRENCY_CODE",
+	   		   REC_NGCCREF_EPC_PROD."PACKAGE_NAME",
+	   		   REC_NGCCREF_EPC_PROD."ITEM_TYPE",
+	   		   REC_NGCCREF_EPC_PROD."ITEM_ROLE",
+	   		   REC_NGCCREF_EPC_PROD."PROCESS_ID", 
+	   		   :CURRENT_ERROR,
+	   		   LV_CUR_UTC); 					
+			
+		END FOR;
+						         		        
+       -- Set Error Flag				        
+	    LV_ERROR_FLAG := 'Y';
+	    LV_LOOP_ERROR_FLAG := 1;
+	    LV_PREV_OFFER_ID := (REC_NGCCREF_EPC_PROD."OFFER_ID" || REC_NGCCREF_EPC_PROD."PACKAGE_ID" || REC_NGCCREF_EPC_PROD."ITEM_ID");
+
+-- Processing for Successful Records
+   ELSE
+
+         IF REC_NGCCREF_EPC_PROD.ERROR_STATUS = '0' THEN
+	    
+	        IF LV_LOOP_ERROR_FLAG = 1 THEN
+	        
+	        INSERT INTO "NDB_MOBILITY"."IFRS_R1.MOBILITY.NDB_MOBILITY::PPD_NGCCREF_EPC_PROD_EH"(
+	   		   "OFFER_ID",
+	   		   "PACKAGE_ID",
+	   		   "ITEM_ID",
+	   		   "REFERENCE_EFFECTIVE_DT",
+	   		   "REFERENCE_EXPIRY_DT",
+	   		   "EFF_SALE_DATE",
+	   		   "EXP_SALE_DATE",
+	   		   "OFFER_NAME",
+	   		   "OFFER_TYPE",
+	   		   "CURRENCY_CODE",
+	   		   "PACKAGE_NAME",
+	   		   "ITEM_TYPE",
+	   		   "ITEM_ROLE",
+	   		   "PROCESS_ID",
+	   		   ERROR_CODE,
+	   		   ERROR_CREATE_TS)
+	        VALUES    
+	           (REC_NGCCREF_EPC_PROD."OFFER_ID",
+	   		   REC_NGCCREF_EPC_PROD."PACKAGE_ID",
+	   		   REC_NGCCREF_EPC_PROD."ITEM_ID",
+	   		   REC_NGCCREF_EPC_PROD."EFF_DT", 
+	   		   REC_NGCCREF_EPC_PROD."EXPIRY_DT", 
+	   		   REC_NGCCREF_EPC_PROD."EFF_SALE_DATE",
+	   		   REC_NGCCREF_EPC_PROD."EXP_SALE_DATE",
+	   		   REC_NGCCREF_EPC_PROD."OFFER_NAME",
+	   		   REC_NGCCREF_EPC_PROD."OFFER_TYPE",
+	   		   REC_NGCCREF_EPC_PROD."CURRENCY_CODE",
+	   		   REC_NGCCREF_EPC_PROD."PACKAGE_NAME",
+	   		   REC_NGCCREF_EPC_PROD."ITEM_TYPE",
+	   		   REC_NGCCREF_EPC_PROD."ITEM_ROLE",
+	   		   REC_NGCCREF_EPC_PROD."PROCESS_ID", 
+	   		   'PREVIOUS VERSION IN ERROR',
+	   		   LV_CUR_UTC);
+	        
+	        ELSE
+--   If Record exists in the Target NDB Table
+     IF (REC_NGCCREF_EPC_PROD.FLAG_EXISTING_RECORD = 'U') AND (REC_NGCCREF_EPC_PROD.PREV_DAY IS NOT NULL) THEN
+
+
+     BEGIN AUTONOMOUS TRANSACTION
+     
+         
+     --History maintenance 
+     UPDATE  "NDB_MOBILITY"."IFRS_R1.MOBILITY.NDB_MOBILITY::PPD_NGCCREF_EPC_PROD" NDB
+		SET ("REFERENCE_EXPIRY_DT", 
+		     "MODIFIED_TS")
+		 =  (REC_NGCCREF_EPC_PROD.PREV_DAY,
+		     LV_CUR_UTC)
+	  WHERE NDB."OFFER_ID" = REC_NGCCREF_EPC_PROD."OFFER_ID" 
+		AND NDB."PACKAGE_ID" = REC_NGCCREF_EPC_PROD."PACKAGE_ID"
+		AND NDB."ITEM_ID" = REC_NGCCREF_EPC_PROD."ITEM_ID"
+		AND REC_NGCCREF_EPC_PROD."EFF_DT" < "REFERENCE_EXPIRY_DT"
+		AND REFERENCE_EXPIRY_DT = REC_NGCCREF_EPC_PROD.EXPIRY_DT;
+   
+    INSERT INTO "NDB_MOBILITY"."IFRS_R1.MOBILITY.NDB_MOBILITY::PPD_NGCCREF_EPC_PROD"(
+	   		   "OFFER_ID",
+	   		   "PACKAGE_ID",
+	   		   "ITEM_ID",
+	   		   "REFERENCE_EFFECTIVE_DT",
+	   		   "REFERENCE_EXPIRY_DT",
+	   		   "EFF_SALE_DATE",
+	   		   "EXP_SALE_DATE",
+	   		   "OFFER_NAME",
+	   		   "OFFER_TYPE",
+	   		   "CURRENCY_CODE",
+	   		   "PACKAGE_NAME",
+	   		   "ITEM_TYPE",
+	   		   "ITEM_ROLE",
+	   		   "PROCESS_ID",
+	   		   "INSERT_TS")
+	VALUES    (REC_NGCCREF_EPC_PROD."OFFER_ID",
+	   		   REC_NGCCREF_EPC_PROD."PACKAGE_ID",
+	   		   REC_NGCCREF_EPC_PROD."ITEM_ID",
+	   		   REC_NGCCREF_EPC_PROD."EFF_DT", 
+	   		   REC_NGCCREF_EPC_PROD."EXPIRY_DT", 
+	   		   REC_NGCCREF_EPC_PROD."EFF_SALE_DATE",
+	   		   REC_NGCCREF_EPC_PROD."EXP_SALE_DATE",
+	   		   REC_NGCCREF_EPC_PROD."OFFER_NAME",
+	   		   REC_NGCCREF_EPC_PROD."OFFER_TYPE",
+	   		   REC_NGCCREF_EPC_PROD."CURRENCY_CODE",
+	   		   REC_NGCCREF_EPC_PROD."PACKAGE_NAME",
+	   		   REC_NGCCREF_EPC_PROD."ITEM_TYPE",
+	   		   REC_NGCCREF_EPC_PROD."ITEM_ROLE",
+	   		   REC_NGCCREF_EPC_PROD."PROCESS_ID",
+	   		   LV_CUR_UTC);
+	   		   
+	   		   LV_PREV_OFFER_ID := (REC_NGCCREF_EPC_PROD."OFFER_ID" || REC_NGCCREF_EPC_PROD."PACKAGE_ID" || REC_NGCCREF_EPC_PROD."ITEM_ID");
+	   		   
+END;  -- END AUTONOMOUS TRANSACTION 
+		         
+--         Insert PK of successfully processed Records into Local Temp Tables 
+--         for Updating NDB_TS in corresponding Landing Tables records 
+
+		   INSERT INTO #UPDATE_NGCC_EPC_LNK
+		   			   ("EPC_LINK_PRIMARY_KEY")
+		   		VALUES (REC_NGCCREF_EPC_PROD."EPC_LINK_PRIMARY_KEY");
+		   		
+		   INSERT INTO #UPDATE_NGCC_EPC_OFFR
+		   			   ("EPC_OFR_PRIMARY_KEY")
+		   		VALUES (REC_NGCCREF_EPC_PROD."EPC_OFR_PRIMARY_KEY");
+			   		    
+		   INSERT INTO #UPDATE_NGCC_EPC_PKG
+		   			   ("EPC_PKG_PRIMARY_KEY")
+		   		VALUES (REC_NGCCREF_EPC_PROD."EPC_PKG_PRIMARY_KEY");	
+			   		    		   		    
+		   INSERT INTO #UPDATE_NGCC_EPC_ITEM
+		   			   ("EPC_ITEM_PRIMARY_KEY")
+		   		VALUES (REC_NGCCREF_EPC_PROD."EPC_ITEM_PRIMARY_KEY");
+		   		
+--         Add record to Delete the error from the error table if it exists
+
+			INSERT INTO	#UPDATE_EH_DELETION(
+		   			    "OFFER_ID",
+				   		"PACKAGE_ID",
+				   		"ITEM_ID")
+		   		VALUES (REC_NGCCREF_EPC_PROD."OFFER_ID",
+			   		    REC_NGCCREF_EPC_PROD."PACKAGE_ID",
+			   		    REC_NGCCREF_EPC_PROD."ITEM_ID");	
+                    	
+    ELSEIF REC_NGCCREF_EPC_PROD.FLAG_EXISTING_RECORD = 'I' THEN
+    BEGIN AUTONOMOUS TRANSACTION
+ -- Insert Records into the target NDB table    
+    INSERT INTO "NDB_MOBILITY"."IFRS_R1.MOBILITY.NDB_MOBILITY::PPD_NGCCREF_EPC_PROD"(
+	   		   "OFFER_ID",
+	   		   "PACKAGE_ID",
+	   		   "ITEM_ID",
+	   		   "REFERENCE_EFFECTIVE_DT",
+	   		   "REFERENCE_EXPIRY_DT",
+	   		   "EFF_SALE_DATE",
+	   		   "EXP_SALE_DATE",
+	   		   "OFFER_NAME",
+	   		   "OFFER_TYPE",
+	   		   "CURRENCY_CODE",
+	   		   "PACKAGE_NAME",
+	   		   "ITEM_TYPE",
+	   		   "ITEM_ROLE",
+	   		   "PROCESS_ID",
+	   		   "INSERT_TS")
+	VALUES    (REC_NGCCREF_EPC_PROD."OFFER_ID",
+	   		   REC_NGCCREF_EPC_PROD."PACKAGE_ID",
+	   		   REC_NGCCREF_EPC_PROD."ITEM_ID",
+	   		   REC_NGCCREF_EPC_PROD."EFF_DT", 
+	   		   REC_NGCCREF_EPC_PROD."EXPIRY_DT", 
+	   		   REC_NGCCREF_EPC_PROD."EFF_SALE_DATE",
+	   		   REC_NGCCREF_EPC_PROD."EXP_SALE_DATE",
+	   		   REC_NGCCREF_EPC_PROD."OFFER_NAME",
+	   		   REC_NGCCREF_EPC_PROD."OFFER_TYPE",
+	   		   REC_NGCCREF_EPC_PROD."CURRENCY_CODE",
+	   		   REC_NGCCREF_EPC_PROD."PACKAGE_NAME",
+	   		   REC_NGCCREF_EPC_PROD."ITEM_TYPE",
+	   		   REC_NGCCREF_EPC_PROD."ITEM_ROLE",
+	   		   REC_NGCCREF_EPC_PROD."PROCESS_ID",
+	   		   LV_CUR_UTC);
+	   		   
+	   		   LV_PREV_OFFER_ID := (REC_NGCCREF_EPC_PROD."OFFER_ID" || REC_NGCCREF_EPC_PROD."PACKAGE_ID" || REC_NGCCREF_EPC_PROD."ITEM_ID");
+	END;
+		         
+--         Insert PK of successfully processed Records into Local Temp Tables 
+--         for Updating NDB_TS in corresponding Landing Tables records 
+
+		   INSERT INTO #UPDATE_NGCC_EPC_LNK
+		   			   ("EPC_LINK_PRIMARY_KEY")
+		   		VALUES (REC_NGCCREF_EPC_PROD."EPC_LINK_PRIMARY_KEY");
+		   		
+		   INSERT INTO #UPDATE_NGCC_EPC_OFFR
+		   			   ("EPC_OFR_PRIMARY_KEY")
+		   		VALUES (REC_NGCCREF_EPC_PROD."EPC_OFR_PRIMARY_KEY");
+			   		    
+		   INSERT INTO #UPDATE_NGCC_EPC_PKG
+		   			   ("EPC_PKG_PRIMARY_KEY")
+		   		VALUES (REC_NGCCREF_EPC_PROD."EPC_PKG_PRIMARY_KEY");	
+			   		    		   		    
+		   INSERT INTO #UPDATE_NGCC_EPC_ITEM
+		   			   ("EPC_ITEM_PRIMARY_KEY")
+		   		VALUES (REC_NGCCREF_EPC_PROD."EPC_ITEM_PRIMARY_KEY");
+		   		
+--         Add record to Delete the error from the error table if it exists
+
+			INSERT INTO	#UPDATE_EH_DELETION(
+		   			    "OFFER_ID",
+				   		"PACKAGE_ID",
+				   		"ITEM_ID")
+		   		VALUES (REC_NGCCREF_EPC_PROD."OFFER_ID",
+			   		    REC_NGCCREF_EPC_PROD."PACKAGE_ID",
+			   		    REC_NGCCREF_EPC_PROD."ITEM_ID");	
+        END IF;
+    
+      END IF; 
+		   
+    END IF;
+
+  END IF;
+
+END FOR;
+
+--------------------------------------------------------------------------------------------------
+-- Update Landing Tables
+-------------------------------------------------------------------------------------------------- 
+
+-- Update Landing Table IFRS_R1.LAND::NGCC_EPC_LNK
+UPDATE "LAND"."IFRS_R1.LAND::NGCC_EPC_LNK"  A
+  FROM "LAND"."IFRS_R1.LAND::NGCC_EPC_LNK"  A 
+ INNER JOIN #UPDATE_NGCC_EPC_LNK B 
+    ON A.EPC_LINK_PRIMARY_KEY = B.EPC_LINK_PRIMARY_KEY
+   SET NDB_TS = LV_CUR_UTC
+ WHERE A.NDB_TS IS NULL;
+ 
+ -- Update Landing Table IFRS_R1.LAND::NGCC_EPC_OFFR
+UPDATE "LAND"."IFRS_R1.LAND::NGCC_EPC_OFFR"  A
+  FROM "LAND"."IFRS_R1.LAND::NGCC_EPC_OFFR"  A 
+ INNER JOIN #UPDATE_NGCC_EPC_OFFR B 
+    ON A.EPC_OFR_PRIMARY_KEY     = B.EPC_OFR_PRIMARY_KEY
+   SET NDB_TS = LV_CUR_UTC
+ WHERE A.NDB_TS IS NULL;
+ 
+ -- Update Landing Table IFRS_R1.LAND::NGCC_EPC_PKG
+UPDATE "LAND"."IFRS_R1.LAND::NGCC_EPC_PKG"  A
+  FROM "LAND"."IFRS_R1.LAND::NGCC_EPC_PKG"  A 
+ INNER JOIN #UPDATE_NGCC_EPC_PKG B 
+    ON A.EPC_PKG_PRIMARY_KEY = B.EPC_PKG_PRIMARY_KEY
+   SET NDB_TS = LV_CUR_UTC
+ WHERE A.NDB_TS IS NULL;
+ 
+  
+ -- Update Landing Table IFRS_R1.LAND::NGCC_EPC_ITEM
+UPDATE "LAND"."IFRS_R1.LAND::NGCC_EPC_ITEM"  A
+  FROM "LAND"."IFRS_R1.LAND::NGCC_EPC_ITEM"  A 
+ INNER JOIN #UPDATE_NGCC_EPC_ITEM B 
+    ON A.EPC_ITEM_PRIMARY_KEY = B.EPC_ITEM_PRIMARY_KEY
+   SET NDB_TS = LV_CUR_UTC
+ WHERE A.NDB_TS IS NULL;
+
+
+--------------------------------------------------------------------------------------------------
+-- Update Error Table
+--------------------------------------------------------------------------------------------------
+UPDATE "NDB_MOBILITY"."IFRS_R1.MOBILITY.NDB_MOBILITY::PPD_NGCCREF_EPC_PROD_EH" A
+  FROM "NDB_MOBILITY"."IFRS_R1.MOBILITY.NDB_MOBILITY::PPD_NGCCREF_EPC_PROD_EH" A 
+ INNER JOIN #UPDATE_EH_DELETION B 
+	ON A.OFFER_ID     = B.OFFER_ID
+   AND A.PACKAGE_ID   = B.PACKAGE_ID
+   AND A.ITEM_ID      = B.ITEM_ID
+   SET (DELETE_DATE, DELETED) = (CURRENT_DATE, 1);
+
+--------------------------------------------------------------------------------------------------
+-- Set Overall Status
+-------------------------------------------------------------------------------------------------- 
+
+--  STATUS 0: Send the success message to scheduling tool to confirm this procedure has been
+--  executed successfully
+    IF(LV_ERROR_FLAG = 'Y') THEN		
+
+     OP_STATUS := LC_ERROR_TEXT; 
+			
+    ELSE
+
+  	 OP_STATUS := LC_SUCCESS_TEXT; 	
+				
+	END IF;
+		
+END;
+

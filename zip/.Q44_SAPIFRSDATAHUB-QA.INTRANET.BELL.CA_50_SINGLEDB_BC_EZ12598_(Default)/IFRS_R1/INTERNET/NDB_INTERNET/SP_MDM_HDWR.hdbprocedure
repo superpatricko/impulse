@@ -1,0 +1,276 @@
+PROCEDURE "NDB_INTERNET"."IFRS_R1.INTERNET.NDB_INTERNET::SP_MDM_HDWR"
+(IN IP_CYCL_ID NVARCHAR(3),
+OUT OP_STATUS NVARCHAR(100)) 
+	LANGUAGE SQLSCRIPT
+	SQL SECURITY INVOKER
+	AS
+
+BEGIN
+--------------------------------------------------------------------------------------------------
+-- Procedure Title : SP_MDM_HDWR
+-- Created By      : BC_EZ08930 (RAKESH)       
+-- Create Date     : 03-18-2017
+-- Description     : Data Inserted using Calculation View - CA_MDM_HDWR
+--                   to NDB Table - MDM_HDWR Using this stored procedure.
+--                   MDM HDWR includes data from table MDM_HDWR.
+-- Project         : Bell Canada
+-- Release         : R1 / IFRS
+--------------------------------------------------------------------------------------------------
+--   M O D I F I C A T I O N   H I S T O R Y
+--------------------------------------------------------------------------------------------------
+-- Date        | User ID          | Modification History/Release
+--------------------------------------------------------------------------------------------------
+--             |                  | 
+--------------------------------------------------------------------------------------------------
+-- Description Of the changes 
+--------------------------------------------------------------------------------------------------
+-- Modification Number          : <Assign Some Number> 
+-- Description of Changes Made> : <Description of Changes>       
+--------------------------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------------------------
+-- Local Variables Declaration
+--------------------------------------------------------------------------------------------------
+
+DECLARE LC_ERROR_TEXT 		NVARCHAR(70) DEFAULT 'OUT STATUS IS 1 : INSERT/UPDATE FOR ONE OR MORE RECORD FAILED';
+DECLARE LC_SUCCESS_TEXT 	NVARCHAR(70) DEFAULT 'OUT STATUS IS 0 : INSERT/UPDATE EXECUTION SUCCESSFUL';
+DECLARE LV_ERROR_FLAG 		NVARCHAR(1) := 'N';
+DECLARE LV_CUR_UTC 			TIMESTAMP := CURRENT_TIMESTAMP;
+DECLARE ERROR_TAB 			TABLE (ERROR_CODE NVARCHAR(100));
+DECLARE i					INTEGER;
+DECLARE RECORD_COUNT		INTEGER;
+DECLARE CURRENT_ERROR		NVARCHAR(100);
+
+--------------------------------------------------------------------------------------------------
+-- Cursors Declaration
+-------------------------------------------------------------------------------------------------- 
+  
+ DECLARE CURSOR MDM_HDWR FOR
+	   SELECT
+			 "CLASS",
+			 "HDWR_CD",
+			 "PROFSNL_INSTLTN_CD",
+			 "REFERENCE_EFFECTIVE_DT",
+			 "REFERENCE_EXPIRY_DT",
+			 "CHRG_ID",
+			 "STRT_SELL_DT",
+             "EFFECTIVE_DATE_PREV_DAY",
+			 "CYCL_ID",
+			 "SEQ_ID",
+			 "FLAG_EXISTING_RECORD" 
+	    FROM "_SYS_BIC"."IFRS_R1.INTERNET.NDB_INTERNET/CA_MDM_HDWR"
+			 (PLACEHOLDER."$$IP_CYCL_ID$$" => :IP_CYCL_ID)
+	ORDER BY "CYCL_ID", "SEQ_ID";   
+
+--------------------------------------------------------------------------------------------------
+-- Local Temporary Tables Declaration
+-------------------------------------------------------------------------------------------------- 
+
+
+CREATE LOCAL TEMPORARY TABLE #UPDATE_MDM_HDWR (HDWR_CD NVARCHAR(30),CHRG_ID NVARCHAR(16),STRT_SELL_DT DATE,CYCL_ID NVARCHAR(3));
+CREATE LOCAL TEMPORARY TABLE #UPDATE_EH_DELETION (HDWR_CD NVARCHAR(30),STRT_SELL_DT DATE, CHRG_ID NVARCHAR(16),REFERENCE_EFFECTIVE_DT DATE);
+        	  
+--------------------------------------------------------------------------------------------------
+-- Cursors Loop
+--------------------------------------------------------------------------------------------------  
+
+FOR HDWR AS MDM_HDWR DO
+
+--  Define Exit Handler
+	DECLARE EXIT HANDLER FOR SQLEXCEPTION 
+	BEGIN AUTONOMOUS TRANSACTION 
+	
+--    Define Exit Handler
+	  DECLARE EXIT HANDLER FOR SQLEXCEPTION 
+	  BEGIN AUTONOMOUS TRANSACTION 	
+	   
+	-- Do Nothing. Exception Handled to ensure SP does not get terminated 
+	
+ 	  END;
+	
+		   -- Insert record into error table
+		   		
+			   	    INSERT INTO  "NDB_INTERNET"."IFRS_R1.INTERNET.NDB_INTERNET::MDM_HDWR_EH"(
+								 "CLASS",
+								 "HDWR_CD",
+								 "PROFSNL_INSTLTN_CD",
+								 "REFERENCE_EFFECTIVE_DT",
+								 "REFERENCE_EXPIRY_DT",
+								 "STRT_SELL_DT",
+								 "CHRG_ID",
+								 "ERROR_CODE",
+								 "TECHNICAL_MESSAGE",
+								 "ERROR_CREATE_TS")
+			      
+			   	         VALUES  (HDWR."CLASS",
+								  HDWR."HDWR_CD",
+								  HDWR."PROFSNL_INSTLTN_CD",
+								  HDWR."REFERENCE_EFFECTIVE_DT",
+								  HDWR."REFERENCE_EXPIRY_DT",
+								  HDWR."STRT_SELL_DT",
+								  HDWR."CHRG_ID",
+								  ::SQL_ERROR_CODE,
+					              ::SQL_ERROR_MESSAGE,
+					              LV_CUR_UTC);
+	
+
+		  	   LV_ERROR_FLAG := 'Y';
+	         
+	  END;       
+    
+    
+    --   If Record exists in the Target NDB Table
+     IF HDWR.FLAG_EXISTING_RECORD = 'U' THEN
+     
+     	BEGIN AUTONOMOUS TRANSACTION  
+     
+          --     Update the target NDB table
+	          UPDATE "NDB_INTERNET"."IFRS_R1.INTERNET.NDB_INTERNET::MDM_HDWR" NDB 
+	   		     SET  NDB.REFERENCE_EXPIRY_DT  = HDWR.EFFECTIVE_DATE_PREV_DAY,
+	 		          NDB."MODIFIED_TS"        = LV_CUR_UTC
+			   WHERE  NDB.HDWR_CD              = HDWR.HDWR_CD
+			     AND  NDB.STRT_SELL_DT         = HDWR.STRT_SELL_DT
+			     AND  NDB.CHRG_ID              = HDWR.CHRG_ID
+			     AND  NDB.REFERENCE_EXPIRY_DT  = '99991231';
+			     
+--    Insert the Incoming new record
+             INSERT INTO "NDB_INTERNET"."IFRS_R1.INTERNET.NDB_INTERNET::MDM_HDWR"( 			     
+						 "CLASS",
+					     "HDWR_CD",
+					     "PROFSNL_INSTLTN_CD",
+					     "REFERENCE_EFFECTIVE_DT",
+					     "REFERENCE_EXPIRY_DT",
+					     "STRT_SELL_DT",
+					     "CHRG_ID",
+					     "INSRT_TS",
+			             "MODIFIED_TS")
+			
+				VALUES  (HDWR."CLASS",
+					     HDWR."HDWR_CD",
+					     HDWR.PROFSNL_INSTLTN_CD,
+					     HDWR."REFERENCE_EFFECTIVE_DT",
+						 HDWR."REFERENCE_EXPIRY_DT",
+						 HDWR."STRT_SELL_DT",
+						 HDWR."CHRG_ID",
+						 LV_CUR_UTC,
+						 LV_CUR_UTC );
+     	END;				 
+						 
+--         Insert PK of successfully processed Records into Local Temp Tables 
+--         for Updating NDB_TS in corresponding Landing Tables records	
+
+			   INSERT INTO #UPDATE_MDM_HDWR
+						   ("HDWR_CD", 
+						    "CHRG_ID",
+						    "STRT_SELL_DT",
+						    "CYCL_ID")
+				    VALUES  (HDWR."HDWR_CD", 
+					 		 HDWR."CHRG_ID",
+					 		 HDWR."STRT_SELL_DT",
+					 		 HDWR."CYCL_ID");
+						   					   	    		
+			   INSERT INTO #UPDATE_EH_DELETION
+						   ("HDWR_CD", 
+						    "CHRG_ID",
+						    "STRT_SELL_DT",
+						    "REFERENCE_EFFECTIVE_DT")
+				     VALUES (HDWR."HDWR_CD", 
+					 		 HDWR."CHRG_ID",
+					 	     HDWR."STRT_SELL_DT",
+						     HDWR."REFERENCE_EFFECTIVE_DT");
+
+    ELSEIF HDWR.FLAG_EXISTING_RECORD = 'I' THEN
+    
+--    Insert Records into the target NDB table
+                    INSERT INTO "NDB_INTERNET"."IFRS_R1.INTERNET.NDB_INTERNET::MDM_HDWR"(
+		                   		 "CLASS",
+							     "HDWR_CD",
+							     "PROFSNL_INSTLTN_CD",
+							     "REFERENCE_EFFECTIVE_DT",
+							     "REFERENCE_EXPIRY_DT",
+							     "STRT_SELL_DT",
+							     "CHRG_ID",
+							     "INSRT_TS")
+					
+						  VALUES (HDWR."CLASS",
+							      HDWR."HDWR_CD",
+							      HDWR."PROFSNL_INSTLTN_CD",
+							      HDWR."REFERENCE_EFFECTIVE_DT",
+								  HDWR."REFERENCE_EXPIRY_DT",
+								  HDWR."STRT_SELL_DT",
+								  HDWR."CHRG_ID",
+								  LV_CUR_UTC);
+						 
+						 
+--         Insert PK of successfully processed Records into Local Temp Tables 
+--         for Updating NDB_TS in corresponding Landing Tables records	
+
+			   INSERT INTO #UPDATE_MDM_HDWR
+						   ("HDWR_CD", 
+						    "CHRG_ID",
+						    "STRT_SELL_DT",
+						    "CYCL_ID")
+				    VALUES  (HDWR."HDWR_CD", 
+					 		 HDWR."CHRG_ID",
+					 		 HDWR."STRT_SELL_DT",
+					 		 HDWR."CYCL_ID");
+						   					   	    		
+			   INSERT INTO #UPDATE_EH_DELETION
+						   ("HDWR_CD", 
+						    "CHRG_ID",
+						    "STRT_SELL_DT",
+						    "REFERENCE_EFFECTIVE_DT")
+				    VALUES ( HDWR."HDWR_CD", 
+					 		 HDWR."CHRG_ID",
+					 	     HDWR."STRT_SELL_DT",
+						     HDWR."REFERENCE_EFFECTIVE_DT");
+						 		
+					   	 
+    END IF;  
+
+END FOR;
+--------------------------------------------------------------------------------------------------
+-- Update Landing Tables
+-------------------------------------------------------------------------------------------------- 
+
+-- Update Landing Table IFRS_R1.LAND::MDM_HDWR
+UPDATE "LAND"."IFRS_R1.LAND::MDM_HDWR" A
+  FROM "LAND"."IFRS_R1.LAND::MDM_HDWR" A 
+ INNER JOIN #UPDATE_MDM_HDWR B 
+    ON A."HDWR_CD"        = B."HDWR_CD"
+   AND A."CHRG_ID"        = B."CHRG_ID"
+   AND A."STRT_SELL_DT"   = B."STRT_SELL_DT"  
+   AND A."CYCL_ID"        = B."CYCL_ID"  
+   SET NDB_TS             = LV_CUR_UTC
+ WHERE A.NDB_TS IS NULL;
+
+--------------------------------------------------------------------------------------------------
+-- Update Error Table
+--------------------------------------------------------------------------------------------------
+
+UPDATE "NDB_INTERNET"."IFRS_R1.INTERNET.NDB_INTERNET::MDM_HDWR_EH" A
+  FROM "NDB_INTERNET"."IFRS_R1.INTERNET.NDB_INTERNET::MDM_HDWR_EH" A 
+ INNER JOIN #UPDATE_EH_DELETION B
+    ON A."HDWR_CD"                 = B."HDWR_CD"
+   AND A."CHRG_ID"                 = B."CHRG_ID"
+   AND A."STRT_SELL_DT"            = B."STRT_SELL_DT"
+   AND A."REFERENCE_EFFECTIVE_DT"  = B."REFERENCE_EFFECTIVE_DT"
+   SET (DELETE_DATE, DELETED)      = (CURRENT_DATE, 1);
+
+--------------------------------------------------------------------------------------------------
+-- Set Overall Status
+-------------------------------------------------------------------------------------------------- 
+
+--  STATUS 0: Send the success message to scheduling tool to confirm this procedure has been
+--  executed successfully
+    IF(LV_ERROR_FLAG = 'Y') THEN		
+
+       OP_STATUS := LC_ERROR_TEXT;
+			
+    ELSE
+ 
+  	   OP_STATUS := LC_SUCCESS_TEXT; 	
+				
+	END IF;
+		
+END;		

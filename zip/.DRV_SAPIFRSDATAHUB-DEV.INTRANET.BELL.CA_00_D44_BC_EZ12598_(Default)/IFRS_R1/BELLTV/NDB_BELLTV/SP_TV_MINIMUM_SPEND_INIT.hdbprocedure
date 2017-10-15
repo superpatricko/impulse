@@ -1,0 +1,344 @@
+PROCEDURE "NDB_TV"."IFRS_R1.BELLTV.NDB_BELLTV::SP_TV_MINIMUM_SPEND_INIT"
+(IN  IP_EFF_DT DATE,OUT OP_STATUS NVARCHAR(1000)) 
+	LANGUAGE SQLSCRIPT
+	SQL SECURITY INVOKER
+	AS
+BEGIN 
+----------------------------------------------------------------------
+-- Procedure Title : SP_TV_MINIMUM_SPEND_INIT
+-- Created By      : BC_EZ15395 (Keshav)       
+-- Create Date     : 19-08-2017
+-- Description     : Data Inserted using Calculation View - CA_TV_MINIMUM_SPEND_INIT
+--                   To NDB Table - TV_TRANSACTIONS Using this stored procedure.
+--                   TV_TRANSACTIONS includes data from table TV_CUSTOMER,SDA_ZMINIMUM_SPEND.			
+-- Project         : Bell Canada
+-- Release         : R1 / IFRS
+--------------------------------------------------------------------------------------------------
+--   M O D I F I C A T I O N   H I S T O R Y
+--------------------------------------------------------------------------------------------------
+-- Date        | User ID          | Modification History/Release
+--------------------------------------------------------------------------------------------------
+--             |                  | 
+--------------------------------------------------------------------------------------------------
+-- Description Of the changes 
+--------------------------------------------------------------------------------------------------
+-- Modification Number          : <Assign Some Number> 
+-- Description of Changes Made> : <Description of Changes>       
+--------------------------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------------------------
+-- Local Variables Declaration
+--------------------------------------------------------------------------------------------------
+
+DECLARE LC_ERROR_TEXT 		NVARCHAR(70) DEFAULT 'OUT STATUS IS 1 : INSERT/UPDATE FOR ONE OR MORE RECORD FAILED';
+DECLARE LC_SUCCESS_TEXT 	NVARCHAR(70) DEFAULT 'OUT STATUS IS 0 : INSERT/UPDATE EXECUTION SUCCESSFUL';
+DECLARE LV_ERROR_FLAG 		NVARCHAR(1) := 'N';
+DECLARE LV_CUR_UTC 			TIMESTAMP := CURRENT_TIMESTAMP;
+DECLARE ERROR_TAB 			TABLE (ERROR_CODE NVARCHAR(100));
+DECLARE i					INTEGER;
+DECLARE RECORD_COUNT		INTEGER;
+DECLARE CURRENT_ERROR		NVARCHAR(100);
+
+--------------------------------------------------------------------------------------------------
+-- Cursors Declaration
+--------------------------------------------------------------------------------------------------   
+DECLARE CURSOR C_TV_TRANSACTIONS FOR
+	  SELECT
+	 "ACCT_NUM",
+	 "PRIN_NUM",
+	 "AGNT_NUM",
+	 "CO_CD",
+	 "CONTR_STRT_DT",
+	 "REFERENCE_EFFECTIVE_DT",
+	 "EXTR_DT",
+	 "TRANS_DT",
+	 "POST_DT",
+	 "AUDT_TRL_DT",
+	 "CONTR_END_DT",
+	 "CONTR_TERM",
+	 "CONTR_TY",
+	 "CUST_ST",
+	 "NETWK_TY",
+	 "CUST_TY",
+	 "KUNNR_SID",
+	 "SERVICE_CD",
+	 "VIRTUAL_IND",
+	 "TERM_IND",
+	 "PRODUCT_TYPE",
+	 "VTG_ROW_ID",
+	 "AMT",
+	 "ERROR_STATUS",
+	 "ERROR_CODE"
+FROM "_SYS_BIC"."IFRS_R1.BELLTV.NDB_BELLTV/CA_TV_MINIMUM_SPEND_INIT"
+                     (PLACEHOLDER."$$IP_EFF_DT$$" => :IP_EFF_DT);
+  
+----------------------------------------------------------------------------------------------------
+-- Local Temporary Tables Declaration
+-----------------------------------------------------------------------------------------------------
+
+CREATE LOCAL TEMPORARY TABLE #UPDATE_TV_CUSTOMER (ACCT_NUM NVARCHAR(16),REFERENCE_EFFECTIVE_DT DATE);
+CREATE LOCAL TEMPORARY TABLE #UPDATE_EH_DELETION (EXTR_DT DATE ,ACCT_NUM NVARCHAR(16), VTG_ROW_ID NVARCHAR(18)); 
+ 
+--------------------------------------------------------------------------------------------------
+-- Cursors Loop
+-------------------------------------------------------------------------------------------------- 
+FOR CUR_TV_TR AS C_TV_TRANSACTIONS DO
+
+--  Define Exit Handler
+	DECLARE EXIT HANDLER FOR SQLEXCEPTION 
+	BEGIN AUTONOMOUS TRANSACTION 
+	
+----  Define Exit Handler
+	  DECLARE EXIT HANDLER FOR SQLEXCEPTION 
+	  BEGIN AUTONOMOUS TRANSACTION 	
+
+	
+ 	  END;
+ 	  
+-- Insert record into error table
+	 
+	     INSERT INTO "NDB_TV"."IFRS_R1.BELLTV.NDB_BELLTV::TV_TRANSACTIONS_EH"(
+					 "ACCT_NUM",
+					 "PRIN_NUM",
+					 "AGNT_NUM",
+					 "CO_CD",
+					 "CONTR_STRT_DT",
+					 "EXTR_DT",
+					 "TRANS_DT",
+					 "POST_DT",
+					 "AUDT_TRL_DT",
+					 "CONTR_END_DT",
+					 "CONTR_TERM",
+					 "CONTR_TY",
+					 "CUST_ST",
+					 "NETWK_TY",
+					 "CUST_TY",
+					 "KUNNR_SID",
+					 "SERVICE_CD",
+					 "VIRTUAL_IND",
+					 "TERM_IND",
+					 "PRODUCT_TYPE",
+					 "VTG_ROW_ID",
+					 "AMT" ,
+					 "ERROR_CODE",
+			         "TECHNICAL_MESSAGE",
+			         "ERROR_CREATE_TS") 
+            VALUES ("CUR_TV_TR"."ACCT_NUM",
+					"CUR_TV_TR"."PRIN_NUM",
+					"CUR_TV_TR"."AGNT_NUM",
+					"CUR_TV_TR"."CO_CD",
+					"CUR_TV_TR"."CONTR_STRT_DT",
+					"CUR_TV_TR"."EXTR_DT",
+					"CUR_TV_TR"."TRANS_DT",
+					"CUR_TV_TR"."POST_DT",
+					"CUR_TV_TR"."AUDT_TRL_DT",
+					"CUR_TV_TR"."CONTR_END_DT",
+					"CUR_TV_TR"."CONTR_TERM",
+					"CUR_TV_TR"."CONTR_TY",
+					"CUR_TV_TR"."CUST_ST",
+					"CUR_TV_TR"."NETWK_TY",
+					"CUR_TV_TR"."CUST_TY",
+					"CUR_TV_TR"."KUNNR_SID",
+					"CUR_TV_TR"."SERVICE_CD",
+					"CUR_TV_TR"."VIRTUAL_IND",
+					"CUR_TV_TR"."TERM_IND",
+					"CUR_TV_TR"."PRODUCT_TYPE",
+					"CUR_TV_TR"."VTG_ROW_ID",
+					"CUR_TV_TR"."AMT",
+		             ::SQL_ERROR_CODE,
+		             ::SQL_ERROR_MESSAGE,
+		             LV_CUR_UTC); 
+	     
+	 -- Set Error Flag		
+				LV_ERROR_FLAG := 'Y';	
+	  	       
+	 END;
+  
+   -----------------------------------------------------------------------------------------------
+ 
+ 
+--  Check the Error Status of the Record. If Record is with Error, then send to Error Table
+	IF CUR_TV_TR.ERROR_STATUS = 1  THEN
+	
+	
+	--  Call the Stored Procedure to split the concatenated Error Messages into Error Rows
+		CALL "NDB_COMMON"."IFRS_R1.COMMON_COMP.EH::SP_EH_SPLIT_ERRORS"(CUR_TV_TR."ERROR_CODE", ERROR_TAB, RECORD_COUNT);
+
+     -- Loop through the Error Records
+		FOR i IN 1 .. :RECORD_COUNT DO
+			
+		 -- Fetch the Error Code
+			CURRENT_ERROR = :ERROR_TAB."ERROR_CODE"[:i];
+			
+		 -- Insert into the Error Table
+		 
+		 INSERT INTO "NDB_TV"."IFRS_R1.BELLTV.NDB_BELLTV::TV_TRANSACTIONS_EH"(
+					 "ACCT_NUM",
+					 "PRIN_NUM",
+					 "AGNT_NUM",
+					 "CO_CD",
+					 "CONTR_STRT_DT",
+					 "EXTR_DT",
+					 "TRANS_DT",
+					 "POST_DT",
+					 "AUDT_TRL_DT",
+					 "CONTR_END_DT",
+					 "CONTR_TERM",
+					 "CONTR_TY",
+					 "CUST_ST",
+					 "NETWK_TY",
+					 "CUST_TY",
+					 "KUNNR_SID",
+					 "SERVICE_CD",
+					 "VIRTUAL_IND",
+					 "TERM_IND",
+					 "PRODUCT_TYPE",
+					 "VTG_ROW_ID",
+					 "AMT" ,
+					 "ERROR_CODE",
+			         "ERROR_CREATE_TS") 
+            VALUES ("CUR_TV_TR"."ACCT_NUM",
+					"CUR_TV_TR"."PRIN_NUM",
+					"CUR_TV_TR"."AGNT_NUM",
+					"CUR_TV_TR"."CO_CD",
+					"CUR_TV_TR"."CONTR_STRT_DT",
+					"CUR_TV_TR"."EXTR_DT",
+					"CUR_TV_TR"."TRANS_DT",
+					"CUR_TV_TR"."POST_DT",
+					"CUR_TV_TR"."AUDT_TRL_DT",
+					"CUR_TV_TR"."CONTR_END_DT",
+					"CUR_TV_TR"."CONTR_TERM",
+					"CUR_TV_TR"."CONTR_TY",
+					"CUR_TV_TR"."CUST_ST",
+					"CUR_TV_TR"."NETWK_TY",
+					"CUR_TV_TR"."CUST_TY",
+					"CUR_TV_TR"."KUNNR_SID",
+					"CUR_TV_TR"."SERVICE_CD",
+					"CUR_TV_TR"."VIRTUAL_IND",
+					"CUR_TV_TR"."TERM_IND",
+					"CUR_TV_TR"."PRODUCT_TYPE",
+					"CUR_TV_TR"."VTG_ROW_ID",
+					"CUR_TV_TR"."AMT",
+		             :CURRENT_ERROR,
+		             LV_CUR_UTC); 
+		             
+		 END FOR;
+
+-- Set Error Flag				        
+			LV_ERROR_FLAG := 'Y';
+		 
+	    
+	-- Processing for Successful Records
+   			    ELSE 
+          
+		 
+		--      Insert Records into the target NDB table
+
+		        INSERT INTO  "NDB_TV"."IFRS_R1.BELLTV.NDB_BELLTV::TV_TRANSACTIONS"(
+							 "ACCT_NUM",
+							 "PRIN_NUM",
+							 "AGNT_NUM",
+							 "CO_CD",
+							 "CONTR_STRT_DT",
+							 "EXTR_DT",
+							 "TRANS_DT",
+							 "POST_DT",
+							 "AUDT_TRL_DT",
+							 "CONTR_END_DT",
+							 "CONTR_TERM",
+							 "CONTR_TY",
+							 "CUST_ST",
+							 "NETWK_TY",
+							 "CUST_TY",
+							 "KUNNR_SID",
+							 "SERVICE_CD",
+							 "VIRTUAL_IND",
+							 "TERM_IND",
+							 "PRODUCT_TYPE",
+							 "VTG_ROW_ID",
+							 "AMT" ,
+							 "INSERT_TS")
+		           VALUES ( "CUR_TV_TR"."ACCT_NUM",
+							"CUR_TV_TR"."PRIN_NUM",
+							"CUR_TV_TR"."AGNT_NUM",
+							"CUR_TV_TR"."CO_CD",
+							"CUR_TV_TR"."CONTR_STRT_DT",
+							"CUR_TV_TR"."EXTR_DT",
+							"CUR_TV_TR"."TRANS_DT",
+							"CUR_TV_TR"."POST_DT",
+							"CUR_TV_TR"."AUDT_TRL_DT",
+							"CUR_TV_TR"."CONTR_END_DT",
+							"CUR_TV_TR"."CONTR_TERM",
+							"CUR_TV_TR"."CONTR_TY",
+							"CUR_TV_TR"."CUST_ST",
+							"CUR_TV_TR"."NETWK_TY",
+							"CUR_TV_TR"."CUST_TY",
+							"CUR_TV_TR"."KUNNR_SID",
+							"CUR_TV_TR"."SERVICE_CD",
+							"CUR_TV_TR"."VIRTUAL_IND",
+							"CUR_TV_TR"."TERM_IND",
+							"CUR_TV_TR"."PRODUCT_TYPE",
+							"CUR_TV_TR"."VTG_ROW_ID",
+							"CUR_TV_TR"."AMT",
+				             LV_CUR_UTC); 
+			 			
+-- End of insert statement -- 
+--  Insert PK of successfully processed Records into Local Temp Tables 
+-- for Updating NDB_TS in corresponding Landing Tables records
+
+		   INSERT INTO #UPDATE_TV_CUSTOMER
+		   			   ("ACCT_NUM",
+		   			    "REFERENCE_EFFECTIVE_DT") 
+		   		VALUES ("CUR_TV_TR"."ACCT_NUM",
+		   		        "CUR_TV_TR"."REFERENCE_EFFECTIVE_DT");
+		   				
+		   INSERT INTO #UPDATE_EH_DELETION
+		   			   ("EXTR_DT", 
+		   			    "ACCT_NUM", 
+		   			    "VTG_ROW_ID") 
+		   		VALUES ("CUR_TV_TR"."EXTR_DT",
+		   				"CUR_TV_TR"."ACCT_NUM",
+		   				"CUR_TV_TR"."VTG_ROW_ID"); 				
+    END IF;
+
+END FOR;
+
+--------------------------------------------------------------------------------------------------
+-- Update NDB Tables
+-------------------------------------------------------------------------------------------------- 
+
+-- Update NDB Table "IFRS_R1.NDB_BELLTV::TV_CUSTOMER"
+UPDATE "NDB_TV"."IFRS_R1.BELLTV.NDB_BELLTV::TV_CUSTOMER" A
+  FROM "NDB_TV"."IFRS_R1.BELLTV.NDB_BELLTV::TV_CUSTOMER" A 
+ INNER JOIN #UPDATE_TV_CUSTOMER B 
+    ON  A."ACCT_NUM"        		    = B."ACCT_NUM"
+   AND  A."REFERENCE_EFFECTIVE_DT"	    = B."REFERENCE_EFFECTIVE_DT" 
+   SET  MIN_SPD_CRE_IND  = 'X'
+ WHERE  A.MIN_SPD_CRE_IND IS NULL;
+
+
+-- Update Error Table
+UPDATE "NDB_TV"."IFRS_R1.BELLTV.NDB_BELLTV::TV_TRANSACTIONS_EH" A
+  FROM "NDB_TV"."IFRS_R1.BELLTV.NDB_BELLTV::TV_TRANSACTIONS_EH" A
+ INNER JOIN  #UPDATE_EH_DELETION B
+    ON  A."EXTR_DT"         = B."EXTR_DT"
+   AND  A."ACCT_NUM"        = B."ACCT_NUM"
+   AND  A."VTG_ROW_ID"      = B."VTG_ROW_ID"
+   SET  (DELETE_DATE, DELETED) = (CURRENT_DATE, 1);
+
+  
+--------------------------------------------------------------------------------------------------
+-- Set Overall Status
+-------------------------------------------------------------------------------------------------- 
+    
+--  STATUS 0: Send the success message to scheduling tool to confirm this procedure has been
+--  executed successfully
+    IF(LV_ERROR_FLAG = 'Y') THEN		
+
+     OP_STATUS := LC_ERROR_TEXT; 
+	
+    ELSE
+
+  	 OP_STATUS := LC_SUCCESS_TEXT; 	
+	END IF;	
+END;

@@ -1,0 +1,647 @@
+PROCEDURE "NDB_COMMON"."IFRS_R1.COMMON_COMP.NDB_COMMON::SP_OB_POSTBILLING"
+(IN  IP_ACTV_DATE DATE,
+ OUT OP_STATUS NVARCHAR(100)) 
+	LANGUAGE SQLSCRIPT
+	SQL SECURITY INVOKER
+	AS
+ 
+BEGIN
+----------------------------------------------------------------------
+-- Procedure Title : SP_OB_POSTBILLING
+-- Created By      : BC_EY96110 (Arpit)      
+-- Create Date     : 08-05-2017
+-- Description     : Data Inserted using Calculation View - CA_OB_PB_CI_OC_RC_CUST
+--                   To NDB Table - OB_POSTBILLING Using this stored procedure.
+--                   NDB_TS is updated in Landing Table	IFRS_OB_POSTBILLING 
+-- 				     after data is loaded in NDB.		
+-- Project         : Bell Canada
+-- Release         : R1 / IFRS
+--------------------------------------------------------------------------------------------------
+--   M O D I F I C A T I O N   H I S T O R Y
+--------------------------------------------------------------------------------------------------
+-- Date        | User ID          | Modification History/Release
+--------------------------------------------------------------------------------------------------
+--             |                  | 
+--------------------------------------------------------------------------------------------------
+-- Description Of the changes 
+--------------------------------------------------------------------------------------------------
+-- Modification Number          : <Assign Some Number> 
+-- Description of Changes Made> : <Description of Changes>       
+--------------------------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------------------------
+-- Local Variables Declaration
+--------------------------------------------------------------------------------------------------
+
+DECLARE LC_ERROR_TEXT 		NVARCHAR(70) DEFAULT 'OUT STATUS IS 1 : INSERT/UPDATE FOR ONE OR MORE RECORD FAILED';
+DECLARE LC_SUCCESS_TEXT 	NVARCHAR(70) DEFAULT 'OUT STATUS IS 0 : INSERT/UPDATE EXECUTION SUCCESSFUL';
+DECLARE LV_ERROR_FLAG 		NVARCHAR(1) := 'N';
+DECLARE LV_CUR_UTC 			TIMESTAMP := CURRENT_TIMESTAMP;
+DECLARE ERROR_TAB 			TABLE (ERROR_CODE NVARCHAR(100));
+DECLARE i					INTEGER;
+DECLARE RECORD_COUNT		INTEGER;
+DECLARE CURRENT_ERROR		NVARCHAR(100);
+
+--------------------------------------------------------------------------------------------------
+-- Cursors Declaration
+--------------------------------------------------------------------------------------------------   
+DECLARE CURSOR C_POSTBILL FOR
+			  SELECT "PRODUCT_TYPE",
+					 "LOB",
+					 "SOC",
+					 "EMP_DISCOUNT_IND",
+					 "AMOUNT",
+					 "BUNDLE_DISCOUNT_IND",
+					 "BNDL_ACT_RSNCODE",
+					 "ACCRUAL_IND",
+					 "ACTV_CODE",
+					 "ACTV_DATE",
+					 "ACT_REASON_CODE",
+					 "ADJ_REASON_CODE",
+					 "AREA_IND",
+					 "BALANCE_IMPACT_CODE",
+					 "BAN",
+					 "BILL_DATE",
+					 "BILL_FIXED_TEXT",
+					 "SUBSCRIBER_NO",
+					 "BILL_SEQ_NO",
+					 "BL_IGNORE_IND",
+					 "BUSINESS_ID",
+					 "CHARGE_SEQ_NO",
+					 "CHARGE_TYPE",
+					 "CURR_CODE",
+					 "CYCLE_CODE",
+					 "CYCLE_END_DATE",
+					 "CYCLE_RUN_MONTH",
+					 "CYCLE_RUN_YEAR",
+					 "CYCLE_START_DATE",
+					 "DISCOUNT_CODE",
+					 "DISC_FROM_AMT",
+					 "DISCOUNT_PCT",
+					 "EFFECTIVE_DATE",
+					 "ENTITY_SEQ_NO",
+					 "FEATURE_CODE",
+					 "FTR_REVENUE_CODE",
+					 "GL_ACCOUNT_NUMBER",
+					 "ISSUE_DATE",
+					 "JOURNALIZATION_DATE",
+					 "LEGACY_CHARGE_TYPE",
+					 "LEGACY_IND",
+					 "LEGACY_SEQ_NO",
+					 "LEGACY_SUBNO",
+					 "OVER_USAGE_INDICATOR",
+					 "PLAN_TYPE",
+					 "PRD_CVRG_END_DATE",
+					 "PRD_CVRG_STRT_DATE",
+					 "PROVINCE_CODE",
+					 "THIRD_PARTY_CHG_IND",
+					 "TRANSACTION_DATE",
+					 "TRANSACTION_TYPE",
+					 "UOM_CODE",
+					 "UOM_OVR_QUANTITY",
+					 "POST_BILLING_ID",
+					 "AR_ACTV",
+					 "CR_DR_IND",
+					 "IFRS_ENT_SEQ_NO",
+					 "REALLOCATION_IND",
+					 "INVOICE_TYPE",
+					 "GL_CLASSIF_CODE",
+					 "GL_CHARGE_TYPE",
+					 "PROFIT_CENTER",
+					 "KUNNR_SID",
+					 "REFERENCE_EXPIRY_DT",
+					 "REFERENCE_EFFECTIVE_DT",
+					 "OBLE",
+					 "SUBDID",
+					 "CYCL_ID",
+					 "ERROR_STATUS",
+					 "ERROR_CODE"
+			    FROM "_SYS_BIC"."IFRS_R1.COMMON_COMP.NDB_COMMON/CA_OB_PB_CI_OC_RC_CUST"
+                     (PLACEHOLDER."$$IP_ACTV_DATE$$" => :IP_ACTV_DATE)
+            ORDER BY "REFERENCE_EFFECTIVE_DT", "REFERENCE_EXPIRY_DT"
+            WITH HINT (NO_REMOTE_JOIN_RELOCATION);
+ 
+----------------------------------------------------------------------------------------------------
+-- Local Temporary Tables Declaration
+-----------------------------------------------------------------------------------------------------
+
+CREATE LOCAL TEMPORARY TABLE #UPDATE_INT_POSTBILLING (POST_BILLING_ID NVARCHAR(25),REFERENCE_EFFECTIVE_DT DATE);
+CREATE LOCAL TEMPORARY TABLE #UPDATE_EH_DELETION (POST_BILLING_ID NVARCHAR(25), REFERENCE_EFFECTIVE_DT DATE); 
+ 
+--------------------------------------------------------------------------------------------------
+-- Cursors Loop
+-------------------------------------------------------------------------------------------------- 
+FOR CUR_PB AS C_POSTBILL DO
+
+--  Define Exit Handler
+	DECLARE EXIT HANDLER FOR SQLEXCEPTION 
+	BEGIN AUTONOMOUS TRANSACTION 
+	
+--    Define Exit Handler
+	  DECLARE EXIT HANDLER FOR SQLEXCEPTION 
+	  BEGIN AUTONOMOUS TRANSACTION 	
+	   
+	-- Do Nothing. Exception Handled to ensure SP does not get terminated 
+	
+ 	  END;
+ 	  
+	 -- Insert record into error table	 
+	     INSERT INTO "NDB_COMMON"."IFRS_R1.COMMON_COMP.NDB_COMMON::OB_POSTBILLING_EH"(
+							 "LOB",
+							 "CHARGE_SEQ_NO",
+							 "POST_BILLING_ID",
+							 "REFERENCE_EFFECTIVE_DT",
+							 "REFERENCE_EXPIRY_DT",
+							 "EFFECTIVE_DATE",
+							 "BAN",
+							 "SUBSCRIBER_NO",
+							 "TRANSACTION_TYPE",
+							 "BUSINESS_ID",
+							 "BILL_SEQ_NO",
+							 "SOC",
+							 "FTR_REVENUE_CODE",
+							 "FEATURE_CODE",
+							 "PRD_CVRG_STRT_DATE",
+							 "PRD_CVRG_END_DATE",
+							 "TRANSACTION_DATE",
+							 "OVER_USAGE_INDICATOR",
+							 "CYCLE_CODE",
+							 "CYCLE_RUN_MONTH",
+							 "CYCLE_RUN_YEAR",
+							 "CYCLE_START_DATE",
+							 "CYCLE_END_DATE",
+							 "ACTV_CODE",
+							 "ACT_REASON_CODE",
+							 "CHARGE_TYPE",
+							 "BILL_FIXED_TEXT",
+							 "ADJ_REASON_CODE",
+							 "ACCRUAL_IND",
+							 "DISCOUNT_CODE",
+							 "DISC_FROM_AMT",
+							 "DISCOUNT_PCT",
+							 "JOURNALIZATION_DATE",
+							 "THIRD_PARTY_CHG_IND",
+							 "PROVINCE_CODE",
+							 "UOM_CODE",
+							 "UOM_OVR_QUANTITY",
+							 "AREA_IND",
+							 "ACTV_DATE",
+							 "BALANCE_IMPACT_CODE",
+							 "GL_ACCOUNT_NUMBER",
+							 "LEGACY_CHARGE_TYPE",
+							 "LEGACY_SUBNO",
+							 "LEGACY_IND",
+							 "LEGACY_SEQ_NO",
+							 "BL_IGNORE_IND",
+							 "CURR_CODE",
+							 "BILL_DATE",
+							 "PLAN_TYPE",
+							 "ISSUE_DATE",
+							 "INVOICE_TYPE",
+							 "GL_CLASSIF_CODE",
+							 "GL_CHARGE_TYPE",
+							 "PROFIT_CENTER",
+							 "AR_ACTV",
+							 "IFRS_ENT_SEQ_NO",
+							 "CR_DR_IND",
+							 "REALLOCATION_IND",
+							 "EMP_DISCOUNT_IND",
+							 "AMOUNT",
+							 "BUNDLE_DISCOUNT_IND",
+							 "KUNNR_SID",
+							 "OBLE",	
+							 "SUBDID",
+							 "CYCL_ID",			
+							 "INSERT_TS",
+							 "ERROR_CODE",
+					         "TECHNICAL_MESSAGE",
+					         "ERROR_CREATE_TS") 
+            VALUES  (
+				     		CUR_PB."LOB",
+				     		CUR_PB."CHARGE_SEQ_NO",
+							CUR_PB."POST_BILLING_ID",
+							CUR_PB."REFERENCE_EFFECTIVE_DT",
+							CUR_PB."REFERENCE_EXPIRY_DT",
+							CUR_PB."EFFECTIVE_DATE",
+							CUR_PB."BAN",
+							CUR_PB."SUBSCRIBER_NO",
+							CUR_PB."TRANSACTION_TYPE",
+							CUR_PB."BUSINESS_ID",
+							CUR_PB."BILL_SEQ_NO",
+							CUR_PB."SOC",
+							CUR_PB."FTR_REVENUE_CODE",
+							CUR_PB."FEATURE_CODE",
+							CUR_PB."PRD_CVRG_STRT_DATE",
+							CUR_PB."PRD_CVRG_END_DATE",
+							CUR_PB."TRANSACTION_DATE",
+							CUR_PB."OVER_USAGE_INDICATOR",
+							CUR_PB."CYCLE_CODE",
+							CUR_PB."CYCLE_RUN_MONTH",
+							CUR_PB."CYCLE_RUN_YEAR",
+							CUR_PB."CYCLE_START_DATE",
+							CUR_PB."CYCLE_END_DATE",
+							CUR_PB."ACTV_CODE",
+							CUR_PB."ACT_REASON_CODE",
+							CUR_PB."CHARGE_TYPE",
+							CUR_PB."BILL_FIXED_TEXT",
+							CUR_PB."ADJ_REASON_CODE",
+							CUR_PB."ACCRUAL_IND",
+							CUR_PB."DISCOUNT_CODE",
+							CUR_PB."DISC_FROM_AMT",
+							CUR_PB."DISCOUNT_PCT",
+							CUR_PB."JOURNALIZATION_DATE",
+							CUR_PB."THIRD_PARTY_CHG_IND",
+							CUR_PB."PROVINCE_CODE",
+							CUR_PB."UOM_CODE",
+							CUR_PB."UOM_OVR_QUANTITY",
+							CUR_PB.AREA_IND,
+							CUR_PB."ACTV_DATE",
+							CUR_PB."BALANCE_IMPACT_CODE",
+							CUR_PB."GL_ACCOUNT_NUMBER",
+							CUR_PB."LEGACY_CHARGE_TYPE",
+							CUR_PB."LEGACY_SUBNO",
+							CUR_PB."LEGACY_IND",
+							CUR_PB."LEGACY_SEQ_NO",
+							CUR_PB."BL_IGNORE_IND",
+							CUR_PB."CURR_CODE",
+							CUR_PB."BILL_DATE",
+							CUR_PB."PLAN_TYPE",
+							CUR_PB."ISSUE_DATE",
+							CUR_PB."INVOICE_TYPE",
+							CUR_PB."GL_CLASSIF_CODE",
+							CUR_PB."GL_CHARGE_TYPE",
+							CUR_PB."PROFIT_CENTER",
+							CUR_PB."AR_ACTV",
+							CUR_PB."IFRS_ENT_SEQ_NO",
+							CUR_PB."CR_DR_IND",
+							CUR_PB."REALLOCATION_IND",
+							CUR_PB."EMP_DISCOUNT_IND",
+							CUR_PB."AMOUNT",
+							CUR_PB."BUNDLE_DISCOUNT_IND",
+							CUR_PB."KUNNR_SID",
+							CUR_PB."OBLE",
+					 		CUR_PB."SUBDID",
+					 		CUR_PB."CYCL_ID",	
+							LV_CUR_UTC,
+				            ::SQL_ERROR_CODE,
+				            ::SQL_ERROR_MESSAGE,
+				            LV_CUR_UTC);      
+				     
+	 --         Set Error Flag		
+				LV_ERROR_FLAG := 'Y';	
+	  	       
+	 END;
+
+--  Check the Error Status of the Record. If Record is with Error, then send to Error Table
+	IF CUR_PB.ERROR_STATUS = '1' THEN
+	
+	--  Call the Stored Procedure to split the concatenated Error Messages into Error Rows
+		CALL "NDB_COMMON"."IFRS_R1.COMMON_COMP.EH::SP_EH_SPLIT_ERRORS"(CUR_PB."ERROR_CODE", ERROR_TAB, RECORD_COUNT);
+
+     -- Loop through the Error Records
+		FOR i IN 1 .. :RECORD_COUNT DO
+			
+		 -- Fetch the Error Code
+			CURRENT_ERROR = :ERROR_TAB."ERROR_CODE"[:i];
+			
+			 -- Insert into the Error Table			 
+		        INSERT INTO  "NDB_COMMON"."IFRS_R1.COMMON_COMP.NDB_COMMON::OB_POSTBILLING_EH"(
+							 "LOB",
+							 "CHARGE_SEQ_NO",
+							 "POST_BILLING_ID",
+							 "REFERENCE_EFFECTIVE_DT",
+							 "REFERENCE_EXPIRY_DT",
+							 "EFFECTIVE_DATE",
+							 "BAN",
+							 "SUBSCRIBER_NO",
+							 "TRANSACTION_TYPE",
+							 "BUSINESS_ID",
+							 "BILL_SEQ_NO",
+							 "SOC",
+							 "FTR_REVENUE_CODE",
+							 "FEATURE_CODE",
+							 "PRD_CVRG_STRT_DATE",
+							 "PRD_CVRG_END_DATE",
+							 "TRANSACTION_DATE",
+							 "OVER_USAGE_INDICATOR",
+							 "CYCLE_CODE",
+							 "CYCLE_RUN_MONTH",
+							 "CYCLE_RUN_YEAR",
+							 "CYCLE_START_DATE",
+							 "CYCLE_END_DATE",
+							 "ACTV_CODE",
+							 "ACT_REASON_CODE",
+							 "CHARGE_TYPE",
+							 "BILL_FIXED_TEXT",
+							 "ADJ_REASON_CODE",
+							 "ACCRUAL_IND",
+							 "DISCOUNT_CODE",
+							 "DISC_FROM_AMT",
+							 "DISCOUNT_PCT",
+							 "JOURNALIZATION_DATE",
+							 "THIRD_PARTY_CHG_IND",
+							 "PROVINCE_CODE",
+							 "UOM_CODE",
+							 "UOM_OVR_QUANTITY",
+							 "AREA_IND",
+							 "ACTV_DATE",
+							 "BALANCE_IMPACT_CODE",
+							 "GL_ACCOUNT_NUMBER",
+							 "LEGACY_CHARGE_TYPE",
+							 "LEGACY_SUBNO",
+							 "LEGACY_IND",
+							 "LEGACY_SEQ_NO",
+							 "BL_IGNORE_IND",
+							 "CURR_CODE",
+							 "BILL_DATE",
+							 "PLAN_TYPE",
+							 "ISSUE_DATE",
+							 "INVOICE_TYPE",
+							 "GL_CLASSIF_CODE",
+							 "GL_CHARGE_TYPE",
+							 "PROFIT_CENTER",
+							 "AR_ACTV",
+							 "IFRS_ENT_SEQ_NO",
+							 "CR_DR_IND",
+							 "REALLOCATION_IND",
+							 "EMP_DISCOUNT_IND",
+							 "AMOUNT",
+							 "BUNDLE_DISCOUNT_IND",
+							 "KUNNR_SID",	
+							 "OBLE",	
+							 "SUBDID",
+							 "CYCL_ID",		
+							  INSERT_TS,
+						     "ERROR_CODE",
+				             "ERROR_CREATE_TS") 
+					VALUES(	CUR_PB."LOB",
+							CUR_PB."CHARGE_SEQ_NO",
+							CUR_PB."POST_BILLING_ID",
+							CUR_PB."REFERENCE_EFFECTIVE_DT",
+							CUR_PB."REFERENCE_EXPIRY_DT",
+							CUR_PB."EFFECTIVE_DATE",
+							CUR_PB."BAN",
+							CUR_PB."SUBSCRIBER_NO",
+							CUR_PB."TRANSACTION_TYPE",
+							CUR_PB."BUSINESS_ID",
+							CUR_PB."BILL_SEQ_NO",
+							CUR_PB."SOC",
+							CUR_PB."FTR_REVENUE_CODE",
+							CUR_PB."FEATURE_CODE",
+							CUR_PB."PRD_CVRG_STRT_DATE",
+							CUR_PB."PRD_CVRG_END_DATE",
+							CUR_PB."TRANSACTION_DATE",
+							CUR_PB."OVER_USAGE_INDICATOR",
+							CUR_PB."CYCLE_CODE",
+							CUR_PB."CYCLE_RUN_MONTH",
+							CUR_PB."CYCLE_RUN_YEAR",
+							CUR_PB."CYCLE_START_DATE",
+							CUR_PB."CYCLE_END_DATE",
+							CUR_PB."ACTV_CODE",
+							CUR_PB."ACT_REASON_CODE",
+							CUR_PB."CHARGE_TYPE",
+							CUR_PB."BILL_FIXED_TEXT",
+							CUR_PB."ADJ_REASON_CODE",
+							CUR_PB."ACCRUAL_IND",
+							CUR_PB."DISCOUNT_CODE",
+							CUR_PB."DISC_FROM_AMT",
+							CUR_PB."DISCOUNT_PCT",
+							CUR_PB."JOURNALIZATION_DATE",
+							CUR_PB."THIRD_PARTY_CHG_IND",
+							CUR_PB."PROVINCE_CODE",
+							CUR_PB."UOM_CODE",
+							CUR_PB."UOM_OVR_QUANTITY",
+							CUR_PB.AREA_IND,
+							CUR_PB."ACTV_DATE",
+							CUR_PB."BALANCE_IMPACT_CODE",
+							CUR_PB."GL_ACCOUNT_NUMBER",
+							CUR_PB."LEGACY_CHARGE_TYPE",
+							CUR_PB."LEGACY_SUBNO",
+							CUR_PB."LEGACY_IND",
+							CUR_PB."LEGACY_SEQ_NO",
+							CUR_PB."BL_IGNORE_IND",
+							CUR_PB."CURR_CODE",
+							CUR_PB."BILL_DATE",
+							CUR_PB."PLAN_TYPE",
+							CUR_PB."ISSUE_DATE",
+							CUR_PB."INVOICE_TYPE",
+							CUR_PB."GL_CLASSIF_CODE",
+							CUR_PB."GL_CHARGE_TYPE",
+							CUR_PB."PROFIT_CENTER",
+							CUR_PB."AR_ACTV",
+							CUR_PB."IFRS_ENT_SEQ_NO",
+							CUR_PB."CR_DR_IND",
+							CUR_PB."REALLOCATION_IND",
+							CUR_PB."EMP_DISCOUNT_IND",
+							CUR_PB."AMOUNT",
+							CUR_PB."BUNDLE_DISCOUNT_IND",
+							CUR_PB."KUNNR_SID",
+							CUR_PB."OBLE",
+					 		CUR_PB."SUBDID",
+					 		CUR_PB."CYCL_ID",
+			 				LV_CUR_UTC,
+				            :CURRENT_ERROR,
+				            LV_CUR_UTC);   
+						 
+			 END FOR ;
+			 
+   -- Set Error Flag  		
+	  LV_ERROR_FLAG := 'Y';
+
+  ELSEIF CUR_PB.ERROR_STATUS = '0' THEN 
+  
+             -- Insert Statement
+		        INSERT INTO  "NDB_COMMON"."IFRS_R1.COMMON_COMP.NDB_COMMON::OB_POSTBILLING"(
+							 "LOB",
+							 "CHARGE_SEQ_NO",
+							 "POST_BILLING_ID",
+							 "REFERENCE_EFFECTIVE_DT",
+							 "REFERENCE_EXPIRY_DT",
+							 "EFFECTIVE_DATE",
+							 "BAN",
+							 "SUBSCRIBER_NO",
+							 "TRANSACTION_TYPE",
+							 "BUSINESS_ID",
+							 "BILL_SEQ_NO",
+							 "SOC",
+							 "FTR_REVENUE_CODE",
+							 "FEATURE_CODE",
+							 "PRD_CVRG_STRT_DATE",
+							 "PRD_CVRG_END_DATE",
+							 "TRANSACTION_DATE",
+							 "OVER_USAGE_INDICATOR",
+							 "CYCLE_CODE",
+							 "CYCLE_RUN_MONTH",
+							 "CYCLE_RUN_YEAR",
+							 "CYCLE_START_DATE",
+							 "CYCLE_END_DATE",
+							 "ACTV_CODE",
+							 "ACT_REASON_CODE",
+							 "CHARGE_TYPE",
+							 "BILL_FIXED_TEXT",
+							 "ADJ_REASON_CODE",
+							 "ACCRUAL_IND",
+							 "DISCOUNT_CODE",
+							 "DISC_FROM_AMT",
+							 "DISCOUNT_PCT",
+							 "JOURNALIZATION_DATE",
+							 "THIRD_PARTY_CHG_IND",
+							 "PROVINCE_CODE",
+							 "UOM_CODE",
+							 "UOM_OVR_QUANTITY",
+							 "AREA_IND",
+							 "ACTV_DATE",
+							 "BALANCE_IMPACT_CODE",
+							 "GL_ACCOUNT_NUMBER",
+							 "LEGACY_CHARGE_TYPE",
+							 "LEGACY_SUBNO",
+							 "LEGACY_IND",
+							 "LEGACY_SEQ_NO",
+							 "BL_IGNORE_IND",
+							 "CURR_CODE",
+							 "BILL_DATE",
+							 "PLAN_TYPE",
+							 "ISSUE_DATE",
+							 "INVOICE_TYPE",
+							 "GL_CLASSIF_CODE",
+							 "GL_CHARGE_TYPE",
+							 "PROFIT_CENTER",
+							 "AR_ACTV",
+							 "IFRS_ENT_SEQ_NO",
+							 "CR_DR_IND",
+							 "REALLOCATION_IND",
+							 "EMP_DISCOUNT_IND",
+							 "AMOUNT",
+							 "BUNDLE_DISCOUNT_IND",
+							 "KUNNR_SID",	
+							 "OBLE",	
+							 "SUBDID",
+							 "CYCL_ID",			
+							 "INSERT_TS")
+		            VALUES (CUR_PB."LOB",
+		            		CUR_PB."CHARGE_SEQ_NO",
+							CUR_PB."POST_BILLING_ID",
+							CUR_PB."REFERENCE_EFFECTIVE_DT",
+							CUR_PB."REFERENCE_EXPIRY_DT",
+							CUR_PB."EFFECTIVE_DATE",
+							CUR_PB."BAN",
+							CUR_PB."SUBSCRIBER_NO",
+							CUR_PB."TRANSACTION_TYPE",
+							CUR_PB."BUSINESS_ID",
+							CUR_PB."BILL_SEQ_NO",
+							CUR_PB."SOC",
+							CUR_PB."FTR_REVENUE_CODE",
+							CUR_PB."FEATURE_CODE",
+							CUR_PB."PRD_CVRG_STRT_DATE",
+							CUR_PB."PRD_CVRG_END_DATE",
+							CUR_PB."TRANSACTION_DATE",
+							CUR_PB."OVER_USAGE_INDICATOR",
+							CUR_PB."CYCLE_CODE",
+							CUR_PB."CYCLE_RUN_MONTH",
+							CUR_PB."CYCLE_RUN_YEAR",
+							CUR_PB."CYCLE_START_DATE",
+							CUR_PB."CYCLE_END_DATE",
+							CUR_PB."ACTV_CODE",
+							CUR_PB."ACT_REASON_CODE",
+							CUR_PB."CHARGE_TYPE",
+							CUR_PB."BILL_FIXED_TEXT",
+							CUR_PB."ADJ_REASON_CODE",
+							CUR_PB."ACCRUAL_IND",
+							CUR_PB."DISCOUNT_CODE",
+							CUR_PB."DISC_FROM_AMT",
+							CUR_PB."DISCOUNT_PCT",
+							CUR_PB."JOURNALIZATION_DATE",
+							CUR_PB."THIRD_PARTY_CHG_IND",
+							CUR_PB."PROVINCE_CODE",
+							CUR_PB."UOM_CODE",
+							CUR_PB."UOM_OVR_QUANTITY",
+							CUR_PB.AREA_IND,
+							CUR_PB."ACTV_DATE",
+							CUR_PB."BALANCE_IMPACT_CODE",
+							CUR_PB."GL_ACCOUNT_NUMBER",
+							CUR_PB."LEGACY_CHARGE_TYPE",
+							CUR_PB."LEGACY_SUBNO",
+							CUR_PB."LEGACY_IND",
+							CUR_PB."LEGACY_SEQ_NO",
+							CUR_PB."BL_IGNORE_IND",
+							CUR_PB."CURR_CODE",
+							CUR_PB."BILL_DATE",
+							CUR_PB."PLAN_TYPE",
+							CUR_PB."ISSUE_DATE",
+							CUR_PB."INVOICE_TYPE",
+							CUR_PB."GL_CLASSIF_CODE",
+							CUR_PB."GL_CHARGE_TYPE",
+							CUR_PB."PROFIT_CENTER",
+							CUR_PB."AR_ACTV",
+							CUR_PB."IFRS_ENT_SEQ_NO",
+							CUR_PB."CR_DR_IND",
+							CUR_PB."REALLOCATION_IND",
+							CUR_PB."EMP_DISCOUNT_IND",
+							CUR_PB."AMOUNT",
+							CUR_PB."BUNDLE_DISCOUNT_IND",
+							CUR_PB."KUNNR_SID",
+							CUR_PB."OBLE",
+					 		CUR_PB."SUBDID",
+					 		CUR_PB."CYCL_ID",
+			 				LV_CUR_UTC);
+			 				 
+--         Insert PK of successfully processed Records into Local Temp Tables 
+--         for Updating NDB_TS in corresponding Landing Tables records
+		   INSERT INTO #UPDATE_INT_POSTBILLING
+		   			   ("POST_BILLING_ID", 
+		   			    "REFERENCE_EFFECTIVE_DT" 
+		   			    ) 
+		   		VALUES (CUR_PB."POST_BILLING_ID",
+		   				CUR_PB."REFERENCE_EFFECTIVE_DT"
+		   				);
+		   				
+		   INSERT INTO #UPDATE_EH_DELETION
+		   			   ("POST_BILLING_ID", 
+		   			    "REFERENCE_EFFECTIVE_DT" 
+		   			   ) 
+		   		VALUES (CUR_PB."POST_BILLING_ID",
+		   				CUR_PB."REFERENCE_EFFECTIVE_DT"
+		   				); 		
+		   						
+    END IF;
+
+END FOR;
+
+--------------------------------------------------------------------------------------------------
+-- Update Landing Tables
+-------------------------------------------------------------------------------------------------- 
+
+-- Update Landing Table "IFRS_R1.LAND::INT_POSTBILL"
+UPDATE "LAND"."IFRS_R1.LAND::IFRS_OB_POSTBILLING" A   
+  FROM "LAND"."IFRS_R1.LAND::IFRS_OB_POSTBILLING" A 
+ INNER JOIN #UPDATE_INT_POSTBILLING B 
+    ON  A."POST_BILLING_ID" = B."POST_BILLING_ID"
+   AND  A."EFF_DT"          = B."REFERENCE_EFFECTIVE_DT"
+   SET  NDB_TS              = LV_CUR_UTC
+ WHERE  A.NDB_TS IS NULL;
+ 
+-- Update Error Table
+UPDATE "NDB_COMMON"."IFRS_R1.COMMON_COMP.NDB_COMMON::OB_POSTBILLING_EH" A
+  FROM "NDB_COMMON"."IFRS_R1.COMMON_COMP.NDB_COMMON::OB_POSTBILLING_EH" A
+ INNER JOIN  #UPDATE_EH_DELETION B
+    ON  A."POST_BILLING_ID"                = B."POST_BILLING_ID"
+   AND  A."REFERENCE_EFFECTIVE_DT"         = B."REFERENCE_EFFECTIVE_DT"
+   SET  (DELETE_DATE, DELETED)             = (CURRENT_DATE, 1);
+  
+--------------------------------------------------------------------------------------------------
+-- Set Overall Status
+-------------------------------------------------------------------------------------------------- 
+
+--  STATUS 0: Send the success message to scheduling tool to confirm this procedure has been
+--  executed successfully
+    IF(LV_ERROR_FLAG = 'Y') THEN		
+
+     OP_STATUS := LC_ERROR_TEXT; 
+			
+    ELSE
+
+  	 OP_STATUS := LC_SUCCESS_TEXT; 	
+  	 
+	END IF;	
+	
+END;

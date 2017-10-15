@@ -1,0 +1,618 @@
+PROCEDURE "NDB_INTERNET"."IFRS_R1.INTERNET.NDB_INTERNET::SP_INT_ORDER"   
+(IN IP_EFF_DT DATE,
+OUT OP_STATUS NVARCHAR(100)) 
+	LANGUAGE SQLSCRIPT
+	SQL SECURITY INVOKER
+	AS
+
+BEGIN
+--------------------------------------------------------------------------------------------------
+-- Procedure Title : SP_INT_ORDER
+-- Created By      : BC_EY96110 (Arpit)       
+-- Create Date     : 06-06-2016
+-- Description     : Data Inserted using Calculation View - CA_INT_SA_CUST_ORDER
+--                   to NDB Table - INT_ORDER Using this stored procedure.
+--                   Internet Order includes data from table INT_SERV_AGRMT.			
+-- Project         : Bell Canada
+-- Release         : R1 / IFRS
+--------------------------------------------------------------------------------------------------
+--   M O D I F I C A T I O N   H I S T O R Y
+--------------------------------------------------------------------------------------------------
+-- Date        | User ID          | Modification History/Release
+--------------------------------------------------------------------------------------------------
+--             |                  | 
+--------------------------------------------------------------------------------------------------
+-- Description Of the changes 
+--------------------------------------------------------------------------------------------------
+-- Modification Number          : <Assign Some Number> 
+-- Description of Changes Made> : <Description of Changes>    
+--------------------------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------------------------
+-- Local Variables Declaration
+--------------------------------------------------------------------------------------------------
+
+DECLARE LC_ERROR_TEXT 		NVARCHAR(70) DEFAULT 'OUT STATUS IS 1 : INSERT/UPDATE FOR ONE OR MORE RECORD FAILED';
+DECLARE LC_SUCCESS_TEXT 	NVARCHAR(70) DEFAULT 'OUT STATUS IS 0 : INSERT/UPDATE EXECUTION SUCCESSFUL';
+DECLARE LV_ERROR_FLAG 		NVARCHAR(1) := 'N';
+DECLARE LV_CUR_UTC 			TIMESTAMP := CURRENT_TIMESTAMP;
+DECLARE ERROR_TAB 			TABLE (ERROR_CODE NVARCHAR(1000));
+DECLARE i					INTEGER;
+DECLARE RECORD_COUNT		INTEGER;
+DECLARE CURRENT_ERROR		NVARCHAR(1000);
+DECLARE LV_OPT_AO_PRC		DECIMAL(15,5);
+DECLARE LV_AO_PRC			DECIMAL(15,5);
+DECLARE LV_PRC_MOD_IND		NVARCHAR(1);
+ 
+-- New variables for version sequence check
+DECLARE LV_LOOP_ERROR_FLAG    INTEGER := 0;
+DECLARE LV_PREV_RECORD	      NVARCHAR(100) := NULL;  
+--------------------------------------------------------------------------------------------------
+-- Cursors Declaration
+-------------------------------------------------------------------------------------------------- 
+DECLARE CURSOR C_ORDER FOR
+			SELECT	 "ODS_SYST_CD",
+					 "EXPIRATION_DATE",
+					 "EFFECTIVE_DATE",
+					 "KUNNR_SID",
+					 "COST_CNTR",
+					 "CONTR_TERM",
+					 "CONTR_IPTN_DT",
+					 "BL_CYC",
+					 "ALTN_CONTR_NUM",
+					 "PRM_CONTR_CUST",
+					 "SOC",
+					 "PST_TAX_CATEGORY",
+					 "TAX_CATEGORY",
+					 "FEATURE_CD",
+					 "SOC_EFFECTIVE_DATE",
+					 "PRDCT_TYP",
+					 "FLAG_EXISTING_RECORD",
+					 "ERROR_STATUS",
+					 "ERROR_CODE",
+					 "REMARKS",
+					 "COMPOUND_KEY",
+					 "ITEM_TRANS_PRICE",
+					 "REFERENCE_EXPIRY_DT",
+					 "REFERENCE_EFFECTIVE_DT",
+					 "EFFECTIVE_DATE_PREV_DAY",
+					 "SOC_SEQ_NO",
+					 "CYCLE_BILL_DAY",
+					 "REC_IND",
+					 "SRVC_FTR_SEQ_NO",
+					 "SOC_VER_NO",
+					 "FTR_SOC_VER_NO",
+					 "BAN_STS",
+					 "SVRC_TYPE",
+					 "FLAG_ZERO_RATED_SOC",
+					 "CONCAT_PK"
+					 FROM "_SYS_BIC"."IFRS_R1.INTERNET.NDB_INTERNET/CA_INT_SA_CUST_ORDER"
+			(PLACEHOLDER."$$IP_EFF_DT$$" => :IP_EFF_DT)
+			ORDER BY ALTN_CONTR_NUM,PRDCT_TYP,"COMPOUND_KEY";
+         
+--------------------------------------------------------------------------------------------------
+-- Local Temporary Tables Declaration
+-------------------------------------------------------------------------------------------------- 
+
+CREATE LOCAL TEMPORARY TABLE #UPDATE_INT_SERV_AGRMT (ALTN_CONTR_NUM NVARCHAR(9), PRDCT_TYP NVARCHAR(1), REFERENCE_EFFECTIVE_DT DATE, SRVC_FTR_SEQ_NO INTEGER, SOC_VER_NO INTEGER, FTR_SOC_VER_NO INTEGER);
+CREATE LOCAL TEMPORARY TABLE #UPDATE_EH_DELETION (ALTN_CONTR_NUM NVARCHAR(100), PRDCT_TYP NVARCHAR(100), REFERENCE_EFFECTIVE_DT NVARCHAR(100),COMPOUND_KEY NVARCHAR(100));
+        	  
+--------------------------------------------------------------------------------------------------
+-- Cursors Loop
+-------------------------------------------------------------------------------------------------- 
+
+FOR CUR_ORDER AS C_ORDER DO
+
+--  Define Exit Handler
+	DECLARE EXIT HANDLER FOR SQLEXCEPTION 
+	BEGIN AUTONOMOUS TRANSACTION 
+	
+		--  Define Exit Handler
+		DECLARE EXIT HANDLER FOR SQLEXCEPTION 
+		BEGIN AUTONOMOUS TRANSACTION 
+		
+		END;
+				
+			-- Insert record into error table
+			 INSERT INTO "NDB_INTERNET"."IFRS_R1.INTERNET.NDB_INTERNET::INT_ORDER_EH"(
+					     "ODS_SYST_CD",
+						 "EXPIRATION_DATE",
+						 "EFFECTIVE_DATE",
+						 "KUNNR_SID",
+						 "COST_CNTR",
+						 "CONTR_TERM",
+						 "CONTR_IPTN_DT",
+						 "BL_CYC",
+						 "ALTN_CONTR_NUM",
+						 "PRM_CONTR_CUST",
+						 "SOC",
+						 "PST_TAX_CATEGORY",
+						 "TAX_CATEGORY",
+						 "FEATURE_CD",
+						 "SOC_EFFECTIVE_DATE",
+						 "PRDCT_TYP",
+						 "REMARKS",
+						 "COMPOUND_KEY",
+						 "ITEM_TRANS_PRICE",
+						 "REFERENCE_EXPIRY_DT",
+						 "REFERENCE_EFFECTIVE_DT",
+						 "SOC_SEQ_NO" ,
+						 "CYCLE_BILL_DAY",
+						 "REC_IND",
+					     "SRVC_FTR_SEQ_NO",
+					     "SOC_VER_NO",
+					 	 "FTR_SOC_VER_NO",
+					 	 "BAN_STS",
+					 	 "SVRC_TYPE",
+					     "ERROR_CODE",
+					     "TECHNICAL_MESSAGE",
+					     "ERROR_CREATE_TS") 
+				  VALUES (
+				         CUR_ORDER."ODS_SYST_CD",
+						 CUR_ORDER."EXPIRATION_DATE",
+						 CUR_ORDER."EFFECTIVE_DATE",
+						 CUR_ORDER."KUNNR_SID",
+						 CUR_ORDER."COST_CNTR",
+						 CUR_ORDER."CONTR_TERM",
+						 CUR_ORDER."CONTR_IPTN_DT",
+						 CUR_ORDER."BL_CYC",
+						 CUR_ORDER."ALTN_CONTR_NUM",
+						 CUR_ORDER."PRM_CONTR_CUST",
+						 CUR_ORDER."SOC",
+						 CUR_ORDER."PST_TAX_CATEGORY",
+						 CUR_ORDER."TAX_CATEGORY",
+						 CUR_ORDER."FEATURE_CD",
+						 CUR_ORDER."SOC_EFFECTIVE_DATE",
+						 CUR_ORDER."PRDCT_TYP",
+						 CUR_ORDER."REMARKS",
+						 CUR_ORDER."COMPOUND_KEY",
+						 CUR_ORDER."ITEM_TRANS_PRICE",
+						 CUR_ORDER."REFERENCE_EXPIRY_DT",
+						 CUR_ORDER."REFERENCE_EFFECTIVE_DT",
+						 CUR_ORDER."SOC_SEQ_NO" ,
+						 CUR_ORDER."CYCLE_BILL_DAY" ,
+						 CUR_ORDER."REC_IND",
+						 CUR_ORDER."SRVC_FTR_SEQ_NO",
+					     CUR_ORDER."SOC_VER_NO",
+					 	 CUR_ORDER."FTR_SOC_VER_NO",
+					 	 CUR_ORDER."BAN_STS",
+					 	 CUR_ORDER."SVRC_TYPE",
+					     ::SQL_ERROR_CODE,
+					     ::SQL_ERROR_MESSAGE,
+						 LV_CUR_UTC);   
+							
+			     LV_ERROR_FLAG := 'Y';
+			     LV_LOOP_ERROR_FLAG := 1;
+		 END;
+		 
+        -- FOR CLEARING THE VARIABLES
+
+	IF ((LV_PREV_RECORD IS NULL )OR (CUR_ORDER."CONCAT_PK" != LV_PREV_RECORD)) THEN
+
+		LV_LOOP_ERROR_FLAG := 0;
+		LV_PREV_RECORD := "CUR_ORDER"."CONCAT_PK";
+		
+    END IF;
+ 		 
+--  Check the Error Status of the Record. If Record is with Error, then send to Error Table
+	IF CUR_ORDER.ERROR_STATUS = '1' THEN
+	
+	--  Call the Stored Procedure to split the concatenated Error Messages into Error Rows
+		CALL "NDB_COMMON"."IFRS_R1.COMMON_COMP.EH::SP_EH_SPLIT_ERRORS"(CUR_ORDER."ERROR_CODE", ERROR_TAB, RECORD_COUNT);
+
+     -- Loop through the Error Records
+		FOR i IN 1 .. :RECORD_COUNT DO
+			
+		 -- Fetch the Error Code
+			CURRENT_ERROR = :ERROR_TAB."ERROR_CODE"[:i];
+					
+				 -- Insert into the Error Table
+		   INSERT INTO "NDB_INTERNET"."IFRS_R1.INTERNET.NDB_INTERNET::INT_ORDER_EH"(
+				         "ODS_SYST_CD",
+						 "EXPIRATION_DATE",
+						 "EFFECTIVE_DATE",
+						 "KUNNR_SID",
+						 "COST_CNTR",
+						 "CONTR_TERM",
+						 "CONTR_IPTN_DT",
+						 "BL_CYC",
+						 "ALTN_CONTR_NUM",
+						 "PRM_CONTR_CUST",
+						 "SOC",
+						 "PST_TAX_CATEGORY",
+						 "TAX_CATEGORY",
+						 "FEATURE_CD",
+						 "SOC_EFFECTIVE_DATE",
+						 "PRDCT_TYP",
+						 "REMARKS",
+						 "COMPOUND_KEY",
+						 "ITEM_TRANS_PRICE",
+						 "REFERENCE_EXPIRY_DT",
+						 "REFERENCE_EFFECTIVE_DT",
+						 "SOC_SEQ_NO" ,
+						 "CYCLE_BILL_DAY" ,
+						 "REC_IND",
+						 "SRVC_FTR_SEQ_NO",
+					     "SOC_VER_NO",
+					 	 "FTR_SOC_VER_NO",
+					 	 "BAN_STS",
+					 	 "SVRC_TYPE",
+				         "ERROR_CODE",
+				         "ERROR_CREATE_TS") 
+		        VALUES ( CUR_ORDER."ODS_SYST_CD",
+						 CUR_ORDER."EXPIRATION_DATE",
+						 CUR_ORDER."EFFECTIVE_DATE",
+						 CUR_ORDER."KUNNR_SID",
+						 CUR_ORDER."COST_CNTR",
+						 CUR_ORDER."CONTR_TERM",
+						 CUR_ORDER."CONTR_IPTN_DT",
+						 CUR_ORDER."BL_CYC",
+						 CUR_ORDER."ALTN_CONTR_NUM",
+						 CUR_ORDER."PRM_CONTR_CUST",
+						 CUR_ORDER."SOC",
+						 CUR_ORDER."PST_TAX_CATEGORY",
+						 CUR_ORDER."TAX_CATEGORY",
+						 CUR_ORDER."FEATURE_CD",
+						 CUR_ORDER."SOC_EFFECTIVE_DATE",
+						 CUR_ORDER."PRDCT_TYP",
+						 CUR_ORDER."REMARKS",
+						 CUR_ORDER."COMPOUND_KEY",
+						 CUR_ORDER."ITEM_TRANS_PRICE",
+						 CUR_ORDER."REFERENCE_EXPIRY_DT",
+						 CUR_ORDER."REFERENCE_EFFECTIVE_DT",
+						 CUR_ORDER."CYCLE_BILL_DAY" ,
+						 CUR_ORDER."SOC_SEQ_NO",
+						 CUR_ORDER."REC_IND",
+						 CUR_ORDER."SRVC_FTR_SEQ_NO",
+					     CUR_ORDER."SOC_VER_NO",
+					 	 CUR_ORDER."FTR_SOC_VER_NO",
+					 	 CUR_ORDER."BAN_STS",
+					 	 CUR_ORDER."SVRC_TYPE",
+						 :CURRENT_ERROR,
+						 LV_CUR_UTC);
+									         		        
+			END FOR;
+
+ -- Set Error Flag				        
+			LV_ERROR_FLAG := 'Y';
+		    LV_LOOP_ERROR_FLAG := 1;
+
+   ELSE 
+         IF CUR_ORDER.ERROR_STATUS = '0' THEN
+	    
+	        IF LV_LOOP_ERROR_FLAG = 1 THEN
+
+  INSERT INTO "NDB_INTERNET"."IFRS_R1.INTERNET.NDB_INTERNET::INT_ORDER_EH"(
+				         "ODS_SYST_CD",
+						 "EXPIRATION_DATE",
+						 "EFFECTIVE_DATE",
+						 "KUNNR_SID",
+						 "COST_CNTR",
+						 "CONTR_TERM",
+						 "CONTR_IPTN_DT",
+						 "BL_CYC",
+						 "ALTN_CONTR_NUM",
+						 "PRM_CONTR_CUST",
+						 "SOC",
+						 "PST_TAX_CATEGORY",
+						 "TAX_CATEGORY",
+						 "FEATURE_CD",
+						 "SOC_EFFECTIVE_DATE",
+						 "PRDCT_TYP",
+						 "REMARKS",
+						 "COMPOUND_KEY",
+						 "ITEM_TRANS_PRICE",
+						 "REFERENCE_EXPIRY_DT",
+						 "REFERENCE_EFFECTIVE_DT",
+						 "SOC_SEQ_NO" ,
+						 "CYCLE_BILL_DAY" ,
+						 "REC_IND",
+						 "SRVC_FTR_SEQ_NO",
+					     "SOC_VER_NO",
+					 	 "FTR_SOC_VER_NO",
+					 	 "BAN_STS",
+					 	 "SVRC_TYPE",
+				         "ERROR_CODE",
+				         "ERROR_CREATE_TS") 
+		        VALUES ( CUR_ORDER."ODS_SYST_CD",
+						 CUR_ORDER."EXPIRATION_DATE",
+						 CUR_ORDER."EFFECTIVE_DATE",
+						 CUR_ORDER."KUNNR_SID",
+						 CUR_ORDER."COST_CNTR",
+						 CUR_ORDER."CONTR_TERM",
+						 CUR_ORDER."CONTR_IPTN_DT",
+						 CUR_ORDER."BL_CYC",
+						 CUR_ORDER."ALTN_CONTR_NUM",
+						 CUR_ORDER."PRM_CONTR_CUST",
+						 CUR_ORDER."SOC",
+						 CUR_ORDER."PST_TAX_CATEGORY",
+						 CUR_ORDER."TAX_CATEGORY",
+						 CUR_ORDER."FEATURE_CD",
+						 CUR_ORDER."SOC_EFFECTIVE_DATE",
+						 CUR_ORDER."PRDCT_TYP",
+						 CUR_ORDER."REMARKS",
+						 CUR_ORDER."COMPOUND_KEY",
+						 CUR_ORDER."ITEM_TRANS_PRICE",
+						 CUR_ORDER."REFERENCE_EXPIRY_DT",
+						 CUR_ORDER."REFERENCE_EFFECTIVE_DT",
+						 CUR_ORDER."CYCLE_BILL_DAY" ,
+						 CUR_ORDER."SOC_SEQ_NO",
+						 CUR_ORDER."REC_IND",
+						 CUR_ORDER."SRVC_FTR_SEQ_NO",
+					     CUR_ORDER."SOC_VER_NO",
+					 	 CUR_ORDER."FTR_SOC_VER_NO",
+					 	 CUR_ORDER."BAN_STS",
+					 	 CUR_ORDER."SVRC_TYPE",
+						'PREVIOUS VERSION IN ERROR',
+						 LV_CUR_UTC);
+	
+	
+	
+-- Processing for Successful Records
+--   If Record exists in the Target NDB Table
+     ELSE IF CUR_ORDER.FLAG_EXISTING_RECORD = 'U' THEN
+
+	 	 BEGIN AUTONOMOUS TRANSACTION 
+		
+				-- History maintenance 	
+					   UPDATE "NDB_INTERNET"."IFRS_R1.INTERNET.NDB_INTERNET::INT_ORDER" NDB
+					      SET  NDB.REFERENCE_EXPIRY_DT      = CUR_ORDER.EFFECTIVE_DATE_PREV_DAY,
+			 		           NDB.MODIFIED_TS              = LV_CUR_UTC 
+					    WHERE  NDB."ALTN_CONTR_NUM"         = CUR_ORDER."ALTN_CONTR_NUM" 
+					      AND  NDB."PRDCT_TYP"              = CUR_ORDER."PRDCT_TYP" 
+						  AND  NDB."COMPOUND_KEY"           = CUR_ORDER."COMPOUND_KEY"
+			              AND  NDB.REFERENCE_EXPIRY_DT      = '99991231';
+			
+			         IF(CUR_ORDER.FLAG_ZERO_RATED_SOC = 'Y') THEN
+			             
+			             INSERT INTO "NDB_INTERNET"."IFRS_R1.INTERNET.NDB_INTERNET::INT_ORDER"
+								  (  "ODS_SYST_CD",
+									 "EXPIRATION_DATE",
+									 "EFFECTIVE_DATE",
+									 "KUNNR_SID",
+									 "COST_CNTR",
+									 "CONTR_TERM",
+									 "CONTR_IPTN_DT",
+									 "BL_CYC",
+									 "ALTN_CONTR_NUM",
+									 "PRM_CONTR_CUST",
+									 "SOC",
+									 "PST_TAX_CATEGORY",
+									 "TAX_CATEGORY",
+									 "FEATURE_CD",
+									 "SOC_EFFECTIVE_DATE",
+									 "PRDCT_TYP",
+									 "REMARKS",
+									 "COMPOUND_KEY",
+									 "ITEM_TRANS_PRICE",
+									 "REFERENCE_EXPIRY_DT",
+									 "REFERENCE_EFFECTIVE_DT",
+									 "SOC_SEQ_NO" ,
+									 "CYCLE_BILL_DAY" ,
+									 "REC_IND",
+									 "SRVC_FTR_SEQ_NO",
+					                 "SOC_VER_NO",
+					 	             "FTR_SOC_VER_NO",
+					 	             "BAN_STS",
+					 	             "SVRC_TYPE",
+						             "INSERT_TS"
+							         )
+			                VALUES ( CUR_ORDER."ODS_SYST_CD",
+									 CUR_ORDER."EXPIRATION_DATE",
+									 CUR_ORDER."EFFECTIVE_DATE",
+									 CUR_ORDER."KUNNR_SID",
+									 CUR_ORDER."COST_CNTR",
+									 CUR_ORDER."CONTR_TERM",
+									 CUR_ORDER."CONTR_IPTN_DT",
+									 CUR_ORDER."BL_CYC",
+									 CUR_ORDER."ALTN_CONTR_NUM",
+									 CUR_ORDER."PRM_CONTR_CUST",
+									 CUR_ORDER."SOC",
+									 CUR_ORDER."PST_TAX_CATEGORY",
+									 CUR_ORDER."TAX_CATEGORY",
+									 CUR_ORDER."FEATURE_CD",
+									 CUR_ORDER."SOC_EFFECTIVE_DATE",
+									 CUR_ORDER."PRDCT_TYP",
+									 CUR_ORDER."REMARKS",
+									 CUR_ORDER."COMPOUND_KEY",
+									 CUR_ORDER."ITEM_TRANS_PRICE",
+									 CUR_ORDER."REFERENCE_EXPIRY_DT",
+									 CUR_ORDER."REFERENCE_EFFECTIVE_DT",
+									 CUR_ORDER."SOC_SEQ_NO",
+									 CUR_ORDER."CYCLE_BILL_DAY" ,
+									 CUR_ORDER."REC_IND",
+									 CUR_ORDER."SRVC_FTR_SEQ_NO",
+					     	         CUR_ORDER."SOC_VER_NO",
+					 	 	         CUR_ORDER."FTR_SOC_VER_NO",
+					 	 	         CUR_ORDER."BAN_STS",
+					 	 	         CUR_ORDER."SVRC_TYPE",
+									 LV_CUR_UTC									
+									 );
+			      END IF;
+			      
+	END; -- END AUTONOMOUS TRANSACTION 
+ 
+--         Insert PK of successfully processed Records into Local Temp Tables 
+--         for Updating NDB_TS in corresponding Landing Tables records
+			INSERT INTO #UPDATE_INT_SERV_AGRMT
+					   	(ALTN_CONTR_NUM, 
+					   	 PRDCT_TYP, 
+		   			     REFERENCE_EFFECTIVE_DT,
+		   			     "SRVC_FTR_SEQ_NO",
+					     "SOC_VER_NO",
+					 	 "FTR_SOC_VER_NO"
+		   			     ) 
+		   		VALUES (CUR_ORDER.ALTN_CONTR_NUM, 
+		   			    CUR_ORDER.PRDCT_TYP, 
+		   			    CUR_ORDER.REFERENCE_EFFECTIVE_DT, 
+		   			    CUR_ORDER."SRVC_FTR_SEQ_NO",
+					    CUR_ORDER."SOC_VER_NO",
+					 	CUR_ORDER."FTR_SOC_VER_NO");
+		  			   			               
+			INSERT INTO #UPDATE_EH_DELETION
+					  	(ALTN_CONTR_NUM, 
+					   	 PRDCT_TYP, 
+		   			     REFERENCE_EFFECTIVE_DT,
+		   			     COMPOUND_KEY
+		   			    ) 
+		   		VALUES (CUR_ORDER.ALTN_CONTR_NUM, 
+		   			    CUR_ORDER.PRDCT_TYP, 
+		   			    CUR_ORDER.REFERENCE_EFFECTIVE_DT,
+		   			    CUR_ORDER.COMPOUND_KEY
+		   			    );
+		   	   					               
+                    	
+     ELSE IF CUR_ORDER.FLAG_EXISTING_RECORD = 'I' THEN
+
+	   BEGIN AUTONOMOUS TRANSACTION 
+
+    	 IF(CUR_ORDER.FLAG_ZERO_RATED_SOC = 'Y') THEN
+    	
+--     Insert Records into the target NDB table     
+           INSERT INTO "NDB_INTERNET"."IFRS_R1.INTERNET.NDB_INTERNET::INT_ORDER"(
+									 "ODS_SYST_CD",
+									 "EXPIRATION_DATE",
+									 "EFFECTIVE_DATE",
+									 "KUNNR_SID",
+									 "COST_CNTR",
+									 "CONTR_TERM",
+									 "CONTR_IPTN_DT",
+									 "BL_CYC",
+									 "ALTN_CONTR_NUM",
+									 "PRM_CONTR_CUST",
+									 "SOC",
+									 "PST_TAX_CATEGORY",
+									 "TAX_CATEGORY",
+									 "FEATURE_CD",
+									 "SOC_EFFECTIVE_DATE",
+									 "PRDCT_TYP",
+									 "REMARKS",
+									 "COMPOUND_KEY",
+									 "ITEM_TRANS_PRICE",
+									 "REFERENCE_EXPIRY_DT",
+									 "REFERENCE_EFFECTIVE_DT",
+									 "SOC_SEQ_NO" ,
+									 "CYCLE_BILL_DAY" ,
+									 "REC_IND",
+									 "SRVC_FTR_SEQ_NO",
+					                 "SOC_VER_NO",
+					 	             "FTR_SOC_VER_NO",
+					 	             "BAN_STS",
+					 	             "SVRC_TYPE",
+						             "INSERT_TS" 
+							         )
+			                VALUES ( CUR_ORDER."ODS_SYST_CD",
+									 CUR_ORDER."EXPIRATION_DATE",
+									 CUR_ORDER."EFFECTIVE_DATE",
+									 CUR_ORDER."KUNNR_SID",
+									 CUR_ORDER."COST_CNTR",
+									 CUR_ORDER."CONTR_TERM",
+									 CUR_ORDER."CONTR_IPTN_DT",
+									 CUR_ORDER."BL_CYC",
+									 CUR_ORDER."ALTN_CONTR_NUM",
+									 CUR_ORDER."PRM_CONTR_CUST",
+									 CUR_ORDER."SOC",
+									 CUR_ORDER."PST_TAX_CATEGORY",
+									 CUR_ORDER."TAX_CATEGORY",
+									 CUR_ORDER."FEATURE_CD",
+									 CUR_ORDER."SOC_EFFECTIVE_DATE",
+									 CUR_ORDER."PRDCT_TYP",
+									 CUR_ORDER."REMARKS",
+									 CUR_ORDER."COMPOUND_KEY",
+									 CUR_ORDER."ITEM_TRANS_PRICE",
+									 CUR_ORDER."REFERENCE_EXPIRY_DT",
+									 CUR_ORDER."REFERENCE_EFFECTIVE_DT",
+									 CUR_ORDER."SOC_SEQ_NO",
+									 CUR_ORDER."CYCLE_BILL_DAY" ,
+									 CUR_ORDER."REC_IND",
+									 CUR_ORDER."SRVC_FTR_SEQ_NO",
+					                 CUR_ORDER."SOC_VER_NO",
+					 	             CUR_ORDER."FTR_SOC_VER_NO",
+					 	             CUR_ORDER."BAN_STS",
+					 	             CUR_ORDER."SVRC_TYPE",
+									 LV_CUR_UTC	
+									 );
+			
+			   END IF ; 
+			END ; -- 	 	 END AUTONOMOUS TRANSACTION 
+			
+			--         Insert PK of successfully processed Records into Local Temp Tables 
+			--         for Updating NDB_TS in corresponding Landing Tables records
+			INSERT INTO #UPDATE_INT_SERV_AGRMT
+					   	(ALTN_CONTR_NUM, 
+					   	 PRDCT_TYP, 
+		   			     REFERENCE_EFFECTIVE_DT,
+		   			     "SRVC_FTR_SEQ_NO",
+					     "SOC_VER_NO",
+					 	 "FTR_SOC_VER_NO"
+		   			    ) 
+		   		VALUES (CUR_ORDER.ALTN_CONTR_NUM, 
+		   			    CUR_ORDER.PRDCT_TYP, 
+		   			    CUR_ORDER.REFERENCE_EFFECTIVE_DT, 
+		   			    CUR_ORDER."SRVC_FTR_SEQ_NO",
+					    CUR_ORDER."SOC_VER_NO",
+					 	CUR_ORDER."FTR_SOC_VER_NO");
+		  			   			               
+			INSERT INTO #UPDATE_EH_DELETION
+					  	(ALTN_CONTR_NUM, 
+					   	 PRDCT_TYP, 
+		   			     REFERENCE_EFFECTIVE_DT,
+		   			     COMPOUND_KEY
+		   			    ) 
+		   		VALUES (CUR_ORDER.ALTN_CONTR_NUM, 
+		   			    CUR_ORDER.PRDCT_TYP, 
+		   			    CUR_ORDER.REFERENCE_EFFECTIVE_DT,
+		   			    CUR_ORDER.COMPOUND_KEY
+		   			    );
+     END IF;   
+    END IF;
+   END IF;
+  END IF;
+ END IF ;    
+END FOR;
+
+--------------------------------------------------------------------------------------------------
+-- Update Landing Tables
+-------------------------------------------------------------------------------------------------- 
+
+-- Update Landing Table IFRS_R1.LAND::INT_SERV_AGRMT
+UPDATE "LAND"."IFRS_R1.LAND::INT_SERV_AGRMT" A
+  FROM "LAND"."IFRS_R1.LAND::INT_SERV_AGRMT" A 
+ INNER JOIN #UPDATE_INT_SERV_AGRMT B 
+    ON A."BAN"             = B."ALTN_CONTR_NUM"
+   AND A."PRODUCT_TYPE"    = B."PRDCT_TYP"
+   AND A."EFF_DT"          = B."REFERENCE_EFFECTIVE_DT"
+   AND A."SRVC_FTR_SEQ_NO" = B."SRVC_FTR_SEQ_NO"
+   AND A."SOC_VER_NO"      = B."SOC_VER_NO"
+   AND A."FTR_SOC_VER_NO"  = B."FTR_SOC_VER_NO"
+   SET NDB_TS              = LV_CUR_UTC 
+ WHERE A.NDB_TS IS NULL;  
+
+
+-- Update Error Table 
+UPDATE "NDB_INTERNET"."IFRS_R1.INTERNET.NDB_INTERNET::INT_ORDER_EH" A
+  FROM "NDB_INTERNET"."IFRS_R1.INTERNET.NDB_INTERNET::INT_ORDER_EH" A 
+ INNER JOIN #UPDATE_EH_DELETION B
+    ON A."ALTN_CONTR_NUM"          = B."ALTN_CONTR_NUM"
+   AND A."PRDCT_TYP"               = B."PRDCT_TYP"
+   AND A."REFERENCE_EFFECTIVE_DT"  = B."REFERENCE_EFFECTIVE_DT"
+   AND A."COMPOUND_KEY"            = B."COMPOUND_KEY"
+   SET (DELETE_DATE, DELETED)      = (CURRENT_DATE, 1);
+
+--------------------------------------------------------------------------------------------------
+-- Set Overall Status
+-------------------------------------------------------------------------------------------------- 
+
+--  STATUS 0: Send the success message to scheduling tool to confirm this procedure has been
+--  executed successfully
+    IF(LV_ERROR_FLAG = 'Y') THEN		
+
+     OP_STATUS := LC_ERROR_TEXT; 
+			
+    ELSE
+
+  	 OP_STATUS := LC_SUCCESS_TEXT; 	
+				
+	END IF;
+		
+END;

@@ -1,0 +1,298 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:AccessControl="http://www.sap.com/ndb/SQLCoreModelAccessControl.ecore" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" xmlns:Variable="http://www.sap.com/ndb/BiModelVariable.ecore" schemaVersion="2.3" id="CA_INT_OFFR_HIST" applyPrivilegeType="NONE" checkAnalyticPrivileges="false" defaultClient="$$client$$" defaultLanguage="$$language$$" hierarchiesSQLEnabled="false" translationRelevant="true" visibility="internal" calculationScenarioType="TREE_BASED" dataCategory="DIMENSION" enforceSqlExecution="false" executionSemantic="UNDEFINED" outputViewType="Projection">
+  <descriptions defaultDescription="Landing View - Table INT_OFFR_HIST"/>
+  <localVariables>
+    <variable id="IP_EFF_DT" parameter="true">
+      <descriptions defaultDescription="IP_EFF_DT"/>
+      <variableProperties datatype="DATE" defaultValue="99991231" mandatory="false">
+        <valueDomain type="Date"/>
+        <selection multiLine="false" type="SingleValue"/>
+      </variableProperties>
+    </variable>
+  </localVariables>
+  <variableMappings>
+    <mapping xsi:type="Variable:ConstantVariableMapping" dataSource="#CA_EH_ERROR_TABLE" value="1304">
+      <targetVariable name="IP_JOB_ID" resourceUri="/IFRS_R1.LAND.EH/calculationviews/CA_EH_ERROR_TABLE"/>
+    </mapping>
+  </variableMappings>
+  <informationModelLayout relativeWidthScenario="49"/>
+  <dataSources>
+    <DataSource id="IFRS_R1.LAND::INT_OFFR_HIST" type="DATA_BASE_TABLE">
+      <viewAttributes allViewAttributes="true"/>
+      <columnObject schemaName="LAND" columnObjectName="IFRS_R1.LAND::INT_OFFR_HIST"/>
+    </DataSource>
+    <DataSource id="CA_EH_ERROR_TABLE" type="CALCULATION_VIEW">
+      <viewAttributes allViewAttributes="true"/>
+      <resourceUri>/IFRS_R1.LAND.EH/calculationviews/CA_EH_ERROR_TABLE</resourceUri>
+    </DataSource>
+  </dataSources>
+  <calculationViews>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_OFFR_HIST" filterExpressionLanguage="COLUMN_ENGINE">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="ODS_SYST_CD"/>
+        <viewAttribute id="OFFER_CODE"/>
+        <viewAttribute id="BAN"/>
+        <viewAttribute id="OFH_SEQ_NO"/>
+        <viewAttribute id="SUBSCRIBER_NO"/>
+        <viewAttribute id="EFFECTIVE_DATE"/>
+        <viewAttribute id="EXPIRATION_DATE"/>
+        <viewAttribute id="PRODUCT_TYPE"/>
+        <viewAttribute id="OFFER_TYPE"/>
+        <viewAttribute id="EFF_DT"/>
+        <viewAttribute id="EXPY_DT"/>
+        <viewAttribute id="NDB_TS"/>
+        <viewAttribute id="SRC_TS"/>
+        <viewAttribute id="CYCL_ID"/>
+        <viewAttribute id="INSRT_TS"/>
+        <viewAttribute id="SEQ_ID"/>
+        <viewAttribute id="PROCESS_ID"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="DATE" id="CC_EXPY_DT" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(&quot;EXPY_DT&quot;=date('29991231'),date('99991231'),&quot;EXPY_DT&quot;)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CC_VERSION_CHECK" length="200" expressionLanguage="COLUMN_ENGINE">
+          <formula>&quot;OFFER_CODE&quot;+'|'+&quot;BAN&quot;+'|'+string(&quot;OFH_SEQ_NO&quot;)+'|'+&quot;SUBSCRIBER_NO&quot;+'|'+&quot;PRODUCT_TYPE&quot;</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#IFRS_R1.LAND::INT_OFFR_HIST">
+        <mapping xsi:type="Calculation:AttributeMapping" target="ODS_SYST_CD" source="ODS_SYST_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OFFER_CODE" source="OFFER_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BAN" source="BAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OFH_SEQ_NO" source="OFH_SEQ_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBSCRIBER_NO" source="SUBSCRIBER_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFFECTIVE_DATE" source="EFFECTIVE_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXPIRATION_DATE" source="EXPIRATION_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT_TYPE" source="PRODUCT_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OFFER_TYPE" source="OFFER_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFF_DT" source="EFF_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXPY_DT" source="EXPY_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NDB_TS" source="NDB_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SRC_TS" source="SRC_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INSRT_TS" source="INSRT_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SEQ_ID" source="SEQ_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROCESS_ID" source="PROCESS_ID"/>
+      </input>
+      <filter>(isNull(&quot;NDB_TS&quot;)) and (&quot;EFF_DT&quot; &lt;= '$$IP_EFF_DT$$')</filter>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_ETL_ERROR">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="PARENT_KEY"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#CA_EH_ERROR_TABLE">
+        <mapping xsi:type="Calculation:AttributeMapping" target="PARENT_KEY" source="PARENT_KEY"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="JOIN_EH" joinOrder="OUTSIDE_IN" joinType="leftOuter">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="ODS_SYST_CD"/>
+        <viewAttribute id="OFFER_CODE"/>
+        <viewAttribute id="BAN"/>
+        <viewAttribute id="OFH_SEQ_NO"/>
+        <viewAttribute id="SUBSCRIBER_NO"/>
+        <viewAttribute id="EFFECTIVE_DATE"/>
+        <viewAttribute id="EXPIRATION_DATE"/>
+        <viewAttribute id="PRODUCT_TYPE"/>
+        <viewAttribute id="OFFER_TYPE"/>
+        <viewAttribute id="EFF_DT"/>
+        <viewAttribute id="EXPY_DT"/>
+        <viewAttribute id="NDB_TS"/>
+        <viewAttribute id="SRC_TS"/>
+        <viewAttribute id="CYCL_ID"/>
+        <viewAttribute id="INSRT_TS"/>
+        <viewAttribute id="SEQ_ID"/>
+        <viewAttribute id="PROCESS_ID"/>
+        <viewAttribute id="CC_EXPY_DT"/>
+        <viewAttribute id="CC_PARENT_KEY"/>
+        <viewAttribute id="PARENT_KEY_ERROR"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#PROJ_OFFR_HIST">
+        <mapping xsi:type="Calculation:AttributeMapping" target="ODS_SYST_CD" source="ODS_SYST_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OFFER_CODE" source="OFFER_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BAN" source="BAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OFH_SEQ_NO" source="OFH_SEQ_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBSCRIBER_NO" source="SUBSCRIBER_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFFECTIVE_DATE" source="EFFECTIVE_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXPIRATION_DATE" source="EXPIRATION_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT_TYPE" source="PRODUCT_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OFFER_TYPE" source="OFFER_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFF_DT" source="EFF_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXPY_DT" source="EXPY_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NDB_TS" source="NDB_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SRC_TS" source="SRC_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INSRT_TS" source="INSRT_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SEQ_ID" source="SEQ_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROCESS_ID" source="PROCESS_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_EXPY_DT" source="CC_EXPY_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_PARENT_KEY" source="CC_VERSION_CHECK"/>
+      </input>
+      <input node="#PROJ_ETL_ERROR">
+        <mapping xsi:type="Calculation:AttributeMapping" target="PARENT_KEY_ERROR" source="PARENT_KEY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_PARENT_KEY" source="PARENT_KEY"/>
+      </input>
+      <joinAttribute name="CC_PARENT_KEY"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_ERROR_FILTER">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="ODS_SYST_CD"/>
+        <viewAttribute id="OFFER_CODE"/>
+        <viewAttribute id="BAN"/>
+        <viewAttribute id="OFH_SEQ_NO"/>
+        <viewAttribute id="SUBSCRIBER_NO"/>
+        <viewAttribute id="EFFECTIVE_DATE"/>
+        <viewAttribute id="EXPIRATION_DATE"/>
+        <viewAttribute id="PRODUCT_TYPE"/>
+        <viewAttribute id="OFFER_TYPE"/>
+        <viewAttribute id="EFF_DT"/>
+        <viewAttribute id="EXPY_DT"/>
+        <viewAttribute id="CC_VERSION_CHECK"/>
+        <viewAttribute id="PARENT_KEY_ERROR">
+          <filter xsi:type="AccessControl:SingleValueFilter" operator="NL" including="true"/>
+        </viewAttribute>
+        <viewAttribute id="SRC_TS"/>
+        <viewAttribute id="CYCL_ID"/>
+        <viewAttribute id="INSRT_TS"/>
+        <viewAttribute id="SEQ_ID"/>
+        <viewAttribute id="PROCESS_ID"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#JOIN_EH">
+        <mapping xsi:type="Calculation:AttributeMapping" target="ODS_SYST_CD" source="ODS_SYST_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OFFER_CODE" source="OFFER_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BAN" source="BAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OFH_SEQ_NO" source="OFH_SEQ_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBSCRIBER_NO" source="SUBSCRIBER_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFFECTIVE_DATE" source="EFFECTIVE_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXPIRATION_DATE" source="EXPIRATION_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT_TYPE" source="PRODUCT_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OFFER_TYPE" source="OFFER_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFF_DT" source="EFF_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXPY_DT" source="CC_EXPY_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_VERSION_CHECK" source="CC_PARENT_KEY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PARENT_KEY_ERROR" source="PARENT_KEY_ERROR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SRC_TS" source="SRC_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INSRT_TS" source="INSRT_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SEQ_ID" source="SEQ_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROCESS_ID" source="PROCESS_ID"/>
+      </input>
+    </calculationView>
+  </calculationViews>
+  <logicalModel id="PROJ_ERROR_FILTER">
+    <descriptions/>
+    <attributes>
+      <attribute id="ODS_SYST_CD" order="1" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ODS_SYST_CD"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="ODS_SYST_CD"/>
+      </attribute>
+      <attribute id="OFFER_CODE" order="2" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="OFFER_CODE"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="OFFER_CODE"/>
+      </attribute>
+      <attribute id="BAN" order="3" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="BAN"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="BAN"/>
+      </attribute>
+      <attribute id="OFH_SEQ_NO" order="4" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="OFH_SEQ_NO"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="OFH_SEQ_NO"/>
+      </attribute>
+      <attribute id="SUBSCRIBER_NO" order="5" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SUBSCRIBER_NO"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="SUBSCRIBER_NO"/>
+      </attribute>
+      <attribute id="EFFECTIVE_DATE" order="6" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="EFFECTIVE_DATE"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="EFFECTIVE_DATE"/>
+      </attribute>
+      <attribute id="EXPIRATION_DATE" order="7" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="EXPIRATION_DATE"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="EXPIRATION_DATE"/>
+      </attribute>
+      <attribute id="PRODUCT_TYPE" order="8" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="PRODUCT_TYPE"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="PRODUCT_TYPE"/>
+      </attribute>
+      <attribute id="OFFER_TYPE" order="9" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="OFFER_TYPE"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="OFFER_TYPE"/>
+      </attribute>
+      <attribute id="EFF_DT" order="10" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="EFF_DT"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="EFF_DT"/>
+      </attribute>
+      <attribute id="EXPY_DT" order="11" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="EXPY_DT"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="EXPY_DT"/>
+      </attribute>
+      <attribute id="CC_VERSION_CHECK" order="12" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CC_VERSION_CHECK"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="CC_VERSION_CHECK"/>
+      </attribute>
+      <attribute id="SRC_TS" order="13" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SRC_TS"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="SRC_TS"/>
+      </attribute>
+      <attribute id="CYCL_ID" order="14" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CYCL_ID"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="CYCL_ID"/>
+      </attribute>
+      <attribute id="INSRT_TS" order="15" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="INSRT_TS"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="INSRT_TS"/>
+      </attribute>
+      <attribute id="SEQ_ID" order="16" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SEQ_ID"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="SEQ_ID"/>
+      </attribute>
+      <attribute id="PROCESS_ID" order="17" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="PROCESS_ID"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="PROCESS_ID"/>
+      </attribute>
+    </attributes>
+    <calculatedAttributes/>
+    <privateDataFoundation>
+      <tableProxies/>
+      <joins/>
+      <layout>
+        <shapes/>
+      </layout>
+    </privateDataFoundation>
+    <baseMeasures/>
+    <calculatedMeasures/>
+    <restrictedMeasures/>
+    <localDimensions/>
+  </logicalModel>
+  <layout>
+    <shapes>
+      <shape expanded="false" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+        <upperLeftCorner x="99" y="87"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_OFFR_HIST" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="22" y="339"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_ETL_ERROR" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="176" y="339"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="JOIN_EH" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="99" y="243"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_ERROR_FILTER" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="99" y="165"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+    </shapes>
+  </layout>
+</Calculation:scenario>

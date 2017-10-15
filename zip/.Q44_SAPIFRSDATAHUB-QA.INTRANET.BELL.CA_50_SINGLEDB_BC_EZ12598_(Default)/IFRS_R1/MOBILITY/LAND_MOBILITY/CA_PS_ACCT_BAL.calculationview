@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:AccessControl="http://www.sap.com/ndb/SQLCoreModelAccessControl.ecore" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" xmlns:Variable="http://www.sap.com/ndb/BiModelVariable.ecore" schemaVersion="2.3" id="CA_PS_ACCT_BAL" applyPrivilegeType="NONE" checkAnalyticPrivileges="false" defaultClient="$$client$$" defaultLanguage="$$language$$" hierarchiesSQLEnabled="false" historyEnabled="false" translationRelevant="true" visibility="internal" calculationScenarioType="TREE_BASED" dataCategory="DIMENSION" enforceSqlExecution="false" executionSemantic="UNDEFINED" outputViewType="Projection">
+  <descriptions defaultDescription="Landing View - Table PS_ACCT_BAL"/>
+  <localVariables>
+    <variable id="IP_CYCL_ID" parameter="true">
+      <descriptions defaultDescription="IP_CYCL_ID"/>
+      <variableProperties datatype="NVARCHAR" defaultValue="999" length="3" mandatory="false">
+        <valueDomain type="empty"/>
+        <selection multiLine="false" type="SingleValue"/>
+      </variableProperties>
+    </variable>
+  </localVariables>
+  <variableMappings>
+    <mapping xsi:type="Variable:ConstantVariableMapping" dataSource="#CA_EH_ERROR_TABLE" value="1280">
+      <targetVariable name="IP_JOB_ID" resourceUri="/IFRS_R1.LAND.EH/calculationviews/CA_EH_ERROR_TABLE"/>
+    </mapping>
+  </variableMappings>
+  <informationModelLayout relativeWidthScenario="47"/>
+  <dataSources>
+    <DataSource id="IFRS_R1.LAND::PS_ACCT_BAL" type="DATA_BASE_TABLE">
+      <viewAttributes allViewAttributes="true"/>
+      <columnObject schemaName="LAND" columnObjectName="IFRS_R1.LAND::PS_ACCT_BAL"/>
+    </DataSource>
+    <DataSource id="CA_EH_ERROR_TABLE" type="CALCULATION_VIEW">
+      <viewAttributes allViewAttributes="true"/>
+      <resourceUri>/IFRS_R1.LAND.EH/calculationviews/CA_EH_ERROR_TABLE</resourceUri>
+    </DataSource>
+  </dataSources>
+  <calculationViews>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_PS_ACCT_BAL" filterExpressionLanguage="COLUMN_ENGINE">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="CUSTOMER_ID"/>
+        <viewAttribute id="NEW_PLATFORM_BALANCE"/>
+        <viewAttribute id="NEW_PLATFORM_BALANCE_EXPIRY_DATE"/>
+        <viewAttribute id="CYCL_ID"/>
+        <viewAttribute id="INSRT_TS"/>
+        <viewAttribute id="NDB_TS"/>
+        <viewAttribute id="NDB_MART"/>
+        <viewAttribute id="SEQ_ID"/>
+        <viewAttribute id="SRC_TS"/>
+        <viewAttribute id="PROCESS_ID"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CC_VERSION_CHECK" length="200" expressionLanguage="COLUMN_ENGINE">
+          <formula>string(&quot;CUSTOMER_ID&quot;)</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#IFRS_R1.LAND::PS_ACCT_BAL">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_ID" source="CUSTOMER_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NEW_PLATFORM_BALANCE" source="NEW_PLATFORM_BALANCE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NEW_PLATFORM_BALANCE_EXPIRY_DATE" source="NEW_PLATFORM_BALANCE_EXPIRY_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INSRT_TS" source="INSRT_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NDB_TS" source="NDB_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NDB_MART" source="NDB_MART"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SEQ_ID" source="SEQ_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SRC_TS" source="SRC_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROCESS_ID" source="PROCESS_ID"/>
+      </input>
+      <filter>(isNull(&quot;NDB_TS&quot;) and &quot;CYCL_ID&quot; &lt;= '$$IP_CYCL_ID$$')</filter>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_ETL_ERROR">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="PARENT_KEY"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#CA_EH_ERROR_TABLE">
+        <mapping xsi:type="Calculation:AttributeMapping" target="PARENT_KEY" source="PARENT_KEY"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="JOIN_EH" cardinality="C1_N" joinOrder="OUTSIDE_IN" joinType="leftOuter">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="CUSTOMER_ID"/>
+        <viewAttribute id="NEW_PLATFORM_BALANCE"/>
+        <viewAttribute id="NEW_PLATFORM_BALANCE_EXPIRY_DATE"/>
+        <viewAttribute id="CYCL_ID"/>
+        <viewAttribute id="INSRT_TS"/>
+        <viewAttribute id="NDB_TS"/>
+        <viewAttribute id="NDB_MART"/>
+        <viewAttribute id="SEQ_ID"/>
+        <viewAttribute id="SRC_TS"/>
+        <viewAttribute id="PROCESS_ID"/>
+        <viewAttribute id="CC_VERSION_CHECK"/>
+        <viewAttribute id="PARENT_KEY_ERROR"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#PROJ_PS_ACCT_BAL">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_ID" source="CUSTOMER_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NEW_PLATFORM_BALANCE" source="NEW_PLATFORM_BALANCE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NEW_PLATFORM_BALANCE_EXPIRY_DATE" source="NEW_PLATFORM_BALANCE_EXPIRY_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INSRT_TS" source="INSRT_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NDB_TS" source="NDB_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NDB_MART" source="NDB_MART"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SEQ_ID" source="SEQ_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SRC_TS" source="SRC_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROCESS_ID" source="PROCESS_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_VERSION_CHECK" source="CC_VERSION_CHECK"/>
+      </input>
+      <input node="#PROJ_ETL_ERROR">
+        <mapping xsi:type="Calculation:AttributeMapping" target="PARENT_KEY_ERROR" source="PARENT_KEY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_VERSION_CHECK" source="PARENT_KEY"/>
+      </input>
+      <joinAttribute name="CC_VERSION_CHECK"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_ERROR_FILE">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="PROCESS_ID"/>
+        <viewAttribute id="SRC_TS"/>
+        <viewAttribute id="SEQ_ID"/>
+        <viewAttribute id="NDB_MART"/>
+        <viewAttribute id="NDB_TS"/>
+        <viewAttribute id="INSRT_TS"/>
+        <viewAttribute id="CYCL_ID"/>
+        <viewAttribute id="NEW_PLATFORM_BALANCE_EXPIRY_DATE"/>
+        <viewAttribute id="NEW_PLATFORM_BALANCE"/>
+        <viewAttribute id="CUSTOMER_ID"/>
+        <viewAttribute id="PARENT_KEY_ERROR">
+          <filter xsi:type="AccessControl:SingleValueFilter" operator="NL" including="true"/>
+        </viewAttribute>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#JOIN_EH">
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROCESS_ID" source="PROCESS_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SRC_TS" source="SRC_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SEQ_ID" source="SEQ_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NDB_MART" source="NDB_MART"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NDB_TS" source="NDB_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INSRT_TS" source="INSRT_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NEW_PLATFORM_BALANCE_EXPIRY_DATE" source="NEW_PLATFORM_BALANCE_EXPIRY_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NEW_PLATFORM_BALANCE" source="NEW_PLATFORM_BALANCE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_ID" source="CUSTOMER_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PARENT_KEY_ERROR" source="PARENT_KEY_ERROR"/>
+      </input>
+    </calculationView>
+  </calculationViews>
+  <logicalModel id="PROJ_ERROR_FILE">
+    <descriptions/>
+    <attributes>
+      <attribute id="PROCESS_ID" order="1" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="PROCESS_ID"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILE" columnName="PROCESS_ID"/>
+      </attribute>
+      <attribute id="SRC_TS" order="2" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SRC_TS"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILE" columnName="SRC_TS"/>
+      </attribute>
+      <attribute id="SEQ_ID" order="3" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SEQ_ID"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILE" columnName="SEQ_ID"/>
+      </attribute>
+      <attribute id="NDB_MART" order="4" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="NDB_MART"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILE" columnName="NDB_MART"/>
+      </attribute>
+      <attribute id="NDB_TS" order="5" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="NDB_TS"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILE" columnName="NDB_TS"/>
+      </attribute>
+      <attribute id="INSRT_TS" order="6" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="INSRT_TS"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILE" columnName="INSRT_TS"/>
+      </attribute>
+      <attribute id="CYCL_ID" order="7" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CYCL_ID"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILE" columnName="CYCL_ID"/>
+      </attribute>
+      <attribute id="NEW_PLATFORM_BALANCE_EXPIRY_DATE" order="8" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="NEW_PLATFORM_BALANCE_EXPIRY_DATE"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILE" columnName="NEW_PLATFORM_BALANCE_EXPIRY_DATE"/>
+      </attribute>
+      <attribute id="NEW_PLATFORM_BALANCE" order="9" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="NEW_PLATFORM_BALANCE"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILE" columnName="NEW_PLATFORM_BALANCE"/>
+      </attribute>
+      <attribute id="CUSTOMER_ID" order="10" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CUSTOMER_ID"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILE" columnName="CUSTOMER_ID"/>
+      </attribute>
+      <attribute id="PARENT_KEY_ERROR" order="11" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="PARENT_KEY_ERROR"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILE" columnName="PARENT_KEY_ERROR"/>
+      </attribute>
+    </attributes>
+    <calculatedAttributes/>
+    <privateDataFoundation>
+      <tableProxies/>
+      <joins/>
+      <layout>
+        <shapes/>
+      </layout>
+    </privateDataFoundation>
+    <baseMeasures/>
+    <calculatedMeasures/>
+    <restrictedMeasures/>
+    <localDimensions/>
+  </logicalModel>
+  <layout>
+    <shapes>
+      <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+        <upperLeftCorner x="99" y="87"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_PS_ACCT_BAL" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="22" y="339"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_ETL_ERROR" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="176" y="339"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="JOIN_EH" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="99" y="243"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_ERROR_FILE" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="99" y="165"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+    </shapes>
+  </layout>
+</Calculation:scenario>

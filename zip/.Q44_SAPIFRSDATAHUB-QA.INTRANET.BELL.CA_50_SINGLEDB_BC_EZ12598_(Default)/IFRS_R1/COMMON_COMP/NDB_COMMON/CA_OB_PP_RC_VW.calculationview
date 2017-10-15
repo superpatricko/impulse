@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" schemaVersion="2.3" id="CA_OB_PP_RC_VW" applyPrivilegeType="ANALYTIC_PRIVILEGE" checkAnalyticPrivileges="true" defaultClient="$$client$$" defaultLanguage="$$language$$" hierarchiesSQLEnabled="false" translationRelevant="true" visibility="internal" calculationScenarioType="TREE_BASED" dataCategory="DIMENSION" enforceSqlExecution="false" executionSemantic="UNDEFINED" outputViewType="Projection">
+  <descriptions defaultDescription="CA_OB_PP_RC_VW"/>
+  <localVariables/>
+  <variableMappings/>
+  <informationModelLayout relativeWidthScenario="39"/>
+  <dataSources>
+    <DataSource id="IFRS_R1.COMMON_COMP.NDB_COMMON::OB_PP_RC_RATE" type="DATA_BASE_TABLE">
+      <viewAttributes allViewAttributes="true"/>
+      <columnObject schemaName="NDB_COMMON" columnObjectName="IFRS_R1.COMMON_COMP.NDB_COMMON::OB_PP_RC_RATE"/>
+    </DataSource>
+  </dataSources>
+  <calculationViews>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_OB_RC_RT_CC">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="RATE"/>
+        <viewAttribute id="FEATURE_CODE"/>
+        <viewAttribute id="EXPIRATION_DATE"/>
+        <viewAttribute id="RFERENCE_EFFECTIVE_DT"/>
+        <viewAttribute id="REFERENCE_EXPIRY_DT"/>
+        <viewAttribute id="EFFECTIVE_DATE"/>
+        <viewAttribute id="SOC"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="INTEGER" id="CC_ACTIVE_EFFECTIVE_REC" expressionLanguage="COLUMN_ENGINE">
+          <formula>IF(( &quot;EFFECTIVE_DATE&quot; &lt;= NOW()  AND (ISNULL(&quot;EXPIRATION_DATE&quot; )  OR &quot;EXPIRATION_DATE&quot;> NOW() )),  1,0)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="INTEGER" id="CC_ACTIVE_EFF_REC" expressionLanguage="COLUMN_ENGINE">
+          <formula>IF(( &quot;RFERENCE_EFFECTIVE_DT&quot;&lt;= NOW()  AND (ISNULL(&quot;REFERENCE_EXPIRY_DT&quot; )  OR &quot;REFERENCE_EXPIRY_DT&quot;> NOW() )),  1,0)</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#IFRS_R1.COMMON_COMP.NDB_COMMON::OB_PP_RC_RATE">
+        <mapping xsi:type="Calculation:AttributeMapping" target="RATE" source="RATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FEATURE_CODE" source="FEATURE_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXPIRATION_DATE" source="EXPIRATION_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RFERENCE_EFFECTIVE_DT" source="RFERENCE_EFFECTIVE_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_EXPIRY_DT" source="REFERENCE_EXPIRY_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFFECTIVE_DATE" source="EFFECTIVE_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SOC" source="SOC"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_OB_RC_RT_ACTV" filterExpressionLanguage="COLUMN_ENGINE">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="CC_ACTIVE_EFFECTIVE_REC"/>
+        <viewAttribute id="CC_ACTIVE_EFF_REC"/>
+        <viewAttribute id="RATE"/>
+        <viewAttribute id="FEATURE_CODE"/>
+        <viewAttribute id="SOC"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#PROJ_OB_RC_RT_CC">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_ACTIVE_EFFECTIVE_REC" source="CC_ACTIVE_EFFECTIVE_REC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_ACTIVE_EFF_REC" source="CC_ACTIVE_EFF_REC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RATE" source="RATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FEATURE_CODE" source="FEATURE_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SOC" source="SOC"/>
+      </input>
+      <filter>&quot;CC_ACTIVE_EFFECTIVE_REC&quot; AND &quot;CC_ACTIVE_EFF_REC&quot;</filter>
+    </calculationView>
+    <calculationView xsi:type="Calculation:RankView" id="RANK_UNIQUE_RATE_FEATURE">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="RATE"/>
+        <viewAttribute id="FEATURE_CODE"/>
+        <viewAttribute id="SOC"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#PROJ_OB_RC_RT_ACTV">
+        <mapping xsi:type="Calculation:AttributeMapping" target="RATE" source="RATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FEATURE_CODE" source="FEATURE_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SOC" source="SOC"/>
+      </input>
+      <windowFunction>
+        <partitionViewAttributeName>FEATURE_CODE</partitionViewAttributeName>
+        <partitionViewAttributeName>SOC</partitionViewAttributeName>
+        <order byViewAttributeName="FEATURE_CODE" direction="DESC"/>
+        <rankThreshold>
+          <value>1</value>
+        </rankThreshold>
+      </windowFunction>
+    </calculationView>
+  </calculationViews>
+  <logicalModel id="RANK_UNIQUE_RATE_FEATURE">
+    <descriptions/>
+    <attributes>
+      <attribute id="RATE" order="1" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="RATE"/>
+        <keyMapping columnObjectName="RANK_UNIQUE_RATE_FEATURE" columnName="RATE"/>
+      </attribute>
+      <attribute id="FEATURE_CODE" order="2" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="FEATURE_CODE"/>
+        <keyMapping columnObjectName="RANK_UNIQUE_RATE_FEATURE" columnName="FEATURE_CODE"/>
+      </attribute>
+      <attribute id="SOC" order="3" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SOC"/>
+        <keyMapping columnObjectName="RANK_UNIQUE_RATE_FEATURE" columnName="SOC"/>
+      </attribute>
+    </attributes>
+    <calculatedAttributes/>
+    <privateDataFoundation>
+      <tableProxies/>
+      <joins/>
+      <layout>
+        <shapes/>
+      </layout>
+    </privateDataFoundation>
+    <baseMeasures/>
+    <calculatedMeasures/>
+    <restrictedMeasures/>
+    <localDimensions/>
+  </logicalModel>
+  <layout>
+    <shapes>
+      <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+        <upperLeftCorner x="22" y="87"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_OB_RC_RT_CC" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="22" y="321"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_OB_RC_RT_ACTV" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="22" y="243"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="RANK_UNIQUE_RATE_FEATURE" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="22" y="165"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+    </shapes>
+  </layout>
+</Calculation:scenario>

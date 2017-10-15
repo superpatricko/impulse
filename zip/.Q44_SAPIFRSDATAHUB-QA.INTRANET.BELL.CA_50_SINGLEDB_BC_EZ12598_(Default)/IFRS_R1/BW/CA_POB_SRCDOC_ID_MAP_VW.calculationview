@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" schemaVersion="2.3" id="CA_POB_SRCDOC_ID_MAP_VW" applyPrivilegeType="ANALYTIC_PRIVILEGE" checkAnalyticPrivileges="true" defaultClient="$$client$$" defaultLanguage="$$language$$" hierarchiesSQLEnabled="false" historyEnabled="false" translationRelevant="true" visibility="reportingEnabled" calculationScenarioType="TREE_BASED" dataCategory="CUBE" enforceSqlExecution="false" executionSemantic="UNDEFINED" outputViewType="Aggregation">
+  <origin/>
+  <descriptions defaultDescription="POB ID to SRCDOC_ID Mapping View"/>
+  <metadata changedAt="2017-07-06 14:50:31.474"/>
+  <localVariables/>
+  <variableMappings/>
+  <informationModelLayout relativeWidthScenario="49"/>
+  <dataSources>
+    <DataSource id="FARR_D_INVOICE" type="DATA_BASE_TABLE">
+      <viewAttributes allViewAttributes="true"/>
+      <columnObject schemaName="SDA" columnObjectName="FARR_D_INVOICE"/>
+    </DataSource>
+    <DataSource id="FARR_D_MAPPING_I" type="DATA_BASE_TABLE">
+      <viewAttributes allViewAttributes="true"/>
+      <columnObject schemaName="SDA" columnObjectName="FARR_D_MAPPING_I"/>
+    </DataSource>
+    <DataSource id="FARR_D_MAPPING" type="DATA_BASE_TABLE">
+      <viewAttributes allViewAttributes="true"/>
+      <columnObject schemaName="SDA" columnObjectName="FARR_D_MAPPING"/>
+    </DataSource>
+  </dataSources>
+  <calculationViews>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PR_FARR_D_INVOICE">
+      <descriptions defaultDescription="Projection of FARR_D_INVOICE"/>
+      <viewAttributes>
+        <viewAttribute id="GUID"/>
+        <viewAttribute id="POB_ID"/>
+        <viewAttribute id="POSTING_DATE"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#FARR_D_INVOICE">
+        <mapping xsi:type="Calculation:AttributeMapping" target="GUID" source="GUID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="POB_ID" source="POB_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="POSTING_DATE" source="POSTING_DATE"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PR_FARR_D_MAPPING_I">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="INVOICE_GUID"/>
+        <viewAttribute id="SRCDOC_ID"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#FARR_D_MAPPING_I">
+        <mapping xsi:type="Calculation:AttributeMapping" target="INVOICE_GUID" source="INVOICE_GUID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SRCDOC_ID" source="SRCDOC_ID"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:RankView" id="RANK_FARR_D_INVOICE">
+      <descriptions defaultDescription="Rank FARR_D_INVOICE by Posting Date per POB ID"/>
+      <viewAttributes>
+        <viewAttribute id="GUID"/>
+        <viewAttribute id="POB_ID"/>
+        <viewAttribute id="POSTING_DATE"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#PR_FARR_D_INVOICE">
+        <mapping xsi:type="Calculation:AttributeMapping" target="GUID" source="GUID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="POB_ID" source="POB_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="POSTING_DATE" source="POSTING_DATE"/>
+      </input>
+      <windowFunction>
+        <partitionViewAttributeName>POB_ID</partitionViewAttributeName>
+        <order byViewAttributeName="POSTING_DATE" direction="ASC"/>
+        <rankThreshold>
+          <value>1</value>
+        </rankThreshold>
+      </windowFunction>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="JOIN_POB_ID_SRDOC_ID" joinType="inner">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="SRCDOC_ID"/>
+        <viewAttribute id="POB_ID"/>
+        <viewAttribute hidden="true" id="JOIN$GUID$INVOICE_GUID"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#RANK_FARR_D_INVOICE">
+        <mapping xsi:type="Calculation:AttributeMapping" target="POB_ID" source="POB_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$GUID$INVOICE_GUID" source="GUID"/>
+      </input>
+      <input node="#PR_FARR_D_MAPPING_I">
+        <mapping xsi:type="Calculation:AttributeMapping" target="SRCDOC_ID" source="SRCDOC_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$GUID$INVOICE_GUID" source="INVOICE_GUID"/>
+      </input>
+      <joinAttribute name="JOIN$GUID$INVOICE_GUID"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PR_FARR_D_MAPPING">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="POB_ID"/>
+        <viewAttribute id="SRCDOC_ID"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#FARR_D_MAPPING">
+        <mapping xsi:type="Calculation:AttributeMapping" target="POB_ID" source="POB_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SRCDOC_ID" source="SRCDOC_ID"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="JOIN_POB_SRCDOC_MAPPING" joinType="fullOuter">
+      <descriptions defaultDescription="Join POB SRCDOC Mapping for Order and Invoice"/>
+      <viewAttributes>
+        <viewAttribute id="POB_ID"/>
+        <viewAttribute id="SRCDOC_ID_ORDER"/>
+        <viewAttribute id="SRCDOC_ID_BILLING"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#PR_FARR_D_MAPPING">
+        <mapping xsi:type="Calculation:AttributeMapping" target="POB_ID" source="POB_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SRCDOC_ID_ORDER" source="SRCDOC_ID"/>
+      </input>
+      <input node="#JOIN_POB_ID_SRDOC_ID">
+        <mapping xsi:type="Calculation:AttributeMapping" target="SRCDOC_ID_BILLING" source="SRCDOC_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="POB_ID" source="POB_ID"/>
+      </input>
+      <joinAttribute name="POB_ID"/>
+    </calculationView>
+  </calculationViews>
+  <logicalModel id="JOIN_POB_SRCDOC_MAPPING">
+    <descriptions/>
+    <attributes>
+      <attribute id="POB_ID" order="2" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="POB_ID"/>
+        <keyMapping columnObjectName="JOIN_POB_SRCDOC_MAPPING" columnName="POB_ID"/>
+      </attribute>
+      <attribute id="SRCDOC_ID_ORDER" order="3" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SRCDOC_ID_ORDER"/>
+        <keyMapping columnObjectName="JOIN_POB_SRCDOC_MAPPING" columnName="SRCDOC_ID_ORDER"/>
+      </attribute>
+      <attribute id="SRCDOC_ID_BILLING" order="4" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SRCDOC_ID_BILLING"/>
+        <keyMapping columnObjectName="JOIN_POB_SRCDOC_MAPPING" columnName="SRCDOC_ID_BILLING"/>
+      </attribute>
+    </attributes>
+    <calculatedAttributes>
+      <calculatedAttribute id="SRCDOC_ID_ORDER_WO_SUFFIX" hidden="false" order="5" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Order SRCDOC_ID without RAI Item (Suffix)"/>
+        <keyCalculation datatype="NVARCHAR" expressionLanguage="COLUMN_ENGINE" length="35">
+          <formula>leftstr(&quot;SRCDOC_ID_ORDER&quot;,(instr(&quot;SRCDOC_ID_ORDER&quot;,'-'))-1)</formula>
+        </keyCalculation>
+      </calculatedAttribute>
+      <calculatedAttribute id="SRCDOC_ID_BILLING_WO_SUFFIX" hidden="false" order="6" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Invoice SRCDOC_ID without RAI Item (Suffix)"/>
+        <keyCalculation datatype="NVARCHAR" expressionLanguage="COLUMN_ENGINE" length="35">
+          <formula>leftstr(&quot;SRCDOC_ID_BILLING&quot;,(instr(&quot;SRCDOC_ID_BILLING&quot;,'-'))-1)</formula>
+        </keyCalculation>
+      </calculatedAttribute>
+    </calculatedAttributes>
+    <privateDataFoundation>
+      <tableProxies/>
+      <joins/>
+      <layout>
+        <shapes/>
+      </layout>
+    </privateDataFoundation>
+    <baseMeasures/>
+    <calculatedMeasures>
+      <measure id="COUNTER" hidden="false" order="1" aggregationType="sum" measureType="simple" aggregatable="true" calculatedMeasureType="counter" datatype="INTEGER" expressionLanguage="COLUMN_ENGINE">
+        <descriptions defaultDescription="COUNTER"/>
+        <exceptionAggregation exceptionAggregationType="countDistinct">
+          <attribute attributeName="POB_ID"/>
+        </exceptionAggregation>
+        <formula>1</formula>
+      </measure>
+    </calculatedMeasures>
+    <restrictedMeasures/>
+    <localDimensions/>
+  </logicalModel>
+  <layout>
+    <shapes>
+      <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+        <upperLeftCorner x="176" y="87"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PR_FARR_D_INVOICE" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="22" y="455"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PR_FARR_D_MAPPING_I" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="176" y="377"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="RANK_FARR_D_INVOICE" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="22" y="377"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="JOIN_POB_ID_SRDOC_ID" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="99" y="281"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PR_FARR_D_MAPPING" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="253" y="281"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="JOIN_POB_SRCDOC_MAPPING" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="176" y="170"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+    </shapes>
+  </layout>
+</Calculation:scenario>

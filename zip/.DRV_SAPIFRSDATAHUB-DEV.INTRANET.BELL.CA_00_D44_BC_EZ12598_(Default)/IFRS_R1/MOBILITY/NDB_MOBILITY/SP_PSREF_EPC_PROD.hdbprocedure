@@ -1,0 +1,817 @@
+PROCEDURE "NDB_MOBILITY"."IFRS_R1.MOBILITY.NDB_MOBILITY::SP_PSREF_EPC_PROD" 
+(IN IP_CYCL_ID NVARCHAR(3),
+OUT OP_STATUS NVARCHAR(100)) 
+	LANGUAGE SQLSCRIPT
+	SQL SECURITY DEFINER
+	AS 
+
+BEGIN
+
+--------------------------------------------------------------------------------
+-- Procedure Title : IFRS_R1.MOBILITY.NDB_MOBILITY::SP_PSREF_EPC_PROD
+--
+-- Created By      : BC_EZ07674(Suresh Konidala)          Date :16/05/2017
+-- 
+-- Procedure Description : 
+--  1.We will update and Insert Subsidy information into NDB layer
+--	2.Provides the subsidy information (effective/expiry dates, rebate type, 
+--    subsidy amount, subsidy duration, etc.) for each contract.	
+-- 
+--Project :Bell Canada
+--
+-- Release :R1/IFRS
+--------------------------------------------------------------------------------
+--   M O D I F I C A T I O N   H I S T O R Y
+--------------------------------------------------------------------------------
+-- Date        | User ID          | Modification History/Release
+--------------------------------------------------------------------------------
+-- 01-02-2017  | BC_EZ07674       | Added cursor logic
+--------------------------------------------------------------------------------
+-- Description Of the changes 
+--------------------------------------------------------------------------------
+-- Modification Number          :<Assign Some Number> 
+-- Description of Changes Made> :<Updated the logic of NDB_TS write back>       
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------------------------
+-- Local Variables Declaration
+--------------------------------------------------------------------------------------------------
+
+DECLARE LC_ERROR_TEXT 		NVARCHAR(70) DEFAULT 'OUT STATUS IS 1 : INSERT/UPDATE FOR ONE OR MORE RECORD FAILED';
+DECLARE LC_SUCCESS_TEXT 	NVARCHAR(70) DEFAULT 'OUT STATUS IS 0 : INSERT/UPDATE EXECUTION SUCCESSFUL';
+DECLARE LV_ERROR_FLAG 		NVARCHAR(1) := 'N';
+DECLARE LV_CUR_UTC 			TIMESTAMP := CURRENT_TIMESTAMP;
+DECLARE ERROR_TAB 			TABLE (ERROR_CODE NVARCHAR(100));
+DECLARE i					INTEGER;
+DECLARE RECORD_COUNT		INTEGER;
+DECLARE CURRENT_ERROR		NVARCHAR(100);
+DECLARE LV_LOOP_ERROR_FLAG  INTEGER := 0;
+DECLARE LV_PREV_NDB_EPC_PRIMARY_KEY	NVARCHAR(1100) := NULL;
+
+--------------------------------------------------------------------------------------------------
+-- Cursors Declaration
+-------------------------------------------------------------------------------------------------- 
+
+   DECLARE CURSOR CA_PSREF_EPC_PROD FOR
+SELECT
+	 "VM_OFFER_ID",
+	 "VM_BILL_OFFER_NAME",
+	 "VM_OFFER_DESCR_ENG",
+	 "VM_OFFER_DESCR_CFR",
+	 "VM_EXTERNAL_SOC",
+	 "VM_EP_PS_STYPE",
+	 "VM_PRICE_PLAN_IND",
+	 "VM_EP_ALGN_ANIV_DT",
+	 "VM_PRICE_NAME",
+	 "VM_EP_PRIT_NAME",
+	 "VM_EP_RATE",
+	 "VM_EP_PS_RATE",
+	 "VM_EP_RC_RATE_IND",
+	 "VM_EP_RATETBL_RATE",
+	 "VM_EP_FREQUENCY",
+	 "VM_EP_FREQ_PAYMNT",
+	 "VM_EP_PERIOD_SET",
+	 "VM_EP_RATETBL_PERD",
+	 "VM_EP_RATETBL_UOQT",
+	 "VM_EP_QTA_PER_VAL",
+	 "VM_BRAND",
+	 "VM_CHARGE_TYPE",
+	 "VM_EP_ELIG_LYL_BNS",
+	 "VM_EP_ELIG_BUDDY",
+	 "VM_EP_UPDRPL_ENDDT",
+	 "VM_CHARGE_CODE",
+	 "VM_EP_SERVC_FILTER",
+	 "VM_EP_SRVC_FLTRGRP",
+	 "VM_EP_PRIT_SCALE",
+	 "VM_EP_RTPRSP_SPNUM",
+	 "VM_EP_ZONES",
+	 "VM_EP_QLFY_CALL_AR",
+	 "VM_EM_ALLOW_TYPE",
+	 "VM_EP_BLOCK_DEP",
+	 "VM_EP_AIR_OR_TOLL",
+	 "VM_EP_ALW_OVR_IND",
+	 "VM_EP_DLY_QTA_VAL",
+	 "VM_EP_BNUS_PRD_NUM",
+	 "VM_EP_BNUS_PRD_UOM",
+	 "VM_EP_RPL_BONUS_LV",
+	 "VM_EP_DISCOUNT_MTD",
+	 "VM_EP_DISCOUNT_VAL",
+	 "VM_EP_QUAL_CRIT",
+	 "VM_EP_MAX_DIS_AMT",
+	 "VM_REPLENISHMENT",
+	 "VM_EP_SERVICE_TYPE",
+	 "EXISTING_RECORD",
+	 "REFERENCE_EFFECTIVE_DT",
+	 "REFERENCE_EXPIRY_DT",
+	 "REFERENCE_EFFECTIVE_PREV_DATE",
+	 "VM_EP_RTPRZN_ZONE",
+	 "VM_EP_RATEBL_RCIN",
+	 "EPC_PRIMARY_KEY",
+	 "NDB_EPC_PRIMARY_KEY",	 
+	 "CYCL_ID",
+	 "ERROR_STATUS",
+	 "ERROR_CODE" 
+FROM "_SYS_BIC"."IFRS_R1.MOBILITY.NDB_MOBILITY/CA_PSREF_EPC_PROD"
+(PLACEHOLDER."$$IP_CYCL_ID$$" => :IP_CYCL_ID)
+ORDER BY "NDB_EPC_PRIMARY_KEY","CYCL_ID", "SEQ_ID";
+
+--------------------------------------------------------------------------------------------------
+-- Local Temporary Tables Declaration
+-------------------------------------------------------------------------------------------------- 
+
+
+CREATE LOCAL TEMPORARY TABLE #UPDATE_PSREF_EPC_PROD ("EPC_PRIMARY_KEY" NVARCHAR(1100));
+CREATE LOCAL TEMPORARY TABLE #UPDATE_EH_DELETION ("NDB_EPC_PRIMARY_KEY" NVARCHAR(1100));
+        	  
+--------------------------------------------------------------------------------------------------
+-- Cursors Loop
+--------------------------------------------------------------------------------------------------  
+
+FOR C_PS_PROD AS CA_PSREF_EPC_PROD DO
+
+--  Define Exit Handler
+	DECLARE EXIT HANDLER FOR SQLEXCEPTION 
+	BEGIN AUTONOMOUS TRANSACTION 
+	
+--    Define Exit Handler
+	  DECLARE EXIT HANDLER FOR SQLEXCEPTION 
+	  BEGIN AUTONOMOUS TRANSACTION 	
+	   
+	-- Do Nothing. Exception Handled to ensure SP does not get terminated 
+	
+ 	  END;
+ 	  
+			     -- Insert record into error table
+			     INSERT INTO "NDB_MOBILITY"."IFRS_R1.MOBILITY.NDB_MOBILITY::PPD_PSREF_EPC_PROD_EH"
+			    (
+					"VM_EP_RATE",
+					"VM_EP_PS_RATE",
+					"VM_EP_RATETBL_RATE",
+					"VM_EP_QTA_PER_VAL",
+					"VM_EP_BNUS_PRD_NUM",
+					"VM_EP_MAX_DIS_AMT",
+					"VM_OFFER_ID",
+					"VM_BILL_OFFER_NAME",
+					"VM_OFFER_DESCR_ENG",
+					"VM_OFFER_DESCR_CFR",
+					"VM_EXTERNAL_SOC",
+					"VM_EP_PS_STYPE",
+					"VM_PRICE_PLAN_IND",
+					"VM_EP_ALGN_ANIV_DT",
+					"VM_PRICE_NAME",
+					"VM_EP_PRIT_NAME",
+					"VM_EP_RC_RATE_IND",
+					"VM_EP_FREQUENCY",
+					"VM_EP_FREQ_PAYMNT",
+					"VM_EP_PERIOD_SET",
+					"VM_EP_RATETBL_PERD",
+					"VM_EP_RATETBL_UOQT",
+					"VM_BRAND",
+					"VM_CHARGE_TYPE",
+					"VM_EP_ELIG_LYL_BNS",
+					"VM_EP_ELIG_BUDDY",
+					"VM_EP_UPDRPL_ENDDT",
+					"VM_CHARGE_CODE",
+					"VM_EP_SERVC_FILTER",
+					"VM_EP_SRVC_FLTRGRP",
+					"VM_EP_PRIT_SCALE",
+					"VM_EP_RTPRSP_SPNUM",
+					"VM_EP_ZONES",
+					"VM_EP_QLFY_CALL_AR",
+					"VM_EM_ALLOW_TYPE",
+					"VM_EP_BLOCK_DEP",
+					"VM_EP_AIR_OR_TOLL",
+					"VM_EP_ALW_OVR_IND",
+					"VM_EP_DLY_QTA_VAL",
+					"VM_EP_BNUS_PRD_UOM",
+					"VM_EP_RPL_BONUS_LV",
+					"VM_EP_DISCOUNT_MTD",
+					"VM_EP_DISCOUNT_VAL",
+					"VM_EP_QUAL_CRIT",
+					"VM_REPLENISHMENT",
+					"VM_EP_SERVICE_TYPE",
+					"REFERENCE_EFFECTIVE_DT",
+					"REFERENCE_EXPIRY_DT",
+					"VM_EP_RTPRZN_ZONE",
+					"VM_EP_RATEBL_RCIN",
+					"NDB_EPC_PRIMARY_KEY", 
+					"ERROR_CODE",
+					"TECHNICAL_MESSAGE",
+					"ERROR_CREATE_TS"					
+				)VALUES(
+					C_PS_PROD."VM_EP_RATE",
+					C_PS_PROD."VM_EP_PS_RATE",
+					C_PS_PROD."VM_EP_RATETBL_RATE",
+					C_PS_PROD."VM_EP_QTA_PER_VAL",
+					C_PS_PROD."VM_EP_BNUS_PRD_NUM",
+					C_PS_PROD."VM_EP_MAX_DIS_AMT",
+					C_PS_PROD."VM_OFFER_ID",
+					C_PS_PROD."VM_BILL_OFFER_NAME",
+					C_PS_PROD."VM_OFFER_DESCR_ENG",
+					C_PS_PROD."VM_OFFER_DESCR_CFR",
+					C_PS_PROD."VM_EXTERNAL_SOC",
+					C_PS_PROD."VM_EP_PS_STYPE",
+					C_PS_PROD."VM_PRICE_PLAN_IND",
+					C_PS_PROD."VM_EP_ALGN_ANIV_DT",
+					C_PS_PROD."VM_PRICE_NAME",
+					C_PS_PROD."VM_EP_PRIT_NAME",
+					C_PS_PROD."VM_EP_RC_RATE_IND",
+					C_PS_PROD."VM_EP_FREQUENCY",
+					C_PS_PROD."VM_EP_FREQ_PAYMNT",
+					C_PS_PROD."VM_EP_PERIOD_SET",
+					C_PS_PROD."VM_EP_RATETBL_PERD",
+					C_PS_PROD."VM_EP_RATETBL_UOQT",
+					C_PS_PROD."VM_BRAND",
+					C_PS_PROD."VM_CHARGE_TYPE",
+					C_PS_PROD."VM_EP_ELIG_LYL_BNS",
+					C_PS_PROD."VM_EP_ELIG_BUDDY",
+					C_PS_PROD."VM_EP_UPDRPL_ENDDT",
+					C_PS_PROD."VM_CHARGE_CODE",
+					C_PS_PROD."VM_EP_SERVC_FILTER",
+					C_PS_PROD."VM_EP_SRVC_FLTRGRP",
+					C_PS_PROD."VM_EP_PRIT_SCALE",
+					C_PS_PROD."VM_EP_RTPRSP_SPNUM",
+					C_PS_PROD."VM_EP_ZONES",
+					C_PS_PROD."VM_EP_QLFY_CALL_AR",
+					C_PS_PROD."VM_EM_ALLOW_TYPE",
+					C_PS_PROD."VM_EP_BLOCK_DEP",
+					C_PS_PROD."VM_EP_AIR_OR_TOLL",
+					C_PS_PROD."VM_EP_ALW_OVR_IND",
+					C_PS_PROD."VM_EP_DLY_QTA_VAL",
+					C_PS_PROD."VM_EP_BNUS_PRD_UOM",
+					C_PS_PROD."VM_EP_RPL_BONUS_LV",
+					C_PS_PROD."VM_EP_DISCOUNT_MTD",
+					C_PS_PROD."VM_EP_DISCOUNT_VAL",
+					C_PS_PROD."VM_EP_QUAL_CRIT",
+					C_PS_PROD."VM_REPLENISHMENT",
+					C_PS_PROD."VM_EP_SERVICE_TYPE",
+					C_PS_PROD."REFERENCE_EFFECTIVE_DT",
+					C_PS_PROD."REFERENCE_EXPIRY_DT",
+					C_PS_PROD."VM_EP_RTPRZN_ZONE",
+					C_PS_PROD."VM_EP_RATEBL_RCIN",
+					C_PS_PROD."NDB_EPC_PRIMARY_KEY",
+					::SQL_ERROR_CODE,
+					::SQL_ERROR_MESSAGE,
+					LV_CUR_UTC);
+
+	  			LV_ERROR_FLAG := 'Y';
+	  			LV_LOOP_ERROR_FLAG := 1;
+  		  
+  	END;	  
+    
+-----------------------------------------------------------------------------------------------   
+-- FOR CLEARING THE VARIABLES
+
+	IF (C_PS_PROD."NDB_EPC_PRIMARY_KEY" != LV_PREV_NDB_EPC_PRIMARY_KEY) THEN
+
+		LV_LOOP_ERROR_FLAG := 0;
+		LV_PREV_NDB_EPC_PRIMARY_KEY := C_PS_PROD."NDB_EPC_PRIMARY_KEY";
+			 	   
+    END IF;
+ -----------------------------------------------------------------------------------------------
+        
+--  Check the Error Status of the Record. If Record is with Error, then send to Error Table
+	IF C_PS_PROD.ERROR_STATUS = '1' THEN
+	
+	--  Call the Stored Procedure to split the concatenated Error Messages into Error Rows
+		CALL "NDB_COMMON"."IFRS_R1.COMMON_COMP.EH::SP_EH_SPLIT_ERRORS"(C_PS_PROD."ERROR_CODE", ERROR_TAB, RECORD_COUNT);
+
+     -- Loop through the Error Records
+		FOR i IN 1 .. :RECORD_COUNT DO
+			
+		 -- Fetch the Error Code
+			CURRENT_ERROR = :ERROR_TAB."ERROR_CODE"[:i];
+			
+		 -- Insert into the Error Table
+			INSERT INTO "NDB_MOBILITY"."IFRS_R1.MOBILITY.NDB_MOBILITY::PPD_PSREF_EPC_PROD_EH"
+			    (
+					"VM_EP_RATE",
+					"VM_EP_PS_RATE",
+					"VM_EP_RATETBL_RATE",
+					"VM_EP_QTA_PER_VAL",
+					"VM_EP_BNUS_PRD_NUM",
+					"VM_EP_MAX_DIS_AMT",
+					"VM_OFFER_ID",
+					"VM_BILL_OFFER_NAME",
+					"VM_OFFER_DESCR_ENG",
+					"VM_OFFER_DESCR_CFR",
+					"VM_EXTERNAL_SOC",
+					"VM_EP_PS_STYPE",
+					"VM_PRICE_PLAN_IND",
+					"VM_EP_ALGN_ANIV_DT",
+					"VM_PRICE_NAME",
+					"VM_EP_PRIT_NAME",
+					"VM_EP_RC_RATE_IND",
+					"VM_EP_FREQUENCY",
+					"VM_EP_FREQ_PAYMNT",
+					"VM_EP_PERIOD_SET",
+					"VM_EP_RATETBL_PERD",
+					"VM_EP_RATETBL_UOQT",
+					"VM_BRAND",
+					"VM_CHARGE_TYPE",
+					"VM_EP_ELIG_LYL_BNS",
+					"VM_EP_ELIG_BUDDY",
+					"VM_EP_UPDRPL_ENDDT",
+					"VM_CHARGE_CODE",
+					"VM_EP_SERVC_FILTER",
+					"VM_EP_SRVC_FLTRGRP",
+					"VM_EP_PRIT_SCALE",
+					"VM_EP_RTPRSP_SPNUM",
+					"VM_EP_ZONES",
+					"VM_EP_QLFY_CALL_AR",
+					"VM_EM_ALLOW_TYPE",
+					"VM_EP_BLOCK_DEP",
+					"VM_EP_AIR_OR_TOLL",
+					"VM_EP_ALW_OVR_IND",
+					"VM_EP_DLY_QTA_VAL",
+					"VM_EP_BNUS_PRD_UOM",
+					"VM_EP_RPL_BONUS_LV",
+					"VM_EP_DISCOUNT_MTD",
+					"VM_EP_DISCOUNT_VAL",
+					"VM_EP_QUAL_CRIT",
+					"VM_REPLENISHMENT",
+					"VM_EP_SERVICE_TYPE",
+					"REFERENCE_EFFECTIVE_DT",
+					"REFERENCE_EXPIRY_DT",
+					"VM_EP_RTPRZN_ZONE",
+					"VM_EP_RATEBL_RCIN",
+					"NDB_EPC_PRIMARY_KEY", 
+					"ERROR_CODE",
+					"ERROR_CREATE_TS"					
+				)VALUES(
+					C_PS_PROD."VM_EP_RATE",
+					C_PS_PROD."VM_EP_PS_RATE",
+					C_PS_PROD."VM_EP_RATETBL_RATE",
+					C_PS_PROD."VM_EP_QTA_PER_VAL",
+					C_PS_PROD."VM_EP_BNUS_PRD_NUM",
+					C_PS_PROD."VM_EP_MAX_DIS_AMT",
+					C_PS_PROD."VM_OFFER_ID",
+					C_PS_PROD."VM_BILL_OFFER_NAME",
+					C_PS_PROD."VM_OFFER_DESCR_ENG",
+					C_PS_PROD."VM_OFFER_DESCR_CFR",
+					C_PS_PROD."VM_EXTERNAL_SOC",
+					C_PS_PROD."VM_EP_PS_STYPE",
+					C_PS_PROD."VM_PRICE_PLAN_IND",
+					C_PS_PROD."VM_EP_ALGN_ANIV_DT",
+					C_PS_PROD."VM_PRICE_NAME",
+					C_PS_PROD."VM_EP_PRIT_NAME",
+					C_PS_PROD."VM_EP_RC_RATE_IND",
+					C_PS_PROD."VM_EP_FREQUENCY",
+					C_PS_PROD."VM_EP_FREQ_PAYMNT",
+					C_PS_PROD."VM_EP_PERIOD_SET",
+					C_PS_PROD."VM_EP_RATETBL_PERD",
+					C_PS_PROD."VM_EP_RATETBL_UOQT",
+					C_PS_PROD."VM_BRAND",
+					C_PS_PROD."VM_CHARGE_TYPE",
+					C_PS_PROD."VM_EP_ELIG_LYL_BNS",
+					C_PS_PROD."VM_EP_ELIG_BUDDY",
+					C_PS_PROD."VM_EP_UPDRPL_ENDDT",
+					C_PS_PROD."VM_CHARGE_CODE",
+					C_PS_PROD."VM_EP_SERVC_FILTER",
+					C_PS_PROD."VM_EP_SRVC_FLTRGRP",
+					C_PS_PROD."VM_EP_PRIT_SCALE",
+					C_PS_PROD."VM_EP_RTPRSP_SPNUM",
+					C_PS_PROD."VM_EP_ZONES",
+					C_PS_PROD."VM_EP_QLFY_CALL_AR",
+					C_PS_PROD."VM_EM_ALLOW_TYPE",
+					C_PS_PROD."VM_EP_BLOCK_DEP",
+					C_PS_PROD."VM_EP_AIR_OR_TOLL",
+					C_PS_PROD."VM_EP_ALW_OVR_IND",
+					C_PS_PROD."VM_EP_DLY_QTA_VAL",
+					C_PS_PROD."VM_EP_BNUS_PRD_UOM",
+					C_PS_PROD."VM_EP_RPL_BONUS_LV",
+					C_PS_PROD."VM_EP_DISCOUNT_MTD",
+					C_PS_PROD."VM_EP_DISCOUNT_VAL",
+					C_PS_PROD."VM_EP_QUAL_CRIT",
+					C_PS_PROD."VM_REPLENISHMENT",
+					C_PS_PROD."VM_EP_SERVICE_TYPE",
+					C_PS_PROD."REFERENCE_EFFECTIVE_DT",
+					C_PS_PROD."REFERENCE_EXPIRY_DT",
+					C_PS_PROD."VM_EP_RTPRZN_ZONE",
+					C_PS_PROD."VM_EP_RATEBL_RCIN",
+					C_PS_PROD."NDB_EPC_PRIMARY_KEY",
+					:CURRENT_ERROR,
+					LV_CUR_UTC);			
+		END FOR;
+						         		        
+       -- Set Error Flag				        
+	    LV_ERROR_FLAG := 'Y';
+	    LV_LOOP_ERROR_FLAG := 1;
+	    LV_PREV_NDB_EPC_PRIMARY_KEY := C_PS_PROD."NDB_EPC_PRIMARY_KEY";
+
+-- Processing for Successful Records
+   ELSE
+         IF C_PS_PROD.ERROR_STATUS = '0' THEN
+	        IF LV_LOOP_ERROR_FLAG = 1 THEN
+    			INSERT INTO "NDB_MOBILITY"."IFRS_R1.MOBILITY.NDB_MOBILITY::PPD_PSREF_EPC_PROD_EH"
+			    (
+					"VM_EP_RATE",
+					"VM_EP_PS_RATE",
+					"VM_EP_RATETBL_RATE",
+					"VM_EP_QTA_PER_VAL",
+					"VM_EP_BNUS_PRD_NUM",
+					"VM_EP_MAX_DIS_AMT",
+					"VM_OFFER_ID",
+					"VM_BILL_OFFER_NAME",
+					"VM_OFFER_DESCR_ENG",
+					"VM_OFFER_DESCR_CFR",
+					"VM_EXTERNAL_SOC",
+					"VM_EP_PS_STYPE",
+					"VM_PRICE_PLAN_IND",
+					"VM_EP_ALGN_ANIV_DT",
+					"VM_PRICE_NAME",
+					"VM_EP_PRIT_NAME",
+					"VM_EP_RC_RATE_IND",
+					"VM_EP_FREQUENCY",
+					"VM_EP_FREQ_PAYMNT",
+					"VM_EP_PERIOD_SET",
+					"VM_EP_RATETBL_PERD",
+					"VM_EP_RATETBL_UOQT",
+					"VM_BRAND",
+					"VM_CHARGE_TYPE",
+					"VM_EP_ELIG_LYL_BNS",
+					"VM_EP_ELIG_BUDDY",
+					"VM_EP_UPDRPL_ENDDT",
+					"VM_CHARGE_CODE",
+					"VM_EP_SERVC_FILTER",
+					"VM_EP_SRVC_FLTRGRP",
+					"VM_EP_PRIT_SCALE",
+					"VM_EP_RTPRSP_SPNUM",
+					"VM_EP_ZONES",
+					"VM_EP_QLFY_CALL_AR",
+					"VM_EM_ALLOW_TYPE",
+					"VM_EP_BLOCK_DEP",
+					"VM_EP_AIR_OR_TOLL",
+					"VM_EP_ALW_OVR_IND",
+					"VM_EP_DLY_QTA_VAL",
+					"VM_EP_BNUS_PRD_UOM",
+					"VM_EP_RPL_BONUS_LV",
+					"VM_EP_DISCOUNT_MTD",
+					"VM_EP_DISCOUNT_VAL",
+					"VM_EP_QUAL_CRIT",
+					"VM_REPLENISHMENT",
+					"VM_EP_SERVICE_TYPE",
+					"REFERENCE_EFFECTIVE_DT",
+					"REFERENCE_EXPIRY_DT",
+					"VM_EP_RTPRZN_ZONE",
+					"VM_EP_RATEBL_RCIN",
+					"NDB_EPC_PRIMARY_KEY", 
+					"ERROR_CODE",
+					"ERROR_CREATE_TS"					
+				)VALUES(
+					C_PS_PROD."VM_EP_RATE",
+					C_PS_PROD."VM_EP_PS_RATE",
+					C_PS_PROD."VM_EP_RATETBL_RATE",
+					C_PS_PROD."VM_EP_QTA_PER_VAL",
+					C_PS_PROD."VM_EP_BNUS_PRD_NUM",
+					C_PS_PROD."VM_EP_MAX_DIS_AMT",
+					C_PS_PROD."VM_OFFER_ID",
+					C_PS_PROD."VM_BILL_OFFER_NAME",
+					C_PS_PROD."VM_OFFER_DESCR_ENG",
+					C_PS_PROD."VM_OFFER_DESCR_CFR",
+					C_PS_PROD."VM_EXTERNAL_SOC",
+					C_PS_PROD."VM_EP_PS_STYPE",
+					C_PS_PROD."VM_PRICE_PLAN_IND",
+					C_PS_PROD."VM_EP_ALGN_ANIV_DT",
+					C_PS_PROD."VM_PRICE_NAME",
+					C_PS_PROD."VM_EP_PRIT_NAME",
+					C_PS_PROD."VM_EP_RC_RATE_IND",
+					C_PS_PROD."VM_EP_FREQUENCY",
+					C_PS_PROD."VM_EP_FREQ_PAYMNT",
+					C_PS_PROD."VM_EP_PERIOD_SET",
+					C_PS_PROD."VM_EP_RATETBL_PERD",
+					C_PS_PROD."VM_EP_RATETBL_UOQT",
+					C_PS_PROD."VM_BRAND",
+					C_PS_PROD."VM_CHARGE_TYPE",
+					C_PS_PROD."VM_EP_ELIG_LYL_BNS",
+					C_PS_PROD."VM_EP_ELIG_BUDDY",
+					C_PS_PROD."VM_EP_UPDRPL_ENDDT",
+					C_PS_PROD."VM_CHARGE_CODE",
+					C_PS_PROD."VM_EP_SERVC_FILTER",
+					C_PS_PROD."VM_EP_SRVC_FLTRGRP",
+					C_PS_PROD."VM_EP_PRIT_SCALE",
+					C_PS_PROD."VM_EP_RTPRSP_SPNUM",
+					C_PS_PROD."VM_EP_ZONES",
+					C_PS_PROD."VM_EP_QLFY_CALL_AR",
+					C_PS_PROD."VM_EM_ALLOW_TYPE",
+					C_PS_PROD."VM_EP_BLOCK_DEP",
+					C_PS_PROD."VM_EP_AIR_OR_TOLL",
+					C_PS_PROD."VM_EP_ALW_OVR_IND",
+					C_PS_PROD."VM_EP_DLY_QTA_VAL",
+					C_PS_PROD."VM_EP_BNUS_PRD_UOM",
+					C_PS_PROD."VM_EP_RPL_BONUS_LV",
+					C_PS_PROD."VM_EP_DISCOUNT_MTD",
+					C_PS_PROD."VM_EP_DISCOUNT_VAL",
+					C_PS_PROD."VM_EP_QUAL_CRIT",
+					C_PS_PROD."VM_REPLENISHMENT",
+					C_PS_PROD."VM_EP_SERVICE_TYPE",
+					C_PS_PROD."REFERENCE_EFFECTIVE_DT",
+					C_PS_PROD."REFERENCE_EXPIRY_DT",
+					C_PS_PROD."VM_EP_RTPRZN_ZONE",
+					C_PS_PROD."VM_EP_RATEBL_RCIN",
+					C_PS_PROD."NDB_EPC_PRIMARY_KEY",
+					'PREVIOUS VERSION IN ERROR',
+					LV_CUR_UTC);
+    ELSE
+    --   If Record exists in the Target NDB Table
+     IF (C_PS_PROD.EXISTING_RECORD = 'U') AND (C_PS_PROD."REFERENCE_EFFECTIVE_PREV_DATE" IS NOT NULL) THEN
+     	BEGIN AUTONOMOUS TRANSACTION 
+ --     Update the target NDB table                 
+
+				UPDATE "NDB_MOBILITY"."IFRS_R1.MOBILITY.NDB_MOBILITY::PPD_PSREF_EPC_PROD" NDB
+				SET NDB.MODIFIED_TS = LV_CUR_UTC,
+					NDB."REFERENCE_EXPIRY_DT" = C_PS_PROD."REFERENCE_EFFECTIVE_PREV_DATE"
+		        WHERE NDB."NDB_EPC_PRIMARY_KEY" = C_PS_PROD."NDB_EPC_PRIMARY_KEY" 
+				AND NDB."REFERENCE_EXPIRY_DT" > C_PS_PROD.REFERENCE_EFFECTIVE_DT
+				AND NDB."REFERENCE_EXPIRY_DT" = C_PS_PROD.REFERENCE_EXPIRY_DT;
+				
+--    Insert the Incoming new record			
+				INSERT INTO "NDB_MOBILITY"."IFRS_R1.MOBILITY.NDB_MOBILITY::PPD_PSREF_EPC_PROD"
+			    (
+					"VM_EP_RATE",
+					"VM_EP_PS_RATE",
+					"VM_EP_RATETBL_RATE",
+					"VM_EP_QTA_PER_VAL",
+					"VM_EP_BNUS_PRD_NUM",
+					"VM_EP_MAX_DIS_AMT",
+					"VM_OFFER_ID",
+					"VM_BILL_OFFER_NAME",
+					"VM_OFFER_DESCR_ENG",
+					"VM_OFFER_DESCR_CFR",
+					"VM_EXTERNAL_SOC",
+					"VM_EP_PS_STYPE",
+					"VM_PRICE_PLAN_IND",
+					"VM_EP_ALGN_ANIV_DT",
+					"VM_PRICE_NAME",
+					"VM_EP_PRIT_NAME",
+					"VM_EP_RC_RATE_IND",
+					"VM_EP_FREQUENCY",
+					"VM_EP_FREQ_PAYMNT",
+					"VM_EP_PERIOD_SET",
+					"VM_EP_RATETBL_PERD",
+					"VM_EP_RATETBL_UOQT",
+					"VM_BRAND",
+					"VM_CHARGE_TYPE",
+					"VM_EP_ELIG_LYL_BNS",
+					"VM_EP_ELIG_BUDDY",
+					"VM_EP_UPDRPL_ENDDT",
+					"VM_CHARGE_CODE",
+					"VM_EP_SERVC_FILTER",
+					"VM_EP_SRVC_FLTRGRP",
+					"VM_EP_PRIT_SCALE",
+					"VM_EP_RTPRSP_SPNUM",
+					"VM_EP_ZONES",
+					"VM_EP_QLFY_CALL_AR",
+					"VM_EM_ALLOW_TYPE",
+					"VM_EP_BLOCK_DEP",
+					"VM_EP_AIR_OR_TOLL",
+					"VM_EP_ALW_OVR_IND",
+					"VM_EP_DLY_QTA_VAL",
+					"VM_EP_BNUS_PRD_UOM",
+					"VM_EP_RPL_BONUS_LV",
+					"VM_EP_DISCOUNT_MTD",
+					"VM_EP_DISCOUNT_VAL",
+					"VM_EP_QUAL_CRIT",
+					"VM_REPLENISHMENT",
+					"VM_EP_SERVICE_TYPE",
+					"REFERENCE_EFFECTIVE_DT",
+					"REFERENCE_EXPIRY_DT",
+					"VM_EP_RTPRZN_ZONE",
+					"VM_EP_RATEBL_RCIN",
+					"NDB_EPC_PRIMARY_KEY",
+					"INSERT_TS"									
+				)VALUES(
+					C_PS_PROD."VM_EP_RATE",
+					C_PS_PROD."VM_EP_PS_RATE",
+					C_PS_PROD."VM_EP_RATETBL_RATE",
+					C_PS_PROD."VM_EP_QTA_PER_VAL",
+					C_PS_PROD."VM_EP_BNUS_PRD_NUM",
+					C_PS_PROD."VM_EP_MAX_DIS_AMT",
+					C_PS_PROD."VM_OFFER_ID",
+					C_PS_PROD."VM_BILL_OFFER_NAME",
+					C_PS_PROD."VM_OFFER_DESCR_ENG",
+					C_PS_PROD."VM_OFFER_DESCR_CFR",
+					C_PS_PROD."VM_EXTERNAL_SOC",
+					C_PS_PROD."VM_EP_PS_STYPE",
+					C_PS_PROD."VM_PRICE_PLAN_IND",
+					C_PS_PROD."VM_EP_ALGN_ANIV_DT",
+					C_PS_PROD."VM_PRICE_NAME",
+					C_PS_PROD."VM_EP_PRIT_NAME",
+					C_PS_PROD."VM_EP_RC_RATE_IND",
+					C_PS_PROD."VM_EP_FREQUENCY",
+					C_PS_PROD."VM_EP_FREQ_PAYMNT",
+					C_PS_PROD."VM_EP_PERIOD_SET",
+					C_PS_PROD."VM_EP_RATETBL_PERD",
+					C_PS_PROD."VM_EP_RATETBL_UOQT",
+					C_PS_PROD."VM_BRAND",
+					C_PS_PROD."VM_CHARGE_TYPE",
+					C_PS_PROD."VM_EP_ELIG_LYL_BNS",
+					C_PS_PROD."VM_EP_ELIG_BUDDY",
+					C_PS_PROD."VM_EP_UPDRPL_ENDDT",
+					C_PS_PROD."VM_CHARGE_CODE",
+					C_PS_PROD."VM_EP_SERVC_FILTER",
+					C_PS_PROD."VM_EP_SRVC_FLTRGRP",
+					C_PS_PROD."VM_EP_PRIT_SCALE",
+					C_PS_PROD."VM_EP_RTPRSP_SPNUM",
+					C_PS_PROD."VM_EP_ZONES",
+					C_PS_PROD."VM_EP_QLFY_CALL_AR",
+					C_PS_PROD."VM_EM_ALLOW_TYPE",
+					C_PS_PROD."VM_EP_BLOCK_DEP",
+					C_PS_PROD."VM_EP_AIR_OR_TOLL",
+					C_PS_PROD."VM_EP_ALW_OVR_IND",
+					C_PS_PROD."VM_EP_DLY_QTA_VAL",
+					C_PS_PROD."VM_EP_BNUS_PRD_UOM",
+					C_PS_PROD."VM_EP_RPL_BONUS_LV",
+					C_PS_PROD."VM_EP_DISCOUNT_MTD",
+					C_PS_PROD."VM_EP_DISCOUNT_VAL",
+					C_PS_PROD."VM_EP_QUAL_CRIT",
+					C_PS_PROD."VM_REPLENISHMENT",
+					C_PS_PROD."VM_EP_SERVICE_TYPE",
+					C_PS_PROD."REFERENCE_EFFECTIVE_DT",
+					C_PS_PROD."REFERENCE_EXPIRY_DT",
+					C_PS_PROD."VM_EP_RTPRZN_ZONE",
+					C_PS_PROD."VM_EP_RATEBL_RCIN",
+					C_PS_PROD."NDB_EPC_PRIMARY_KEY",
+					LV_CUR_UTC);
+					
+					LV_PREV_NDB_EPC_PRIMARY_KEY := C_PS_PROD."NDB_EPC_PRIMARY_KEY";
+	END;		 
+			 
+--         Insert PK of successfully processed Records into Local Temp Tables 
+--         for Updating NDB_TS in corresponding Landing Tables records	
+
+		   INSERT INTO #UPDATE_PSREF_EPC_PROD
+					   ("EPC_PRIMARY_KEY") 
+			    VALUES (C_PS_PROD."EPC_PRIMARY_KEY");
+
+		   INSERT INTO #UPDATE_EH_DELETION
+					   ("NDB_EPC_PRIMARY_KEY") 
+			    VALUES (C_PS_PROD."NDB_EPC_PRIMARY_KEY");  	    		
+					   	
+   ELSEIF C_PS_PROD.EXISTING_RECORD = 'I' THEN
+      BEGIN AUTONOMOUS TRANSACTION
+--    Insert Records into the target NDB table		
+				INSERT INTO "NDB_MOBILITY"."IFRS_R1.MOBILITY.NDB_MOBILITY::PPD_PSREF_EPC_PROD"
+			    (
+					"VM_EP_RATE",
+					"VM_EP_PS_RATE",
+					"VM_EP_RATETBL_RATE",
+					"VM_EP_QTA_PER_VAL",
+					"VM_EP_BNUS_PRD_NUM",
+					"VM_EP_MAX_DIS_AMT",
+					"VM_OFFER_ID",
+					"VM_BILL_OFFER_NAME",
+					"VM_OFFER_DESCR_ENG",
+					"VM_OFFER_DESCR_CFR",
+					"VM_EXTERNAL_SOC",
+					"VM_EP_PS_STYPE",
+					"VM_PRICE_PLAN_IND",
+					"VM_EP_ALGN_ANIV_DT",
+					"VM_PRICE_NAME",
+					"VM_EP_PRIT_NAME",
+					"VM_EP_RC_RATE_IND",
+					"VM_EP_FREQUENCY",
+					"VM_EP_FREQ_PAYMNT",
+					"VM_EP_PERIOD_SET",
+					"VM_EP_RATETBL_PERD",
+					"VM_EP_RATETBL_UOQT",
+					"VM_BRAND",
+					"VM_CHARGE_TYPE",
+					"VM_EP_ELIG_LYL_BNS",
+					"VM_EP_ELIG_BUDDY",
+					"VM_EP_UPDRPL_ENDDT",
+					"VM_CHARGE_CODE",
+					"VM_EP_SERVC_FILTER",
+					"VM_EP_SRVC_FLTRGRP",
+					"VM_EP_PRIT_SCALE",
+					"VM_EP_RTPRSP_SPNUM",
+					"VM_EP_ZONES",
+					"VM_EP_QLFY_CALL_AR",
+					"VM_EM_ALLOW_TYPE",
+					"VM_EP_BLOCK_DEP",
+					"VM_EP_AIR_OR_TOLL",
+					"VM_EP_ALW_OVR_IND",
+					"VM_EP_DLY_QTA_VAL",
+					"VM_EP_BNUS_PRD_UOM",
+					"VM_EP_RPL_BONUS_LV",
+					"VM_EP_DISCOUNT_MTD",
+					"VM_EP_DISCOUNT_VAL",
+					"VM_EP_QUAL_CRIT",
+					"VM_REPLENISHMENT",
+					"VM_EP_SERVICE_TYPE",
+					"REFERENCE_EFFECTIVE_DT",
+					"REFERENCE_EXPIRY_DT",
+					"VM_EP_RTPRZN_ZONE",
+					"VM_EP_RATEBL_RCIN",
+					"NDB_EPC_PRIMARY_KEY",
+					"INSERT_TS"									
+				)VALUES(
+					C_PS_PROD."VM_EP_RATE",
+					C_PS_PROD."VM_EP_PS_RATE",
+					C_PS_PROD."VM_EP_RATETBL_RATE",
+					C_PS_PROD."VM_EP_QTA_PER_VAL",
+					C_PS_PROD."VM_EP_BNUS_PRD_NUM",
+					C_PS_PROD."VM_EP_MAX_DIS_AMT",
+					C_PS_PROD."VM_OFFER_ID",
+					C_PS_PROD."VM_BILL_OFFER_NAME",
+					C_PS_PROD."VM_OFFER_DESCR_ENG",
+					C_PS_PROD."VM_OFFER_DESCR_CFR",
+					C_PS_PROD."VM_EXTERNAL_SOC",
+					C_PS_PROD."VM_EP_PS_STYPE",
+					C_PS_PROD."VM_PRICE_PLAN_IND",
+					C_PS_PROD."VM_EP_ALGN_ANIV_DT",
+					C_PS_PROD."VM_PRICE_NAME",
+					C_PS_PROD."VM_EP_PRIT_NAME",
+					C_PS_PROD."VM_EP_RC_RATE_IND",
+					C_PS_PROD."VM_EP_FREQUENCY",
+					C_PS_PROD."VM_EP_FREQ_PAYMNT",
+					C_PS_PROD."VM_EP_PERIOD_SET",
+					C_PS_PROD."VM_EP_RATETBL_PERD",
+					C_PS_PROD."VM_EP_RATETBL_UOQT",
+					C_PS_PROD."VM_BRAND",
+					C_PS_PROD."VM_CHARGE_TYPE",
+					C_PS_PROD."VM_EP_ELIG_LYL_BNS",
+					C_PS_PROD."VM_EP_ELIG_BUDDY",
+					C_PS_PROD."VM_EP_UPDRPL_ENDDT",
+					C_PS_PROD."VM_CHARGE_CODE",
+					C_PS_PROD."VM_EP_SERVC_FILTER",
+					C_PS_PROD."VM_EP_SRVC_FLTRGRP",
+					C_PS_PROD."VM_EP_PRIT_SCALE",
+					C_PS_PROD."VM_EP_RTPRSP_SPNUM",
+					C_PS_PROD."VM_EP_ZONES",
+					C_PS_PROD."VM_EP_QLFY_CALL_AR",
+					C_PS_PROD."VM_EM_ALLOW_TYPE",
+					C_PS_PROD."VM_EP_BLOCK_DEP",
+					C_PS_PROD."VM_EP_AIR_OR_TOLL",
+					C_PS_PROD."VM_EP_ALW_OVR_IND",
+					C_PS_PROD."VM_EP_DLY_QTA_VAL",
+					C_PS_PROD."VM_EP_BNUS_PRD_UOM",
+					C_PS_PROD."VM_EP_RPL_BONUS_LV",
+					C_PS_PROD."VM_EP_DISCOUNT_MTD",
+					C_PS_PROD."VM_EP_DISCOUNT_VAL",
+					C_PS_PROD."VM_EP_QUAL_CRIT",
+					C_PS_PROD."VM_REPLENISHMENT",
+					C_PS_PROD."VM_EP_SERVICE_TYPE",
+					C_PS_PROD."REFERENCE_EFFECTIVE_DT",
+					C_PS_PROD."REFERENCE_EXPIRY_DT",
+					C_PS_PROD."VM_EP_RTPRZN_ZONE",
+					C_PS_PROD."VM_EP_RATEBL_RCIN",
+					C_PS_PROD."NDB_EPC_PRIMARY_KEY",
+					LV_CUR_UTC);
+					
+					LV_PREV_NDB_EPC_PRIMARY_KEY := C_PS_PROD."NDB_EPC_PRIMARY_KEY";
+		   END;		
+--         Insert PK of successfully processed Records into Local Temp Tables 
+--         for Updating NDB_TS in corresponding Landing Tables records	
+		   INSERT INTO #UPDATE_PSREF_EPC_PROD
+					   ("EPC_PRIMARY_KEY") 
+			    VALUES (C_PS_PROD."EPC_PRIMARY_KEY");
+
+		   INSERT INTO #UPDATE_EH_DELETION
+					   ("NDB_EPC_PRIMARY_KEY") 
+			    VALUES (C_PS_PROD."NDB_EPC_PRIMARY_KEY"); 
+			END IF;  
+	  	END IF;
+	  END IF;   				    
+   END IF;  
+END FOR;					   			    
+
+--------------------------------------------------------------------------------------------------
+-- Update Landing Tables
+-------------------------------------------------------------------------------------------------- 
+
+-- Update Landing Table IFRS_R1.LAND::PSREF_EPC_PROD
+UPDATE "LAND"."IFRS_R1.LAND::PSREF_EPC_PROD" A
+  FROM "LAND"."IFRS_R1.LAND::PSREF_EPC_PROD" A 
+  INNER JOIN #UPDATE_PSREF_EPC_PROD B 
+  ON A."EPC_PRIMARY_KEY" = B."EPC_PRIMARY_KEY"
+  SET A.NDB_TS = LV_CUR_UTC
+  WHERE A.NDB_TS IS NULL;
+
+--------------------------------------------------------------------------------------------------
+-- Update Error Table
+--------------------------------------------------------------------------------------------------
+
+UPDATE "NDB_MOBILITY"."IFRS_R1.MOBILITY.NDB_MOBILITY::PPD_PSREF_EPC_PROD_EH" A
+  FROM "NDB_MOBILITY"."IFRS_R1.MOBILITY.NDB_MOBILITY::PPD_PSREF_EPC_PROD_EH" A 
+  INNER JOIN #UPDATE_EH_DELETION B
+    ON A."NDB_EPC_PRIMARY_KEY" = B."NDB_EPC_PRIMARY_KEY"
+  SET (DELETE_DATE, DELETED) = (CURRENT_DATE, 1);
+
+--------------------------------------------------------------------------------------------------
+-- Set Overall Status
+-------------------------------------------------------------------------------------------------- 
+
+--  STATUS 0: Send the success message to scheduling tool to confirm this procedure has been
+--  executed successfully
+    IF(LV_ERROR_FLAG = 'Y') THEN		
+
+     OP_STATUS := LC_ERROR_TEXT;
+			
+    ELSE
+
+  	 OP_STATUS := LC_SUCCESS_TEXT; 	
+				
+	END IF;
+		
+END;

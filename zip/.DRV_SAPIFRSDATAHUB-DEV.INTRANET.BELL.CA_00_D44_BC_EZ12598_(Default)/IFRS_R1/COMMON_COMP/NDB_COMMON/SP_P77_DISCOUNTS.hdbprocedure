@@ -1,0 +1,262 @@
+PROCEDURE "NDB_COMMON"."IFRS_R1.COMMON_COMP.NDB_COMMON::SP_P77_DISCOUNTS" 
+(IN IP_CYCL_ID NVARCHAR(3),
+OUT OP_STATUS NVARCHAR(100)) 
+	LANGUAGE SQLSCRIPT
+	SQL SECURITY INVOKER
+	AS 
+
+BEGIN
+--------------------------------------------------------------------------------------------------
+-- Procedure Title : SP_P77_DISCOUNTS
+-- Created By      : BC_EY96106 (SANDEEP ADAGAL)       
+-- Create Date     : 05-10-2017
+-- Description     : Data Inserted using Calculation View - CA_P77_TRANS_DSCT
+--                   to NDB Table - P77_DISCOUNTS Using this stored procedure.
+--                   			
+-- Project         : Bell Canada
+-- Release         : R1 / IFRS
+--------------------------------------------------------------------------------------------------
+--   M O D I F I C A T I O N   H I S T O R Y
+--------------------------------------------------------------------------------------------------
+-- Date        | User ID          | Modification History/Release
+--------------------------------------------------------------------------------------------------
+--             |                  | 
+--------------------------------------------------------------------------------------------------
+-- Description Of the changes 
+--------------------------------------------------------------------------------------------------
+-- Modification Number          : <Assign Some Number>
+-- Description of Changes Made> : <Description of Changes>    
+--------------------------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------------------------
+-- Local Variables Declaration
+--------------------------------------------------------------------------------------------------
+
+DECLARE LC_ERROR_TEXT 		NVARCHAR(70) DEFAULT 'OUT STATUS IS 1 : INSERT/UPDATE FOR ONE OR MORE RECORD FAILED';
+DECLARE LC_SUCCESS_TEXT 	NVARCHAR(70) DEFAULT 'OUT STATUS IS 0 : INSERT/UPDATE EXECUTION SUCCESSFUL';
+DECLARE LV_ERROR_FLAG 		NVARCHAR(1) := 'N';
+DECLARE LV_CUR_UTC 			TIMESTAMP := CURRENT_TIMESTAMP;
+DECLARE ERROR_TAB 			TABLE (ERROR_CODE NVARCHAR(100));
+DECLARE i					INTEGER;
+DECLARE RECORD_COUNT		INTEGER;
+DECLARE CURRENT_ERROR		NVARCHAR(100);
+
+--------------------------------------------------------------------------------------------------
+-- Cursors Declaration
+-------------------------------------------------------------------------------------------------- 
+
+   DECLARE CURSOR CUR_DISCOUNTS FOR
+			SELECT
+			     "TRANS_ID",
+	 			 "TRANS_LINE_ID",
+	 			 "DSCT_TY_CD",
+	 			 "DSCT_ID",
+	 			 "DSCT_AMT",
+	 			 "ACCT_KEY_FLG",
+	 			 "SRC_FILE",
+	 			 "SRC_TS",
+	 			 "REC_EFFECTIVE_DT",
+	 			 "REC_EXPIRY_DT",
+	 			 "ACTIVE_INDICATOR",
+	 			 "CYCLE_NUM",
+	 			 "REC_EFFECTIVE_PREV_DATE",
+	 			 "FLAG_EXISTING_RECORD" 
+		    FROM "_SYS_BIC"."IFRS_R1.COMMON_COMP.NDB_COMMON/CA_P77_TRANS_DSCT"
+               	 (PLACEHOLDER."$$IP_CYCL_ID$$" => :IP_CYCL_ID)
+        	ORDER BY "CYCLE_NUM";
+                 
+--------------------------------------------------------------------------------------------------
+-- Local Temporary Tables Declaration
+-------------------------------------------------------------------------------------------------- 
+
+CREATE LOCAL TEMPORARY TABLE #UPDATE_P77_DISCOUNTS ("TRANS_ID" NVARCHAR(15),"TRANS_LINE_ID" NVARCHAR(6),"DSCT_TY_CD" NVARCHAR(4),"CYCLE_NUM" NVARCHAR(3),"SRC_FILE" NVARCHAR(10));
+CREATE LOCAL TEMPORARY TABLE #UPDATE_EH_DELETION   ("TRANS_ID" NVARCHAR(15),"TRANS_LINE_ID" NVARCHAR(6),"DSCT_TY_CD" NVARCHAR(4));
+        	  
+--------------------------------------------------------------------------------------------------
+-- Cursors Loop
+--------------------------------------------------------------------------------------------------  
+
+FOR C_DSCT AS CUR_DISCOUNTS DO
+
+--  Define Exit Handler
+	DECLARE EXIT HANDLER FOR SQLEXCEPTION 
+	BEGIN AUTONOMOUS TRANSACTION 
+	
+--    Define Exit Handler
+	  DECLARE EXIT HANDLER FOR SQLEXCEPTION 
+	  BEGIN AUTONOMOUS TRANSACTION 	
+	   
+	-- Do Nothing. Exception Handled to ensure SP does not get terminated 
+	
+ 	  END;
+ 	  
+			     -- Insert record into error table
+			   	    INSERT INTO "NDB_COMMON"."IFRS_R1.COMMON_COMP.NDB_COMMON::P77_DISCOUNTS_EH"
+			   	    		   ("TRANS_ID",
+	 			 				"TRANS_LINE_ID",
+	 			 				"DSCT_TY_CD",
+	 			 				"DSCT_ID",
+	 			 				"DSCT_AMT",
+	 			 				"ACCT_KEY_FLG",
+	 			 				"SRC_FILE",
+	 			 				"SRC_TS",
+	 			 				"REC_EFFECTIVE_DT",
+	 			 				"REC_EXPIRY_DT",
+	 			 				"ACTIVE_INDICATOR",
+	 			 				"CYCLE_NUM",
+								"ERROR_CODE",
+								"TECHNICAL_MESSAGE",
+								"ERROR_CREATE_TS")
+			   	         VALUES (C_DSCT."TRANS_ID",
+	 			 				 C_DSCT."TRANS_LINE_ID",
+	 			 				 C_DSCT."DSCT_TY_CD",
+	 			 				 C_DSCT."DSCT_ID",
+	 			 				 C_DSCT."DSCT_AMT",
+	 			 				 C_DSCT."ACCT_KEY_FLG",
+	 			 				 C_DSCT."SRC_FILE",
+	 			 				 C_DSCT."SRC_TS",
+	 			 				 C_DSCT."REC_EFFECTIVE_DT",
+	 			 				 C_DSCT."REC_EXPIRY_DT",
+	 			 				 C_DSCT."ACTIVE_INDICATOR",
+	 			 				 C_DSCT."CYCLE_NUM",
+								 ::SQL_ERROR_CODE,
+						         ::SQL_ERROR_MESSAGE,
+						         LV_CUR_UTC); 
+
+	  			LV_ERROR_FLAG := 'Y';
+  		  
+  	END;	  
+    
+--  If Record exists in the Target NDB Table
+     IF C_DSCT.FLAG_EXISTING_RECORD = 'U' THEN
+     
+     		 
+--         Insert PK of successfully processed Records into Local Temp Tables 
+--         for Updating NDB_TS in corresponding Landing Tables records	
+		   INSERT INTO #UPDATE_P77_DISCOUNTS
+					   ("TRANS_ID", 
+					    "TRANS_LINE_ID", 
+					   	"DSCT_TY_CD",
+					    "CYCLE_NUM",
+					    "SRC_FILE"
+					   	) 
+			    VALUES (C_DSCT."TRANS_ID",
+	 			 	    C_DSCT."TRANS_LINE_ID",
+	 			 	    C_DSCT."DSCT_TY_CD",
+	 			 	    C_DSCT."CYCLE_NUM",
+					    C_DSCT."SRC_FILE");
+					   					   	    		
+		   INSERT INTO #UPDATE_EH_DELETION
+					   ("TRANS_ID", 
+					    "TRANS_LINE_ID", 
+					   	"DSCT_TY_CD") 
+			    VALUES (C_DSCT."TRANS_ID",
+	 			 	    C_DSCT."TRANS_LINE_ID",
+	 			 	    C_DSCT."DSCT_TY_CD");
+					   	
+   ELSE 
+      
+      BEGIN AUTONOMOUS TRANSACTION
+--    Insert Records into the target NDB table			   	
+		   INSERT INTO "NDB_COMMON"."IFRS_R1.COMMON_COMP.NDB_COMMON::P77_DISCOUNTS"
+   	    		    ("TRANS_ID",
+	 			 	 "TRANS_LINE_ID",
+	 			 	 "DSCT_TY_CD",
+	 			 	 "DSCT_ID",
+	 			 	 "DSCT_AMT",
+	 			 	 "ACCT_KEY_FLG",
+	 			 	 "SRC_FILE",
+	 			 	 "SRC_TS",
+	 			 	 "REC_EFFECTIVE_DT",
+	 			 	 "REC_EXPIRY_DT",
+	 			 	 "ACTIVE_INDICATOR",
+	 			 	 "CYCLE_NUM",
+					 "INSERT_TS")
+ 		     VALUES (C_DSCT."TRANS_ID",
+	 			 	 C_DSCT."TRANS_LINE_ID",
+	 			 	 C_DSCT."DSCT_TY_CD",
+	 			 	 C_DSCT."DSCT_ID",
+	 			 	 C_DSCT."DSCT_AMT",
+	 			 	 C_DSCT."ACCT_KEY_FLG",
+	 			 	 C_DSCT."SRC_FILE",
+	 			 	 C_DSCT."SRC_TS",
+	 			 	 C_DSCT."REC_EFFECTIVE_DT",
+	 			 	 C_DSCT."REC_EXPIRY_DT",
+	 			 	 C_DSCT."ACTIVE_INDICATOR",
+	 			 	 C_DSCT."CYCLE_NUM",
+					 LV_CUR_UTC);
+		
+		END;
+		
+--         Insert PK of successfully processed Records into Local Temp Tables 
+--         for Updating NDB_TS in corresponding Landing Tables records 
+		   INSERT INTO #UPDATE_P77_DISCOUNTS
+					   ("TRANS_ID", 
+					    "TRANS_LINE_ID", 
+					   	"DSCT_TY_CD",
+					    "CYCLE_NUM",
+					    "SRC_FILE"
+					   	) 
+			    VALUES (C_DSCT."TRANS_ID",
+	 			 	    C_DSCT."TRANS_LINE_ID",
+	 			 	    C_DSCT."DSCT_TY_CD",
+	 			 	    C_DSCT."CYCLE_NUM",
+					    C_DSCT."SRC_FILE");
+					   					   	    		
+		   INSERT INTO #UPDATE_EH_DELETION
+					   ("TRANS_ID", 
+					    "TRANS_LINE_ID", 
+					   	"DSCT_TY_CD") 
+			    VALUES (C_DSCT."TRANS_ID",
+	 			 	    C_DSCT."TRANS_LINE_ID",
+	 			 	    C_DSCT."DSCT_TY_CD");				   	
+					   	
+   END IF;  
+
+END FOR;					   			    
+
+--------------------------------------------------------------------------------------------------
+-- Update Landing Tables
+-------------------------------------------------------------------------------------------------- 
+
+-- Update Landing Table IFRS_R1.LAND::P77_TRANS_DSCT
+UPDATE "LAND"."IFRS_R1.LAND::P77_TRANS_DSCT" A
+  FROM "LAND"."IFRS_R1.LAND::P77_TRANS_DSCT" A 
+ INNER JOIN #UPDATE_P77_DISCOUNTS B 
+    ON A."TRANS_ID"        = B."TRANS_ID"
+   AND A."TRANS_LINE_ID"   = B."TRANS_LINE_ID"
+   AND A."DSCT_TY_CD"      = B."DSCT_TY_CD"
+   AND A."CYCL_ID"         = B."CYCLE_NUM"
+   AND A."SRC_FILE"        = B."SRC_FILE"
+   SET A.DSCT_TS           = LV_CUR_UTC
+ WHERE A.DSCT_TS IS NULL;
+
+--------------------------------------------------------------------------------------------------
+-- Update Error Table
+--------------------------------------------------------------------------------------------------
+
+UPDATE "NDB_COMMON"."IFRS_R1.COMMON_COMP.NDB_COMMON::P77_DISCOUNTS_EH" A
+  FROM "NDB_COMMON"."IFRS_R1.COMMON_COMP.NDB_COMMON::P77_DISCOUNTS_EH" A 
+ INNER JOIN #UPDATE_EH_DELETION B
+    ON A."TRANS_ID"        = B."TRANS_ID"
+   AND A."TRANS_LINE_ID"   = B."TRANS_LINE_ID"
+   AND A."DSCT_TY_CD"      = B."DSCT_TY_CD"
+   SET (DELETE_DATE, DELETED) = (CURRENT_DATE, 1);
+
+--------------------------------------------------------------------------------------------------
+-- Set Overall Status
+-------------------------------------------------------------------------------------------------- 
+
+--  STATUS 0: Send the success message to scheduling tool to confirm this procedure has been
+--  executed successfully
+    IF(LV_ERROR_FLAG = 'Y') THEN		
+
+     OP_STATUS := LC_ERROR_TEXT;
+			
+    ELSE
+
+  	 OP_STATUS := LC_SUCCESS_TEXT; 	
+				
+	END IF;
+		
+END;

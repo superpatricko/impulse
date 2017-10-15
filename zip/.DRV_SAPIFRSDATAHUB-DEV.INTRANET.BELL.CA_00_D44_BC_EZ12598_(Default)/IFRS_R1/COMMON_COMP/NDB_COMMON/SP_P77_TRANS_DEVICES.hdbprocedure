@@ -1,0 +1,960 @@
+PROCEDURE "NDB_COMMON"."IFRS_R1.COMMON_COMP.NDB_COMMON::SP_P77_TRANS_DEVICES"
+(IN IP_CYCL_ID NVARCHAR(3),
+OUT OP_STATUS NVARCHAR(100))   
+LANGUAGE SQLSCRIPT
+SQL SECURITY INVOKER
+AS
+BEGIN 
+--------------------------------------------------------------------------------------------------
+-- Procedure Title : SP_P77_TRANS_DEVICES
+-- Created By      : BC_EY96106       
+-- Create Date     : 03-17-2017
+-- Description     : Data Inserted using Calculation View - CA_P77_TRANS_DEVICES
+--                   To NDB Table - P77_TRANS_DEVICES Using this stored procedure.
+-- Project         : Bell Canada
+-- Release         : R1 / IFRS
+--------------------------------------------------------------------------------------------------
+--   M O D I F I C A T I O N   H I S T O R Y
+--------------------------------------------------------------------------------------------------
+-- Date        | User ID          | Modification History/Release
+--------------------------------------------------------------------------------------------------
+--             |                  | 
+--------------------------------------------------------------------------------------------------
+-- Description Of the changes 
+--------------------------------------------------------------------------------------------------
+-- Modification Number          : <Assign Some Number> 
+-- Description of Changes Made> : <Description of Changes>       
+--------------------------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------------------------
+-- Global Variables Declaration
+--------------------------------------------------------------------------------------------------
+
+DECLARE LC_ERROR_TEXT 		           NVARCHAR(70) DEFAULT 'OUT STATUS IS 1 : INSERT/UPDATE FOR ONE OR MORE RECORD FAILED';
+DECLARE LC_SUCCESS_TEXT 			   NVARCHAR(70) DEFAULT 'OUT STATUS IS 0 : INSERT/UPDATE EXECUTION SUCCESSFUL';
+DECLARE LV_ERROR_FLAG 		           NVARCHAR(1) := 'N';
+DECLARE LV_CUR_UTC 			           TIMESTAMP := CURRENT_TIMESTAMP;
+DECLARE ERROR_TAB 			           TABLE (ERROR_CODE NVARCHAR(100));
+DECLARE i					           INTEGER;
+DECLARE RECORD_COUNT		           INTEGER;
+DECLARE CURRENT_ERROR		           NVARCHAR(100);
+-- New Variable added
+DECLARE LV_LOOP_ERROR_FLAG             INTEGER := 0;
+DECLARE LV_PREV_CC_CONCAT_PRIMARY_KEY  NVARCHAR(100):= NULL; 
+
+
+--------------------------------------------------------------------------------------------------
+-- Cursors Declaration
+--------------------------------------------------------------------------------------------------
+DECLARE CURSOR CUR_DEVICES FOR 
+			     SELECT
+				 "TRANSACTION_ID",
+				 "TRANSACTION_LN_ID",
+				 "DIST_CHANNEL",
+				 "SECONDARY_SERIAL_NUM",
+				 "CONTRACT_UNIQUE_ID",
+				 "ART_NUM",
+				 "ITM_GRP_CD",
+				 "MER_CTGRY",
+				 "TRANS_PRC",
+				 "DEVICE_TRANS_PRC",
+				 "STDALN_SLNG_PRC",
+				 "DEVICE_STDALN_SLNG_PRC",
+				 "SALES_DOC_TYP",
+				 "ORD_REASON_CD",
+				 "FINAL_TRANS_PRC",
+				 "CURRN",
+				 "CONS_BLD_AMT",
+				 "BANNER",
+				 "COMPANY_CD",
+				 "LEGAL_ENTITY",
+				 "DEALER",
+				 "TAX_JURIS_CD",
+				 "VERISIGN_AUTH_AMT",
+				 "STORE",
+				 "ACCTNG_DT",
+				 "ITEM_FINAL_TRANS_PRC",
+				 "ITEM_CONS_BLD_AMT",
+				 "DEALER_PRC",
+				 "SUB_MERC_CTGRY",
+				 "INCENTIVES",
+				 "RFND_CD",
+				 "RFND_AMT",
+				 "PROMO_CD",
+				 "DEFRD_GL_FLG",
+				 "BRND_CD",
+				 "TRANS_TYP_CD",
+				 "ITEM_QUANTITY",
+				 "ITEM_DSCT_AMT",
+				 "DEFRD_ACT_PROFIT_CENTRE",
+				 "DEFRD_ACT_REVNU_GL",
+				 "DEFRD_ACT_REV_AMT",
+				 "DEFRD_ACT_DOC_NUM",
+				 "DEFRD_ACT_POST_DT",
+				 "DEFRD_ACT_DOC_DT",
+				 "DEFRD_ACT_DOC_TY",
+				 "DEFRD_ACT_ACCT_PD",
+				 "PRIMARY_SERIAL_NUM",
+				 "REV_JOURNALIZATION_DT",
+				 "REV_ACTG_DOC_NUM",
+				 "REV_GL_ACT_NUM",
+				 "REV_AMT",
+				 "REV_PROFIT_CTR",
+				 "TRANS_COMPLETION_INDICATOR",
+				 "CASO_SLS_TM_DCNT_GL",
+				 "CASO_LTO_PRMO_DCNT_GL",
+				 "CASO_ISPR_DCNT_GL",
+				 "CASO_ROI_SPCL_DCNT_GL",
+				 "SRC_FILE_NAME",
+				 "SCENARIO_IDENTIFIER",
+				 "CYCLE_NUM",
+				 "CUSTOMER_GROUP",
+				 "MATERIAL_GROUP",
+				 "REV_ACT_DOC_TY",
+				 "REC_EXPIRY_DT",
+				 "REC_EFFECTIVE_DT",
+				 "REC_EXPIRY_DT_UPDATE",
+				 "ERROR_STATUS",
+				 "ERROR_CODE",
+				 "FLAG_EXISTING_RECORD",
+				 "SER_NUM_PRIMARY_KEY",
+				 "SRC_TS",
+				 "ITEM_PRIMARY_KEY",
+				 "CONTR_INCPTN",
+				 "CC_CONCAT_PRIMARY_KEY",
+				 "TRANS_COMPLETION_INDICATOR_RIGHT_NDB"
+			FROM "_SYS_BIC"."IFRS_R1.COMMON_COMP.NDB_COMMON/CA_P77_TRANS_DEVICES" 
+			(PLACEHOLDER."$$IP_CYCL_ID$$" => :IP_CYCL_ID)
+            ORDER BY "TRANSACTION_ID","TRANSACTION_LN_ID","PRIMARY_SERIAL_NUM","DIST_CHANNEL",
+                     "CYCLE_NUM","FLAG_EXISTING_RECORD","CONTR_INCPTN","ACCTNG_DT","REV_JOURNALIZATION_DT";
+                      
+                   
+--------------------------------------------------------------------------------------------------
+-- Local Temporary Tables Declaration
+-------------------------------------------------------------------------------------------------- 
+
+CREATE LOCAL TEMPORARY TABLE #UPDATE_P77_TRANS_DEVICES ("TRANSACTION_ID" NVARCHAR(20), "TRANSACTION_LN_ID" NVARCHAR(6),"DIST_CHANNEL" NVARCHAR(2),"SER_NUM_PRIMARY_KEY" NVARCHAR(70),"ITEM_PRIMARY_KEY" NVARCHAR(100),"SRC_FILE_NAME" NVARCHAR(10),"CYCLE_NUM" NVARCHAR(3));
+CREATE LOCAL TEMPORARY TABLE #UPDATE_EH_DELETION ("TRANSACTION_ID" NVARCHAR(20), "TRANSACTION_LN_ID" NVARCHAR(6),"DIST_CHANNEL" NVARCHAR(2),"PRIMARY_SERIAL_NUM" NVARCHAR(25));
+
+--------------------------------------------------------------------------------------------------
+-- Cursors Loop
+-------------------------------------------------------------------------------------------------- 
+
+FOR C_DEV AS CUR_DEVICES DO
+
+--  Define Exit Handler
+	DECLARE EXIT HANDLER FOR SQLEXCEPTION 
+	BEGIN AUTONOMOUS TRANSACTION 
+	
+--  Define Exit Handler
+	DECLARE EXIT HANDLER FOR SQLEXCEPTION 
+	BEGIN AUTONOMOUS TRANSACTION 
+
+    END;
+		
+	 -- Insert record into error table
+	   	INSERT INTO  "NDB_COMMON"."IFRS_R1.COMMON_COMP.NDB_COMMON::P77_TRANS_DEVICES_EH"(
+					 "TRANSACTION_ID",
+					 "TRANSACTION_LN_ID",
+					 "DIST_CHANNEL",
+					 "SECONDARY_SERIAL_NUM",
+					 "CONTRACT_UNIQUE_ID",
+					 "ART_NUM",
+					 "ITM_GRP_CD",
+					 "MER_CTGRY",
+					 "TRANS_PRC",
+					 "DEVICE_TRANS_PRC",
+					 "STDALN_SLNG_PRC",
+					 "DEVICE_STDALN_SLNG_PRC",
+					 "SALES_DOC_TYP",
+					 "ORD_REASON_CD",
+					 "FINAL_TRANS_PRC",
+					 "CURRN",
+					 "CONS_BLD_AMT",
+					 "BANNER",
+					 "COMPANY_CD",
+					 "LEGAL_ENTITY",
+					 "DEALER",
+					 "TAX_JURIS_CD",
+					 "VERISIGN_AUTH_AMT",
+					 "STORE",
+					 "ACCTNG_DT",
+					 "ITEM_FINAL_TRANS_PRC",
+					 "ITEM_CONS_BLD_AMT",
+					 "DEALER_PRC",
+					 "SUB_MERC_CTGRY",
+					 "INCENTIVES",
+					 "RFND_CD",
+					 "RFND_AMT",
+					 "PROMO_CD",
+					 "DEFRD_GL_FLG",
+					 "BRND_CD",
+					 "TRANS_TYP_CD",
+					 "ITEM_QUANTITY",
+					 "ITEM_DSCT_AMT",
+					 "DEFRD_ACT_PROFIT_CENTRE",
+					 "DEFRD_ACT_REVNU_GL",
+					 "DEFRD_ACT_REV_AMT",
+					 "DEFRD_ACT_DOC_NUM",
+					 "DEFRD_ACT_POST_DT",
+					 "DEFRD_ACT_DOC_DT",
+					 "DEFRD_ACT_DOC_TY",
+					 "DEFRD_ACT_ACCT_PD",
+					 "PRIMARY_SERIAL_NUM",
+					 "REV_JOURNALIZATION_DT",
+					 "REV_ACTG_DOC_NUM",
+					 "REV_GL_ACT_NUM",
+					 "REV_AMT",
+					 "REV_PROFIT_CTR",
+					 "TRANS_COMPLETION_INDICATOR",
+					 "CASO_SLS_TM_DCNT_GL",
+					 "CASO_LTO_PRMO_DCNT_GL",
+					 "CASO_ISPR_DCNT_GL",
+					 "CASO_ROI_SPCL_DCNT_GL",
+					 "SRC_FILE_NAME",
+					 "SCENARIO_IDENTIFIER",
+					 "CYCLE_NUM",
+					 "CUSTOMER_GROUP",
+					 "MATERIAL_GROUP",
+					 "REV_ACT_DOC_TY",
+					 "REC_EXPIRY_DT",
+					 "REC_EFFECTIVE_DT",
+					 "ERROR_CODE",
+					 "TECHNICAL_MESSAGE",
+					 "ERROR_CREATE_TS",
+					 "INSERT_TS") 
+					 VALUES (
+					 C_DEV."TRANSACTION_ID",
+					 C_DEV."TRANSACTION_LN_ID",
+					 C_DEV."DIST_CHANNEL",
+					 C_DEV."SECONDARY_SERIAL_NUM",
+					 C_DEV."CONTRACT_UNIQUE_ID",
+					 C_DEV."ART_NUM",
+					 C_DEV."ITM_GRP_CD",
+					 C_DEV."MER_CTGRY",
+					 C_DEV."TRANS_PRC",
+					 C_DEV."DEVICE_TRANS_PRC",
+					 C_DEV."STDALN_SLNG_PRC",
+					 C_DEV."DEVICE_STDALN_SLNG_PRC",
+					 C_DEV."SALES_DOC_TYP",
+					 C_DEV."ORD_REASON_CD",
+					 C_DEV."FINAL_TRANS_PRC",
+					 C_DEV."CURRN",
+					 C_DEV."CONS_BLD_AMT",
+					 C_DEV."BANNER",
+					 C_DEV."COMPANY_CD",
+					 C_DEV."LEGAL_ENTITY",
+					 C_DEV."DEALER",
+					 C_DEV."TAX_JURIS_CD",
+					 C_DEV."VERISIGN_AUTH_AMT",
+					 C_DEV."STORE",
+					 C_DEV."ACCTNG_DT",
+					 C_DEV."ITEM_FINAL_TRANS_PRC",
+					 C_DEV."ITEM_CONS_BLD_AMT",
+					 C_DEV."DEALER_PRC",
+					 C_DEV."SUB_MERC_CTGRY",
+					 C_DEV."INCENTIVES",
+					 C_DEV."RFND_CD",
+					 C_DEV."RFND_AMT",
+					 C_DEV."PROMO_CD",
+					 C_DEV."DEFRD_GL_FLG",
+					 C_DEV."BRND_CD",
+					 C_DEV."TRANS_TYP_CD",
+					 C_DEV."ITEM_QUANTITY",
+					 C_DEV."ITEM_DSCT_AMT",
+					 C_DEV."DEFRD_ACT_PROFIT_CENTRE",
+					 C_DEV."DEFRD_ACT_REVNU_GL",
+					 C_DEV."DEFRD_ACT_REV_AMT",
+					 C_DEV."DEFRD_ACT_DOC_NUM",
+					 C_DEV."DEFRD_ACT_POST_DT",
+					 C_DEV."DEFRD_ACT_DOC_DT",
+					 C_DEV."DEFRD_ACT_DOC_TY",
+					 C_DEV."DEFRD_ACT_ACCT_PD",
+					 C_DEV."PRIMARY_SERIAL_NUM",
+					 C_DEV."REV_JOURNALIZATION_DT",
+					 C_DEV."REV_ACTG_DOC_NUM",
+					 C_DEV."REV_GL_ACT_NUM",
+					 C_DEV."REV_AMT",
+					 C_DEV."REV_PROFIT_CTR",
+					 C_DEV."TRANS_COMPLETION_INDICATOR",
+					 C_DEV."CASO_SLS_TM_DCNT_GL",
+					 C_DEV."CASO_LTO_PRMO_DCNT_GL",
+					 C_DEV."CASO_ISPR_DCNT_GL",
+					 C_DEV."CASO_ROI_SPCL_DCNT_GL",
+					 C_DEV."SRC_FILE_NAME",
+					 C_DEV."SCENARIO_IDENTIFIER",
+					 C_DEV."CYCLE_NUM",
+					 C_DEV."CUSTOMER_GROUP",
+					 C_DEV."MATERIAL_GROUP",
+					 C_DEV."REV_ACT_DOC_TY",
+					 C_DEV."REC_EXPIRY_DT",
+					 C_DEV."REC_EFFECTIVE_DT", 
+					 ::SQL_ERROR_CODE,
+					 ::SQL_ERROR_MESSAGE,
+					 LV_CUR_UTC,
+					 LV_CUR_UTC);   
+	   
+		  	 	 	 LV_ERROR_FLAG := 'Y';
+		  	  	 	 LV_LOOP_ERROR_FLAG := 1;
+    
+                 END;
+    
+      --Clearing the Variables  
+	  IF (LV_PREV_CC_CONCAT_PRIMARY_KEY IS NULL OR C_DEV.CC_CONCAT_PRIMARY_KEY != LV_PREV_CC_CONCAT_PRIMARY_KEY) THEN
+	     
+	      LV_LOOP_ERROR_FLAG := 0;
+	      LV_PREV_CC_CONCAT_PRIMARY_KEY := "C_DEV"."CC_CONCAT_PRIMARY_KEY";
+	     
+	  END IF;
+
+--  Check the Error Status of the Record. If Record is with Error, then send to Error Table
+	  IF C_DEV.ERROR_STATUS = '1' THEN
+	
+	--  Call the Stored Procedure to split the concatenated Error Messages into Error Rows
+	  CALL "NDB_COMMON"."IFRS_R1.COMMON_COMP.EH::SP_EH_SPLIT_ERRORS"(C_DEV."ERROR_CODE", ERROR_TAB, RECORD_COUNT);
+
+     -- Loop through the Error Records
+	  FOR i IN 1 .. :RECORD_COUNT DO
+			
+		 -- Fetch the Error Code
+	  CURRENT_ERROR = :ERROR_TAB."ERROR_CODE"[:i];
+			
+		 --     Insert into the Error Table
+	  INSERT INTO "NDB_COMMON"."IFRS_R1.COMMON_COMP.NDB_COMMON::P77_TRANS_DEVICES_EH"(
+				  "TRANSACTION_ID",
+				  "TRANSACTION_LN_ID",
+				  "DIST_CHANNEL",
+				  "SECONDARY_SERIAL_NUM",
+				  "CONTRACT_UNIQUE_ID",
+				  "ART_NUM",
+				  "ITM_GRP_CD",
+				  "MER_CTGRY",
+				  "TRANS_PRC",
+				  "DEVICE_TRANS_PRC",
+				  "STDALN_SLNG_PRC",
+				  "DEVICE_STDALN_SLNG_PRC",
+				  "SALES_DOC_TYP",
+				  "ORD_REASON_CD",
+				  "FINAL_TRANS_PRC",
+				  "CURRN",
+				  "CONS_BLD_AMT",
+				  "BANNER",
+				  "COMPANY_CD",
+				  "LEGAL_ENTITY",
+				  "DEALER",
+				  "TAX_JURIS_CD",
+				  "VERISIGN_AUTH_AMT",
+				  "STORE",
+				  "ACCTNG_DT",
+				  "ITEM_FINAL_TRANS_PRC",
+				  "ITEM_CONS_BLD_AMT",
+				  "DEALER_PRC",
+				  "SUB_MERC_CTGRY",
+				  "INCENTIVES",
+				  "RFND_CD",
+				  "RFND_AMT",
+				  "PROMO_CD",
+				  "DEFRD_GL_FLG",
+				  "BRND_CD",
+				  "TRANS_TYP_CD",
+				  "ITEM_QUANTITY",
+				  "ITEM_DSCT_AMT",
+				  "DEFRD_ACT_PROFIT_CENTRE",
+				  "DEFRD_ACT_REVNU_GL",
+				  "DEFRD_ACT_REV_AMT",
+				  "DEFRD_ACT_DOC_NUM",
+				  "DEFRD_ACT_POST_DT",
+				  "DEFRD_ACT_DOC_DT",
+				  "DEFRD_ACT_DOC_TY",
+				  "DEFRD_ACT_ACCT_PD",
+				  "PRIMARY_SERIAL_NUM",
+				  "REV_JOURNALIZATION_DT",
+				  "REV_ACTG_DOC_NUM",
+				  "REV_GL_ACT_NUM",
+				  "REV_AMT",
+				  "REV_PROFIT_CTR",
+				  "TRANS_COMPLETION_INDICATOR",
+				  "CASO_SLS_TM_DCNT_GL",
+				  "CASO_LTO_PRMO_DCNT_GL",
+				  "CASO_ISPR_DCNT_GL",
+				  "CASO_ROI_SPCL_DCNT_GL",
+				  "SRC_FILE_NAME",
+				  "SCENARIO_IDENTIFIER",
+				  "CYCLE_NUM",
+				  "CUSTOMER_GROUP",
+				  "MATERIAL_GROUP",
+				  "REV_ACT_DOC_TY",
+				  "REC_EXPIRY_DT",
+				  "REC_EFFECTIVE_DT",
+				  "ERROR_CODE",
+				  "ERROR_CREATE_TS",
+				  "INSERT_TS") 
+				  VALUES (
+				   C_DEV."TRANSACTION_ID",
+				   C_DEV."TRANSACTION_LN_ID",
+				   C_DEV."DIST_CHANNEL",
+				   C_DEV."SECONDARY_SERIAL_NUM",
+				   C_DEV."CONTRACT_UNIQUE_ID",
+				   C_DEV."ART_NUM",
+				   C_DEV."ITM_GRP_CD",
+				   C_DEV."MER_CTGRY",
+				   C_DEV."TRANS_PRC",
+				   C_DEV."DEVICE_TRANS_PRC",
+				   C_DEV."STDALN_SLNG_PRC",
+				   C_DEV."DEVICE_STDALN_SLNG_PRC",
+				   C_DEV."SALES_DOC_TYP",
+				   C_DEV."ORD_REASON_CD",
+				   C_DEV."FINAL_TRANS_PRC",
+				   C_DEV."CURRN",
+				   C_DEV."CONS_BLD_AMT",
+				   C_DEV."BANNER",
+				   C_DEV."COMPANY_CD",
+				   C_DEV."LEGAL_ENTITY",
+				   C_DEV."DEALER",
+				   C_DEV."TAX_JURIS_CD",
+				   C_DEV."VERISIGN_AUTH_AMT",
+				   C_DEV."STORE",
+				   C_DEV."ACCTNG_DT",
+				   C_DEV."ITEM_FINAL_TRANS_PRC",
+				   C_DEV."ITEM_CONS_BLD_AMT",
+				   C_DEV."DEALER_PRC",
+				   C_DEV."SUB_MERC_CTGRY",
+				   C_DEV."INCENTIVES",
+				   C_DEV."RFND_CD",
+				   C_DEV."RFND_AMT",
+				   C_DEV."PROMO_CD",
+				   C_DEV."DEFRD_GL_FLG",
+				   C_DEV."BRND_CD",
+				   C_DEV."TRANS_TYP_CD",
+				   C_DEV."ITEM_QUANTITY",
+				   C_DEV."ITEM_DSCT_AMT",
+				   C_DEV."DEFRD_ACT_PROFIT_CENTRE",
+				   C_DEV."DEFRD_ACT_REVNU_GL",
+				   C_DEV."DEFRD_ACT_REV_AMT",
+				   C_DEV."DEFRD_ACT_DOC_NUM",
+				   C_DEV."DEFRD_ACT_POST_DT",
+				   C_DEV."DEFRD_ACT_DOC_DT",
+				   C_DEV."DEFRD_ACT_DOC_TY",
+				   C_DEV."DEFRD_ACT_ACCT_PD",
+				   C_DEV."PRIMARY_SERIAL_NUM",
+				   C_DEV."REV_JOURNALIZATION_DT",
+				   C_DEV."REV_ACTG_DOC_NUM",
+				   C_DEV."REV_GL_ACT_NUM",
+				   C_DEV."REV_AMT",
+				   C_DEV."REV_PROFIT_CTR",
+				   C_DEV."TRANS_COMPLETION_INDICATOR",
+				   C_DEV."CASO_SLS_TM_DCNT_GL",
+				   C_DEV."CASO_LTO_PRMO_DCNT_GL",
+				   C_DEV."CASO_ISPR_DCNT_GL",
+				   C_DEV."CASO_ROI_SPCL_DCNT_GL",
+				   C_DEV."SRC_FILE_NAME",
+				   C_DEV."SCENARIO_IDENTIFIER",
+				   C_DEV."CYCLE_NUM",
+				   C_DEV."CUSTOMER_GROUP",
+				   C_DEV."MATERIAL_GROUP",
+				   C_DEV."REV_ACT_DOC_TY",
+				   C_DEV."REC_EXPIRY_DT",
+				   C_DEV."REC_EFFECTIVE_DT",
+				   :CURRENT_ERROR,
+				   LV_CUR_UTC,
+				   LV_CUR_UTC); 
+				
+		END FOR;	
+			     
+	              -- Set Error Flag				        
+				  LV_ERROR_FLAG := 'Y';
+				  LV_LOOP_ERROR_FLAG := 1;
+	  
+   	    ELSE
+   
+	   --Processing the Successful Records
+	   IF C_DEV.ERROR_STATUS= '0'  THEN
+	   
+	   IF LV_LOOP_ERROR_FLAG = 1   THEN
+  
+   
+	 INSERT INTO "NDB_COMMON"."IFRS_R1.COMMON_COMP.NDB_COMMON::P77_TRANS_DEVICES_EH"(
+				 "TRANSACTION_ID",
+				 "TRANSACTION_LN_ID",
+				 "DIST_CHANNEL",
+				 "SECONDARY_SERIAL_NUM",
+				 "CONTRACT_UNIQUE_ID",
+				 "ART_NUM",
+				 "ITM_GRP_CD",
+				 "MER_CTGRY",
+				 "TRANS_PRC",
+				 "DEVICE_TRANS_PRC",
+				 "STDALN_SLNG_PRC",
+			     "DEVICE_STDALN_SLNG_PRC",
+				 "SALES_DOC_TYP",
+				 "ORD_REASON_CD",
+				 "FINAL_TRANS_PRC",
+				 "CURRN",
+				 "CONS_BLD_AMT",
+			     "BANNER",
+				 "COMPANY_CD",
+				 "LEGAL_ENTITY",
+			     "DEALER",
+			     "TAX_JURIS_CD",
+			     "VERISIGN_AUTH_AMT",
+				 "STORE",
+			     "ACCTNG_DT",
+				 "ITEM_FINAL_TRANS_PRC",
+				 "ITEM_CONS_BLD_AMT",
+			     "DEALER_PRC",
+				 "SUB_MERC_CTGRY",
+				 "INCENTIVES",
+				 "RFND_CD",
+			     "RFND_AMT",
+				 "PROMO_CD",
+			     "DEFRD_GL_FLG",
+				 "BRND_CD",
+				 "TRANS_TYP_CD",
+				 "ITEM_QUANTITY",
+				 "ITEM_DSCT_AMT",
+				 "DEFRD_ACT_PROFIT_CENTRE",
+			     "DEFRD_ACT_REVNU_GL",
+				 "DEFRD_ACT_REV_AMT",
+			     "DEFRD_ACT_DOC_NUM",
+			     "DEFRD_ACT_POST_DT",
+			     "DEFRD_ACT_DOC_DT",
+				 "DEFRD_ACT_DOC_TY",
+				 "DEFRD_ACT_ACCT_PD",
+				 "PRIMARY_SERIAL_NUM",
+				 "REV_JOURNALIZATION_DT",
+			     "REV_ACTG_DOC_NUM",
+				 "REV_GL_ACT_NUM",
+				 "REV_AMT",
+				 "REV_PROFIT_CTR",
+				 "TRANS_COMPLETION_INDICATOR",
+				 "CASO_SLS_TM_DCNT_GL",
+				 "CASO_LTO_PRMO_DCNT_GL",
+			     "CASO_ISPR_DCNT_GL",
+				 "CASO_ROI_SPCL_DCNT_GL",
+				 "SRC_FILE_NAME",
+				 "SCENARIO_IDENTIFIER",
+				 "CYCLE_NUM",
+				 "CUSTOMER_GROUP",
+				 "MATERIAL_GROUP",
+				 "REV_ACT_DOC_TY",
+				 "REC_EXPIRY_DT",
+				 "REC_EFFECTIVE_DT",
+				 "ERROR_CODE",
+				 "ERROR_CREATE_TS",
+				 "INSERT_TS") 			 
+				 VALUES (
+				  C_DEV."TRANSACTION_ID",
+				  C_DEV."TRANSACTION_LN_ID",
+				  C_DEV."DIST_CHANNEL",
+				  C_DEV."SECONDARY_SERIAL_NUM",
+				  C_DEV."CONTRACT_UNIQUE_ID",
+				  C_DEV."ART_NUM",
+				  C_DEV."ITM_GRP_CD",
+				  C_DEV."MER_CTGRY",
+				  C_DEV."TRANS_PRC",
+				  C_DEV."DEVICE_TRANS_PRC",
+				  C_DEV."STDALN_SLNG_PRC",
+				  C_DEV."DEVICE_STDALN_SLNG_PRC",
+				  C_DEV."SALES_DOC_TYP",
+				  C_DEV."ORD_REASON_CD",
+				  C_DEV."FINAL_TRANS_PRC",
+				  C_DEV."CURRN",
+				  C_DEV."CONS_BLD_AMT",
+				  C_DEV."BANNER",
+				  C_DEV."COMPANY_CD",
+			      C_DEV."LEGAL_ENTITY",
+				  C_DEV."DEALER",
+				  C_DEV."TAX_JURIS_CD",
+				  C_DEV."VERISIGN_AUTH_AMT",
+				  C_DEV."STORE",
+				  C_DEV."ACCTNG_DT",
+				  C_DEV."ITEM_FINAL_TRANS_PRC",
+			      C_DEV."ITEM_CONS_BLD_AMT",
+			      C_DEV."DEALER_PRC",
+				  C_DEV."SUB_MERC_CTGRY",
+				  C_DEV."INCENTIVES",
+			      C_DEV."RFND_CD",
+			      C_DEV."RFND_AMT",
+				  C_DEV."PROMO_CD",
+				  C_DEV."DEFRD_GL_FLG",
+				  C_DEV."BRND_CD",
+				  C_DEV."TRANS_TYP_CD",
+				  C_DEV."ITEM_QUANTITY",
+				  C_DEV."ITEM_DSCT_AMT",
+				  C_DEV."DEFRD_ACT_PROFIT_CENTRE",
+				  C_DEV."DEFRD_ACT_REVNU_GL",
+				  C_DEV."DEFRD_ACT_REV_AMT",
+				  C_DEV."DEFRD_ACT_DOC_NUM",
+				  C_DEV."DEFRD_ACT_POST_DT",
+				  C_DEV."DEFRD_ACT_DOC_DT",
+				  C_DEV."DEFRD_ACT_DOC_TY",
+				  C_DEV."DEFRD_ACT_ACCT_PD",
+			      C_DEV."PRIMARY_SERIAL_NUM",
+				  C_DEV."REV_JOURNALIZATION_DT",
+				  C_DEV."REV_ACTG_DOC_NUM",
+				  C_DEV."REV_GL_ACT_NUM",
+				  C_DEV."REV_AMT",
+				  C_DEV."REV_PROFIT_CTR",
+				  C_DEV."TRANS_COMPLETION_INDICATOR",
+				  C_DEV."CASO_SLS_TM_DCNT_GL",
+				  C_DEV."CASO_LTO_PRMO_DCNT_GL",
+				  C_DEV."CASO_ISPR_DCNT_GL",
+				  C_DEV."CASO_ROI_SPCL_DCNT_GL",
+				  C_DEV."SRC_FILE_NAME",
+				  C_DEV."SCENARIO_IDENTIFIER",
+				  C_DEV."CYCLE_NUM",
+				  C_DEV."CUSTOMER_GROUP",
+			      C_DEV."MATERIAL_GROUP",
+				  C_DEV."REV_ACT_DOC_TY",
+			      C_DEV."REC_EXPIRY_DT",
+				  C_DEV."REC_EFFECTIVE_DT",
+				  'PREVIOUS VERSION IN ERROR',
+				  LV_CUR_UTC,
+				  LV_CUR_UTC); 
+		    ELSE
+				
+--   If Record exists in the Target NDB Table and TRANS_COMPLETION_INDICATOR <> 'Y'
+            IF (C_DEV.FLAG_EXISTING_RECORD = 'UR') THEN
+     
+				BEGIN AUTONOMOUS TRANSACTION
+				     
+	     -- UPDATE REV FIELDS for which TRANSACTIONS EXIST
+				UPDATE "NDB_COMMON"."IFRS_R1.COMMON_COMP.NDB_COMMON::P77_TRANS_DEVICES" AS NDB 
+				   SET NDB.REV_JOURNALIZATION_DT = C_DEV."REV_JOURNALIZATION_DT",
+					 	NDB.REV_ACTG_DOC_NUM = C_DEV."REV_ACTG_DOC_NUM",
+					 	NDB.REV_GL_ACT_NUM = C_DEV."REV_GL_ACT_NUM",
+					 	NDB.REV_AMT = C_DEV."REV_AMT",
+					 	NDB.REV_PROFIT_CTR = C_DEV."REV_PROFIT_CTR",
+					    NDB.TRANS_COMPLETION_INDICATOR = C_DEV."TRANS_COMPLETION_INDICATOR",
+					 	NDB.MODIFIED_TS = LV_CUR_UTC
+			      WHERE NDB.TRANSACTION_ID   = C_DEV.TRANSACTION_ID 
+					AND NDB.TRANSACTION_LN_ID = C_DEV.TRANSACTION_LN_ID 
+					AND NDB.DIST_CHANNEL=C_DEV.DIST_CHANNEL 
+					AND NDB.PRIMARY_SERIAL_NUM=C_DEV.PRIMARY_SERIAL_NUM 
+					AND NDB.REC_EXPIRY_DT='9999-12-31' 
+					AND NDB."TRANS_COMPLETION_INDICATOR" <> 'Y'
+					AND NDB."DEFRD_GL_FLG" IS NOT NULL; 
+					
+					 END;     
+	     
+		INSERT INTO #UPDATE_P77_TRANS_DEVICES
+				    ("TRANSACTION_ID",
+				     "TRANSACTION_LN_ID",
+				     "DIST_CHANNEL",
+					 "SER_NUM_PRIMARY_KEY",
+					 "ITEM_PRIMARY_KEY",
+					 "SRC_FILE_NAME",
+					 "CYCLE_NUM") 
+			 VALUES ("C_DEV"."TRANSACTION_ID",
+					 "C_DEV"."TRANSACTION_LN_ID",
+					 "C_DEV"."DIST_CHANNEL",
+					 "C_DEV"."SER_NUM_PRIMARY_KEY",
+					 "C_DEV"."ITEM_PRIMARY_KEY",
+					 "C_DEV"."SRC_FILE_NAME",
+					 "C_DEV"."CYCLE_NUM");
+						   					   	    		
+		INSERT INTO #UPDATE_EH_DELETION
+				   ("TRANSACTION_ID",
+					"TRANSACTION_LN_ID",
+					"DIST_CHANNEL",
+					"PRIMARY_SERIAL_NUM") 
+		    VALUES ("C_DEV"."TRANSACTION_ID",
+					"C_DEV"."TRANSACTION_LN_ID",
+					"C_DEV"."DIST_CHANNEL",
+					"C_DEV"."PRIMARY_SERIAL_NUM"); 
+            
+            
+      
+            
+            ELSE
+
+--          If Record exists in the Target NDB Table
+            IF C_DEV.FLAG_EXISTING_RECORD = 'UN' THEN
+				  
+		INSERT INTO #UPDATE_P77_TRANS_DEVICES
+			 	    ("TRANSACTION_ID",
+					 "TRANSACTION_LN_ID",
+				   	 "DIST_CHANNEL",
+				   	 "SER_NUM_PRIMARY_KEY",
+				   	 "ITEM_PRIMARY_KEY",
+				   	 "SRC_FILE_NAME",
+				   	 "CYCLE_NUM") 
+			  VALUES ("C_DEV"."TRANSACTION_ID",
+			 	   	  "C_DEV"."TRANSACTION_LN_ID",
+					  "C_DEV"."DIST_CHANNEL",
+					  "C_DEV"."SER_NUM_PRIMARY_KEY",
+					  "C_DEV"."ITEM_PRIMARY_KEY",
+					  "C_DEV"."SRC_FILE_NAME",
+					  "C_DEV"."CYCLE_NUM");
+										   					   	    		
+	   INSERT INTO #UPDATE_EH_DELETION
+				   ("TRANSACTION_ID",
+			 	   	"TRANSACTION_LN_ID",
+			 	   	"DIST_CHANNEL",
+				   	"PRIMARY_SERIAL_NUM") 
+		    VALUES ("C_DEV"."TRANSACTION_ID",
+			 	   	"C_DEV"."TRANSACTION_LN_ID",
+		 	   	    "C_DEV"."DIST_CHANNEL",
+				   	"C_DEV"."PRIMARY_SERIAL_NUM"); 
+		
+       
+                    	
+            ELSE
+    
+			    --  Insert the new records having FLAG_EXISTING_RECORD = 'I'
+		BEGIN AUTONOMOUS TRANSACTION
+		    
+			  --    Insert Records into the target NDB table
+		INSERT INTO "NDB_COMMON"."IFRS_R1.COMMON_COMP.NDB_COMMON::P77_TRANS_DEVICES"(
+		 		   	 "TRANSACTION_ID",
+					 "TRANSACTION_LN_ID",
+				     "DIST_CHANNEL",
+					 "SECONDARY_SERIAL_NUM",
+					 "CONTRACT_UNIQUE_ID",
+					 "ART_NUM",
+					 "ITM_GRP_CD",
+					 "MER_CTGRY",
+					 "TRANS_PRC",
+					 "DEVICE_TRANS_PRC",
+					 "STDALN_SLNG_PRC",
+					 "DEVICE_STDALN_SLNG_PRC",
+					 "SALES_DOC_TYP",
+					 "ORD_REASON_CD",
+					 "FINAL_TRANS_PRC",
+		 			 "CURRN",
+					 "CONS_BLD_AMT",
+					 "BANNER",
+					 "COMPANY_CD",
+					 "LEGAL_ENTITY",
+					 "DEALER",
+					 "TAX_JURIS_CD",
+					 "VERISIGN_AUTH_AMT",
+					 "STORE",
+					 "ACCTNG_DT",
+					 "ITEM_FINAL_TRANS_PRC",
+					 "ITEM_CONS_BLD_AMT",
+					 "DEALER_PRC",
+					 "SUB_MERC_CTGRY",
+					 "INCENTIVES",
+					 "RFND_CD",
+					 "RFND_AMT",
+					 "PROMO_CD",
+					 "DEFRD_GL_FLG",
+					 "BRND_CD",
+					 "TRANS_TYP_CD",
+					 "ITEM_QUANTITY",
+					 "ITEM_DSCT_AMT",
+					 "DEFRD_ACT_PROFIT_CENTRE",
+					 "DEFRD_ACT_REVNU_GL",
+					 "DEFRD_ACT_REV_AMT",
+					 "DEFRD_ACT_DOC_NUM",
+					 "DEFRD_ACT_POST_DT",
+					 "DEFRD_ACT_DOC_DT",
+					 "DEFRD_ACT_DOC_TY",
+					 "DEFRD_ACT_ACCT_PD",
+					 "PRIMARY_SERIAL_NUM",
+					 "REV_JOURNALIZATION_DT",
+					 "REV_ACTG_DOC_NUM",
+					 "REV_GL_ACT_NUM",
+					 "REV_AMT",
+					 "REV_PROFIT_CTR",
+					 "TRANS_COMPLETION_INDICATOR",
+					 "CASO_SLS_TM_DCNT_GL",
+					 "CASO_LTO_PRMO_DCNT_GL",
+					 "CASO_ISPR_DCNT_GL",
+					 "CASO_ROI_SPCL_DCNT_GL",
+					 "SRC_FILE_NAME",
+					 "SCENARIO_IDENTIFIER",
+					 "CYCLE_NUM",
+					 "CUSTOMER_GROUP",
+					 "MATERIAL_GROUP",
+					 "REV_ACT_DOC_TY",
+					 "REC_EXPIRY_DT",
+					 "REC_EFFECTIVE_DT",
+					 "INSERT_TS",
+					 "CONTR_INCPTN" ) 
+					 VALUES ( 
+					 C_DEV."TRANSACTION_ID",
+					 C_DEV."TRANSACTION_LN_ID",
+					 C_DEV."DIST_CHANNEL",
+					 C_DEV."SECONDARY_SERIAL_NUM",
+					 C_DEV."CONTRACT_UNIQUE_ID",
+					 C_DEV."ART_NUM",
+					 C_DEV."ITM_GRP_CD",
+					 C_DEV."MER_CTGRY",
+					 C_DEV."TRANS_PRC",
+					 C_DEV."DEVICE_TRANS_PRC",
+					 C_DEV."STDALN_SLNG_PRC",
+					 C_DEV."DEVICE_STDALN_SLNG_PRC",
+					 C_DEV."SALES_DOC_TYP",
+					 C_DEV."ORD_REASON_CD",
+					 C_DEV."FINAL_TRANS_PRC",
+					 C_DEV."CURRN",
+					 C_DEV."CONS_BLD_AMT",
+					 C_DEV."BANNER",
+					 C_DEV."COMPANY_CD",
+					 C_DEV."LEGAL_ENTITY",
+					 C_DEV."DEALER",
+					 C_DEV."TAX_JURIS_CD",
+					 C_DEV."VERISIGN_AUTH_AMT",
+					 C_DEV."STORE",
+					 C_DEV."ACCTNG_DT",
+					 C_DEV."ITEM_FINAL_TRANS_PRC",
+					 C_DEV."ITEM_CONS_BLD_AMT",
+					 C_DEV."DEALER_PRC",
+					 C_DEV."SUB_MERC_CTGRY",
+					 C_DEV."INCENTIVES",
+					 C_DEV."RFND_CD",
+					 C_DEV."RFND_AMT",
+					 C_DEV."PROMO_CD",
+					 C_DEV."DEFRD_GL_FLG",
+					 C_DEV."BRND_CD",
+					 C_DEV."TRANS_TYP_CD",
+					 C_DEV."ITEM_QUANTITY",
+					 C_DEV."ITEM_DSCT_AMT",
+					 C_DEV."DEFRD_ACT_PROFIT_CENTRE",
+					 C_DEV."DEFRD_ACT_REVNU_GL",
+					 C_DEV."DEFRD_ACT_REV_AMT",
+					 C_DEV."DEFRD_ACT_DOC_NUM",
+					 C_DEV."DEFRD_ACT_POST_DT",
+					 C_DEV."DEFRD_ACT_DOC_DT",
+					 C_DEV."DEFRD_ACT_DOC_TY",
+					 C_DEV."DEFRD_ACT_ACCT_PD",
+					 C_DEV."PRIMARY_SERIAL_NUM",
+					 C_DEV."REV_JOURNALIZATION_DT",
+					 C_DEV."REV_ACTG_DOC_NUM",
+					 C_DEV."REV_GL_ACT_NUM",
+					 C_DEV."REV_AMT",
+					 C_DEV."REV_PROFIT_CTR",
+					 C_DEV."TRANS_COMPLETION_INDICATOR",
+					 C_DEV."CASO_SLS_TM_DCNT_GL",
+					 C_DEV."CASO_LTO_PRMO_DCNT_GL",
+					 C_DEV."CASO_ISPR_DCNT_GL",
+					 C_DEV."CASO_ROI_SPCL_DCNT_GL",
+					 C_DEV."SRC_FILE_NAME",
+					 C_DEV."SCENARIO_IDENTIFIER",
+					 C_DEV."CYCLE_NUM",
+					 C_DEV."CUSTOMER_GROUP",
+					 C_DEV."MATERIAL_GROUP",
+					 C_DEV."REV_ACT_DOC_TY",
+					 C_DEV."REC_EXPIRY_DT",
+					 C_DEV."REC_EFFECTIVE_DT",
+					 LV_CUR_UTC,
+					 C_DEV."CONTR_INCPTN");
+							 
+							 							 
+			   END;
+				  				 
+	--      Insert PK of successfully processed Records into Local Temp Tables 
+	--      for Updating NDB_TS in corresponding Landing Tables records
+		INSERT INTO #UPDATE_P77_TRANS_DEVICES
+					("TRANSACTION_ID",
+				 	 "TRANSACTION_LN_ID",
+				 	 "DIST_CHANNEL",
+					 "SER_NUM_PRIMARY_KEY",
+					 "ITEM_PRIMARY_KEY",
+					 "SRC_FILE_NAME",
+					 "CYCLE_NUM") 
+			 VALUES ("C_DEV"."TRANSACTION_ID",
+				 	 "C_DEV"."TRANSACTION_LN_ID",
+				 	 "C_DEV"."DIST_CHANNEL",
+					 "C_DEV"."SER_NUM_PRIMARY_KEY",
+					 "C_DEV"."ITEM_PRIMARY_KEY",
+					 "C_DEV"."SRC_FILE_NAME",
+					 "C_DEV"."CYCLE_NUM");
+								   					   	    
+								   					   	    		
+		 INSERT INTO #UPDATE_EH_DELETION
+					 ("TRANSACTION_ID",
+				 	  "TRANSACTION_LN_ID",
+				 	  "DIST_CHANNEL",
+					  "PRIMARY_SERIAL_NUM") 
+			  VALUES ("C_DEV"."TRANSACTION_ID",
+				 	  "C_DEV"."TRANSACTION_LN_ID",
+				 	  "C_DEV"."DIST_CHANNEL",
+					  "C_DEV"."PRIMARY_SERIAL_NUM"); 
+				   	 
+         END IF;
+    
+         END IF;
+    
+         END IF;
+  
+         END IF; 
+ 
+         END IF; 
+         
+        -- END IF; 
+
+         END FOR;					   			    
+
+--------------------------------------------------------------------------------------------------
+-- Update Landing Tables
+-------------------------------------------------------------------------------------------------- 
+
+-- Update Landing Tables 
+
+	 	  	  UPDATE "LAND"."IFRS_R1.LAND::P77_TRANS_HDR"  A 
+		       FROM  "LAND"."IFRS_R1.LAND::P77_TRANS_HDR"  A
+	     INNER JOIN  #UPDATE_P77_TRANS_DEVICES  B
+		         ON  A."TRANS_ID" = B."TRANSACTION_ID"
+		        AND A."CONTR_TY" = B."DIST_CHANNEL"
+		        AND A."CYCL_ID" = B."CYCLE_NUM"
+		        AND A."SRC_FILE" = B."SRC_FILE_NAME"
+			    SET DEV_TS= LV_CUR_UTC 
+		      WHERE DEV_TS IS NULL; 
+				
+	 	     UPDATE "LAND"."IFRS_R1.LAND::P77_TRANS_ITEM"  A 
+		       FROM "LAND"."IFRS_R1.LAND::P77_TRANS_ITEM"  A
+	     INNER JOIN #UPDATE_P77_TRANS_DEVICES B
+		         ON  A."ITEM_PRIMARY_KEY" = B."ITEM_PRIMARY_KEY"
+		        SET DEV_TS= LV_CUR_UTC 
+	          WHERE DEV_TS IS NULL;
+			
+		     UPDATE "LAND"."IFRS_R1.LAND::P77_TRANS_DSCT"  A 
+		       FROM "LAND"."IFRS_R1.LAND::P77_TRANS_DSCT"  A
+	     INNER JOIN #UPDATE_P77_TRANS_DEVICES B
+		         ON   A."TRANS_ID" = B."TRANSACTION_ID"
+		        AND	  A."TRANS_LINE_ID" = B."TRANSACTION_LN_ID"
+		        AND   A."CYCL_ID" = B."CYCLE_NUM"
+		        AND   A."SRC_FILE" = B."SRC_FILE_NAME"
+		        SET   DEV_TS= LV_CUR_UTC 
+	            WHERE DEV_TS IS NULL; 		
+				
+			  UPDATE "LAND"."IFRS_R1.LAND::P77_TRANS_SER_NUM"  A 
+		  	    FROM "LAND"."IFRS_R1.LAND::P77_TRANS_SER_NUM"  A
+	      INNER JOIN #UPDATE_P77_TRANS_DEVICES B
+		          ON  A."SER_NUM_PRIMARY_KEY" = B."SER_NUM_PRIMARY_KEY"
+		         SET DEV_TS= LV_CUR_UTC 
+		       WHERE DEV_TS IS NULL; 
+
+--------------------------------------------------------------------------------------------------
+-- Update Error Table
+--------------------------------------------------------------------------------------------------
+
+			  UPDATE "NDB_COMMON"."IFRS_R1.COMMON_COMP.NDB_COMMON::P77_TRANS_DEVICES_EH" A
+		  		FROM "NDB_COMMON"."IFRS_R1.COMMON_COMP.NDB_COMMON::P77_TRANS_DEVICES_EH" A 
+    	  INNER JOIN #UPDATE_EH_DELETION B
+		    	  ON A."TRANSACTION_ID" = B."TRANSACTION_ID" 
+		   		 AND A."TRANSACTION_LN_ID" = B."TRANSACTION_LN_ID" 
+		   		 AND A."DIST_CHANNEL" = B."DIST_CHANNEL" 
+		   		 AND A."PRIMARY_SERIAL_NUM" = B."PRIMARY_SERIAL_NUM" 
+		   		 SET (DELETE_DATE, DELETED) = (LV_CUR_UTC, 1);
+
+--------------------------------------------------------------------------------------------------
+-- Set Overall Status
+-------------------------------------------------------------------------------------------------- 
+
+--  STATUS 0: Send the success message to scheduling tool to confirm this procedure has been
+--  executed successfully
+    			IF(LV_ERROR_FLAG = 'Y') THEN		
+
+     			   OP_STATUS := LC_ERROR_TEXT; 
+			
+   		        ELSE
+
+  	 			   OP_STATUS := LC_SUCCESS_TEXT; 	
+				
+				END IF;
+		
+				END;

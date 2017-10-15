@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:AccessControl="http://www.sap.com/ndb/SQLCoreModelAccessControl.ecore" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" schemaVersion="2.3" id="CA_ZINTERNET_RAC" applyPrivilegeType="NONE" checkAnalyticPrivileges="false" defaultClient="$$client$$" defaultLanguage="$$language$$" hierarchiesSQLEnabled="false" historyEnabled="false" translationRelevant="true" visibility="internal" calculationScenarioType="TREE_BASED" dataCategory="DIMENSION" enforceSqlExecution="false" executionSemantic="UNDEFINED" outputViewType="Projection">
+  <descriptions defaultDescription="CA_ZINTERNET_RAC"/>
+  <localVariables/>
+  <variableMappings/>
+  <informationModelLayout relativeWidthScenario="48"/>
+  <dataSources>
+    <DataSource id="ZINTERNET_RAC" type="DATA_BASE_TABLE">
+      <viewAttributes allViewAttributes="true"/>
+      <columnObject schemaName="SDA" columnObjectName="ZINTERNET_RAC"/>
+    </DataSource>
+    <DataSource id="IFRS_R1.INTERNET.NDB_INTERNET::INT_ORDER" type="DATA_BASE_TABLE">
+      <viewAttributes allViewAttributes="true"/>
+      <columnObject schemaName="NDB_INTERNET" columnObjectName="IFRS_R1.INTERNET.NDB_INTERNET::INT_ORDER"/>
+    </DataSource>
+  </dataSources>
+  <calculationViews>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_ZINT_RAC">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="REVTYPE"/>
+        <viewAttribute id="RT_PLAN_CODE"/>
+        <viewAttribute id="PRODUCT"/>
+        <viewAttribute id="MANDT"/>
+        <viewAttribute id="VALID_FROM"/>
+        <viewAttribute id="VALID_TO"/>
+        <viewAttribute id="RACCODE"/>
+        <viewAttribute id="CODE_DESC"/>
+        <viewAttribute id="ZUPDATE"/>
+        <viewAttribute id="UPUSERID"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CC_REVTYPE" length="3" expressionLanguage="COLUMN_ENGINE">
+          <formula>leftstr(&quot;REVTYPE&quot;,1)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CC_RT_PLAN_CODE" length="9" expressionLanguage="COLUMN_ENGINE">
+          <formula>leftstr(&quot;RT_PLAN_CODE&quot;,9)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CC_PRODUCT" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>leftstr(&quot;PRODUCT&quot;,1)</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#ZINTERNET_RAC">
+        <mapping xsi:type="Calculation:AttributeMapping" target="REVTYPE" source="REVTYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RT_PLAN_CODE" source="RT_PLAN_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT" source="PRODUCT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VALID_FROM" source="VALID_FROM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VALID_TO" source="VALID_TO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RACCODE" source="RACCODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CODE_DESC" source="CODE_DESC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZUPDATE" source="ZUPDATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="UPUSERID" source="UPUSERID"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="INT_ORDER">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="REMARKS"/>
+        <viewAttribute id="SOC"/>
+        <viewAttribute id="REFERENCE_EFFECTIVE_DT"/>
+        <viewAttribute id="ALTN_CONTR_NUM"/>
+        <viewAttribute id="EFFECTIVE_DATE"/>
+        <viewAttribute id="COMPOUND_KEY"/>
+        <viewAttribute id="PRDCT_TYP"/>
+        <viewAttribute id="RAC_CD">
+          <filter xsi:type="AccessControl:SingleValueFilter" operator="NL" including="true"/>
+        </viewAttribute>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#IFRS_R1.INTERNET.NDB_INTERNET::INT_ORDER">
+        <mapping xsi:type="Calculation:AttributeMapping" target="REMARKS" source="REMARKS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SOC" source="SOC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_EFFECTIVE_DT" source="REFERENCE_EFFECTIVE_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ALTN_CONTR_NUM" source="ALTN_CONTR_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFFECTIVE_DATE" source="EFFECTIVE_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="COMPOUND_KEY" source="COMPOUND_KEY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRDCT_TYP" source="PRDCT_TYP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RAC_CD" source="RAC_CD"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="JOIN_RAC_ORDER" joinOrder="OUTSIDE_IN" joinType="inner">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="PRDCT_TYP"/>
+        <viewAttribute id="SOC"/>
+        <viewAttribute id="REMARKS"/>
+        <viewAttribute id="RACCODE"/>
+        <viewAttribute id="VALID_FROM"/>
+        <viewAttribute id="VALID_TO"/>
+        <viewAttribute id="REFERENCE_EFFECTIVE_DT"/>
+        <viewAttribute id="ALTN_CONTR_NUM"/>
+        <viewAttribute id="EFFECTIVE_DATE"/>
+        <viewAttribute id="COMPOUND_KEY"/>
+        <viewAttribute id="REVTYPE"/>
+        <viewAttribute id="RT_PLAN_CODE"/>
+        <viewAttribute id="PRODUCT"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="DATE" id="CC_VALID_FROM" expressionLanguage="COLUMN_ENGINE">
+          <formula>&quot;VALID_FROM&quot;</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="DATE" id="CC_VALID_TO" expressionLanguage="COLUMN_ENGINE">
+          <formula>&quot;VALID_TO&quot;</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#INT_ORDER">
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRDCT_TYP" source="PRDCT_TYP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SOC" source="SOC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REMARKS" source="REMARKS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_EFFECTIVE_DT" source="REFERENCE_EFFECTIVE_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ALTN_CONTR_NUM" source="ALTN_CONTR_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFFECTIVE_DATE" source="EFFECTIVE_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="COMPOUND_KEY" source="COMPOUND_KEY"/>
+      </input>
+      <input node="#PROJ_ZINT_RAC">
+        <mapping xsi:type="Calculation:AttributeMapping" target="RACCODE" source="RACCODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VALID_FROM" source="VALID_FROM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VALID_TO" source="VALID_TO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REVTYPE" source="CC_REVTYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RT_PLAN_CODE" source="CC_RT_PLAN_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT" source="CC_PRODUCT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SOC" source="CC_RT_PLAN_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REMARKS" source="CC_REVTYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRDCT_TYP" source="CC_PRODUCT"/>
+      </input>
+      <joinAttribute name="SOC"/>
+      <joinAttribute name="REMARKS"/>
+      <joinAttribute name="PRDCT_TYP"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_ACTV" filterExpressionLanguage="COLUMN_ENGINE">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="PRDCT_TYP"/>
+        <viewAttribute id="SOC"/>
+        <viewAttribute id="REMARKS"/>
+        <viewAttribute id="REFERENCE_EFFECTIVE_DT"/>
+        <viewAttribute id="CC_VALID_FROM"/>
+        <viewAttribute id="CC_VALID_TO"/>
+        <viewAttribute id="RACCODE"/>
+        <viewAttribute id="ALTN_CONTR_NUM"/>
+        <viewAttribute id="EFFECTIVE_DATE"/>
+        <viewAttribute id="COMPOUND_KEY"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#JOIN_RAC_ORDER">
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRDCT_TYP" source="PRDCT_TYP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SOC" source="SOC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REMARKS" source="REMARKS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_EFFECTIVE_DT" source="REFERENCE_EFFECTIVE_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_VALID_FROM" source="CC_VALID_FROM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_VALID_TO" source="CC_VALID_TO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RACCODE" source="RACCODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ALTN_CONTR_NUM" source="ALTN_CONTR_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFFECTIVE_DATE" source="EFFECTIVE_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="COMPOUND_KEY" source="COMPOUND_KEY"/>
+      </input>
+      <filter>(&quot;REFERENCE_EFFECTIVE_DT&quot; >= &quot;CC_VALID_FROM&quot; ) and&#xD;
+(&quot;REFERENCE_EFFECTIVE_DT&quot; &lt;= &quot;CC_VALID_TO&quot; )</filter>
+    </calculationView>
+  </calculationViews>
+  <logicalModel id="PROJ_ACTV">
+    <descriptions/>
+    <attributes>
+      <attribute id="PRDCT_TYP" order="1" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="PRDCT_TYP"/>
+        <keyMapping columnObjectName="PROJ_ACTV" columnName="PRDCT_TYP"/>
+      </attribute>
+      <attribute id="SOC" order="2" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SOC"/>
+        <keyMapping columnObjectName="PROJ_ACTV" columnName="SOC"/>
+      </attribute>
+      <attribute id="REMARKS" order="3" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="REMARKS"/>
+        <keyMapping columnObjectName="PROJ_ACTV" columnName="REMARKS"/>
+      </attribute>
+      <attribute id="RAC_CD" order="4" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="RAC_CD"/>
+        <keyMapping columnObjectName="PROJ_ACTV" columnName="RACCODE"/>
+      </attribute>
+      <attribute id="ALTN_CONTR_NUM" order="5" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ALTN_CONTR_NUM"/>
+        <keyMapping columnObjectName="PROJ_ACTV" columnName="ALTN_CONTR_NUM"/>
+      </attribute>
+      <attribute id="EFFECTIVE_DATE" order="6" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="EFFECTIVE_DATE"/>
+        <keyMapping columnObjectName="PROJ_ACTV" columnName="EFFECTIVE_DATE"/>
+      </attribute>
+      <attribute id="COMPOUND_KEY" order="7" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="COMPOUND_KEY"/>
+        <keyMapping columnObjectName="PROJ_ACTV" columnName="COMPOUND_KEY"/>
+      </attribute>
+      <attribute id="REFERENCE_EFFECTIVE_DT" order="8" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="REFERENCE_EFFECTIVE_DT"/>
+        <keyMapping columnObjectName="PROJ_ACTV" columnName="REFERENCE_EFFECTIVE_DT"/>
+      </attribute>
+    </attributes>
+    <calculatedAttributes/>
+    <privateDataFoundation>
+      <tableProxies/>
+      <joins/>
+      <layout>
+        <shapes/>
+      </layout>
+    </privateDataFoundation>
+    <baseMeasures/>
+    <calculatedMeasures/>
+    <restrictedMeasures/>
+    <localDimensions/>
+  </logicalModel>
+  <layout>
+    <shapes>
+      <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+        <upperLeftCorner x="99" y="87"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_ZINT_RAC" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="176" y="339"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="INT_ORDER" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="22" y="339"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="JOIN_RAC_ORDER" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="99" y="243"/>
+        <rectangleSize height="122" width="141"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_ACTV" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="99" y="165"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+    </shapes>
+  </layout>
+</Calculation:scenario>

@@ -1,0 +1,255 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:AccessControl="http://www.sap.com/ndb/SQLCoreModelAccessControl.ecore" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" xmlns:Variable="http://www.sap.com/ndb/BiModelVariable.ecore" schemaVersion="2.3" id="CA_EH_PK_MAP" applyPrivilegeType="ANALYTIC_PRIVILEGE" checkAnalyticPrivileges="true" defaultClient="$$client$$" defaultLanguage="$$language$$" hierarchiesSQLEnabled="false" translationRelevant="true" visibility="internal" calculationScenarioType="TREE_BASED" dataCategory="DIMENSION" enforceSqlExecution="false" executionSemantic="UNDEFINED" outputViewType="Projection">
+  <descriptions defaultDescription="Calculation view to process the errors raised during the CIR to Landing processing"/>
+  <localVariables>
+    <variable id="IP_TABLE_NAME" parameter="true">
+      <descriptions defaultDescription="IP_TABLE_NAME"/>
+      <variableProperties datatype="NVARCHAR" defaultValue="IFRS_R1.LAND::TAP_BILL" length="256" mandatory="false">
+        <valueDomain type="empty"/>
+        <selection multiLine="false" type="SingleValue"/>
+      </variableProperties>
+    </variable>
+    <variable id="IP_PROCESS_ID" parameter="true">
+      <descriptions defaultDescription="IP_PROCESS_ID"/>
+      <variableProperties datatype="INTEGER" defaultValue="12345" mandatory="false">
+        <valueDomain type="empty"/>
+        <selection multiLine="false" type="SingleValue"/>
+      </variableProperties>
+    </variable>
+  </localVariables>
+  <variableMappings>
+    <mapping xsi:type="Variable:VariableMapping" dataSource="#CA_EH_LANDING_TABLE_METADATA">
+      <targetVariable name="IP_TABLE_NAME" resourceUri="/IFRS_R1.LAND.EH/calculationviews/CA_EH_LANDING_TABLE_METADATA"/>
+      <localVariable>#IP_TABLE_NAME</localVariable>
+    </mapping>
+  </variableMappings>
+  <informationModelLayout relativeWidthScenario="50"/>
+  <dataSources>
+    <DataSource id="IFRS_R1.LAND.EH::EH_ERROR_RECORD_ROW" type="DATA_BASE_VIEW">
+      <viewAttributes allViewAttributes="true"/>
+      <columnObject schemaName="LAND" columnObjectName="IFRS_R1.LAND.EH::EH_ERROR_RECORD_ROW"/>
+    </DataSource>
+    <DataSource id="CA_EH_LANDING_TABLE_METADATA" type="CALCULATION_VIEW">
+      <viewAttributes allViewAttributes="true"/>
+      <resourceUri>/IFRS_R1.LAND.EH/calculationviews/CA_EH_LANDING_TABLE_METADATA</resourceUri>
+    </DataSource>
+  </dataSources>
+  <calculationViews>
+    <calculationView xsi:type="Calculation:ProjectionView" id="Error_Staging">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="JOB_ID"/>
+        <viewAttribute id="JOB_NAME"/>
+        <viewAttribute id="PROCESS_ID">
+          <filter xsi:type="AccessControl:SingleValueFilter" including="true" value="$$IP_PROCESS_ID$$"/>
+        </viewAttribute>
+        <viewAttribute id="CYCLE_ID"/>
+        <viewAttribute id="ERROR_RECORD"/>
+        <viewAttribute id="FILE_TYPE"/>
+        <viewAttribute id="LOAD_DATE"/>
+        <viewAttribute id="ROWID"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="INTEGER" id="row" expressionLanguage="COLUMN_ENGINE">
+          <formula>rownum()</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#IFRS_R1.LAND.EH::EH_ERROR_RECORD_ROW">
+        <mapping xsi:type="Calculation:AttributeMapping" target="JOB_ID" source="JOB_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="JOB_NAME" source="JOB_NAME"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROCESS_ID" source="PROCESS_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCLE_ID" source="CYCLE_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ERROR_RECORD" source="ERROR_RECORD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FILE_TYPE" source="FILE_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LOAD_DATE" source="LOAD_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ROWID" source="$rowid$"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="OVERFLOW_FILE">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="JOB_ID"/>
+        <viewAttribute id="JOB_NAME"/>
+        <viewAttribute id="PROCESS_ID"/>
+        <viewAttribute id="CYCLE_ID"/>
+        <viewAttribute id="ERROR_RECORD"/>
+        <viewAttribute id="FILE_TYPE"/>
+        <viewAttribute id="LOAD_DATE"/>
+        <viewAttribute id="ROWID"/>
+        <viewAttribute id="row"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="VARCHAR" id="CC_VALUES_ONLY" length="1000" expressionLanguage="SQL">
+          <formula>replace(replace(substr_after(&quot;ERROR_RECORD&quot;,'VALUES '),')',','),'(',',')</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="TABLE_NAME" length="50" expressionLanguage="COLUMN_ENGINE">
+          <formula>'$$IP_TABLE_NAME$$'</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#Error_Staging">
+        <mapping xsi:type="Calculation:AttributeMapping" target="JOB_ID" source="JOB_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="JOB_NAME" source="JOB_NAME"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROCESS_ID" source="PROCESS_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCLE_ID" source="CYCLE_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ERROR_RECORD" source="ERROR_RECORD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FILE_TYPE" source="FILE_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LOAD_DATE" source="LOAD_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ROWID" source="ROWID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="row" source="row"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="LANDING_METADATA">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="SCHEMA_NAME"/>
+        <viewAttribute id="TABLE_NAME"/>
+        <viewAttribute id="COLUMN_NAME"/>
+        <viewAttribute id="POSITION"/>
+        <viewAttribute id="INDEX_POSITION"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#CA_EH_LANDING_TABLE_METADATA">
+        <mapping xsi:type="Calculation:AttributeMapping" target="SCHEMA_NAME" source="SCHEMA_NAME"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TABLE_NAME" source="TABLE_NAME"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="COLUMN_NAME" source="COLUMN_NAME"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="POSITION" source="POSITION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INDEX_POSITION" source="INDEX_POSITION"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="OVERFLOW_METADATA" joinType="leftOuter">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="JOB_ID"/>
+        <viewAttribute id="TABLE_NAME"/>
+        <viewAttribute id="COLUMN_NAME"/>
+        <viewAttribute id="SEPARATOR_POSITION"/>
+        <viewAttribute id="SEQUENCE_OF_CONCAT"/>
+        <viewAttribute id="CC_VALUES_ONLY"/>
+        <viewAttribute id="PROCESS_ID"/>
+        <viewAttribute id="ROWID"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="TINYINT" id="IS_A_PRIMARY_KEY" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isnull(&quot;SEQUENCE_OF_CONCAT&quot;), 0,1)</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#LANDING_METADATA">
+        <mapping xsi:type="Calculation:AttributeMapping" target="SEPARATOR_POSITION" source="POSITION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SEQUENCE_OF_CONCAT" source="INDEX_POSITION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="COLUMN_NAME" source="COLUMN_NAME"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TABLE_NAME" source="TABLE_NAME"/>
+      </input>
+      <input node="#OVERFLOW_FILE">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_VALUES_ONLY" source="CC_VALUES_ONLY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="JOB_ID" source="JOB_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROCESS_ID" source="PROCESS_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ROWID" source="ROWID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TABLE_NAME" source="TABLE_NAME"/>
+      </input>
+      <joinAttribute name="TABLE_NAME"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="Primary_keys_only">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="SEPARATOR_POSITION"/>
+        <viewAttribute id="SEQUENCE_OF_CONCAT"/>
+        <viewAttribute id="CC_VALUES_ONLY"/>
+        <viewAttribute id="COLUMN_NAME"/>
+        <viewAttribute id="TABLE_NAME"/>
+        <viewAttribute id="IS_A_PRIMARY_KEY">
+          <filter xsi:type="AccessControl:SingleValueFilter" including="true" value="1"/>
+        </viewAttribute>
+        <viewAttribute id="JOB_ID"/>
+        <viewAttribute id="ROWID"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#OVERFLOW_METADATA">
+        <mapping xsi:type="Calculation:AttributeMapping" target="SEPARATOR_POSITION" source="SEPARATOR_POSITION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SEQUENCE_OF_CONCAT" source="SEQUENCE_OF_CONCAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_VALUES_ONLY" source="CC_VALUES_ONLY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="COLUMN_NAME" source="COLUMN_NAME"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TABLE_NAME" source="TABLE_NAME"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_A_PRIMARY_KEY" source="IS_A_PRIMARY_KEY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="JOB_ID" source="JOB_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ROWID" source="ROWID"/>
+      </input>
+    </calculationView>
+  </calculationViews>
+  <logicalModel id="Primary_keys_only">
+    <descriptions/>
+    <attributes>
+      <attribute id="SEPARATOR_POSITION" order="1" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SEPARATOR_POSITION"/>
+        <keyMapping columnObjectName="Primary_keys_only" columnName="SEPARATOR_POSITION"/>
+      </attribute>
+      <attribute id="SEQUENCE_OF_CONCAT" order="2" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SEQUENCE_OF_CONCAT"/>
+        <keyMapping columnObjectName="Primary_keys_only" columnName="SEQUENCE_OF_CONCAT"/>
+      </attribute>
+      <attribute id="ERROR_RECORD" order="3" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ERROR_RECORD"/>
+        <keyMapping columnObjectName="Primary_keys_only" columnName="CC_VALUES_ONLY"/>
+      </attribute>
+      <attribute id="FIELD_NAME" order="4" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="FIELD_NAME"/>
+        <keyMapping columnObjectName="Primary_keys_only" columnName="COLUMN_NAME"/>
+      </attribute>
+      <attribute id="TABLE_NAME" order="5" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="TABLE_NAME"/>
+        <keyMapping columnObjectName="Primary_keys_only" columnName="TABLE_NAME"/>
+      </attribute>
+      <attribute id="IS_A_PRIMARY_KEY" order="6" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="IS_A_PRIMARY_KEY"/>
+        <keyMapping columnObjectName="Primary_keys_only" columnName="IS_A_PRIMARY_KEY"/>
+      </attribute>
+      <attribute id="JOB_ID" order="7" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions/>
+        <keyMapping columnObjectName="Primary_keys_only" columnName="JOB_ID"/>
+      </attribute>
+      <attribute id="ROWID" order="8" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions/>
+        <keyMapping columnObjectName="Primary_keys_only" columnName="ROWID"/>
+      </attribute>
+    </attributes>
+    <calculatedAttributes/>
+    <privateDataFoundation>
+      <tableProxies/>
+      <joins/>
+      <layout>
+        <shapes/>
+      </layout>
+    </privateDataFoundation>
+    <baseMeasures/>
+    <calculatedMeasures/>
+    <restrictedMeasures/>
+    <localDimensions/>
+  </logicalModel>
+  <layout>
+    <shapes>
+      <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+        <upperLeftCorner x="99" y="87"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Error_Staging" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="176" y="417"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="OVERFLOW_FILE" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="176" y="339"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="LANDING_METADATA" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="22" y="339"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="OVERFLOW_METADATA" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="99" y="243"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Primary_keys_only" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="99" y="165"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+    </shapes>
+  </layout>
+</Calculation:scenario>

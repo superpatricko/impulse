@@ -1,0 +1,318 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:AccessControl="http://www.sap.com/ndb/SQLCoreModelAccessControl.ecore" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" xmlns:Variable="http://www.sap.com/ndb/BiModelVariable.ecore" schemaVersion="2.3" id="CA_P77_TRANS_DSCT" applyPrivilegeType="NONE" checkAnalyticPrivileges="false" defaultClient="$$client$$" defaultLanguage="$$language$$" hierarchiesSQLEnabled="false" translationRelevant="true" visibility="internal" calculationScenarioType="TREE_BASED" dataCategory="DIMENSION" enforceSqlExecution="false" executionSemantic="UNDEFINED" outputViewType="Projection">
+  <descriptions defaultDescription="Landing View - Table P77_TRANS_DSCT">
+    <comment text="Simple Private view which is based on landing P77_TRANS_DSCT table.&#xD;&#xA;One to One mapping of landing table and only NDB related columns are activated in output."/>
+  </descriptions>
+  <localVariables>
+    <variable id="IP_CYCL_ID" parameter="true">
+      <descriptions defaultDescription="IP_CYCL_ID"/>
+      <variableProperties datatype="NVARCHAR" defaultValue="C99" length="3" mandatory="false">
+        <valueDomain type="empty"/>
+        <selection multiLine="false" type="SingleValue"/>
+      </variableProperties>
+    </variable>
+    <variable id="IP_JOB_ID" parameter="true">
+      <descriptions defaultDescription="IP_JOB_ID"/>
+      <variableProperties datatype="NVARCHAR" length="20" mandatory="false">
+        <valueDomain type="empty"/>
+        <selection multiLine="true" type="SingleValue"/>
+        <defaultRange including="true" lowValue="1331"/>
+        <defaultRange including="true" lowValue="1336"/>
+        <defaultRange including="true" lowValue="1341"/>
+        <defaultRange including="true" lowValue="1346"/>
+        <defaultRange including="true" lowValue="1350"/>
+        <defaultRange including="true" lowValue="1354"/>
+        <defaultRange including="true" lowValue="1357"/>
+        <defaultRange including="true" lowValue="1367"/>
+      </variableProperties>
+    </variable>
+  </localVariables>
+  <variableMappings>
+    <mapping xsi:type="Variable:VariableMapping" dataSource="#CA_EH_ERROR_TABLE_MULTI_JOBS">
+      <targetVariable name="IP_JOB_ID" resourceUri="/IFRS_R1.LAND.EH/calculationviews/CA_EH_ERROR_TABLE_MULTI_JOBS"/>
+      <localVariable>#IP_JOB_ID</localVariable>
+    </mapping>
+  </variableMappings>
+  <informationModelLayout relativeWidthScenario="46"/>
+  <dataSources>
+    <DataSource id="IFRS_R1.LAND::P77_TRANS_DSCT" type="DATA_BASE_TABLE">
+      <viewAttributes allViewAttributes="true"/>
+      <columnObject schemaName="LAND" columnObjectName="IFRS_R1.LAND::P77_TRANS_DSCT"/>
+    </DataSource>
+    <DataSource id="CA_EH_ERROR_TABLE_MULTI_JOBS" type="CALCULATION_VIEW">
+      <viewAttributes allViewAttributes="true"/>
+      <resourceUri>/IFRS_R1.LAND.EH/calculationviews/CA_EH_ERROR_TABLE_MULTI_JOBS</resourceUri>
+    </DataSource>
+  </dataSources>
+  <calculationViews>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_P77_TRANS_DSCT" filterExpressionLanguage="COLUMN_ENGINE">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="DSCT_AMT"/>
+        <viewAttribute id="DSCT_ID"/>
+        <viewAttribute id="DSCT_TY_CD"/>
+        <viewAttribute id="REC_TY"/>
+        <viewAttribute id="TRANS_ID"/>
+        <viewAttribute id="TRANS_LINE_ID"/>
+        <viewAttribute id="CYCL_ID"/>
+        <viewAttribute id="INSRT_TS"/>
+        <viewAttribute id="SEQ_ID"/>
+        <viewAttribute id="SRC_FILE"/>
+        <viewAttribute id="NDB_MART"/>
+        <viewAttribute id="SRC_TS"/>
+        <viewAttribute id="PROCESS_ID"/>
+        <viewAttribute id="ACCT_KEY_FLG"/>
+        <viewAttribute id="DEV_TS"/>
+        <viewAttribute id="ACSY_TS"/>
+        <viewAttribute id="DSCT_TS"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CC_VERSION_CHECK" length="200" expressionLanguage="COLUMN_ENGINE">
+          <formula>&quot;TRANS_ID&quot;+'|'+&quot;TRANS_LINE_ID&quot;</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#IFRS_R1.LAND::P77_TRANS_DSCT">
+        <mapping xsi:type="Calculation:AttributeMapping" target="DSCT_AMT" source="DSCT_AMT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DSCT_ID" source="DSCT_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DSCT_TY_CD" source="DSCT_TY_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REC_TY" source="REC_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRANS_ID" source="TRANS_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRANS_LINE_ID" source="TRANS_LINE_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INSRT_TS" source="INSRT_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SEQ_ID" source="SEQ_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SRC_FILE" source="SRC_FILE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NDB_MART" source="NDB_MART"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SRC_TS" source="SRC_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROCESS_ID" source="PROCESS_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACCT_KEY_FLG" source="ACCT_KEY_FLG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DEV_TS" source="DEV_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACSY_TS" source="ACSY_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DSCT_TS" source="DSCT_TS"/>
+      </input>
+      <filter>((isNull(&quot;DEV_TS&quot;)) or (isNull(&quot;ACSY_TS&quot;))or(isNull(&quot;DSCT_TS&quot;))) and (&quot;SRC_FILE&quot; !='COMM') and  &#xD;
+(&quot;CYCL_ID&quot; &lt;= '$$IP_CYCL_ID$$')</filter>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_ERROR_TABLE">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="PARENT_KEY_ERROR"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#CA_EH_ERROR_TABLE_MULTI_JOBS">
+        <mapping xsi:type="Calculation:AttributeMapping" target="PARENT_KEY_ERROR" source="PARENT_KEY"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="JOIN_TRANS_ITEM" joinOrder="OUTSIDE_IN" joinType="leftOuter">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="DSCT_AMT"/>
+        <viewAttribute id="DSCT_ID"/>
+        <viewAttribute id="DSCT_TY_CD"/>
+        <viewAttribute id="REC_TY"/>
+        <viewAttribute id="TRANS_ID"/>
+        <viewAttribute id="TRANS_LINE_ID"/>
+        <viewAttribute id="CYCL_ID"/>
+        <viewAttribute id="INSRT_TS"/>
+        <viewAttribute id="SEQ_ID"/>
+        <viewAttribute id="SRC_FILE"/>
+        <viewAttribute id="NDB_MART"/>
+        <viewAttribute id="SRC_TS"/>
+        <viewAttribute id="PROCESS_ID"/>
+        <viewAttribute id="ACCT_KEY_FLG"/>
+        <viewAttribute id="DEV_TS"/>
+        <viewAttribute id="ACSY_TS"/>
+        <viewAttribute id="DSCT_TS"/>
+        <viewAttribute id="CC_VERSION_CHECK"/>
+        <viewAttribute id="PARENT_KEY_ERROR"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#PROJ_P77_TRANS_DSCT">
+        <mapping xsi:type="Calculation:AttributeMapping" target="DSCT_AMT" source="DSCT_AMT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DSCT_ID" source="DSCT_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DSCT_TY_CD" source="DSCT_TY_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REC_TY" source="REC_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRANS_ID" source="TRANS_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRANS_LINE_ID" source="TRANS_LINE_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INSRT_TS" source="INSRT_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SEQ_ID" source="SEQ_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SRC_FILE" source="SRC_FILE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NDB_MART" source="NDB_MART"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SRC_TS" source="SRC_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROCESS_ID" source="PROCESS_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACCT_KEY_FLG" source="ACCT_KEY_FLG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DEV_TS" source="DEV_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACSY_TS" source="ACSY_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DSCT_TS" source="DSCT_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_VERSION_CHECK" source="CC_VERSION_CHECK"/>
+      </input>
+      <input node="#PROJ_ERROR_TABLE">
+        <mapping xsi:type="Calculation:AttributeMapping" target="PARENT_KEY_ERROR" source="PARENT_KEY_ERROR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_VERSION_CHECK" source="PARENT_KEY_ERROR"/>
+      </input>
+      <joinAttribute name="CC_VERSION_CHECK"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_TRANS_ITEM">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="DSCT_AMT"/>
+        <viewAttribute id="DSCT_ID"/>
+        <viewAttribute id="DSCT_TY_CD"/>
+        <viewAttribute id="REC_TY"/>
+        <viewAttribute id="TRANS_ID"/>
+        <viewAttribute id="TRANS_LINE_ID"/>
+        <viewAttribute id="CYCL_ID"/>
+        <viewAttribute id="INSRT_TS"/>
+        <viewAttribute id="SEQ_ID"/>
+        <viewAttribute id="SRC_FILE"/>
+        <viewAttribute id="NDB_MART"/>
+        <viewAttribute id="SRC_TS"/>
+        <viewAttribute id="PROCESS_ID"/>
+        <viewAttribute id="ACCT_KEY_FLG"/>
+        <viewAttribute id="DEV_TS"/>
+        <viewAttribute id="ACSY_TS"/>
+        <viewAttribute id="DSCT_TS"/>
+        <viewAttribute id="CC_VERSION_CHECK"/>
+        <viewAttribute id="PARENT_KEY_ERROR">
+          <filter xsi:type="AccessControl:SingleValueFilter" operator="NL" including="true"/>
+        </viewAttribute>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#JOIN_TRANS_ITEM">
+        <mapping xsi:type="Calculation:AttributeMapping" target="DSCT_AMT" source="DSCT_AMT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DSCT_ID" source="DSCT_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DSCT_TY_CD" source="DSCT_TY_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REC_TY" source="REC_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRANS_ID" source="TRANS_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRANS_LINE_ID" source="TRANS_LINE_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INSRT_TS" source="INSRT_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SEQ_ID" source="SEQ_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SRC_FILE" source="SRC_FILE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NDB_MART" source="NDB_MART"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SRC_TS" source="SRC_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROCESS_ID" source="PROCESS_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACCT_KEY_FLG" source="ACCT_KEY_FLG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DEV_TS" source="DEV_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACSY_TS" source="ACSY_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DSCT_TS" source="DSCT_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_VERSION_CHECK" source="CC_VERSION_CHECK"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PARENT_KEY_ERROR" source="PARENT_KEY_ERROR"/>
+      </input>
+    </calculationView>
+  </calculationViews>
+  <logicalModel id="PROJ_TRANS_ITEM">
+    <descriptions/>
+    <attributes>
+      <attribute id="DSCT_AMT" order="1" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="DSCT_AMT"/>
+        <keyMapping columnObjectName="PROJ_TRANS_ITEM" columnName="DSCT_AMT"/>
+      </attribute>
+      <attribute id="DSCT_ID" order="2" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="DSCT_ID"/>
+        <keyMapping columnObjectName="PROJ_TRANS_ITEM" columnName="DSCT_ID"/>
+      </attribute>
+      <attribute id="DSCT_TY_CD" order="3" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="DSCT_TY_CD"/>
+        <keyMapping columnObjectName="PROJ_TRANS_ITEM" columnName="DSCT_TY_CD"/>
+      </attribute>
+      <attribute id="REC_TY" order="4" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="REC_TY"/>
+        <keyMapping columnObjectName="PROJ_TRANS_ITEM" columnName="REC_TY"/>
+      </attribute>
+      <attribute id="TRANS_ID" order="5" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="TRANS_ID"/>
+        <keyMapping columnObjectName="PROJ_TRANS_ITEM" columnName="TRANS_ID"/>
+      </attribute>
+      <attribute id="TRANS_LINE_ID" order="6" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="TRANS_LINE_ID"/>
+        <keyMapping columnObjectName="PROJ_TRANS_ITEM" columnName="TRANS_LINE_ID"/>
+      </attribute>
+      <attribute id="CYCL_ID" order="7" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CYCL_ID"/>
+        <keyMapping columnObjectName="PROJ_TRANS_ITEM" columnName="CYCL_ID"/>
+      </attribute>
+      <attribute id="INSRT_TS" order="8" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="INSRT_TS"/>
+        <keyMapping columnObjectName="PROJ_TRANS_ITEM" columnName="INSRT_TS"/>
+      </attribute>
+      <attribute id="SEQ_ID" order="9" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SEQ_ID"/>
+        <keyMapping columnObjectName="PROJ_TRANS_ITEM" columnName="SEQ_ID"/>
+      </attribute>
+      <attribute id="SRC_FILE" order="10" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SRC_FILE"/>
+        <keyMapping columnObjectName="PROJ_TRANS_ITEM" columnName="SRC_FILE"/>
+      </attribute>
+      <attribute id="NDB_MART" order="11" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="NDB_MART"/>
+        <keyMapping columnObjectName="PROJ_TRANS_ITEM" columnName="NDB_MART"/>
+      </attribute>
+      <attribute id="SRC_TS" order="12" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SRC_TS"/>
+        <keyMapping columnObjectName="PROJ_TRANS_ITEM" columnName="SRC_TS"/>
+      </attribute>
+      <attribute id="PROCESS_ID" order="13" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="PROCESS_ID"/>
+        <keyMapping columnObjectName="PROJ_TRANS_ITEM" columnName="PROCESS_ID"/>
+      </attribute>
+      <attribute id="ACCT_KEY_FLG" order="14" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ACCT_KEY_FLG"/>
+        <keyMapping columnObjectName="PROJ_TRANS_ITEM" columnName="ACCT_KEY_FLG"/>
+      </attribute>
+      <attribute id="DEV_TS" order="15" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="DEV_TS"/>
+        <keyMapping columnObjectName="PROJ_TRANS_ITEM" columnName="DEV_TS"/>
+      </attribute>
+      <attribute id="ACSY_TS" order="16" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ACSY_TS"/>
+        <keyMapping columnObjectName="PROJ_TRANS_ITEM" columnName="ACSY_TS"/>
+      </attribute>
+      <attribute id="DSCT_TS" order="17" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="DSCT_TS"/>
+        <keyMapping columnObjectName="PROJ_TRANS_ITEM" columnName="DSCT_TS"/>
+      </attribute>
+      <attribute id="CC_VERSION_CHECK" order="18" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CC_VERSION_CHECK"/>
+        <keyMapping columnObjectName="PROJ_TRANS_ITEM" columnName="CC_VERSION_CHECK"/>
+      </attribute>
+    </attributes>
+    <calculatedAttributes/>
+    <privateDataFoundation>
+      <tableProxies/>
+      <joins/>
+      <layout>
+        <shapes/>
+      </layout>
+    </privateDataFoundation>
+    <baseMeasures/>
+    <calculatedMeasures/>
+    <restrictedMeasures/>
+    <localDimensions/>
+  </logicalModel>
+  <layout>
+    <shapes>
+      <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+        <upperLeftCorner x="99" y="87"/>
+        <rectangleSize height="64" width="140"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_P77_TRANS_DSCT" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="22" y="339"/>
+        <rectangleSize height="64" width="140"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_ERROR_TABLE" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="176" y="339"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="JOIN_TRANS_ITEM" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="99" y="243"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_TRANS_ITEM" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="99" y="165"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+    </shapes>
+  </layout>
+</Calculation:scenario>

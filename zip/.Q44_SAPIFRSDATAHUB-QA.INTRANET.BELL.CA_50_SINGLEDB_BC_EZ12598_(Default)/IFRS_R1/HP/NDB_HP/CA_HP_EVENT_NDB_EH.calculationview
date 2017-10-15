@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:AccessControl="http://www.sap.com/ndb/SQLCoreModelAccessControl.ecore" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" schemaVersion="2.3" id="CA_HP_EVENT_NDB_EH" applyPrivilegeType="NONE" checkAnalyticPrivileges="false" defaultClient="$$client$$" defaultLanguage="$$language$$" hierarchiesSQLEnabled="false" translationRelevant="true" visibility="internal" calculationScenarioType="TREE_BASED" dataCategory="DIMENSION" enforceSqlExecution="false" executionSemantic="UNDEFINED" outputViewType="Projection">
+  <descriptions defaultDescription="CA_HP_EVENT_NDB_EH"/>
+  <localVariables/>
+  <variableMappings/>
+  <informationModelLayout relativeWidthScenario="51"/>
+  <dataSources>
+    <DataSource id="IFRS_R1.HP.NDB_HP::HP_EVENT" type="DATA_BASE_TABLE">
+      <viewAttributes allViewAttributes="true"/>
+      <columnObject schemaName="NDB_HP" columnObjectName="IFRS_R1.HP.NDB_HP::HP_EVENT"/>
+    </DataSource>
+    <DataSource id="IFRS_R1.HP.NDB_HP::HP_EVENT_EH" type="DATA_BASE_TABLE">
+      <viewAttributes allViewAttributes="true"/>
+      <columnObject schemaName="NDB_HP" columnObjectName="IFRS_R1.HP.NDB_HP::HP_EVENT_EH"/>
+    </DataSource>
+  </dataSources>
+  <calculationViews>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_NDB">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="CONTRACT_UNIQUE_IDENTIFIER"/>
+        <viewAttribute id="EVENT_ID"/>
+        <viewAttribute id="EVENT_TYPE_CODE"/>
+        <viewAttribute id="EVENT_EFFECTIVE_DATE"/>
+        <viewAttribute id="TEMPORARY_SEASONAL_SUSPENSION"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#IFRS_R1.HP.NDB_HP::HP_EVENT">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTRACT_UNIQUE_IDENTIFIER" source="CONTRACT_UNIQUE_IDENTIFIER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EVENT_ID" source="EVENT_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EVENT_TYPE_CODE" source="EVENT_TYPE_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EVENT_EFFECTIVE_DATE" source="EVENT_EFFECTIVE_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TEMPORARY_SEASONAL_SUSPENSION" source="TEMPORARY_SEASONAL_SUSPENSION"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_EH">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="CONTRACT_UNIQUE_IDENTIFIER"/>
+        <viewAttribute id="EVENT_ID"/>
+        <viewAttribute id="DELETED">
+          <filter xsi:type="AccessControl:SingleValueFilter" operator="NL" including="true"/>
+        </viewAttribute>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#IFRS_R1.HP.NDB_HP::HP_EVENT_EH">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTRACT_UNIQUE_IDENTIFIER" source="CONTRACT_UNIQUE_IDENTIFIER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EVENT_ID" source="EVENT_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DELETED" source="DELETED"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="JOIN_NDB_EH" joinType="leftOuter">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="CONTRACT_UNIQUE_IDENTIFIER"/>
+        <viewAttribute id="EVENT_ID"/>
+        <viewAttribute id="EVENT_TYPE_CODE"/>
+        <viewAttribute id="EVENT_EFFECTIVE_DATE"/>
+        <viewAttribute id="TEMPORARY_SEASONAL_SUSPENSION"/>
+        <viewAttribute id="CONTRACT_UNIQUE_IDENTIFIER_RIGHT"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CC_VERSION_CHECK" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isNull(&quot;CONTRACT_UNIQUE_IDENTIFIER_RIGHT&quot;),'0','1')</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#PROJ_NDB">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTRACT_UNIQUE_IDENTIFIER" source="CONTRACT_UNIQUE_IDENTIFIER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EVENT_ID" source="EVENT_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EVENT_TYPE_CODE" source="EVENT_TYPE_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EVENT_EFFECTIVE_DATE" source="EVENT_EFFECTIVE_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TEMPORARY_SEASONAL_SUSPENSION" source="TEMPORARY_SEASONAL_SUSPENSION"/>
+      </input>
+      <input node="#PROJ_EH">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTRACT_UNIQUE_IDENTIFIER_RIGHT" source="CONTRACT_UNIQUE_IDENTIFIER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTRACT_UNIQUE_IDENTIFIER" source="CONTRACT_UNIQUE_IDENTIFIER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EVENT_ID" source="EVENT_ID"/>
+      </input>
+      <joinAttribute name="CONTRACT_UNIQUE_IDENTIFIER"/>
+      <joinAttribute name="EVENT_ID"/>
+    </calculationView>
+  </calculationViews>
+  <logicalModel id="JOIN_NDB_EH">
+    <descriptions/>
+    <attributes>
+      <attribute id="CONTRACT_UNIQUE_IDENTIFIER" order="1" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CONTRACT_UNIQUE_IDENTIFIER"/>
+        <keyMapping columnObjectName="JOIN_NDB_EH" columnName="CONTRACT_UNIQUE_IDENTIFIER"/>
+      </attribute>
+      <attribute id="EVENT_ID" order="2" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="EVENT_ID"/>
+        <keyMapping columnObjectName="JOIN_NDB_EH" columnName="EVENT_ID"/>
+      </attribute>
+      <attribute id="EVENT_TYPE_CODE" order="3" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="EVENT_TYPE_CODE"/>
+        <keyMapping columnObjectName="JOIN_NDB_EH" columnName="EVENT_TYPE_CODE"/>
+      </attribute>
+      <attribute id="EVENT_EFFECTIVE_DATE" order="4" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="EVENT_EFFECTIVE_DATE"/>
+        <keyMapping columnObjectName="JOIN_NDB_EH" columnName="EVENT_EFFECTIVE_DATE"/>
+      </attribute>
+      <attribute id="TEMPORARY_SEASONAL_SUSPENSION" order="5" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="TEMPORARY_SEASONAL_SUSPENSION"/>
+        <keyMapping columnObjectName="JOIN_NDB_EH" columnName="TEMPORARY_SEASONAL_SUSPENSION"/>
+      </attribute>
+      <attribute id="CONTRACT_UNIQUE_IDENTIFIER_RIGHT" order="6" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CONTRACT_UNIQUE_IDENTIFIER_RIGHT"/>
+        <keyMapping columnObjectName="JOIN_NDB_EH" columnName="CONTRACT_UNIQUE_IDENTIFIER_RIGHT"/>
+      </attribute>
+      <attribute id="CC_VERSION_CHECK" order="7" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CC_VERSION_CHECK"/>
+        <keyMapping columnObjectName="JOIN_NDB_EH" columnName="CC_VERSION_CHECK"/>
+      </attribute>
+    </attributes>
+    <calculatedAttributes/>
+    <privateDataFoundation>
+      <tableProxies/>
+      <joins/>
+      <layout>
+        <shapes/>
+      </layout>
+    </privateDataFoundation>
+    <baseMeasures/>
+    <calculatedMeasures/>
+    <restrictedMeasures/>
+    <localDimensions/>
+  </logicalModel>
+  <layout>
+    <shapes>
+      <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+        <upperLeftCorner x="99" y="87"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_NDB" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="22" y="261"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_EH" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="176" y="261"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="JOIN_NDB_EH" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="99" y="165"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+    </shapes>
+  </layout>
+</Calculation:scenario>

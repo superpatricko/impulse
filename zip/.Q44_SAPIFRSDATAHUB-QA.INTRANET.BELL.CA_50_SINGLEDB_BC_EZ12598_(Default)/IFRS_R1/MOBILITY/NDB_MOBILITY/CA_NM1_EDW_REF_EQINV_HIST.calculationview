@@ -1,0 +1,486 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:AccessControl="http://www.sap.com/ndb/SQLCoreModelAccessControl.ecore" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" xmlns:Variable="http://www.sap.com/ndb/BiModelVariable.ecore" schemaVersion="2.3" id="CA_NM1_EDW_REF_EQINV_HIST" applyPrivilegeType="ANALYTIC_PRIVILEGE" checkAnalyticPrivileges="true" defaultClient="$$client$$" defaultLanguage="$$language$$" hierarchiesSQLEnabled="false" translationRelevant="true" visibility="internal" calculationScenarioType="TREE_BASED" dataCategory="DIMENSION" enforceSqlExecution="false" executionSemantic="UNDEFINED" outputViewType="Projection">
+  <descriptions defaultDescription="CA_NM1_EDW_REF_EQINV_HIST"/>
+  <localVariables>
+    <variable id="IP_EFF_DT" parameter="true">
+      <descriptions defaultDescription="IP_EFF_DT"/>
+      <variableProperties datatype="DATE" defaultValue="99991231" mandatory="false">
+        <valueDomain type="Date"/>
+        <selection multiLine="false" type="SingleValue"/>
+      </variableProperties>
+    </variable>
+  </localVariables>
+  <variableMappings>
+    <mapping xsi:type="Variable:VariableMapping" dataSource="#CA_NM1_EDW_REF_EQINV_HIST">
+      <targetVariable name="IP_EFF_DT" resourceUri="/IFRS_R1.MOBILITY.LAND_MOBILITY/calculationviews/CA_NM1_EDW_REF_EQINV_HIST"/>
+      <localVariable>#IP_EFF_DT</localVariable>
+    </mapping>
+  </variableMappings>
+  <informationModelLayout relativeWidthScenario="43"/>
+  <dataSources>
+    <DataSource id="IFRS_R1.MOBILITY.NDB_MOBILITY::MOBL_POST_EQINV_HIST_EH" type="DATA_BASE_TABLE">
+      <viewAttributes allViewAttributes="true"/>
+      <columnObject schemaName="NDB_MOBILITY" columnObjectName="IFRS_R1.MOBILITY.NDB_MOBILITY::MOBL_POST_EQINV_HIST_EH"/>
+    </DataSource>
+    <DataSource id="CA_NM1_EDW_REF_EQINV_HIST" type="CALCULATION_VIEW">
+      <viewAttributes allViewAttributes="true"/>
+      <resourceUri>/IFRS_R1.MOBILITY.LAND_MOBILITY/calculationviews/CA_NM1_EDW_REF_EQINV_HIST</resourceUri>
+    </DataSource>
+    <DataSource id="IFRS_R1.MOBILITY.NDB_MOBILITY::MOBL_POST_EQINV_HIST" type="DATA_BASE_TABLE">
+      <viewAttributes allViewAttributes="true"/>
+      <columnObject schemaName="NDB_MOBILITY" columnObjectName="IFRS_R1.MOBILITY.NDB_MOBILITY::MOBL_POST_EQINV_HIST"/>
+    </DataSource>
+  </dataSources>
+  <calculationViews>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_EH">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="ESN_EH"/>
+        <viewAttribute id="DELETED">
+          <filter xsi:type="AccessControl:SingleValueFilter" operator="NL" including="true"/>
+        </viewAttribute>
+        <viewAttribute id="REFERENCE_EFFECTIVE_DT_EH"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#IFRS_R1.MOBILITY.NDB_MOBILITY::MOBL_POST_EQINV_HIST_EH">
+        <mapping xsi:type="Calculation:AttributeMapping" target="ESN_EH" source="ESN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DELETED" source="DELETED"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_EFFECTIVE_DT_EH" source="REFERENCE_EFFECTIVE_DT"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_PVT_VIEW">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="ESN"/>
+        <viewAttribute id="EFF_DT"/>
+        <viewAttribute id="EXPY_DT"/>
+        <viewAttribute id="ORIGINAL_DEALER"/>
+        <viewAttribute id="ACTV_DEALER_CODE"/>
+        <viewAttribute id="INVENTORY_STATUS"/>
+        <viewAttribute id="INV_STAT_DATE"/>
+        <viewAttribute id="DEAC_REASON_CD"/>
+        <viewAttribute id="IMSI"/>
+        <viewAttribute id="NETWORK_SUB_TYPE"/>
+        <viewAttribute id="SIM_BRAND_CD"/>
+        <viewAttribute id="CYCL_ID"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#CA_NM1_EDW_REF_EQINV_HIST">
+        <mapping xsi:type="Calculation:AttributeMapping" target="ESN" source="ESN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFF_DT" source="EFF_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXPY_DT" source="EXPY_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ORIGINAL_DEALER" source="ORIGINAL_DEALER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACTV_DEALER_CODE" source="ACTV_DEALER_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INVENTORY_STATUS" source="INVENTORY_STATUS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INV_STAT_DATE" source="INV_STAT_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DEAC_REASON_CD" source="DEAC_REASON_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IMSI" source="IMSI"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NETWORK_SUB_TYPE" source="NETWORK_SUB_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SIM_BRAND_CD" source="SIM_BRAND_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="JOIN_INCOMING_RECORDS_WITH_EH" joinOrder="OUTSIDE_IN" joinType="leftOuter">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="ESN"/>
+        <viewAttribute id="ESN_EH"/>
+        <viewAttribute id="CYCL_ID"/>
+        <viewAttribute id="REFERENCE_EFFECTIVE_DT_EH"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="DATE" id="CC_EFF_DT" expressionLanguage="COLUMN_ENGINE">
+          <formula>date(&quot;REFERENCE_EFFECTIVE_DT_EH&quot;)</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#PROJ_EH">
+        <mapping xsi:type="Calculation:AttributeMapping" target="ESN_EH" source="ESN_EH"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_EFFECTIVE_DT_EH" source="REFERENCE_EFFECTIVE_DT_EH"/>
+      </input>
+      <input node="#PROJ_PVT_VIEW">
+        <mapping xsi:type="Calculation:AttributeMapping" target="ESN" source="ESN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ESN_EH" source="ESN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_EFFECTIVE_DT_EH" source="EFF_DT"/>
+      </input>
+      <joinAttribute name="ESN_EH"/>
+      <joinAttribute name="REFERENCE_EFFECTIVE_DT_EH"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_FILTER_INCOMMING_RECORDS" filterExpressionLanguage="COLUMN_ENGINE">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="ESN_LAND"/>
+        <viewAttribute id="ESN_RIGHT"/>
+        <viewAttribute id="EFF_DT_EH"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#JOIN_INCOMING_RECORDS_WITH_EH">
+        <mapping xsi:type="Calculation:AttributeMapping" target="ESN_LAND" source="ESN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ESN_RIGHT" source="ESN_EH"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFF_DT_EH" source="CC_EFF_DT"/>
+      </input>
+      <filter>isNull(&quot;ESN_LAND&quot;)</filter>
+    </calculationView>
+    <calculationView xsi:type="Calculation:AggregationView" id="AGGR_DISTINCT">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="EFF_DT_EH"/>
+        <viewAttribute id="ESN_RIGHT"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#PROJ_FILTER_INCOMMING_RECORDS">
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFF_DT_EH" source="EFF_DT_EH"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ESN_RIGHT" source="ESN_RIGHT"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="JOIN_CA_ERROR" joinOrder="OUTSIDE_IN" joinType="leftOuter">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="ESN"/>
+        <viewAttribute id="EFF_DT"/>
+        <viewAttribute id="EXPY_DT"/>
+        <viewAttribute id="ORIGINAL_DEALER"/>
+        <viewAttribute id="ACTV_DEALER_CODE"/>
+        <viewAttribute id="INVENTORY_STATUS"/>
+        <viewAttribute id="INV_STAT_DATE"/>
+        <viewAttribute id="DEAC_REASON_CD"/>
+        <viewAttribute id="IMSI"/>
+        <viewAttribute id="NETWORK_SUB_TYPE"/>
+        <viewAttribute id="SIM_BRAND_CD"/>
+        <viewAttribute id="ESN_RIGHT"/>
+        <viewAttribute id="EFF_DT_EH"/>
+        <viewAttribute id="CYCL_ID"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="IS_20402701" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isNull(&quot;ESN_RIGHT&quot;),0,1)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="DATE" id="CC_REFERENCE_EXPIRY_DT" expressionLanguage="COLUMN_ENGINE">
+          <formula>date('99991231')</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#PROJ_PVT_VIEW">
+        <mapping xsi:type="Calculation:AttributeMapping" target="ESN" source="ESN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFF_DT" source="EFF_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXPY_DT" source="EXPY_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ORIGINAL_DEALER" source="ORIGINAL_DEALER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACTV_DEALER_CODE" source="ACTV_DEALER_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INVENTORY_STATUS" source="INVENTORY_STATUS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INV_STAT_DATE" source="INV_STAT_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DEAC_REASON_CD" source="DEAC_REASON_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IMSI" source="IMSI"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NETWORK_SUB_TYPE" source="NETWORK_SUB_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SIM_BRAND_CD" source="SIM_BRAND_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+      </input>
+      <input node="#AGGR_DISTINCT">
+        <mapping xsi:type="Calculation:AttributeMapping" target="ESN_RIGHT" source="ESN_RIGHT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFF_DT_EH" source="EFF_DT_EH"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFF_DT" source="EFF_DT_EH"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ESN" source="ESN_RIGHT"/>
+      </input>
+      <joinAttribute name="EFF_DT"/>
+      <joinAttribute name="ESN"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_MOBL_POST_EQINVE_NDB">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="ESN"/>
+        <viewAttribute id="REFERENCE_EXPIRY_DT">
+          <filter xsi:type="AccessControl:SingleValueFilter" including="true" value="99991231"/>
+        </viewAttribute>
+        <viewAttribute id="REFERENCE_EFFECTIVE_DT"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#IFRS_R1.MOBILITY.NDB_MOBILITY::MOBL_POST_EQINV_HIST">
+        <mapping xsi:type="Calculation:AttributeMapping" target="ESN" source="ESN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_EXPIRY_DT" source="REFERENCE_EXPIRY_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_EFFECTIVE_DT" source="REFERENCE_EFFECTIVE_DT"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="JOIN_MOBL_POST_EQINV_UPDATE_INSERT" joinOrder="OUTSIDE_IN" joinType="leftOuter">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="EFF_DT"/>
+        <viewAttribute id="EXPY_DT"/>
+        <viewAttribute id="ORIGINAL_DEALER"/>
+        <viewAttribute id="ACTV_DEALER_CODE"/>
+        <viewAttribute id="INVENTORY_STATUS"/>
+        <viewAttribute id="INV_STAT_DATE"/>
+        <viewAttribute id="DEAC_REASON_CD"/>
+        <viewAttribute id="IMSI"/>
+        <viewAttribute id="NETWORK_SUB_TYPE"/>
+        <viewAttribute id="SIM_BRAND_CD"/>
+        <viewAttribute id="IS_20402701"/>
+        <viewAttribute id="ESN"/>
+        <viewAttribute id="CYCL_ID"/>
+        <viewAttribute id="ESN_1"/>
+        <viewAttribute id="CC_REFERENCE_EXPIRY_DT"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#JOIN_CA_ERROR">
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFF_DT" source="EFF_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXPY_DT" source="EXPY_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ORIGINAL_DEALER" source="ORIGINAL_DEALER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACTV_DEALER_CODE" source="ACTV_DEALER_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INVENTORY_STATUS" source="INVENTORY_STATUS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INV_STAT_DATE" source="INV_STAT_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DEAC_REASON_CD" source="DEAC_REASON_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IMSI" source="IMSI"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NETWORK_SUB_TYPE" source="NETWORK_SUB_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SIM_BRAND_CD" source="SIM_BRAND_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20402701" source="IS_20402701"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ESN" source="ESN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_REFERENCE_EXPIRY_DT" source="CC_REFERENCE_EXPIRY_DT"/>
+      </input>
+      <input node="#PROJ_MOBL_POST_EQINVE_NDB">
+        <mapping xsi:type="Calculation:AttributeMapping" target="ESN_1" source="ESN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ESN" source="ESN"/>
+      </input>
+      <joinAttribute name="ESN"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:RankView" id="RANK_SEQ">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="EFF_DT"/>
+        <viewAttribute id="EXPY_DT"/>
+        <viewAttribute id="ORIGINAL_DEALER"/>
+        <viewAttribute id="ACTV_DEALER_CODE"/>
+        <viewAttribute id="INVENTORY_STATUS"/>
+        <viewAttribute id="INV_STAT_DATE"/>
+        <viewAttribute id="DEAC_REASON_CD"/>
+        <viewAttribute id="IMSI"/>
+        <viewAttribute id="NETWORK_SUB_TYPE"/>
+        <viewAttribute id="SIM_BRAND_CD"/>
+        <viewAttribute id="IS_20402701"/>
+        <viewAttribute id="ESN"/>
+        <viewAttribute id="CYCL_ID"/>
+        <viewAttribute id="ESN_RIGHT"/>
+        <viewAttribute id="CC_REFERENCE_EXPIRY_DT"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#JOIN_MOBL_POST_EQINV_UPDATE_INSERT">
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFF_DT" source="EFF_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXPY_DT" source="EXPY_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ORIGINAL_DEALER" source="ORIGINAL_DEALER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACTV_DEALER_CODE" source="ACTV_DEALER_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INVENTORY_STATUS" source="INVENTORY_STATUS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INV_STAT_DATE" source="INV_STAT_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DEAC_REASON_CD" source="DEAC_REASON_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IMSI" source="IMSI"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NETWORK_SUB_TYPE" source="NETWORK_SUB_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SIM_BRAND_CD" source="SIM_BRAND_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20402701" source="IS_20402701"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ESN" source="ESN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ESN_RIGHT" source="ESN_1"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_REFERENCE_EXPIRY_DT" source="CC_REFERENCE_EXPIRY_DT"/>
+      </input>
+      <windowFunction dynamicPartitionAttributes="false">
+        <partitionViewAttributeName>ESN</partitionViewAttributeName>
+        <order byViewAttributeName="EFF_DT" direction="ASC"/>
+        <rankThreshold>
+          <value>100</value>
+        </rankThreshold>
+        <rankViewAttributeName>RANK_SEQ</rankViewAttributeName>
+      </windowFunction>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_INSERT_UPDATE">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="EFF_DT"/>
+        <viewAttribute id="EXPY_DT"/>
+        <viewAttribute id="ORIGINAL_DEALER"/>
+        <viewAttribute id="ACTV_DEALER_CODE"/>
+        <viewAttribute id="INVENTORY_STATUS"/>
+        <viewAttribute id="INV_STAT_DATE"/>
+        <viewAttribute id="DEAC_REASON_CD"/>
+        <viewAttribute id="IMSI"/>
+        <viewAttribute id="NETWORK_SUB_TYPE"/>
+        <viewAttribute id="SIM_BRAND_CD"/>
+        <viewAttribute id="IS_20402701"/>
+        <viewAttribute id="ESN"/>
+        <viewAttribute id="RANK_SEQ"/>
+        <viewAttribute id="CYCL_ID"/>
+        <viewAttribute id="ESN_RIGHT"/>
+        <viewAttribute id="CC_REFERENCE_EXPIRY_DT"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CC_EXISTING_RECORD" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isNULL(&quot;ESN_RIGHT&quot;) and (&quot;RANK_SEQ&quot; = 1), 'I', 'U')</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="DATE" id="CC_EFFECTIVE_DATE_PREV_DAY" expressionLanguage="COLUMN_ENGINE">
+          <formula>adddays(&quot;EFF_DT&quot;,-1)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="DATE" id="CC_REFERENCE_EFFECTIVE_DT" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(&quot;CC_EXISTING_RECORD&quot;='I',date('19000101'),&quot;EFF_DT&quot;)</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#RANK_SEQ">
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFF_DT" source="EFF_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXPY_DT" source="EXPY_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ORIGINAL_DEALER" source="ORIGINAL_DEALER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACTV_DEALER_CODE" source="ACTV_DEALER_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INVENTORY_STATUS" source="INVENTORY_STATUS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INV_STAT_DATE" source="INV_STAT_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DEAC_REASON_CD" source="DEAC_REASON_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IMSI" source="IMSI"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NETWORK_SUB_TYPE" source="NETWORK_SUB_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SIM_BRAND_CD" source="SIM_BRAND_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20402701" source="IS_20402701"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ESN" source="ESN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RANK_SEQ" source="RANK_SEQ"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ESN_RIGHT" source="ESN_RIGHT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_REFERENCE_EXPIRY_DT" source="CC_REFERENCE_EXPIRY_DT"/>
+      </input>
+    </calculationView>
+  </calculationViews>
+  <logicalModel id="PROJ_INSERT_UPDATE">
+    <descriptions/>
+    <attributes>
+      <attribute id="EFF_DT" order="1" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="EFF_DT"/>
+        <keyMapping columnObjectName="PROJ_INSERT_UPDATE" columnName="EFF_DT"/>
+      </attribute>
+      <attribute id="EXPY_DT" order="2" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="EXPY_DT"/>
+        <keyMapping columnObjectName="PROJ_INSERT_UPDATE" columnName="EXPY_DT"/>
+      </attribute>
+      <attribute id="ORIGINAL_DEALER" order="3" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ORIGINAL_DEALER"/>
+        <keyMapping columnObjectName="PROJ_INSERT_UPDATE" columnName="ORIGINAL_DEALER"/>
+      </attribute>
+      <attribute id="ACTV_DEALER_CODE" order="4" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ACTV_DEALER_CODE"/>
+        <keyMapping columnObjectName="PROJ_INSERT_UPDATE" columnName="ACTV_DEALER_CODE"/>
+      </attribute>
+      <attribute id="INVENTORY_STATUS" order="5" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="INVENTORY_STATUS"/>
+        <keyMapping columnObjectName="PROJ_INSERT_UPDATE" columnName="INVENTORY_STATUS"/>
+      </attribute>
+      <attribute id="INV_STAT_DATE" order="6" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="INV_STAT_DATE"/>
+        <keyMapping columnObjectName="PROJ_INSERT_UPDATE" columnName="INV_STAT_DATE"/>
+      </attribute>
+      <attribute id="DEAC_REASON_CD" order="7" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="DEAC_REASON_CD"/>
+        <keyMapping columnObjectName="PROJ_INSERT_UPDATE" columnName="DEAC_REASON_CD"/>
+      </attribute>
+      <attribute id="IMSI" order="8" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="IMSI"/>
+        <keyMapping columnObjectName="PROJ_INSERT_UPDATE" columnName="IMSI"/>
+      </attribute>
+      <attribute id="NETWORK_SUB_TYPE" order="9" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="NETWORK_SUB_TYPE"/>
+        <keyMapping columnObjectName="PROJ_INSERT_UPDATE" columnName="NETWORK_SUB_TYPE"/>
+      </attribute>
+      <attribute id="SIM_BRAND_CD" order="10" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SIM_BRAND_CD"/>
+        <keyMapping columnObjectName="PROJ_INSERT_UPDATE" columnName="SIM_BRAND_CD"/>
+      </attribute>
+      <attribute id="IS_20402701" order="11" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="IS_20402701"/>
+        <keyMapping columnObjectName="PROJ_INSERT_UPDATE" columnName="IS_20402701"/>
+      </attribute>
+      <attribute id="ESN" order="12" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ESN"/>
+        <keyMapping columnObjectName="PROJ_INSERT_UPDATE" columnName="ESN"/>
+      </attribute>
+      <attribute id="FLAG_EXISTING_RECORD" order="13" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="FLAG_EXISTING_RECORD"/>
+        <keyMapping columnObjectName="PROJ_INSERT_UPDATE" columnName="CC_EXISTING_RECORD"/>
+      </attribute>
+      <attribute id="CC_EFFECTIVE_DATE_PREV_DAY" order="14" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CC_EFFECTIVE_DATE_PREV_DAY"/>
+        <keyMapping columnObjectName="PROJ_INSERT_UPDATE" columnName="CC_EFFECTIVE_DATE_PREV_DAY"/>
+      </attribute>
+      <attribute id="CYCL_ID" order="17" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CYCL_ID"/>
+        <keyMapping columnObjectName="PROJ_INSERT_UPDATE" columnName="CYCL_ID"/>
+      </attribute>
+      <attribute id="REFERENCE_EFFECTIVE_DT" hidden="false" order="18" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="REFERENCE_EFFECTIVE_DT"/>
+        <keyMapping columnObjectName="PROJ_INSERT_UPDATE" columnName="CC_REFERENCE_EFFECTIVE_DT"/>
+      </attribute>
+      <attribute id="REFERENCE_EXPIRY_DT" hidden="false" order="19" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions/>
+        <keyMapping columnObjectName="PROJ_INSERT_UPDATE" columnName="CC_REFERENCE_EXPIRY_DT"/>
+      </attribute>
+    </attributes>
+    <calculatedAttributes>
+      <calculatedAttribute id="ERROR_CODE" hidden="false" order="15" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ERROR_CODE"/>
+        <keyCalculation datatype="NVARCHAR" expressionLanguage="COLUMN_ENGINE" length="400">
+          <formula>if(&quot;IS_20402701&quot;='1', '20402701||','')</formula>
+        </keyCalculation>
+      </calculatedAttribute>
+      <calculatedAttribute id="ERROR_STATUS" hidden="false" order="16" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ERROR_STATUS"/>
+        <keyCalculation datatype="NVARCHAR" expressionLanguage="COLUMN_ENGINE" length="1">
+          <formula>if((&quot;IS_20402701&quot;='1'),'1','0')</formula>
+        </keyCalculation>
+      </calculatedAttribute>
+    </calculatedAttributes>
+    <privateDataFoundation>
+      <tableProxies/>
+      <joins/>
+      <layout>
+        <shapes/>
+      </layout>
+    </privateDataFoundation>
+    <baseMeasures/>
+    <calculatedMeasures/>
+    <restrictedMeasures/>
+    <localDimensions/>
+  </logicalModel>
+  <layout>
+    <shapes>
+      <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+        <upperLeftCorner x="253" y="87"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_EH" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="22" y="765"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_PVT_VIEW" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="176" y="765"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="JOIN_INCOMING_RECORDS_WITH_EH" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="89" y="669"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_FILTER_INCOMMING_RECORDS" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="89" y="591"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="AGGR_DISTINCT" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="89" y="513"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="JOIN_CA_ERROR" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="176" y="417"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_MOBL_POST_EQINVE_NDB" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="330" y="417"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="JOIN_MOBL_POST_EQINV_UPDATE_INSERT" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="253" y="321"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="RANK_SEQ" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="253" y="243"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_INSERT_UPDATE" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="253" y="165"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+    </shapes>
+  </layout>
+</Calculation:scenario>

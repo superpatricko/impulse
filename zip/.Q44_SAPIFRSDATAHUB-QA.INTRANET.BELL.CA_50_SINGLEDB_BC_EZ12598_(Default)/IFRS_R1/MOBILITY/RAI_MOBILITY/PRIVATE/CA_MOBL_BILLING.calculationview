@@ -1,0 +1,1413 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:AccessControl="http://www.sap.com/ndb/SQLCoreModelAccessControl.ecore" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" schemaVersion="2.3" id="CA_MOBL_BILLING" applyPrivilegeType="NONE" checkAnalyticPrivileges="false" defaultClient="$$client$$" defaultLanguage="$$language$$" hierarchiesSQLEnabled="false" translationRelevant="true" visibility="internal" calculationScenarioType="TREE_BASED" dataCategory="DIMENSION" enforceSqlExecution="false" executionSemantic="UNDEFINED" outputViewType="Projection">
+  <descriptions defaultDescription="CA_MOBL_BILLING"/>
+  <localVariables>
+    <variable id="IP_BILL_DATE" parameter="true">
+      <descriptions defaultDescription="IP_BILL_DATE"/>
+      <variableProperties datatype="DATE" defaultExpressionLanguage="COLUMN_ENGINE" mandatory="false">
+        <valueDomain type="empty"/>
+        <selection multiLine="false" type="SingleValue"/>
+        <defaultExpression>date( now() )</defaultExpression>
+      </variableProperties>
+    </variable>
+  </localVariables>
+  <variableMappings/>
+  <informationModelLayout relativeWidthScenario="58"/>
+  <dataSources>
+    <DataSource id="IFRS_R1.MOBILITY.NDB_MOBILITY::MOBL_POST_BILL_EH" type="DATA_BASE_TABLE">
+      <viewAttributes allViewAttributes="true"/>
+      <columnObject schemaName="NDB_MOBILITY" columnObjectName="IFRS_R1.MOBILITY.NDB_MOBILITY::MOBL_POST_BILL_EH"/>
+    </DataSource>
+    <DataSource id="IFRS_R1.MOBILITY.NDB_MOBILITY::MOBL_POST_BILL" type="DATA_BASE_TABLE">
+      <viewAttributes allViewAttributes="true"/>
+      <columnObject schemaName="NDB_MOBILITY" columnObjectName="IFRS_R1.MOBILITY.NDB_MOBILITY::MOBL_POST_BILL"/>
+    </DataSource>
+    <DataSource id="IFRS_R1.MOBILITY.NDB_MOBILITY::MOBL_POST_ORDER_EH" type="DATA_BASE_TABLE">
+      <viewAttributes allViewAttributes="true"/>
+      <columnObject schemaName="NDB_MOBILITY" columnObjectName="IFRS_R1.MOBILITY.NDB_MOBILITY::MOBL_POST_ORDER_EH"/>
+    </DataSource>
+    <DataSource id="IFRS_R1.MOBILITY.RAI_MOBILITY::MOBL_ORDR_EH" type="DATA_BASE_TABLE">
+      <viewAttributes allViewAttributes="true"/>
+      <columnObject schemaName="RAI_MOBILITY" columnObjectName="IFRS_R1.MOBILITY.RAI_MOBILITY::MOBL_ORDR_EH"/>
+    </DataSource>
+  </dataSources>
+  <calculationViews>
+    <calculationView xsi:type="Calculation:AggregationView" id="AGGR_BILLING_PARENT">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="BAN"/>
+        <viewAttribute id="SUBSCR_NO"/>
+        <viewAttribute id="DELETED">
+          <filter xsi:type="AccessControl:SingleValueFilter" operator="NL" including="true"/>
+        </viewAttribute>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#IFRS_R1.MOBILITY.NDB_MOBILITY::MOBL_POST_BILL_EH">
+        <mapping xsi:type="Calculation:AttributeMapping" target="BAN" source="BAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBSCR_NO" source="SUBSCR_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DELETED" source="DELETED"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_MOBL_BILLING" filterExpressionLanguage="COLUMN_ENGINE">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="ITEM_ID"/>
+        <viewAttribute id="BAN"/>
+        <viewAttribute id="BILL_SEQ_NO"/>
+        <viewAttribute id="ENT_SEQ_NO"/>
+        <viewAttribute id="GL_ACCT_NO"/>
+        <viewAttribute id="ITEM_SUB_ID"/>
+        <viewAttribute id="JOURN_DT"/>
+        <viewAttribute id="SUBSCR_NO"/>
+        <viewAttribute id="DSCT_CD"/>
+        <viewAttribute id="ADJ_RSN_CD"/>
+        <viewAttribute id="CHRG_SEQ_NO"/>
+        <viewAttribute id="EFF_DT"/>
+        <viewAttribute id="GL_COST_CENTRE"/>
+        <viewAttribute id="GL_JURISD_CD"/>
+        <viewAttribute id="GL_TAX_CD"/>
+        <viewAttribute id="PRD_CVRG_END_DT"/>
+        <viewAttribute id="PRD_CVRG_STRT_DT"/>
+        <viewAttribute id="PROMO_CD"/>
+        <viewAttribute id="PROV"/>
+        <viewAttribute id="UOM"/>
+        <viewAttribute id="ACCR_IND"/>
+        <viewAttribute id="ACTV_CD"/>
+        <viewAttribute id="ACTV_RSN_CD"/>
+        <viewAttribute id="AMT"/>
+        <viewAttribute id="BAL_IMP_CD"/>
+        <viewAttribute id="BILLER"/>
+        <viewAttribute id="OVER_USE_IND"/>
+        <viewAttribute id="TRANS_TY"/>
+        <viewAttribute id="ADJ_RSN_CLASS_CD"/>
+        <viewAttribute id="FTR_REV_CD"/>
+        <viewAttribute id="KUNNR_SID"/>
+        <viewAttribute id="GL_PRICE_PLAN_GRP"/>
+        <viewAttribute id="AR_ACTV"/>
+        <viewAttribute id="CR_DR_IND"/>
+        <viewAttribute id="CURR_CODE"/>
+        <viewAttribute id="VIRTUAL_INV_FLAG"/>
+        <viewAttribute id="REALLOCATION_IND"/>
+        <viewAttribute id="CUSTOMER_GROUP"/>
+        <viewAttribute id="MATERIAL_GROUP"/>
+        <viewAttribute id="REV_ACTG_DOC_NUM"/>
+        <viewAttribute id="BANNER"/>
+        <viewAttribute id="DEALER"/>
+        <viewAttribute id="REV_ACT_DOC_TY"/>
+        <viewAttribute id="ART_NUM"/>
+        <viewAttribute id="BRND"/>
+        <viewAttribute id="REFERENCE_ID"/>
+        <viewAttribute id="HEADER_ID"/>
+        <viewAttribute id="SOURCE_DOC_ID"/>
+        <viewAttribute id="ORIG_DOC_ID"/>
+        <viewAttribute id="TIME_IND"/>
+        <viewAttribute id="RAI_ITEM_ID"/>
+        <viewAttribute id="RUN_ID"/>
+        <viewAttribute id="PMP_TS"/>
+        <viewAttribute id="CYCL_ID"/>
+        <viewAttribute id="EXECUTION_ID"/>
+        <viewAttribute id="CONVERSION_IND"/>
+        <viewAttribute id="INSERT_TS"/>
+        <viewAttribute id="MODIFIED_TS"/>
+        <viewAttribute id="BATCH_ID"/>
+        <viewAttribute id="RAI_TS"/>
+        <viewAttribute id="CYCLE_NUM"/>
+        <viewAttribute id="BILL_PRIMARY_KEY"/>
+        <viewAttribute id="CHRG_TY_CLASSIF"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="DATE" id="CC_IP_DATE" expressionLanguage="COLUMN_ENGINE">
+          <formula>'$$IP_BILL_DATE$$'</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#IFRS_R1.MOBILITY.NDB_MOBILITY::MOBL_POST_BILL">
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_ID" source="ITEM_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BAN" source="BAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_SEQ_NO" source="BILL_SEQ_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ENT_SEQ_NO" source="ENT_SEQ_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GL_ACCT_NO" source="GL_ACCT_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_SUB_ID" source="ITEM_SUB_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="JOURN_DT" source="JOURN_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBSCR_NO" source="SUBSCR_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DSCT_CD" source="DSCT_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ADJ_RSN_CD" source="ADJ_RSN_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CHRG_SEQ_NO" source="CHRG_SEQ_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFF_DT" source="EFF_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GL_COST_CENTRE" source="GL_COST_CENTRE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GL_JURISD_CD" source="GL_JURISD_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GL_TAX_CD" source="GL_TAX_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRD_CVRG_END_DT" source="PRD_CVRG_END_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRD_CVRG_STRT_DT" source="PRD_CVRG_STRT_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROMO_CD" source="PROMO_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROV" source="PROV"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="UOM" source="UOM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACCR_IND" source="ACCR_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACTV_CD" source="ACTV_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACTV_RSN_CD" source="ACTV_RSN_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AMT" source="AMT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BAL_IMP_CD" source="BAL_IMP_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILLER" source="BILLER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OVER_USE_IND" source="OVER_USE_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRANS_TY" source="TRANS_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ADJ_RSN_CLASS_CD" source="ADJ_RSN_CLASS_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FTR_REV_CD" source="FTR_REV_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KUNNR_SID" source="KUNNR_SID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GL_PRICE_PLAN_GRP" source="GL_PRICE_PLAN_GRP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AR_ACTV" source="AR_ACTV"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CR_DR_IND" source="CR_DR_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CURR_CODE" source="CURR_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VIRTUAL_INV_FLAG" source="VIRTUAL_INV_FLAG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REALLOCATION_IND" source="REALLOCATION_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_GROUP" source="CUSTOMER_GROUP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MATERIAL_GROUP" source="MATERIAL_GROUP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REV_ACTG_DOC_NUM" source="REV_ACTG_DOC_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BANNER" source="BANNER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DEALER" source="DEALER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REV_ACT_DOC_TY" source="REV_ACT_DOC_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ART_NUM" source="ART_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BRND" source="BRND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_ID" source="REFERENCE_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="HEADER_ID" source="HEADER_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SOURCE_DOC_ID" source="SOURCE_DOC_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ORIG_DOC_ID" source="ORIG_DOC_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TIME_IND" source="TIME_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RAI_ITEM_ID" source="RAI_ITEM_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RUN_ID" source="RUN_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PMP_TS" source="PMP_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXECUTION_ID" source="EXECUTION_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONVERSION_IND" source="CONVERSION_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INSERT_TS" source="INSERT_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MODIFIED_TS" source="MODIFIED_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BATCH_ID" source="BATCH_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RAI_TS" source="RAI_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCLE_NUM" source="CYCLE_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_PRIMARY_KEY" source="BILL_PRIMARY_KEY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CHRG_TY_CLASSIF" source="CHRG_TY_CLASSIF"/>
+      </input>
+      <filter>(isNull(&quot;RAI_TS&quot;)) AND (&quot;JOURN_DT&quot; &lt;='$$IP_BILL_DATE$$')</filter>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="JOIN_BILLING_PARENT" cardinality="CN_1" joinType="leftOuter" joinOrder="OUTSIDE_IN">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="BAN_RIGHT"/>
+        <viewAttribute id="SUBSCR_NO_RIGHT"/>
+        <viewAttribute id="ITEM_ID"/>
+        <viewAttribute id="BAN"/>
+        <viewAttribute id="BILL_SEQ_NO"/>
+        <viewAttribute id="ENT_SEQ_NO"/>
+        <viewAttribute id="GL_ACCT_NO"/>
+        <viewAttribute id="ITEM_SUB_ID"/>
+        <viewAttribute id="JOURN_DT"/>
+        <viewAttribute id="SUBSCR_NO"/>
+        <viewAttribute id="DSCT_CD"/>
+        <viewAttribute id="ADJ_RSN_CD"/>
+        <viewAttribute id="CHRG_SEQ_NO"/>
+        <viewAttribute id="EFF_DT"/>
+        <viewAttribute id="GL_COST_CENTRE"/>
+        <viewAttribute id="GL_JURISD_CD"/>
+        <viewAttribute id="GL_TAX_CD"/>
+        <viewAttribute id="PRD_CVRG_END_DT"/>
+        <viewAttribute id="PRD_CVRG_STRT_DT"/>
+        <viewAttribute id="PROMO_CD"/>
+        <viewAttribute id="PROV"/>
+        <viewAttribute id="UOM"/>
+        <viewAttribute id="ACCR_IND"/>
+        <viewAttribute id="ACTV_CD"/>
+        <viewAttribute id="ACTV_RSN_CD"/>
+        <viewAttribute id="AMT"/>
+        <viewAttribute id="BAL_IMP_CD"/>
+        <viewAttribute id="BILLER"/>
+        <viewAttribute id="OVER_USE_IND"/>
+        <viewAttribute id="TRANS_TY"/>
+        <viewAttribute id="ADJ_RSN_CLASS_CD"/>
+        <viewAttribute id="FTR_REV_CD"/>
+        <viewAttribute id="KUNNR_SID"/>
+        <viewAttribute id="GL_PRICE_PLAN_GRP"/>
+        <viewAttribute id="AR_ACTV"/>
+        <viewAttribute id="CR_DR_IND"/>
+        <viewAttribute id="CURR_CODE"/>
+        <viewAttribute id="VIRTUAL_INV_FLAG"/>
+        <viewAttribute id="REALLOCATION_IND"/>
+        <viewAttribute id="CUSTOMER_GROUP"/>
+        <viewAttribute id="MATERIAL_GROUP"/>
+        <viewAttribute id="REV_ACTG_DOC_NUM"/>
+        <viewAttribute id="BANNER"/>
+        <viewAttribute id="DEALER"/>
+        <viewAttribute id="REV_ACT_DOC_TY"/>
+        <viewAttribute id="ART_NUM"/>
+        <viewAttribute id="BRND"/>
+        <viewAttribute id="REFERENCE_ID"/>
+        <viewAttribute id="HEADER_ID"/>
+        <viewAttribute id="SOURCE_DOC_ID"/>
+        <viewAttribute id="ORIG_DOC_ID"/>
+        <viewAttribute id="TIME_IND"/>
+        <viewAttribute id="RAI_ITEM_ID"/>
+        <viewAttribute id="RUN_ID"/>
+        <viewAttribute id="PMP_TS"/>
+        <viewAttribute id="CYCL_ID"/>
+        <viewAttribute id="EXECUTION_ID"/>
+        <viewAttribute id="CONVERSION_IND"/>
+        <viewAttribute id="INSERT_TS"/>
+        <viewAttribute id="MODIFIED_TS"/>
+        <viewAttribute id="BATCH_ID"/>
+        <viewAttribute id="RAI_TS"/>
+        <viewAttribute id="CYCLE_NUM"/>
+        <viewAttribute id="BILL_PRIMARY_KEY"/>
+        <viewAttribute id="CHRG_TY_CLASSIF"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#PROJ_MOBL_BILLING">
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_ID" source="ITEM_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BAN" source="BAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_SEQ_NO" source="BILL_SEQ_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ENT_SEQ_NO" source="ENT_SEQ_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GL_ACCT_NO" source="GL_ACCT_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_SUB_ID" source="ITEM_SUB_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="JOURN_DT" source="JOURN_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBSCR_NO" source="SUBSCR_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DSCT_CD" source="DSCT_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ADJ_RSN_CD" source="ADJ_RSN_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CHRG_SEQ_NO" source="CHRG_SEQ_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFF_DT" source="EFF_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GL_COST_CENTRE" source="GL_COST_CENTRE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GL_JURISD_CD" source="GL_JURISD_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GL_TAX_CD" source="GL_TAX_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRD_CVRG_END_DT" source="PRD_CVRG_END_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRD_CVRG_STRT_DT" source="PRD_CVRG_STRT_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROMO_CD" source="PROMO_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROV" source="PROV"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="UOM" source="UOM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACCR_IND" source="ACCR_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACTV_CD" source="ACTV_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACTV_RSN_CD" source="ACTV_RSN_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AMT" source="AMT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BAL_IMP_CD" source="BAL_IMP_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILLER" source="BILLER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OVER_USE_IND" source="OVER_USE_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRANS_TY" source="TRANS_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ADJ_RSN_CLASS_CD" source="ADJ_RSN_CLASS_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FTR_REV_CD" source="FTR_REV_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KUNNR_SID" source="KUNNR_SID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GL_PRICE_PLAN_GRP" source="GL_PRICE_PLAN_GRP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AR_ACTV" source="AR_ACTV"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CR_DR_IND" source="CR_DR_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CURR_CODE" source="CURR_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VIRTUAL_INV_FLAG" source="VIRTUAL_INV_FLAG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REALLOCATION_IND" source="REALLOCATION_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_GROUP" source="CUSTOMER_GROUP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MATERIAL_GROUP" source="MATERIAL_GROUP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REV_ACTG_DOC_NUM" source="REV_ACTG_DOC_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BANNER" source="BANNER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DEALER" source="DEALER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REV_ACT_DOC_TY" source="REV_ACT_DOC_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ART_NUM" source="ART_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BRND" source="BRND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_ID" source="REFERENCE_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="HEADER_ID" source="HEADER_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SOURCE_DOC_ID" source="SOURCE_DOC_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ORIG_DOC_ID" source="ORIG_DOC_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TIME_IND" source="TIME_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RAI_ITEM_ID" source="RAI_ITEM_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RUN_ID" source="RUN_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PMP_TS" source="PMP_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXECUTION_ID" source="EXECUTION_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONVERSION_IND" source="CONVERSION_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INSERT_TS" source="INSERT_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MODIFIED_TS" source="MODIFIED_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BATCH_ID" source="BATCH_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RAI_TS" source="RAI_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCLE_NUM" source="CYCLE_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_PRIMARY_KEY" source="BILL_PRIMARY_KEY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CHRG_TY_CLASSIF" source="CHRG_TY_CLASSIF"/>
+      </input>
+      <input node="#AGGR_BILLING_PARENT">
+        <mapping xsi:type="Calculation:AttributeMapping" target="BAN_RIGHT" source="BAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBSCR_NO_RIGHT" source="SUBSCR_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BAN" source="BAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBSCR_NO" source="SUBSCR_NO"/>
+      </input>
+      <joinAttribute name="BAN"/>
+      <joinAttribute name="SUBSCR_NO"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_BILLING_ERROR_FILTER">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="BAN_RIGHT">
+          <filter xsi:type="AccessControl:SingleValueFilter" operator="NL" including="true"/>
+        </viewAttribute>
+        <viewAttribute id="SUBSCR_NO_RIGHT">
+          <filter xsi:type="AccessControl:SingleValueFilter" operator="NL" including="true"/>
+        </viewAttribute>
+        <viewAttribute id="ITEM_ID"/>
+        <viewAttribute id="BAN"/>
+        <viewAttribute id="BILL_SEQ_NO"/>
+        <viewAttribute id="ENT_SEQ_NO"/>
+        <viewAttribute id="GL_ACCT_NO"/>
+        <viewAttribute id="ITEM_SUB_ID"/>
+        <viewAttribute id="JOURN_DT"/>
+        <viewAttribute id="SUBSCR_NO"/>
+        <viewAttribute id="DSCT_CD"/>
+        <viewAttribute id="ADJ_RSN_CD"/>
+        <viewAttribute id="CHRG_SEQ_NO"/>
+        <viewAttribute id="EFF_DT"/>
+        <viewAttribute id="GL_COST_CENTRE"/>
+        <viewAttribute id="GL_JURISD_CD"/>
+        <viewAttribute id="GL_TAX_CD"/>
+        <viewAttribute id="PRD_CVRG_END_DT"/>
+        <viewAttribute id="PRD_CVRG_STRT_DT"/>
+        <viewAttribute id="PROMO_CD"/>
+        <viewAttribute id="PROV"/>
+        <viewAttribute id="UOM"/>
+        <viewAttribute id="ACCR_IND"/>
+        <viewAttribute id="ACTV_CD"/>
+        <viewAttribute id="ACTV_RSN_CD"/>
+        <viewAttribute id="AMT"/>
+        <viewAttribute id="BAL_IMP_CD"/>
+        <viewAttribute id="BILLER"/>
+        <viewAttribute id="OVER_USE_IND"/>
+        <viewAttribute id="TRANS_TY"/>
+        <viewAttribute id="ADJ_RSN_CLASS_CD"/>
+        <viewAttribute id="FTR_REV_CD"/>
+        <viewAttribute id="KUNNR_SID"/>
+        <viewAttribute id="GL_PRICE_PLAN_GRP"/>
+        <viewAttribute id="AR_ACTV"/>
+        <viewAttribute id="CR_DR_IND"/>
+        <viewAttribute id="CURR_CODE"/>
+        <viewAttribute id="VIRTUAL_INV_FLAG"/>
+        <viewAttribute id="REALLOCATION_IND"/>
+        <viewAttribute id="CUSTOMER_GROUP"/>
+        <viewAttribute id="MATERIAL_GROUP"/>
+        <viewAttribute id="REV_ACTG_DOC_NUM"/>
+        <viewAttribute id="BANNER"/>
+        <viewAttribute id="DEALER"/>
+        <viewAttribute id="REV_ACT_DOC_TY"/>
+        <viewAttribute id="ART_NUM"/>
+        <viewAttribute id="BRND"/>
+        <viewAttribute id="REFERENCE_ID"/>
+        <viewAttribute id="HEADER_ID"/>
+        <viewAttribute id="SOURCE_DOC_ID"/>
+        <viewAttribute id="ORIG_DOC_ID"/>
+        <viewAttribute id="TIME_IND"/>
+        <viewAttribute id="RAI_ITEM_ID"/>
+        <viewAttribute id="RUN_ID"/>
+        <viewAttribute id="PMP_TS"/>
+        <viewAttribute id="CYCL_ID"/>
+        <viewAttribute id="EXECUTION_ID"/>
+        <viewAttribute id="CONVERSION_IND"/>
+        <viewAttribute id="INSERT_TS"/>
+        <viewAttribute id="MODIFIED_TS"/>
+        <viewAttribute id="BATCH_ID"/>
+        <viewAttribute id="RAI_TS"/>
+        <viewAttribute id="CYCLE_NUM"/>
+        <viewAttribute id="BILL_PRIMARY_KEY"/>
+        <viewAttribute id="CHRG_TY_CLASSIF"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#JOIN_BILLING_PARENT">
+        <mapping xsi:type="Calculation:AttributeMapping" target="BAN_RIGHT" source="BAN_RIGHT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBSCR_NO_RIGHT" source="SUBSCR_NO_RIGHT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_ID" source="ITEM_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BAN" source="BAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_SEQ_NO" source="BILL_SEQ_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ENT_SEQ_NO" source="ENT_SEQ_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GL_ACCT_NO" source="GL_ACCT_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_SUB_ID" source="ITEM_SUB_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="JOURN_DT" source="JOURN_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBSCR_NO" source="SUBSCR_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DSCT_CD" source="DSCT_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ADJ_RSN_CD" source="ADJ_RSN_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CHRG_SEQ_NO" source="CHRG_SEQ_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFF_DT" source="EFF_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GL_COST_CENTRE" source="GL_COST_CENTRE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GL_JURISD_CD" source="GL_JURISD_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GL_TAX_CD" source="GL_TAX_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRD_CVRG_END_DT" source="PRD_CVRG_END_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRD_CVRG_STRT_DT" source="PRD_CVRG_STRT_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROMO_CD" source="PROMO_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROV" source="PROV"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="UOM" source="UOM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACCR_IND" source="ACCR_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACTV_CD" source="ACTV_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACTV_RSN_CD" source="ACTV_RSN_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AMT" source="AMT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BAL_IMP_CD" source="BAL_IMP_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILLER" source="BILLER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OVER_USE_IND" source="OVER_USE_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRANS_TY" source="TRANS_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ADJ_RSN_CLASS_CD" source="ADJ_RSN_CLASS_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FTR_REV_CD" source="FTR_REV_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KUNNR_SID" source="KUNNR_SID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GL_PRICE_PLAN_GRP" source="GL_PRICE_PLAN_GRP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AR_ACTV" source="AR_ACTV"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CR_DR_IND" source="CR_DR_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CURR_CODE" source="CURR_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VIRTUAL_INV_FLAG" source="VIRTUAL_INV_FLAG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REALLOCATION_IND" source="REALLOCATION_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_GROUP" source="CUSTOMER_GROUP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MATERIAL_GROUP" source="MATERIAL_GROUP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REV_ACTG_DOC_NUM" source="REV_ACTG_DOC_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BANNER" source="BANNER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DEALER" source="DEALER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REV_ACT_DOC_TY" source="REV_ACT_DOC_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ART_NUM" source="ART_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BRND" source="BRND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_ID" source="REFERENCE_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="HEADER_ID" source="HEADER_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SOURCE_DOC_ID" source="SOURCE_DOC_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ORIG_DOC_ID" source="ORIG_DOC_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TIME_IND" source="TIME_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RAI_ITEM_ID" source="RAI_ITEM_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RUN_ID" source="RUN_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PMP_TS" source="PMP_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXECUTION_ID" source="EXECUTION_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONVERSION_IND" source="CONVERSION_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INSERT_TS" source="INSERT_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MODIFIED_TS" source="MODIFIED_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BATCH_ID" source="BATCH_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RAI_TS" source="RAI_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCLE_NUM" source="CYCLE_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_PRIMARY_KEY" source="BILL_PRIMARY_KEY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CHRG_TY_CLASSIF" source="CHRG_TY_CLASSIF"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:AggregationView" id="AGGR_ORDR_PARENT">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="BAN"/>
+        <viewAttribute id="SUBSCR_NO"/>
+        <viewAttribute id="DELETED">
+          <filter xsi:type="AccessControl:SingleValueFilter" operator="NL" including="true"/>
+        </viewAttribute>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#IFRS_R1.MOBILITY.NDB_MOBILITY::MOBL_POST_ORDER_EH">
+        <mapping xsi:type="Calculation:AttributeMapping" target="BAN" source="BAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBSCR_NO" source="SUBSCR_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DELETED" source="DELETED"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="JOIN_ORDR_EH_BILLING" cardinality="CN_1" joinType="leftOuter" joinOrder="OUTSIDE_IN">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="BAN_RIGHT"/>
+        <viewAttribute id="SUBSCR_NO_RIGHT"/>
+        <viewAttribute id="ITEM_ID"/>
+        <viewAttribute id="BAN"/>
+        <viewAttribute id="BILL_SEQ_NO"/>
+        <viewAttribute id="ENT_SEQ_NO"/>
+        <viewAttribute id="GL_ACCT_NO"/>
+        <viewAttribute id="ITEM_SUB_ID"/>
+        <viewAttribute id="JOURN_DT"/>
+        <viewAttribute id="SUBSCR_NO"/>
+        <viewAttribute id="DSCT_CD"/>
+        <viewAttribute id="ADJ_RSN_CD"/>
+        <viewAttribute id="CHRG_SEQ_NO"/>
+        <viewAttribute id="EFF_DT"/>
+        <viewAttribute id="GL_COST_CENTRE"/>
+        <viewAttribute id="GL_JURISD_CD"/>
+        <viewAttribute id="GL_TAX_CD"/>
+        <viewAttribute id="PRD_CVRG_END_DT"/>
+        <viewAttribute id="PRD_CVRG_STRT_DT"/>
+        <viewAttribute id="PROMO_CD"/>
+        <viewAttribute id="PROV"/>
+        <viewAttribute id="UOM"/>
+        <viewAttribute id="ACCR_IND"/>
+        <viewAttribute id="ACTV_CD"/>
+        <viewAttribute id="ACTV_RSN_CD"/>
+        <viewAttribute id="AMT"/>
+        <viewAttribute id="BAL_IMP_CD"/>
+        <viewAttribute id="BILLER"/>
+        <viewAttribute id="OVER_USE_IND"/>
+        <viewAttribute id="TRANS_TY"/>
+        <viewAttribute id="ADJ_RSN_CLASS_CD"/>
+        <viewAttribute id="FTR_REV_CD"/>
+        <viewAttribute id="KUNNR_SID"/>
+        <viewAttribute id="GL_PRICE_PLAN_GRP"/>
+        <viewAttribute id="AR_ACTV"/>
+        <viewAttribute id="CR_DR_IND"/>
+        <viewAttribute id="CURR_CODE"/>
+        <viewAttribute id="VIRTUAL_INV_FLAG"/>
+        <viewAttribute id="REALLOCATION_IND"/>
+        <viewAttribute id="CUSTOMER_GROUP"/>
+        <viewAttribute id="MATERIAL_GROUP"/>
+        <viewAttribute id="REV_ACTG_DOC_NUM"/>
+        <viewAttribute id="BANNER"/>
+        <viewAttribute id="DEALER"/>
+        <viewAttribute id="REV_ACT_DOC_TY"/>
+        <viewAttribute id="ART_NUM"/>
+        <viewAttribute id="BRND"/>
+        <viewAttribute id="REFERENCE_ID"/>
+        <viewAttribute id="HEADER_ID"/>
+        <viewAttribute id="SOURCE_DOC_ID"/>
+        <viewAttribute id="ORIG_DOC_ID"/>
+        <viewAttribute id="TIME_IND"/>
+        <viewAttribute id="RAI_ITEM_ID"/>
+        <viewAttribute id="RUN_ID"/>
+        <viewAttribute id="PMP_TS"/>
+        <viewAttribute id="CYCL_ID"/>
+        <viewAttribute id="EXECUTION_ID"/>
+        <viewAttribute id="CONVERSION_IND"/>
+        <viewAttribute id="INSERT_TS"/>
+        <viewAttribute id="MODIFIED_TS"/>
+        <viewAttribute id="BATCH_ID"/>
+        <viewAttribute id="RAI_TS"/>
+        <viewAttribute id="CYCLE_NUM"/>
+        <viewAttribute id="BILL_PRIMARY_KEY"/>
+        <viewAttribute id="CHRG_TY_CLASSIF"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#PROJ_BILLING_ERROR_FILTER">
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_ID" source="ITEM_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BAN" source="BAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_SEQ_NO" source="BILL_SEQ_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ENT_SEQ_NO" source="ENT_SEQ_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GL_ACCT_NO" source="GL_ACCT_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_SUB_ID" source="ITEM_SUB_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="JOURN_DT" source="JOURN_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBSCR_NO" source="SUBSCR_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DSCT_CD" source="DSCT_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ADJ_RSN_CD" source="ADJ_RSN_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CHRG_SEQ_NO" source="CHRG_SEQ_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFF_DT" source="EFF_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GL_COST_CENTRE" source="GL_COST_CENTRE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GL_JURISD_CD" source="GL_JURISD_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GL_TAX_CD" source="GL_TAX_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRD_CVRG_END_DT" source="PRD_CVRG_END_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRD_CVRG_STRT_DT" source="PRD_CVRG_STRT_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROMO_CD" source="PROMO_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROV" source="PROV"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="UOM" source="UOM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACCR_IND" source="ACCR_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACTV_CD" source="ACTV_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACTV_RSN_CD" source="ACTV_RSN_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AMT" source="AMT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BAL_IMP_CD" source="BAL_IMP_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILLER" source="BILLER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OVER_USE_IND" source="OVER_USE_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRANS_TY" source="TRANS_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ADJ_RSN_CLASS_CD" source="ADJ_RSN_CLASS_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FTR_REV_CD" source="FTR_REV_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KUNNR_SID" source="KUNNR_SID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GL_PRICE_PLAN_GRP" source="GL_PRICE_PLAN_GRP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AR_ACTV" source="AR_ACTV"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CR_DR_IND" source="CR_DR_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CURR_CODE" source="CURR_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VIRTUAL_INV_FLAG" source="VIRTUAL_INV_FLAG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REALLOCATION_IND" source="REALLOCATION_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_GROUP" source="CUSTOMER_GROUP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MATERIAL_GROUP" source="MATERIAL_GROUP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REV_ACTG_DOC_NUM" source="REV_ACTG_DOC_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BANNER" source="BANNER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DEALER" source="DEALER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REV_ACT_DOC_TY" source="REV_ACT_DOC_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ART_NUM" source="ART_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BRND" source="BRND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_ID" source="REFERENCE_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="HEADER_ID" source="HEADER_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SOURCE_DOC_ID" source="SOURCE_DOC_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ORIG_DOC_ID" source="ORIG_DOC_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TIME_IND" source="TIME_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RAI_ITEM_ID" source="RAI_ITEM_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RUN_ID" source="RUN_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PMP_TS" source="PMP_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXECUTION_ID" source="EXECUTION_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONVERSION_IND" source="CONVERSION_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INSERT_TS" source="INSERT_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MODIFIED_TS" source="MODIFIED_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BATCH_ID" source="BATCH_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RAI_TS" source="RAI_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCLE_NUM" source="CYCLE_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_PRIMARY_KEY" source="BILL_PRIMARY_KEY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CHRG_TY_CLASSIF" source="CHRG_TY_CLASSIF"/>
+      </input>
+      <input node="#AGGR_ORDR_PARENT">
+        <mapping xsi:type="Calculation:AttributeMapping" target="BAN_RIGHT" source="BAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBSCR_NO_RIGHT" source="SUBSCR_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BAN" source="BAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBSCR_NO" source="SUBSCR_NO"/>
+      </input>
+      <joinAttribute name="BAN"/>
+      <joinAttribute name="SUBSCR_NO"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_ORDR_EH_FILTER" filterExpressionLanguage="COLUMN_ENGINE">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="ITEM_ID"/>
+        <viewAttribute id="BAN"/>
+        <viewAttribute id="BILL_SEQ_NO"/>
+        <viewAttribute id="ENT_SEQ_NO"/>
+        <viewAttribute id="GL_ACCT_NO"/>
+        <viewAttribute id="ITEM_SUB_ID"/>
+        <viewAttribute id="JOURN_DT"/>
+        <viewAttribute id="SUBSCR_NO"/>
+        <viewAttribute id="DSCT_CD"/>
+        <viewAttribute id="ADJ_RSN_CD"/>
+        <viewAttribute id="CHRG_SEQ_NO"/>
+        <viewAttribute id="EFF_DT"/>
+        <viewAttribute id="GL_COST_CENTRE"/>
+        <viewAttribute id="GL_JURISD_CD"/>
+        <viewAttribute id="GL_TAX_CD"/>
+        <viewAttribute id="PRD_CVRG_END_DT"/>
+        <viewAttribute id="PRD_CVRG_STRT_DT"/>
+        <viewAttribute id="PROMO_CD"/>
+        <viewAttribute id="PROV"/>
+        <viewAttribute id="UOM"/>
+        <viewAttribute id="ACCR_IND"/>
+        <viewAttribute id="ACTV_CD"/>
+        <viewAttribute id="ACTV_RSN_CD"/>
+        <viewAttribute id="AMT"/>
+        <viewAttribute id="BAL_IMP_CD"/>
+        <viewAttribute id="BILLER"/>
+        <viewAttribute id="OVER_USE_IND"/>
+        <viewAttribute id="TRANS_TY"/>
+        <viewAttribute id="ADJ_RSN_CLASS_CD"/>
+        <viewAttribute id="FTR_REV_CD"/>
+        <viewAttribute id="KUNNR_SID"/>
+        <viewAttribute id="GL_PRICE_PLAN_GRP"/>
+        <viewAttribute id="AR_ACTV"/>
+        <viewAttribute id="CR_DR_IND"/>
+        <viewAttribute id="CURR_CODE"/>
+        <viewAttribute id="VIRTUAL_INV_FLAG"/>
+        <viewAttribute id="REALLOCATION_IND"/>
+        <viewAttribute id="CUSTOMER_GROUP"/>
+        <viewAttribute id="MATERIAL_GROUP"/>
+        <viewAttribute id="REV_ACTG_DOC_NUM"/>
+        <viewAttribute id="BANNER"/>
+        <viewAttribute id="DEALER"/>
+        <viewAttribute id="REV_ACT_DOC_TY"/>
+        <viewAttribute id="ART_NUM"/>
+        <viewAttribute id="BRND"/>
+        <viewAttribute id="REFERENCE_ID"/>
+        <viewAttribute id="HEADER_ID"/>
+        <viewAttribute id="SOURCE_DOC_ID"/>
+        <viewAttribute id="ORIG_DOC_ID"/>
+        <viewAttribute id="TIME_IND"/>
+        <viewAttribute id="RAI_ITEM_ID"/>
+        <viewAttribute id="RUN_ID"/>
+        <viewAttribute id="PMP_TS"/>
+        <viewAttribute id="CYCL_ID"/>
+        <viewAttribute id="EXECUTION_ID"/>
+        <viewAttribute id="CONVERSION_IND"/>
+        <viewAttribute id="INSERT_TS"/>
+        <viewAttribute id="MODIFIED_TS"/>
+        <viewAttribute id="BATCH_ID"/>
+        <viewAttribute id="RAI_TS"/>
+        <viewAttribute id="SUBSCR_NO_RIGHT"/>
+        <viewAttribute id="BAN_RIGHT"/>
+        <viewAttribute id="CYCLE_NUM"/>
+        <viewAttribute id="BILL_PRIMARY_KEY"/>
+        <viewAttribute id="CHRG_TY_CLASSIF"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#JOIN_ORDR_EH_BILLING">
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_ID" source="ITEM_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BAN" source="BAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_SEQ_NO" source="BILL_SEQ_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ENT_SEQ_NO" source="ENT_SEQ_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GL_ACCT_NO" source="GL_ACCT_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_SUB_ID" source="ITEM_SUB_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="JOURN_DT" source="JOURN_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBSCR_NO" source="SUBSCR_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DSCT_CD" source="DSCT_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ADJ_RSN_CD" source="ADJ_RSN_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CHRG_SEQ_NO" source="CHRG_SEQ_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFF_DT" source="EFF_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GL_COST_CENTRE" source="GL_COST_CENTRE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GL_JURISD_CD" source="GL_JURISD_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GL_TAX_CD" source="GL_TAX_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRD_CVRG_END_DT" source="PRD_CVRG_END_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRD_CVRG_STRT_DT" source="PRD_CVRG_STRT_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROMO_CD" source="PROMO_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROV" source="PROV"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="UOM" source="UOM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACCR_IND" source="ACCR_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACTV_CD" source="ACTV_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACTV_RSN_CD" source="ACTV_RSN_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AMT" source="AMT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BAL_IMP_CD" source="BAL_IMP_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILLER" source="BILLER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OVER_USE_IND" source="OVER_USE_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRANS_TY" source="TRANS_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ADJ_RSN_CLASS_CD" source="ADJ_RSN_CLASS_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FTR_REV_CD" source="FTR_REV_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KUNNR_SID" source="KUNNR_SID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GL_PRICE_PLAN_GRP" source="GL_PRICE_PLAN_GRP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AR_ACTV" source="AR_ACTV"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CR_DR_IND" source="CR_DR_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CURR_CODE" source="CURR_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VIRTUAL_INV_FLAG" source="VIRTUAL_INV_FLAG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REALLOCATION_IND" source="REALLOCATION_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_GROUP" source="CUSTOMER_GROUP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MATERIAL_GROUP" source="MATERIAL_GROUP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REV_ACTG_DOC_NUM" source="REV_ACTG_DOC_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BANNER" source="BANNER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DEALER" source="DEALER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REV_ACT_DOC_TY" source="REV_ACT_DOC_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ART_NUM" source="ART_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BRND" source="BRND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_ID" source="REFERENCE_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="HEADER_ID" source="HEADER_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SOURCE_DOC_ID" source="SOURCE_DOC_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ORIG_DOC_ID" source="ORIG_DOC_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TIME_IND" source="TIME_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RAI_ITEM_ID" source="RAI_ITEM_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RUN_ID" source="RUN_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PMP_TS" source="PMP_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXECUTION_ID" source="EXECUTION_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONVERSION_IND" source="CONVERSION_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INSERT_TS" source="INSERT_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MODIFIED_TS" source="MODIFIED_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BATCH_ID" source="BATCH_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RAI_TS" source="RAI_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBSCR_NO_RIGHT" source="SUBSCR_NO_RIGHT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BAN_RIGHT" source="BAN_RIGHT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCLE_NUM" source="CYCLE_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_PRIMARY_KEY" source="BILL_PRIMARY_KEY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CHRG_TY_CLASSIF" source="CHRG_TY_CLASSIF"/>
+      </input>
+      <filter>(isNull(&quot;BAN_RIGHT&quot;))</filter>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_MOBL_ORDR_MAIN_EH">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="HEADER_ID"/>
+        <viewAttribute id="DELETED">
+          <filter xsi:type="AccessControl:SingleValueFilter" operator="NL" including="true"/>
+        </viewAttribute>
+        <viewAttribute id="REFERENCE_ID"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CC_SUBSCR_NO" length="35" expressionLanguage="COLUMN_ENGINE">
+          <formula>midstr(&quot;REFERENCE_ID&quot;,(strlen(&quot;HEADER_ID&quot;) + 1),( strlen(&quot;REFERENCE_ID&quot;) - strlen(&quot;HEADER_ID&quot;) - 3))&#xD;
+</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#IFRS_R1.MOBILITY.RAI_MOBILITY::MOBL_ORDR_EH">
+        <mapping xsi:type="Calculation:AttributeMapping" target="HEADER_ID" source="HEADER_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DELETED" source="DELETED"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_ID" source="REFERENCE_ID"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:AggregationView" id="AGGR_RAI_MOBL_ORDR_EH_PARENT">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="HEADER_ID"/>
+        <viewAttribute id="CC_SUBSCR_NO"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#PROJ_MOBL_ORDR_MAIN_EH">
+        <mapping xsi:type="Calculation:AttributeMapping" target="HEADER_ID" source="HEADER_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_SUBSCR_NO" source="CC_SUBSCR_NO"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="JOIN" cardinality="CN_1" joinType="leftOuter" joinOrder="OUTSIDE_IN">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="ITEM_ID"/>
+        <viewAttribute id="BAN"/>
+        <viewAttribute id="BILL_SEQ_NO"/>
+        <viewAttribute id="ENT_SEQ_NO"/>
+        <viewAttribute id="GL_ACCT_NO"/>
+        <viewAttribute id="ITEM_SUB_ID"/>
+        <viewAttribute id="JOURN_DT"/>
+        <viewAttribute id="SUBSCR_NO"/>
+        <viewAttribute id="DSCT_CD"/>
+        <viewAttribute id="ADJ_RSN_CD"/>
+        <viewAttribute id="CHRG_SEQ_NO"/>
+        <viewAttribute id="EFF_DT"/>
+        <viewAttribute id="GL_COST_CENTRE"/>
+        <viewAttribute id="GL_JURISD_CD"/>
+        <viewAttribute id="GL_TAX_CD"/>
+        <viewAttribute id="PRD_CVRG_END_DT"/>
+        <viewAttribute id="PRD_CVRG_STRT_DT"/>
+        <viewAttribute id="PROMO_CD"/>
+        <viewAttribute id="PROV"/>
+        <viewAttribute id="UOM"/>
+        <viewAttribute id="ACCR_IND"/>
+        <viewAttribute id="ACTV_CD"/>
+        <viewAttribute id="ACTV_RSN_CD"/>
+        <viewAttribute id="AMT"/>
+        <viewAttribute id="BAL_IMP_CD"/>
+        <viewAttribute id="BILLER"/>
+        <viewAttribute id="OVER_USE_IND"/>
+        <viewAttribute id="TRANS_TY"/>
+        <viewAttribute id="ADJ_RSN_CLASS_CD"/>
+        <viewAttribute id="FTR_REV_CD"/>
+        <viewAttribute id="KUNNR_SID"/>
+        <viewAttribute id="GL_PRICE_PLAN_GRP"/>
+        <viewAttribute id="AR_ACTV"/>
+        <viewAttribute id="CR_DR_IND"/>
+        <viewAttribute id="CURR_CODE"/>
+        <viewAttribute id="VIRTUAL_INV_FLAG"/>
+        <viewAttribute id="REALLOCATION_IND"/>
+        <viewAttribute id="CUSTOMER_GROUP"/>
+        <viewAttribute id="MATERIAL_GROUP"/>
+        <viewAttribute id="REV_ACTG_DOC_NUM"/>
+        <viewAttribute id="BANNER"/>
+        <viewAttribute id="DEALER"/>
+        <viewAttribute id="REV_ACT_DOC_TY"/>
+        <viewAttribute id="ART_NUM"/>
+        <viewAttribute id="BRND"/>
+        <viewAttribute id="REFERENCE_ID"/>
+        <viewAttribute id="HEADER_ID"/>
+        <viewAttribute id="SOURCE_DOC_ID"/>
+        <viewAttribute id="ORIG_DOC_ID"/>
+        <viewAttribute id="TIME_IND"/>
+        <viewAttribute id="RAI_ITEM_ID"/>
+        <viewAttribute id="RUN_ID"/>
+        <viewAttribute id="PMP_TS"/>
+        <viewAttribute id="CYCL_ID"/>
+        <viewAttribute id="EXECUTION_ID"/>
+        <viewAttribute id="CONVERSION_IND"/>
+        <viewAttribute id="INSERT_TS"/>
+        <viewAttribute id="MODIFIED_TS"/>
+        <viewAttribute id="BATCH_ID"/>
+        <viewAttribute id="RAI_TS"/>
+        <viewAttribute id="CC_SUBSCR_NO"/>
+        <viewAttribute id="HEADER_ID_RIGHT"/>
+        <viewAttribute id="CYCLE_NUM"/>
+        <viewAttribute id="BILL_PRIMARY_KEY"/>
+        <viewAttribute id="CHRG_TY_CLASSIF"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#PROJ_ORDR_EH_FILTER">
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_ID" source="ITEM_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BAN" source="BAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_SEQ_NO" source="BILL_SEQ_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ENT_SEQ_NO" source="ENT_SEQ_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GL_ACCT_NO" source="GL_ACCT_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_SUB_ID" source="ITEM_SUB_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="JOURN_DT" source="JOURN_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBSCR_NO" source="SUBSCR_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DSCT_CD" source="DSCT_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ADJ_RSN_CD" source="ADJ_RSN_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CHRG_SEQ_NO" source="CHRG_SEQ_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFF_DT" source="EFF_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GL_COST_CENTRE" source="GL_COST_CENTRE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GL_JURISD_CD" source="GL_JURISD_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GL_TAX_CD" source="GL_TAX_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRD_CVRG_END_DT" source="PRD_CVRG_END_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRD_CVRG_STRT_DT" source="PRD_CVRG_STRT_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROMO_CD" source="PROMO_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROV" source="PROV"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="UOM" source="UOM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACCR_IND" source="ACCR_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACTV_CD" source="ACTV_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACTV_RSN_CD" source="ACTV_RSN_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AMT" source="AMT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BAL_IMP_CD" source="BAL_IMP_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILLER" source="BILLER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OVER_USE_IND" source="OVER_USE_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRANS_TY" source="TRANS_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ADJ_RSN_CLASS_CD" source="ADJ_RSN_CLASS_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FTR_REV_CD" source="FTR_REV_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KUNNR_SID" source="KUNNR_SID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GL_PRICE_PLAN_GRP" source="GL_PRICE_PLAN_GRP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AR_ACTV" source="AR_ACTV"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CR_DR_IND" source="CR_DR_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CURR_CODE" source="CURR_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VIRTUAL_INV_FLAG" source="VIRTUAL_INV_FLAG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REALLOCATION_IND" source="REALLOCATION_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_GROUP" source="CUSTOMER_GROUP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MATERIAL_GROUP" source="MATERIAL_GROUP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REV_ACTG_DOC_NUM" source="REV_ACTG_DOC_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BANNER" source="BANNER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DEALER" source="DEALER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REV_ACT_DOC_TY" source="REV_ACT_DOC_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ART_NUM" source="ART_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BRND" source="BRND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_ID" source="REFERENCE_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="HEADER_ID" source="HEADER_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SOURCE_DOC_ID" source="SOURCE_DOC_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ORIG_DOC_ID" source="ORIG_DOC_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TIME_IND" source="TIME_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RAI_ITEM_ID" source="RAI_ITEM_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RUN_ID" source="RUN_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PMP_TS" source="PMP_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXECUTION_ID" source="EXECUTION_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONVERSION_IND" source="CONVERSION_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INSERT_TS" source="INSERT_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MODIFIED_TS" source="MODIFIED_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BATCH_ID" source="BATCH_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RAI_TS" source="RAI_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCLE_NUM" source="CYCLE_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_PRIMARY_KEY" source="BILL_PRIMARY_KEY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CHRG_TY_CLASSIF" source="CHRG_TY_CLASSIF"/>
+      </input>
+      <input node="#AGGR_RAI_MOBL_ORDR_EH_PARENT">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_SUBSCR_NO" source="CC_SUBSCR_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="HEADER_ID_RIGHT" source="HEADER_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BAN" source="HEADER_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBSCR_NO" source="CC_SUBSCR_NO"/>
+      </input>
+      <joinAttribute name="BAN"/>
+      <joinAttribute name="SUBSCR_NO"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_FINAL_FILTER" filterExpressionLanguage="COLUMN_ENGINE">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="ITEM_ID"/>
+        <viewAttribute id="BAN"/>
+        <viewAttribute id="BILL_SEQ_NO"/>
+        <viewAttribute id="ENT_SEQ_NO"/>
+        <viewAttribute id="GL_ACCT_NO"/>
+        <viewAttribute id="ITEM_SUB_ID"/>
+        <viewAttribute id="JOURN_DT"/>
+        <viewAttribute id="SUBSCR_NO"/>
+        <viewAttribute id="DSCT_CD"/>
+        <viewAttribute id="ADJ_RSN_CD"/>
+        <viewAttribute id="CHRG_SEQ_NO"/>
+        <viewAttribute id="EFF_DT"/>
+        <viewAttribute id="GL_COST_CENTRE"/>
+        <viewAttribute id="GL_JURISD_CD"/>
+        <viewAttribute id="GL_TAX_CD"/>
+        <viewAttribute id="PRD_CVRG_END_DT"/>
+        <viewAttribute id="PRD_CVRG_STRT_DT"/>
+        <viewAttribute id="PROMO_CD"/>
+        <viewAttribute id="PROV"/>
+        <viewAttribute id="UOM"/>
+        <viewAttribute id="ACCR_IND"/>
+        <viewAttribute id="ACTV_CD"/>
+        <viewAttribute id="ACTV_RSN_CD"/>
+        <viewAttribute id="AMT"/>
+        <viewAttribute id="BAL_IMP_CD"/>
+        <viewAttribute id="BILLER"/>
+        <viewAttribute id="OVER_USE_IND"/>
+        <viewAttribute id="TRANS_TY"/>
+        <viewAttribute id="ADJ_RSN_CLASS_CD"/>
+        <viewAttribute id="FTR_REV_CD"/>
+        <viewAttribute id="KUNNR_SID"/>
+        <viewAttribute id="GL_PRICE_PLAN_GRP"/>
+        <viewAttribute id="AR_ACTV"/>
+        <viewAttribute id="CR_DR_IND"/>
+        <viewAttribute id="CURR_CODE"/>
+        <viewAttribute id="VIRTUAL_INV_FLAG"/>
+        <viewAttribute id="REALLOCATION_IND"/>
+        <viewAttribute id="CUSTOMER_GROUP"/>
+        <viewAttribute id="MATERIAL_GROUP"/>
+        <viewAttribute id="REV_ACTG_DOC_NUM"/>
+        <viewAttribute id="BANNER"/>
+        <viewAttribute id="DEALER"/>
+        <viewAttribute id="REV_ACT_DOC_TY"/>
+        <viewAttribute id="ART_NUM"/>
+        <viewAttribute id="BRND"/>
+        <viewAttribute id="REFERENCE_ID"/>
+        <viewAttribute id="HEADER_ID"/>
+        <viewAttribute id="SOURCE_DOC_ID"/>
+        <viewAttribute id="ORIG_DOC_ID"/>
+        <viewAttribute id="TIME_IND"/>
+        <viewAttribute id="RAI_ITEM_ID"/>
+        <viewAttribute id="RUN_ID"/>
+        <viewAttribute id="PMP_TS"/>
+        <viewAttribute id="CYCL_ID"/>
+        <viewAttribute id="EXECUTION_ID"/>
+        <viewAttribute id="CONVERSION_IND"/>
+        <viewAttribute id="INSERT_TS"/>
+        <viewAttribute id="MODIFIED_TS"/>
+        <viewAttribute id="BATCH_ID"/>
+        <viewAttribute id="RAI_TS"/>
+        <viewAttribute id="CC_SUBSCR_NO"/>
+        <viewAttribute id="HEADER_ID_RIGHT"/>
+        <viewAttribute id="CYCLE_NUM"/>
+        <viewAttribute id="BILL_PRIMARY_KEY"/>
+        <viewAttribute id="CHRG_TY_CLASSIF"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#JOIN">
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_ID" source="ITEM_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BAN" source="BAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_SEQ_NO" source="BILL_SEQ_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ENT_SEQ_NO" source="ENT_SEQ_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GL_ACCT_NO" source="GL_ACCT_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_SUB_ID" source="ITEM_SUB_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="JOURN_DT" source="JOURN_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBSCR_NO" source="SUBSCR_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DSCT_CD" source="DSCT_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ADJ_RSN_CD" source="ADJ_RSN_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CHRG_SEQ_NO" source="CHRG_SEQ_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFF_DT" source="EFF_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GL_COST_CENTRE" source="GL_COST_CENTRE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GL_JURISD_CD" source="GL_JURISD_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GL_TAX_CD" source="GL_TAX_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRD_CVRG_END_DT" source="PRD_CVRG_END_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRD_CVRG_STRT_DT" source="PRD_CVRG_STRT_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROMO_CD" source="PROMO_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROV" source="PROV"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="UOM" source="UOM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACCR_IND" source="ACCR_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACTV_CD" source="ACTV_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACTV_RSN_CD" source="ACTV_RSN_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AMT" source="AMT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BAL_IMP_CD" source="BAL_IMP_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILLER" source="BILLER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OVER_USE_IND" source="OVER_USE_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRANS_TY" source="TRANS_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ADJ_RSN_CLASS_CD" source="ADJ_RSN_CLASS_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FTR_REV_CD" source="FTR_REV_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KUNNR_SID" source="KUNNR_SID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GL_PRICE_PLAN_GRP" source="GL_PRICE_PLAN_GRP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AR_ACTV" source="AR_ACTV"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CR_DR_IND" source="CR_DR_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CURR_CODE" source="CURR_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VIRTUAL_INV_FLAG" source="VIRTUAL_INV_FLAG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REALLOCATION_IND" source="REALLOCATION_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_GROUP" source="CUSTOMER_GROUP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MATERIAL_GROUP" source="MATERIAL_GROUP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REV_ACTG_DOC_NUM" source="REV_ACTG_DOC_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BANNER" source="BANNER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DEALER" source="DEALER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REV_ACT_DOC_TY" source="REV_ACT_DOC_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ART_NUM" source="ART_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BRND" source="BRND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_ID" source="REFERENCE_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="HEADER_ID" source="HEADER_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SOURCE_DOC_ID" source="SOURCE_DOC_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ORIG_DOC_ID" source="ORIG_DOC_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TIME_IND" source="TIME_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RAI_ITEM_ID" source="RAI_ITEM_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RUN_ID" source="RUN_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PMP_TS" source="PMP_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXECUTION_ID" source="EXECUTION_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONVERSION_IND" source="CONVERSION_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INSERT_TS" source="INSERT_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MODIFIED_TS" source="MODIFIED_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BATCH_ID" source="BATCH_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RAI_TS" source="RAI_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_SUBSCR_NO" source="CC_SUBSCR_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="HEADER_ID_RIGHT" source="HEADER_ID_RIGHT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCLE_NUM" source="CYCLE_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_PRIMARY_KEY" source="BILL_PRIMARY_KEY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CHRG_TY_CLASSIF" source="CHRG_TY_CLASSIF"/>
+      </input>
+      <filter>(isNull(&quot;HEADER_ID_RIGHT&quot;))</filter>
+    </calculationView>
+  </calculationViews>
+  <logicalModel id="PROJ_FINAL_FILTER">
+    <descriptions/>
+    <attributes>
+      <attribute id="ITEM_ID" order="1" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ITEM ID"/>
+        <keyMapping columnObjectName="PROJ_FINAL_FILTER" columnName="ITEM_ID"/>
+      </attribute>
+      <attribute id="BAN" order="2" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="BAN"/>
+        <keyMapping columnObjectName="PROJ_FINAL_FILTER" columnName="BAN"/>
+      </attribute>
+      <attribute id="BILL_SEQ_NO" order="3" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="BILL SEQ NO"/>
+        <keyMapping columnObjectName="PROJ_FINAL_FILTER" columnName="BILL_SEQ_NO"/>
+      </attribute>
+      <attribute id="ENT_SEQ_NO" order="4" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ENT SEQ NO"/>
+        <keyMapping columnObjectName="PROJ_FINAL_FILTER" columnName="ENT_SEQ_NO"/>
+      </attribute>
+      <attribute id="GL_ACCT_NO" order="5" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="GL ACCT NO"/>
+        <keyMapping columnObjectName="PROJ_FINAL_FILTER" columnName="GL_ACCT_NO"/>
+      </attribute>
+      <attribute id="ITEM_SUB_ID" order="6" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ITEM SUB ID"/>
+        <keyMapping columnObjectName="PROJ_FINAL_FILTER" columnName="ITEM_SUB_ID"/>
+      </attribute>
+      <attribute id="JOURN_DT" order="7" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="JOURN DT"/>
+        <keyMapping columnObjectName="PROJ_FINAL_FILTER" columnName="JOURN_DT"/>
+      </attribute>
+      <attribute id="SUBSCR_NO" order="8" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SUBSCR NO"/>
+        <keyMapping columnObjectName="PROJ_FINAL_FILTER" columnName="SUBSCR_NO"/>
+      </attribute>
+      <attribute id="DSCT_CD" order="9" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="DSCT CD"/>
+        <keyMapping columnObjectName="PROJ_FINAL_FILTER" columnName="DSCT_CD"/>
+      </attribute>
+      <attribute id="ADJ_RSN_CD" order="10" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ADJ RSN CD"/>
+        <keyMapping columnObjectName="PROJ_FINAL_FILTER" columnName="ADJ_RSN_CD"/>
+      </attribute>
+      <attribute id="CHRG_SEQ_NO" order="11" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CHRG SEQ NO"/>
+        <keyMapping columnObjectName="PROJ_FINAL_FILTER" columnName="CHRG_SEQ_NO"/>
+      </attribute>
+      <attribute id="EFF_DT" order="12" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="EFF DT"/>
+        <keyMapping columnObjectName="PROJ_FINAL_FILTER" columnName="EFF_DT"/>
+      </attribute>
+      <attribute id="GL_COST_CENTRE" order="13" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="GL COST CENTRE"/>
+        <keyMapping columnObjectName="PROJ_FINAL_FILTER" columnName="GL_COST_CENTRE"/>
+      </attribute>
+      <attribute id="GL_JURISD_CD" order="14" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="GL JURISD CD"/>
+        <keyMapping columnObjectName="PROJ_FINAL_FILTER" columnName="GL_JURISD_CD"/>
+      </attribute>
+      <attribute id="GL_TAX_CD" order="15" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="GL TAX CD"/>
+        <keyMapping columnObjectName="PROJ_FINAL_FILTER" columnName="GL_TAX_CD"/>
+      </attribute>
+      <attribute id="PRD_CVRG_END_DT" order="16" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="PRD CVRG END DT"/>
+        <keyMapping columnObjectName="PROJ_FINAL_FILTER" columnName="PRD_CVRG_END_DT"/>
+      </attribute>
+      <attribute id="PRD_CVRG_STRT_DT" order="17" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="PRD CVRG STRT DT"/>
+        <keyMapping columnObjectName="PROJ_FINAL_FILTER" columnName="PRD_CVRG_STRT_DT"/>
+      </attribute>
+      <attribute id="PROMO_CD" order="18" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="PROMO CD"/>
+        <keyMapping columnObjectName="PROJ_FINAL_FILTER" columnName="PROMO_CD"/>
+      </attribute>
+      <attribute id="PROV" order="19" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="PROV"/>
+        <keyMapping columnObjectName="PROJ_FINAL_FILTER" columnName="PROV"/>
+      </attribute>
+      <attribute id="UOM" order="20" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="UOM"/>
+        <keyMapping columnObjectName="PROJ_FINAL_FILTER" columnName="UOM"/>
+      </attribute>
+      <attribute id="ACCR_IND" order="21" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ACCR IND"/>
+        <keyMapping columnObjectName="PROJ_FINAL_FILTER" columnName="ACCR_IND"/>
+      </attribute>
+      <attribute id="ACTV_CD" order="22" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ACTV CD"/>
+        <keyMapping columnObjectName="PROJ_FINAL_FILTER" columnName="ACTV_CD"/>
+      </attribute>
+      <attribute id="ACTV_RSN_CD" order="23" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ACTV RSN CD"/>
+        <keyMapping columnObjectName="PROJ_FINAL_FILTER" columnName="ACTV_RSN_CD"/>
+      </attribute>
+      <attribute id="AMT" order="24" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="AMT"/>
+        <keyMapping columnObjectName="PROJ_FINAL_FILTER" columnName="AMT"/>
+      </attribute>
+      <attribute id="BAL_IMP_CD" order="25" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="BAL IMP CD"/>
+        <keyMapping columnObjectName="PROJ_FINAL_FILTER" columnName="BAL_IMP_CD"/>
+      </attribute>
+      <attribute id="BILLER" order="26" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="BILLER"/>
+        <keyMapping columnObjectName="PROJ_FINAL_FILTER" columnName="BILLER"/>
+      </attribute>
+      <attribute id="OVER_USE_IND" order="27" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="OVER USE IND"/>
+        <keyMapping columnObjectName="PROJ_FINAL_FILTER" columnName="OVER_USE_IND"/>
+      </attribute>
+      <attribute id="TRANS_TY" order="28" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="TRANS TY"/>
+        <keyMapping columnObjectName="PROJ_FINAL_FILTER" columnName="TRANS_TY"/>
+      </attribute>
+      <attribute id="ADJ_RSN_CLASS_CD" order="29" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ADJ RSN CLASS CD"/>
+        <keyMapping columnObjectName="PROJ_FINAL_FILTER" columnName="ADJ_RSN_CLASS_CD"/>
+      </attribute>
+      <attribute id="FTR_REV_CD" order="30" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="FTR REV CD"/>
+        <keyMapping columnObjectName="PROJ_FINAL_FILTER" columnName="FTR_REV_CD"/>
+      </attribute>
+      <attribute id="KUNNR_SID" order="31" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="KUNNR SID"/>
+        <keyMapping columnObjectName="PROJ_FINAL_FILTER" columnName="KUNNR_SID"/>
+      </attribute>
+      <attribute id="GL_PRICE_PLAN_GRP" order="32" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="GL PRICE PLAN GRP"/>
+        <keyMapping columnObjectName="PROJ_FINAL_FILTER" columnName="GL_PRICE_PLAN_GRP"/>
+      </attribute>
+      <attribute id="AR_ACTV" order="33" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="AR ACTV"/>
+        <keyMapping columnObjectName="PROJ_FINAL_FILTER" columnName="AR_ACTV"/>
+      </attribute>
+      <attribute id="CR_DR_IND" order="34" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CR DR IND"/>
+        <keyMapping columnObjectName="PROJ_FINAL_FILTER" columnName="CR_DR_IND"/>
+      </attribute>
+      <attribute id="CURR_CODE" order="35" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CURR CODE"/>
+        <keyMapping columnObjectName="PROJ_FINAL_FILTER" columnName="CURR_CODE"/>
+      </attribute>
+      <attribute id="VIRTUAL_INV_FLAG" order="36" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="VIRTUAL INV FLAG"/>
+        <keyMapping columnObjectName="PROJ_FINAL_FILTER" columnName="VIRTUAL_INV_FLAG"/>
+      </attribute>
+      <attribute id="REALLOCATION_IND" order="37" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="REALLOCATION IND"/>
+        <keyMapping columnObjectName="PROJ_FINAL_FILTER" columnName="REALLOCATION_IND"/>
+      </attribute>
+      <attribute id="CUSTOMER_GROUP" order="38" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CUSTOMER GROUP"/>
+        <keyMapping columnObjectName="PROJ_FINAL_FILTER" columnName="CUSTOMER_GROUP"/>
+      </attribute>
+      <attribute id="MATERIAL_GROUP" order="39" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="MATERIAL GROUP"/>
+        <keyMapping columnObjectName="PROJ_FINAL_FILTER" columnName="MATERIAL_GROUP"/>
+      </attribute>
+      <attribute id="REV_ACTG_DOC_NUM" order="40" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="REV ACTG DOC NUM"/>
+        <keyMapping columnObjectName="PROJ_FINAL_FILTER" columnName="REV_ACTG_DOC_NUM"/>
+      </attribute>
+      <attribute id="BANNER" order="41" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="BANNER"/>
+        <keyMapping columnObjectName="PROJ_FINAL_FILTER" columnName="BANNER"/>
+      </attribute>
+      <attribute id="DEALER" order="42" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="DEALER"/>
+        <keyMapping columnObjectName="PROJ_FINAL_FILTER" columnName="DEALER"/>
+      </attribute>
+      <attribute id="REV_ACT_DOC_TY" order="43" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="REV ACT DOC TY"/>
+        <keyMapping columnObjectName="PROJ_FINAL_FILTER" columnName="REV_ACT_DOC_TY"/>
+      </attribute>
+      <attribute id="ART_NUM" order="44" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ART NUM"/>
+        <keyMapping columnObjectName="PROJ_FINAL_FILTER" columnName="ART_NUM"/>
+      </attribute>
+      <attribute id="BRND" order="45" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="BRND"/>
+        <keyMapping columnObjectName="PROJ_FINAL_FILTER" columnName="BRND"/>
+      </attribute>
+      <attribute id="REFERENCE_ID" order="46" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SOURCE DOC ID"/>
+        <keyMapping columnObjectName="PROJ_FINAL_FILTER" columnName="REFERENCE_ID"/>
+      </attribute>
+      <attribute id="HEADER_ID" order="47" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="HEADER ID"/>
+        <keyMapping columnObjectName="PROJ_FINAL_FILTER" columnName="HEADER_ID"/>
+      </attribute>
+      <attribute id="SOURCE_DOC_ID" order="48" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SOURCE DOC ID"/>
+        <keyMapping columnObjectName="PROJ_FINAL_FILTER" columnName="SOURCE_DOC_ID"/>
+      </attribute>
+      <attribute id="ORIG_DOC_ID" order="49" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ORIG DOC ID"/>
+        <keyMapping columnObjectName="PROJ_FINAL_FILTER" columnName="ORIG_DOC_ID"/>
+      </attribute>
+      <attribute id="TIME_IND" order="50" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="TIME IND"/>
+        <keyMapping columnObjectName="PROJ_FINAL_FILTER" columnName="TIME_IND"/>
+      </attribute>
+      <attribute id="RAI_ITEM_ID" order="51" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="RAI ITEM ID"/>
+        <keyMapping columnObjectName="PROJ_FINAL_FILTER" columnName="RAI_ITEM_ID"/>
+      </attribute>
+      <attribute id="RUN_ID" order="52" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="RUN ID"/>
+        <keyMapping columnObjectName="PROJ_FINAL_FILTER" columnName="RUN_ID"/>
+      </attribute>
+      <attribute id="PMP_TS" order="53" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="PMP TS"/>
+        <keyMapping columnObjectName="PROJ_FINAL_FILTER" columnName="PMP_TS"/>
+      </attribute>
+      <attribute id="CYCL_ID" order="54" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CYCL ID"/>
+        <keyMapping columnObjectName="PROJ_FINAL_FILTER" columnName="CYCL_ID"/>
+      </attribute>
+      <attribute id="EXECUTION_ID" order="55" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="EXECUTION ID"/>
+        <keyMapping columnObjectName="PROJ_FINAL_FILTER" columnName="EXECUTION_ID"/>
+      </attribute>
+      <attribute id="CONVERSION_IND" order="56" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CONVERSION IND"/>
+        <keyMapping columnObjectName="PROJ_FINAL_FILTER" columnName="CONVERSION_IND"/>
+      </attribute>
+      <attribute id="INSERT_TS" order="57" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="INSERT TS"/>
+        <keyMapping columnObjectName="PROJ_FINAL_FILTER" columnName="INSERT_TS"/>
+      </attribute>
+      <attribute id="MODIFIED_TS" order="58" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="MODIFIED TS"/>
+        <keyMapping columnObjectName="PROJ_FINAL_FILTER" columnName="MODIFIED_TS"/>
+      </attribute>
+      <attribute id="BATCH_ID" order="59" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="BATCH ID"/>
+        <keyMapping columnObjectName="PROJ_FINAL_FILTER" columnName="BATCH_ID"/>
+      </attribute>
+      <attribute id="RAI_TS" order="60" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="RAI TS"/>
+        <keyMapping columnObjectName="PROJ_FINAL_FILTER" columnName="RAI_TS"/>
+      </attribute>
+      <attribute id="CYCLE_NUM" order="61" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CYCLE NUM"/>
+        <keyMapping columnObjectName="PROJ_FINAL_FILTER" columnName="CYCLE_NUM"/>
+      </attribute>
+      <attribute id="BILL_PRIMARY_KEY" order="62" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="BILL_PRIMARY_KEY"/>
+        <keyMapping columnObjectName="PROJ_FINAL_FILTER" columnName="BILL_PRIMARY_KEY"/>
+      </attribute>
+      <attribute id="CHRG_TY_CLASSIF" order="63" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CHRG_TY_CLASSIF"/>
+        <keyMapping columnObjectName="PROJ_FINAL_FILTER" columnName="CHRG_TY_CLASSIF"/>
+      </attribute>
+    </attributes>
+    <calculatedAttributes/>
+    <privateDataFoundation>
+      <tableProxies/>
+      <joins/>
+      <layout>
+        <shapes/>
+      </layout>
+    </privateDataFoundation>
+    <baseMeasures/>
+    <calculatedMeasures/>
+    <restrictedMeasures/>
+    <localDimensions/>
+  </logicalModel>
+  <layout>
+    <shapes>
+      <shape expanded="false" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+        <upperLeftCorner x="252" y="87"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+      <shape expanded="true" modelObjectName="AGGR_BILLING_PARENT" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="176" y="669"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_MOBL_BILLING" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="22" y="669"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="JOIN_BILLING_PARENT" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="99" y="573"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_BILLING_ERROR_FILTER" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="99" y="495"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="AGGR_ORDR_PARENT" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="253" y="495"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="JOIN_ORDR_EH_BILLING" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="175" y="399"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_ORDR_EH_FILTER" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="175" y="321"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_MOBL_ORDR_MAIN_EH" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="329" y="399"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="AGGR_RAI_MOBL_ORDR_EH_PARENT" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="329" y="321"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="JOIN" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="252" y="225"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_FINAL_FILTER" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="252" y="147"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+    </shapes>
+  </layout>
+</Calculation:scenario>

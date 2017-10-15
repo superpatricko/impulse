@@ -1,0 +1,271 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:AccessControl="http://www.sap.com/ndb/SQLCoreModelAccessControl.ecore" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" schemaVersion="2.3" id="CA_NGCCREF_EPC_PROD_NDB_EH" applyPrivilegeType="NONE" checkAnalyticPrivileges="false" defaultClient="$$client$$" defaultLanguage="$$language$$" hierarchiesSQLEnabled="false" translationRelevant="true" visibility="internal" calculationScenarioType="TREE_BASED" dataCategory="DIMENSION" enforceSqlExecution="false" executionSemantic="UNDEFINED" outputViewType="Projection">
+  <descriptions defaultDescription="CA_NGCCREF_EPC_PROD_NDB_EH"/>
+  <metadata changedAt="2017-08-11 19:06:36.516"/>
+  <localVariables/>
+  <variableMappings/>
+  <informationModelLayout relativeWidthScenario="35"/>
+  <dataSources>
+    <DataSource id="IFRS_R1.MOBILITY.NDB_MOBILITY::PPD_NGCCREF_EPC_PROD" type="DATA_BASE_TABLE">
+      <viewAttributes allViewAttributes="true"/>
+      <columnObject schemaName="NDB_MOBILITY" columnObjectName="IFRS_R1.MOBILITY.NDB_MOBILITY::PPD_NGCCREF_EPC_PROD"/>
+    </DataSource>
+    <DataSource id="IFRS_R1.MOBILITY.NDB_MOBILITY::PPD_NGCCREF_EPC_PROD_EH" type="DATA_BASE_TABLE">
+      <viewAttributes allViewAttributes="true"/>
+      <columnObject schemaName="NDB_MOBILITY" columnObjectName="IFRS_R1.MOBILITY.NDB_MOBILITY::PPD_NGCCREF_EPC_PROD_EH"/>
+    </DataSource>
+  </dataSources>
+  <calculationViews>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_NDB">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="OFFER_ID"/>
+        <viewAttribute id="PACKAGE_ID"/>
+        <viewAttribute id="ITEM_ID"/>
+        <viewAttribute id="REFERENCE_EFFECTIVE_DT">
+          <filter xsi:type="AccessControl:SingleValueFilter" including="true" value="9999-12-31"/>
+        </viewAttribute>
+        <viewAttribute id="REFERENCE_EXPIRY_DT"/>
+        <viewAttribute id="EFF_SALE_DATE"/>
+        <viewAttribute id="EXP_SALE_DATE"/>
+        <viewAttribute id="OFFER_NAME"/>
+        <viewAttribute id="OFFER_LEVEL"/>
+        <viewAttribute id="OFFER_TYPE"/>
+        <viewAttribute id="OFFER_PROPERTIES"/>
+        <viewAttribute id="CURRENCY_CODE"/>
+        <viewAttribute id="PACKAGE_NAME"/>
+        <viewAttribute id="ITEM_PARAM_ATTR_NAME"/>
+        <viewAttribute id="ITEM_PARAM_ATTR_UOM"/>
+        <viewAttribute id="ITEM_PARAM_ATTR_VALUE"/>
+        <viewAttribute id="PARAM_ITEM_DIMENTION"/>
+        <viewAttribute id="ITEM_TYPE"/>
+        <viewAttribute id="ITEM_ROLE"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#IFRS_R1.MOBILITY.NDB_MOBILITY::PPD_NGCCREF_EPC_PROD">
+        <mapping xsi:type="Calculation:AttributeMapping" target="OFFER_ID" source="OFFER_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PACKAGE_ID" source="PACKAGE_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_ID" source="ITEM_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_EFFECTIVE_DT" source="REFERENCE_EFFECTIVE_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_EXPIRY_DT" source="REFERENCE_EXPIRY_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFF_SALE_DATE" source="EFF_SALE_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXP_SALE_DATE" source="EXP_SALE_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OFFER_NAME" source="OFFER_NAME"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OFFER_LEVEL" source="OFFER_LEVEL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OFFER_TYPE" source="OFFER_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OFFER_PROPERTIES" source="OFFER_PROPERTIES"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CURRENCY_CODE" source="CURRENCY_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PACKAGE_NAME" source="PACKAGE_NAME"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_PARAM_ATTR_NAME" source="ITEM_PARAM_ATTR_NAME"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_PARAM_ATTR_UOM" source="ITEM_PARAM_ATTR_UOM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_PARAM_ATTR_VALUE" source="ITEM_PARAM_ATTR_VALUE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PARAM_ITEM_DIMENTION" source="PARAM_ITEM_DIMENTION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_TYPE" source="ITEM_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_ROLE" source="ITEM_ROLE"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_EH">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="OFFER_ID"/>
+        <viewAttribute id="PACKAGE_ID"/>
+        <viewAttribute id="ITEM_ID"/>
+        <viewAttribute id="DELETED">
+          <filter xsi:type="AccessControl:SingleValueFilter" operator="NL" including="true"/>
+        </viewAttribute>
+        <viewAttribute id="REFERENCE_EFFECTIVE_DT"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="DATE" id="CC_REFERENCE_EFFECTIVE_DT" expressionLanguage="COLUMN_ENGINE">
+          <formula>&quot;REFERENCE_EFFECTIVE_DT&quot;</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#IFRS_R1.MOBILITY.NDB_MOBILITY::PPD_NGCCREF_EPC_PROD_EH">
+        <mapping xsi:type="Calculation:AttributeMapping" target="OFFER_ID" source="OFFER_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PACKAGE_ID" source="PACKAGE_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_ID" source="ITEM_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DELETED" source="DELETED"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_EFFECTIVE_DT" source="REFERENCE_EFFECTIVE_DT"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="JOIN_NDB_EH" joinType="leftOuter">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="OFFER_ID"/>
+        <viewAttribute id="PACKAGE_ID"/>
+        <viewAttribute id="ITEM_ID"/>
+        <viewAttribute id="REFERENCE_EFFECTIVE_DT"/>
+        <viewAttribute id="REFERENCE_EXPIRY_DT"/>
+        <viewAttribute id="EFF_SALE_DATE"/>
+        <viewAttribute id="EXP_SALE_DATE"/>
+        <viewAttribute id="OFFER_NAME"/>
+        <viewAttribute id="OFFER_LEVEL"/>
+        <viewAttribute id="OFFER_TYPE"/>
+        <viewAttribute id="OFFER_PROPERTIES"/>
+        <viewAttribute id="CURRENCY_CODE"/>
+        <viewAttribute id="PACKAGE_NAME"/>
+        <viewAttribute id="ITEM_PARAM_ATTR_NAME"/>
+        <viewAttribute id="ITEM_PARAM_ATTR_UOM"/>
+        <viewAttribute id="ITEM_PARAM_ATTR_VALUE"/>
+        <viewAttribute id="PARAM_ITEM_DIMENTION"/>
+        <viewAttribute id="ITEM_TYPE"/>
+        <viewAttribute id="ITEM_ROLE"/>
+        <viewAttribute id="OFFER_ID_RIGHT"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CC_VERSION_CHECK" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isnull(&quot;OFFER_ID_RIGHT&quot;),'0','1')</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#PROJ_NDB">
+        <mapping xsi:type="Calculation:AttributeMapping" target="OFFER_ID" source="OFFER_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PACKAGE_ID" source="PACKAGE_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_ID" source="ITEM_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_EFFECTIVE_DT" source="REFERENCE_EFFECTIVE_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_EXPIRY_DT" source="REFERENCE_EXPIRY_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFF_SALE_DATE" source="EFF_SALE_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXP_SALE_DATE" source="EXP_SALE_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OFFER_NAME" source="OFFER_NAME"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OFFER_LEVEL" source="OFFER_LEVEL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OFFER_TYPE" source="OFFER_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OFFER_PROPERTIES" source="OFFER_PROPERTIES"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CURRENCY_CODE" source="CURRENCY_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PACKAGE_NAME" source="PACKAGE_NAME"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_PARAM_ATTR_NAME" source="ITEM_PARAM_ATTR_NAME"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_PARAM_ATTR_UOM" source="ITEM_PARAM_ATTR_UOM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_PARAM_ATTR_VALUE" source="ITEM_PARAM_ATTR_VALUE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PARAM_ITEM_DIMENTION" source="PARAM_ITEM_DIMENTION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_TYPE" source="ITEM_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_ROLE" source="ITEM_ROLE"/>
+      </input>
+      <input node="#PROJ_EH">
+        <mapping xsi:type="Calculation:AttributeMapping" target="OFFER_ID_RIGHT" source="OFFER_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OFFER_ID" source="OFFER_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PACKAGE_ID" source="PACKAGE_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_ID" source="ITEM_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_EFFECTIVE_DT" source="CC_REFERENCE_EFFECTIVE_DT"/>
+      </input>
+      <joinAttribute name="OFFER_ID"/>
+      <joinAttribute name="PACKAGE_ID"/>
+      <joinAttribute name="ITEM_ID"/>
+      <joinAttribute name="REFERENCE_EFFECTIVE_DT"/>
+    </calculationView>
+  </calculationViews>
+  <logicalModel id="JOIN_NDB_EH">
+    <descriptions/>
+    <attributes>
+      <attribute id="OFFER_ID" order="1" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="OFFER_ID"/>
+        <keyMapping columnObjectName="JOIN_NDB_EH" columnName="OFFER_ID"/>
+      </attribute>
+      <attribute id="PACKAGE_ID" order="2" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="PACKAGE_ID"/>
+        <keyMapping columnObjectName="JOIN_NDB_EH" columnName="PACKAGE_ID"/>
+      </attribute>
+      <attribute id="ITEM_ID" order="3" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ITEM_ID"/>
+        <keyMapping columnObjectName="JOIN_NDB_EH" columnName="ITEM_ID"/>
+      </attribute>
+      <attribute id="REFERENCE_EFFECTIVE_DT" order="4" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="REFERENCE_EFFECTIVE_DT"/>
+        <keyMapping columnObjectName="JOIN_NDB_EH" columnName="REFERENCE_EFFECTIVE_DT"/>
+      </attribute>
+      <attribute id="REFERENCE_EXPIRY_DT" order="5" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="REFERENCE_EXPIRY_DT"/>
+        <keyMapping columnObjectName="JOIN_NDB_EH" columnName="REFERENCE_EXPIRY_DT"/>
+      </attribute>
+      <attribute id="EFF_SALE_DATE" order="6" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="EFF_SALE_DATE"/>
+        <keyMapping columnObjectName="JOIN_NDB_EH" columnName="EFF_SALE_DATE"/>
+      </attribute>
+      <attribute id="EXP_SALE_DATE" order="7" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="EXP_SALE_DATE"/>
+        <keyMapping columnObjectName="JOIN_NDB_EH" columnName="EXP_SALE_DATE"/>
+      </attribute>
+      <attribute id="OFFER_NAME" order="8" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="OFFER_NAME"/>
+        <keyMapping columnObjectName="JOIN_NDB_EH" columnName="OFFER_NAME"/>
+      </attribute>
+      <attribute id="OFFER_LEVEL" order="9" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="OFFER_LEVEL"/>
+        <keyMapping columnObjectName="JOIN_NDB_EH" columnName="OFFER_LEVEL"/>
+      </attribute>
+      <attribute id="OFFER_TYPE" order="10" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="OFFER_TYPE"/>
+        <keyMapping columnObjectName="JOIN_NDB_EH" columnName="OFFER_TYPE"/>
+      </attribute>
+      <attribute id="OFFER_PROPERTIES" order="11" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="OFFER_PROPERTIES"/>
+        <keyMapping columnObjectName="JOIN_NDB_EH" columnName="OFFER_PROPERTIES"/>
+      </attribute>
+      <attribute id="CURRENCY_CODE" order="12" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CURRENCY_CODE"/>
+        <keyMapping columnObjectName="JOIN_NDB_EH" columnName="CURRENCY_CODE"/>
+      </attribute>
+      <attribute id="PACKAGE_NAME" order="13" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="PACKAGE_NAME"/>
+        <keyMapping columnObjectName="JOIN_NDB_EH" columnName="PACKAGE_NAME"/>
+      </attribute>
+      <attribute id="ITEM_PARAM_ATTR_NAME" order="14" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ITEM_PARAM_ATTR_NAME"/>
+        <keyMapping columnObjectName="JOIN_NDB_EH" columnName="ITEM_PARAM_ATTR_NAME"/>
+      </attribute>
+      <attribute id="ITEM_PARAM_ATTR_UOM" order="15" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ITEM_PARAM_ATTR_UOM"/>
+        <keyMapping columnObjectName="JOIN_NDB_EH" columnName="ITEM_PARAM_ATTR_UOM"/>
+      </attribute>
+      <attribute id="ITEM_PARAM_ATTR_VALUE" order="16" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ITEM_PARAM_ATTR_VALUE"/>
+        <keyMapping columnObjectName="JOIN_NDB_EH" columnName="ITEM_PARAM_ATTR_VALUE"/>
+      </attribute>
+      <attribute id="PARAM_ITEM_DIMENTION" order="17" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="PARAM_ITEM_DIMENTION"/>
+        <keyMapping columnObjectName="JOIN_NDB_EH" columnName="PARAM_ITEM_DIMENTION"/>
+      </attribute>
+      <attribute id="ITEM_TYPE" order="18" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ITEM_TYPE"/>
+        <keyMapping columnObjectName="JOIN_NDB_EH" columnName="ITEM_TYPE"/>
+      </attribute>
+      <attribute id="ITEM_ROLE" order="19" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ITEM_ROLE"/>
+        <keyMapping columnObjectName="JOIN_NDB_EH" columnName="ITEM_ROLE"/>
+      </attribute>
+      <attribute id="CC_VERSION_CHECK" order="20" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CC_VERSION_CHECK"/>
+        <keyMapping columnObjectName="JOIN_NDB_EH" columnName="CC_VERSION_CHECK"/>
+      </attribute>
+    </attributes>
+    <calculatedAttributes/>
+    <privateDataFoundation>
+      <tableProxies/>
+      <joins/>
+      <layout>
+        <shapes/>
+      </layout>
+    </privateDataFoundation>
+    <baseMeasures/>
+    <calculatedMeasures/>
+    <restrictedMeasures/>
+    <localDimensions/>
+  </logicalModel>
+  <layout>
+    <shapes>
+      <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+        <upperLeftCorner x="99" y="87"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_NDB" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="22" y="261"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_EH" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="176" y="261"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="JOIN_NDB_EH" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="99" y="165"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+    </shapes>
+  </layout>
+</Calculation:scenario>

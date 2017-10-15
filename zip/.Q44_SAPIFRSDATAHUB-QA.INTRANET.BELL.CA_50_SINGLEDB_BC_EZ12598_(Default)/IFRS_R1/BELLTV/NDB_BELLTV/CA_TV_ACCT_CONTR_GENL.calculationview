@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" xmlns:Variable="http://www.sap.com/ndb/BiModelVariable.ecore" schemaVersion="2.3" id="CA_TV_ACCT_CONTR_GENL" applyPrivilegeType="ANALYTIC_PRIVILEGE" checkAnalyticPrivileges="true" defaultClient="$$client$$" defaultLanguage="$$language$$" hierarchiesSQLEnabled="false" historyEnabled="false" translationRelevant="true" visibility="internal" calculationScenarioType="TREE_BASED" dataCategory="DIMENSION" enforceSqlExecution="false" executionSemantic="UNDEFINED" outputViewType="Projection">
+  <descriptions defaultDescription="CA_TV_ACCT_CONTR_GENL"/>
+  <localVariables>
+    <variable id="IP_CYCL_ID" parameter="true">
+      <descriptions defaultDescription="IP_CYCL_ID"/>
+      <variableProperties datatype="NVARCHAR" defaultValue="999" length="3" mandatory="false">
+        <valueDomain type="empty"/>
+        <selection multiLine="false" type="SingleValue"/>
+      </variableProperties>
+    </variable>
+  </localVariables>
+  <variableMappings>
+    <mapping xsi:type="Variable:VariableMapping" dataSource="#CA_TV_ACCT_CONTR_GENL">
+      <targetVariable name="IP_CYCL_ID" resourceUri="/IFRS_R1.BELLTV.LAND_BELLTV/calculationviews/CA_TV_ACCT_CONTR_GENL"/>
+      <localVariable>#IP_CYCL_ID</localVariable>
+    </mapping>
+  </variableMappings>
+  <informationModelLayout relativeWidthScenario="43"/>
+  <dataSources>
+    <DataSource id="CA_TV_ACCT_CONTR_GENL" type="CALCULATION_VIEW">
+      <viewAttributes allViewAttributes="true"/>
+      <resourceUri>/IFRS_R1.BELLTV.LAND_BELLTV/calculationviews/CA_TV_ACCT_CONTR_GENL</resourceUri>
+    </DataSource>
+  </dataSources>
+  <calculationViews>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_PV_TV_ACCT_CONTR_GENL" filterExpressionLanguage="COLUMN_ENGINE">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="ACCT_NUM"/>
+        <viewAttribute id="EVNT_TY"/>
+        <viewAttribute id="CONTR_END_DT"/>
+        <viewAttribute id="EVNT_EFF_DT"/>
+        <viewAttribute id="EVNT_ID"/>
+        <viewAttribute id="CONTR_ID"/>
+        <viewAttribute id="CONTR_TERM"/>
+        <viewAttribute id="COMIT_TY"/>
+        <viewAttribute id="PRIN_NUM"/>
+        <viewAttribute id="CYCL_ID"/>
+        <viewAttribute id="SEQ_ID"/>
+        <viewAttribute id="SRC_TS"/>
+        <viewAttribute id="PROCESS_ID"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="DATE" id="CC_EVNT_EFF_DT" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isNull(&quot;CONTR_END_DT&quot;),&quot;EVNT_EFF_DT&quot;,&quot;CONTR_END_DT&quot;)&#xD;
+&#xD;
+</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CC_AGNT_NUM" length="4" expressionLanguage="COLUMN_ENGINE">
+          <formula>rpad(midstr(&quot;ACCT_NUM&quot;, 7,3),4,'0')&#xD;
+</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#CA_TV_ACCT_CONTR_GENL">
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACCT_NUM" source="ACCT_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EVNT_TY" source="EVNT_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTR_END_DT" source="CONTR_END_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EVNT_EFF_DT" source="EVNT_EFF_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EVNT_ID" source="EVNT_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTR_ID" source="CONTR_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTR_TERM" source="CONTR_TERM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="COMIT_TY" source="COMIT_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRIN_NUM" source="PRIN_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SEQ_ID" source="SEQ_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SRC_TS" source="SRC_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROCESS_ID" source="PROCESS_ID"/>
+      </input>
+      <filter>(in (&quot;EVNT_TY&quot;,'MODIFY COMMITMENT','TERM UPDATE','CONTRACT MODIFICATIONS','MODIFY CONTRACT DATES'))</filter>
+    </calculationView>
+  </calculationViews>
+  <logicalModel id="PROJ_PV_TV_ACCT_CONTR_GENL">
+    <descriptions/>
+    <attributes>
+      <attribute id="ACCT_NUM" order="1" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ACCT_NUM"/>
+        <keyMapping columnObjectName="PROJ_PV_TV_ACCT_CONTR_GENL" columnName="ACCT_NUM"/>
+      </attribute>
+      <attribute id="EVNT_TY" order="2" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="EVNT_TY"/>
+        <keyMapping columnObjectName="PROJ_PV_TV_ACCT_CONTR_GENL" columnName="EVNT_TY"/>
+      </attribute>
+      <attribute id="CONTR_END_DT" order="3" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CONTR_END_DT"/>
+        <keyMapping columnObjectName="PROJ_PV_TV_ACCT_CONTR_GENL" columnName="CONTR_END_DT"/>
+      </attribute>
+      <attribute id="EVNT_EFF_DT" order="4" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="EVNT_EFF_DT"/>
+        <keyMapping columnObjectName="PROJ_PV_TV_ACCT_CONTR_GENL" columnName="EVNT_EFF_DT"/>
+      </attribute>
+      <attribute id="EVNT_ID" order="5" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="EVNT_ID"/>
+        <keyMapping columnObjectName="PROJ_PV_TV_ACCT_CONTR_GENL" columnName="EVNT_ID"/>
+      </attribute>
+      <attribute id="CONTR_ID" order="6" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CONTR_ID"/>
+        <keyMapping columnObjectName="PROJ_PV_TV_ACCT_CONTR_GENL" columnName="CONTR_ID"/>
+      </attribute>
+      <attribute id="CONTR_TERM" order="7" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CONTR_TERM"/>
+        <keyMapping columnObjectName="PROJ_PV_TV_ACCT_CONTR_GENL" columnName="CONTR_TERM"/>
+      </attribute>
+      <attribute id="COMIT_TY" order="8" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="COMIT_TY"/>
+        <keyMapping columnObjectName="PROJ_PV_TV_ACCT_CONTR_GENL" columnName="COMIT_TY"/>
+      </attribute>
+      <attribute id="PRIN_NUM" order="9" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="PRIN_NUM"/>
+        <keyMapping columnObjectName="PROJ_PV_TV_ACCT_CONTR_GENL" columnName="PRIN_NUM"/>
+      </attribute>
+      <attribute id="CYCL_ID" order="10" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CYCL_ID"/>
+        <keyMapping columnObjectName="PROJ_PV_TV_ACCT_CONTR_GENL" columnName="CYCL_ID"/>
+      </attribute>
+      <attribute id="SEQ_ID" order="11" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SEQ_ID"/>
+        <keyMapping columnObjectName="PROJ_PV_TV_ACCT_CONTR_GENL" columnName="SEQ_ID"/>
+      </attribute>
+      <attribute id="SRC_TS" order="12" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SRC_TS"/>
+        <keyMapping columnObjectName="PROJ_PV_TV_ACCT_CONTR_GENL" columnName="SRC_TS"/>
+      </attribute>
+      <attribute id="PROCESS_ID" order="13" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="PROCESS_ID"/>
+        <keyMapping columnObjectName="PROJ_PV_TV_ACCT_CONTR_GENL" columnName="PROCESS_ID"/>
+      </attribute>
+      <attribute id="CC_EVNT_EFF_DT" order="14" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CC_EVNT_EFF_DT"/>
+        <keyMapping columnObjectName="PROJ_PV_TV_ACCT_CONTR_GENL" columnName="CC_EVNT_EFF_DT"/>
+      </attribute>
+      <attribute id="CC_AGNT_NUM" order="15" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CC_AGNT_NUM"/>
+        <keyMapping columnObjectName="PROJ_PV_TV_ACCT_CONTR_GENL" columnName="CC_AGNT_NUM"/>
+      </attribute>
+    </attributes>
+    <calculatedAttributes/>
+    <privateDataFoundation>
+      <tableProxies/>
+      <joins/>
+      <layout>
+        <shapes/>
+      </layout>
+    </privateDataFoundation>
+    <baseMeasures/>
+    <calculatedMeasures/>
+    <restrictedMeasures/>
+    <localDimensions/>
+  </logicalModel>
+  <layout>
+    <shapes>
+      <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+        <upperLeftCorner x="27" y="87"/>
+        <rectangleSize height="64" width="229"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_PV_TV_ACCT_CONTR_GENL" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="22" y="165"/>
+        <rectangleSize height="64" width="239"/>
+      </shape>
+    </shapes>
+  </layout>
+</Calculation:scenario>

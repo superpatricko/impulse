@@ -1,0 +1,487 @@
+PROCEDURE "NDB_MOBILITY"."IFRS_R1.MOBILITY.NDB_MOBILITY::SP_VIR_INV" 
+(OUT OP_STATUS NVARCHAR(100))
+	LANGUAGE SQLSCRIPT
+	SQL SECURITY INVOKER
+	--DEFAULT SCHEMA <default_schema_name>
+	--READS SQL DATA 
+	AS
+BEGIN	
+ 
+--------------------------------------------------------------------------------------------------
+-- Procedure Title : SP_VIR_INV
+-- Created By      : BC_EZ10152 (KISHAN PUROHIT)       
+-- Create Date     : 16-05-2017
+-- Description     : It is used to Upsert data in NDB Billing Table.
+--                   NDB_TS is updated in Landing Table after data is loaded in NDB.
+-- Project         : Bell Canada
+-- Release         : R1 / IFRS
+--------------------------------------------------------------------------------------------------
+--   M O D I F I C A T I O N   H I S T O R Y
+--------------------------------------------------------------------------------------------------
+-- Date        | User ID          | Modification History/Release
+--------------------------------------------------------------------------------------------------
+--             |                  | 
+--------------------------------------------------------------------------------------------------
+-- Description Of the changes 
+--------------------------------------------------------------------------------------------------
+-- Modification Number          : <Assign Some Number> 
+-- Description of Changes Made> : <Description of Changes>       
+--------------------------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------------------------
+-- Local Variables Declaration
+--------------------------------------------------------------------------------------------------
+
+DECLARE LC_ERROR_TEXT 		NVARCHAR(70) DEFAULT 'OUT STATUS IS 1 : INSERT/UPDATE FOR ONE OR MORE RECORD FAILED';
+DECLARE LC_SUCCESS_TEXT 	NVARCHAR(70) DEFAULT 'OUT STATUS IS 0 : INSERT/UPDATE EXECUTION SUCCESSFUL';
+DECLARE LV_ERROR_FLAG 		NVARCHAR(1) := 'N';
+DECLARE LV_CUR_UTC 			TIMESTAMP := CURRENT_TIMESTAMP;
+DECLARE ERROR_TAB 			TABLE (ERROR_CODE NVARCHAR(100));
+DECLARE i					INTEGER;
+DECLARE RECORD_COUNT		INTEGER;
+DECLARE CURRENT_ERROR		NVARCHAR(100);
+DECLARE LC_ENT_SEQ_NO     	NVARCHAR(12);
+
+--------------------------------------------------------------------------------------------------
+-- Cursors Declaration
+-------------------------------------------------------------------------------------------------- 
+
+DECLARE CURSOR C_VIR_INV FOR
+		SELECT
+		 	  "ITEM_ID",
+	          "BAN",
+	          "SUBSCR_NO",
+	          "PROV",
+	          "KUNNR_SID",
+	          "GL_ACCT_NO",
+	          "GL_COST_CENTRE",
+	          "JOURN_DT",
+	          "GL_JURISD_CD",
+	          "PROMO_CD",
+	          "ITEM_SUB_ID",
+	          "AMT",
+	          "DSCT_CD",
+	          "ADJ_RSN_CD",
+	          "CHRG_SEQ_NO",
+	          "GL_TAX_CD",
+	          "UOM",
+	          "ACCR_IND",
+	          "ACTV_CD",
+	          "ACTV_RSN_CD",
+	          "BAL_IMP_CD",
+	          "BILLER",
+	          "OVER_USE_IND",
+	          "TRANS_TY",
+	          "ADJ_RSN_CLASS_CD",
+	          "FTR_REV_CD",
+	          "GL_PRICE_PLAN_GRP",
+	          "AR_ACTV",
+	          "CURR_CODE",
+	          "CR_DR_IND",
+	          "REALLOCATION_IND",
+	          "VIRTUAL_INV_FLAG",
+	          "CUSTOMER_GROUP",
+	          "MATERIAL_GROUP",
+	          "REV_ACTG_DOC_NUM",
+	          "REV_ACT_DOC_TY",
+	          "BANNER",
+	          "ART_NUM",
+	          "DEALER",
+	          "BRND",
+	          "EFF_DT",
+	          "COUNT",
+	          "BILL_PRIMARY_KEY",
+	          CHRG_TY_CLASSIF,
+	          "CYCLE_NUM",	          
+	          "ERROR_CODE",
+	          "ERROR_STATUS"
+		 FROM "_SYS_BIC"."IFRS_R1.MOBILITY.NDB_MOBILITY/CA_VIRTUAL_INVOICE";
+	
+--------------------------------------------------------------------------------------------------
+-- Local Temporary Tables Declaration
+--------------------------------------------------------------------------------------------------  
+
+	CREATE LOCAL TEMPORARY TABLE #UPDATE_EH_DELETION(BAN NVARCHAR(9),
+	                                                 SUBSCR_NO NVARCHAR(30),
+	                                                 ITEM_ID NVARCHAR(20),
+	                                                 ITEM_SUB_ID NVARCHAR(6));
+	
+--------------------------------------------------------------------------------------------------
+-- Cursors Loop
+-------------------------------------------------------------------------------------------------- 		
+
+	FOR CUR_INV AS C_VIR_INV DO
+		
+		-- Define Exit Handler
+		DECLARE EXIT HANDLER FOR SQLEXCEPTION 
+		BEGIN AUTONOMOUS TRANSACTION
+			-- Define Exit Handler
+			DECLARE EXIT HANDLER FOR SQLEXCEPTION 
+			BEGIN AUTONOMOUS TRANSACTION 
+			END;
+			INSERT INTO "NDB_MOBILITY"."IFRS_R1.MOBILITY.NDB_MOBILITY::MOBL_POST_BILL_EH"(
+				     "ITEM_ID",
+	                 "BAN",
+	                 "SUBSCR_NO",
+	                 "PROV",
+	                 "KUNNR_SID",
+	                 "GL_ACCT_NO",
+	                 "GL_COST_CENTRE",
+	                 "JOURN_DT",
+	                 "GL_JURISD_CD",
+	                 "PROMO_CD",
+	                 "ITEM_SUB_ID",
+	                 "AMT",
+	                 "DSCT_CD",
+	                 "ADJ_RSN_CD",
+	                 "CHRG_SEQ_NO",
+	                 "GL_TAX_CD",
+	                 "UOM",
+	                 "ACCR_IND",
+	                 "ACTV_CD",
+	                 "ACTV_RSN_CD",
+	                 "BAL_IMP_CD",
+	                 "BILLER",
+	                 "OVER_USE_IND",
+	                 "TRANS_TY",
+	                 "ADJ_RSN_CLASS_CD",
+	                 "FTR_REV_CD",
+	                 "GL_PRICE_PLAN_GRP",
+	                 "AR_ACTV",
+	                 "CURR_CODE",
+	                 "CR_DR_IND",
+	                 "REALLOCATION_IND",
+	                 "VIRTUAL_INV_FLAG",
+	                 "CUSTOMER_GROUP",
+	                 "MATERIAL_GROUP",
+	                 "REV_ACTG_DOC_NUM",
+	                 "REV_ACT_DOC_TY",
+	                 "BANNER",
+	                 "ART_NUM",
+	                 "DEALER",
+	                 "BRND",
+	                 "EFF_DT",
+	               	 "COUNT",
+	         		 "BILL_PRIMARY_KEY",
+	         		 CHRG_TY_CLASSIF,
+	                 "CYCLE_NUM",					 
+					 "INSERT_TS",
+					 "ERROR_CODE",
+					 "TECHNICAL_MESSAGE",
+					 "ERROR_CREATE_TS"
+					 ) VALUES (
+					 CUR_INV."ITEM_ID",
+	                 CUR_INV."BAN",
+	                 CUR_INV."SUBSCR_NO",
+	                 CUR_INV."PROV",
+	                 CUR_INV."KUNNR_SID",
+	                 CUR_INV."GL_ACCT_NO",
+	                 CUR_INV."GL_COST_CENTRE",
+	                 CUR_INV."JOURN_DT",
+	                 CUR_INV."GL_JURISD_CD",
+	                 CUR_INV."PROMO_CD",
+	                 CUR_INV."ITEM_SUB_ID",
+	                 CUR_INV."AMT",
+	                 CUR_INV."DSCT_CD",
+	                 CUR_INV."ADJ_RSN_CD",
+	                 CUR_INV."CHRG_SEQ_NO",
+	                 CUR_INV."GL_TAX_CD",
+	                 CUR_INV."UOM",
+	                 CUR_INV."ACCR_IND",
+	                 CUR_INV."ACTV_CD",
+	                 CUR_INV."ACTV_RSN_CD",
+	                 CUR_INV."BAL_IMP_CD",
+	                 CUR_INV."BILLER",
+	                 CUR_INV."OVER_USE_IND",
+	                 CUR_INV."TRANS_TY",
+	                 CUR_INV."ADJ_RSN_CLASS_CD",
+	                 CUR_INV."FTR_REV_CD",
+	                 CUR_INV."GL_PRICE_PLAN_GRP",
+	                 CUR_INV."AR_ACTV",
+	                 CUR_INV."CURR_CODE",
+	                 CUR_INV."CR_DR_IND",
+	                 CUR_INV."REALLOCATION_IND",
+	                 CUR_INV."VIRTUAL_INV_FLAG",
+	                 CUR_INV."CUSTOMER_GROUP",
+	                 CUR_INV."MATERIAL_GROUP",
+	                 CUR_INV."REV_ACTG_DOC_NUM",
+	                 CUR_INV."REV_ACT_DOC_TY",
+	                 CUR_INV."BANNER",
+	                 CUR_INV."ART_NUM",
+	                 CUR_INV."DEALER",
+	                 CUR_INV."BRND",
+	                 CUR_INV."EFF_DT",
+	                 CUR_INV."COUNT",
+	  	             CUR_INV."BILL_PRIMARY_KEY",
+	  	             CUR_INV.CHRG_TY_CLASSIF,
+	                 CUR_INV."CYCLE_NUM", 
+					 LV_CUR_UTC,
+					 ::SQL_ERROR_CODE,
+				 	 ::SQL_ERROR_MESSAGE,
+	  				 LV_CUR_UTC);
+	  				 
+			LV_ERROR_FLAG := 'Y';		   
+		
+		END;
+		SELECT "CONV_STG_MOBILITY"."IFRS_R1_CONV.MOBILITY.STG_MOBILITY::SEQ_ENT_SEQ_NO_CONV".nextval INTO LC_ENT_SEQ_NO FROM DUMMY;
+		
+		--Check the Error Status of the Record. If Record is with Error, then send to Error Table
+		IF CUR_INV.ERROR_STATUS = '1' THEN
+			--  Call the Stored Procedure to split the concatenated Error Messages into Error Rows
+		    CALL "NDB_COMMON"."IFRS_R1.COMMON_COMP.EH::SP_EH_SPLIT_ERRORS"(CUR_INV."ERROR_CODE", ERROR_TAB, RECORD_COUNT);
+		    FOR i IN 1 .. :RECORD_COUNT DO
+		    	CURRENT_ERROR = :ERROR_TAB."ERROR_CODE"[:i];
+		    	--Insert data into NDB Error table
+		    	INSERT INTO "NDB_MOBILITY"."IFRS_R1.MOBILITY.NDB_MOBILITY::MOBL_POST_BILL_EH"(
+				     "ITEM_ID",
+	                 "BAN",
+	                 "SUBSCR_NO",
+	                 "PROV",
+	                 "KUNNR_SID",
+	                 "GL_ACCT_NO",
+	                 "GL_COST_CENTRE",
+	                 "JOURN_DT",
+	                 "GL_JURISD_CD",
+	                 "PROMO_CD",
+	                 "ITEM_SUB_ID",
+	                 "AMT",
+	                 "DSCT_CD",
+	                 "ADJ_RSN_CD",
+	                 "CHRG_SEQ_NO",
+	                 "GL_TAX_CD",
+	                 "UOM",
+	                 "ACCR_IND",
+	                 "ACTV_CD",
+	                 "ACTV_RSN_CD",
+	                 "BAL_IMP_CD",
+	                 "BILLER",
+	                 "OVER_USE_IND",
+	                 "TRANS_TY",
+	                 "ADJ_RSN_CLASS_CD",
+	                 "FTR_REV_CD",
+	                 "GL_PRICE_PLAN_GRP",
+	                 "AR_ACTV",
+	                 "CURR_CODE",
+	                 "CR_DR_IND",
+	                 "REALLOCATION_IND",
+	                 "VIRTUAL_INV_FLAG",
+	                 "CUSTOMER_GROUP",
+	                 "MATERIAL_GROUP",
+	                 "REV_ACTG_DOC_NUM",
+	                 "REV_ACT_DOC_TY",
+	                 "BANNER",
+	                 "ART_NUM",
+	                 "DEALER",
+	                 "BRND",
+	                 "EFF_DT",
+	                 "COUNT",
+	         		 "BILL_PRIMARY_KEY",
+	         		 CHRG_TY_CLASSIF,
+	                 "CYCLE_NUM",					 
+					 "INSERT_TS",
+					 "ERROR_CODE",
+					 "ERROR_CREATE_TS"
+					 ) VALUES (
+					 CUR_INV."ITEM_ID",
+	                 CUR_INV."BAN",
+	                 CUR_INV."SUBSCR_NO",
+	                 CUR_INV."PROV",
+	                 CUR_INV."KUNNR_SID",
+	                 CUR_INV."GL_ACCT_NO",
+	                 CUR_INV."GL_COST_CENTRE",
+	                 CUR_INV."JOURN_DT",
+	                 CUR_INV."GL_JURISD_CD",
+	                 CUR_INV."PROMO_CD",
+	                 CUR_INV."ITEM_SUB_ID",
+	                 CUR_INV."AMT",
+	                 CUR_INV."DSCT_CD",
+	                 CUR_INV."ADJ_RSN_CD",
+	                 CUR_INV."CHRG_SEQ_NO",
+	                 CUR_INV."GL_TAX_CD",
+	                 CUR_INV."UOM",
+	                 CUR_INV."ACCR_IND",
+	                 CUR_INV."ACTV_CD",
+	                 CUR_INV."ACTV_RSN_CD",
+	                 CUR_INV."BAL_IMP_CD",
+	                 CUR_INV."BILLER",
+	                 CUR_INV."OVER_USE_IND",
+	                 CUR_INV."TRANS_TY",
+	                 CUR_INV."ADJ_RSN_CLASS_CD",
+	                 CUR_INV."FTR_REV_CD",
+	                 CUR_INV."GL_PRICE_PLAN_GRP",
+	                 CUR_INV."AR_ACTV",
+	                 CUR_INV."CURR_CODE",
+	                 CUR_INV."CR_DR_IND",
+	                 CUR_INV."REALLOCATION_IND",
+	                 CUR_INV."VIRTUAL_INV_FLAG",
+	                 CUR_INV."CUSTOMER_GROUP",
+	                 CUR_INV."MATERIAL_GROUP",
+	                 CUR_INV."REV_ACTG_DOC_NUM",
+	                 CUR_INV."REV_ACT_DOC_TY",
+	                 CUR_INV."BANNER",
+	                 CUR_INV."ART_NUM",
+	                 CUR_INV."DEALER",
+	                 CUR_INV."BRND",
+	                 CUR_INV."EFF_DT",
+	                 CUR_INV."COUNT",
+	         		 CUR_INV."BILL_PRIMARY_KEY",
+	         		 CUR_INV.CHRG_TY_CLASSIF,
+	                 CUR_INV."CYCLE_NUM",	 
+					 LV_CUR_UTC,
+					 :CURRENT_ERROR,
+	  				 LV_CUR_UTC);
+	  				 
+		    END FOR;
+		 LV_ERROR_FLAG := 'Y';
+		 
+		 
+		 ELSEIF CUR_INV.ERROR_STATUS = '0' THEN 
+		 		INSERT INTO "NDB_MOBILITY"."IFRS_R1.MOBILITY.NDB_MOBILITY::MOBL_POST_BILL"(
+				     "ITEM_ID",
+	                 "BAN",
+	                 "SUBSCR_NO",
+	                 "PROV",
+	                 "KUNNR_SID",
+	                 "GL_ACCT_NO",
+	                 "GL_COST_CENTRE",
+	                 "JOURN_DT",
+	                 "GL_JURISD_CD",
+	                 "PROMO_CD",
+	                 "ITEM_SUB_ID",
+	                 "AMT",
+	                 "DSCT_CD",
+	                 "ADJ_RSN_CD",
+	                 "CHRG_SEQ_NO",
+	                 "GL_TAX_CD",
+	                 "UOM",
+	                 "ACCR_IND",
+	                 "ACTV_CD",
+	                 "ACTV_RSN_CD",
+	                 "BAL_IMP_CD",
+	                 "BILLER",
+	                 "OVER_USE_IND",
+	                 "TRANS_TY",
+	                 "ADJ_RSN_CLASS_CD",
+	                 "FTR_REV_CD",
+	                 "GL_PRICE_PLAN_GRP",
+	                 "AR_ACTV",
+	                 "CURR_CODE",
+	                 "CR_DR_IND",
+	                 "REALLOCATION_IND",
+	                 "VIRTUAL_INV_FLAG",
+	                 "CUSTOMER_GROUP",
+	                 "MATERIAL_GROUP",
+	                 "REV_ACTG_DOC_NUM",
+	                 "REV_ACT_DOC_TY",
+	                 "BANNER",
+	                 "ART_NUM",
+	                 "DEALER",
+	                 "BRND",
+	                 "EFF_DT",
+	                 "COUNT",
+	         		 "BILL_PRIMARY_KEY",
+	         		 CHRG_TY_CLASSIF,
+	                 "CYCLE_NUM",
+	                 "BILL_SEQ_NO",
+                     "ENT_SEQ_NO",					 
+					 "INSERT_TS"
+					 ) VALUES (
+					 CUR_INV."ITEM_ID",
+	                 CUR_INV."BAN",
+	                 CUR_INV."SUBSCR_NO",
+	                 CUR_INV."PROV",
+	                 CUR_INV."KUNNR_SID",
+	                 CUR_INV."GL_ACCT_NO",
+	                 CUR_INV."GL_COST_CENTRE",
+	                 CUR_INV."JOURN_DT",
+	                 CUR_INV."GL_JURISD_CD",
+	                 CUR_INV."PROMO_CD",
+	                 CUR_INV."ITEM_SUB_ID",
+	                 CUR_INV."AMT",
+	                 CUR_INV."DSCT_CD",
+	                 CUR_INV."ADJ_RSN_CD",
+	                 CUR_INV."CHRG_SEQ_NO",
+	                 CUR_INV."GL_TAX_CD",
+	                 CUR_INV."UOM",
+	                 CUR_INV."ACCR_IND",
+	                 CUR_INV."ACTV_CD",
+	                 CUR_INV."ACTV_RSN_CD",
+	                 CUR_INV."BAL_IMP_CD",
+	                 CUR_INV."BILLER",
+	                 CUR_INV."OVER_USE_IND",
+	                 CUR_INV."TRANS_TY",
+	                 CUR_INV."ADJ_RSN_CLASS_CD",
+	                 CUR_INV."FTR_REV_CD",
+	                 CUR_INV."GL_PRICE_PLAN_GRP",
+	                 CUR_INV."AR_ACTV",
+	                 CUR_INV."CURR_CODE",
+	                 CUR_INV."CR_DR_IND",
+	                 CUR_INV."REALLOCATION_IND",
+	                 CUR_INV."VIRTUAL_INV_FLAG",
+	                 CUR_INV."CUSTOMER_GROUP",
+	                 CUR_INV."MATERIAL_GROUP",
+	                 CUR_INV."REV_ACTG_DOC_NUM",
+	                 CUR_INV."REV_ACT_DOC_TY",
+	                 CUR_INV."BANNER",
+	                 CUR_INV."ART_NUM",
+	                 CUR_INV."DEALER",
+	                 CUR_INV."BRND",
+	                 CUR_INV."EFF_DT",
+	                 CUR_INV."COUNT",
+	         		 CUR_INV."BILL_PRIMARY_KEY"||'I'||(:LC_ENT_SEQ_NO),
+	         		 CUR_INV.CHRG_TY_CLASSIF,
+	                 CUR_INV."CYCLE_NUM",
+	                 'I'||"NDB_MOBILITY"."IFRS_R1.MOBILITY.NDB_MOBILITY::SEQ_BILL_SEQ_NO".nextval,
+                     'I'||:LC_ENT_SEQ_NO,	 
+					 LV_CUR_UTC);
+					-- Update VIR_INV_TS with current_timestamp for the records that has been processed for MOBL_POST_ORDER table
+                    UPDATE  "NDB_MOBILITY"."IFRS_R1.MOBILITY.NDB_MOBILITY::MOBL_POST_ORDER" ORD
+                       SET VIR_INV_TS = LV_CUR_UTC
+                     WHERE ORD.BAN = CUR_INV.BAN
+                       AND ORD.SUBSCR_NO = CUR_INV.SUBSCR_NO
+                       AND ORD.ITEM_ID = CUR_INV.ITEM_ID
+                       AND ORD.ITEM_SUB_ID = CUR_INV.ITEM_SUB_ID
+                       AND VIR_INV_TS IS NULL;
+									
+				
+					INSERT INTO #UPDATE_EH_DELETION(BAN,
+								 	                SUBSCR_NO,
+								 	                ITEM_ID,
+								 	                ITEM_SUB_ID
+								 	                ) VALUES (
+									                CUR_INV."BAN",
+								 	                CUR_INV."SUBSCR_NO",
+								 	                CUR_INV."ITEM_ID",
+								 	                CUR_INV."ITEM_SUB_ID");
+								 	                
+
+					
+		 END IF;
+	END FOR;
+	
+--------------------------------------------------------------------------------------------------
+-- Update Error Table
+--------------------------------------------------------------------------------------------------
+
+	UPDATE "NDB_MOBILITY"."IFRS_R1.MOBILITY.NDB_MOBILITY::MOBL_POST_BILL_EH" A
+    FROM "NDB_MOBILITY"."IFRS_R1.MOBILITY.NDB_MOBILITY::MOBL_POST_BILL_EH" A 
+    INNER JOIN #UPDATE_EH_DELETION B       
+  	ON  A.BAN            =         B.BAN
+	AND A.SUBSCR_NO      =         B.SUBSCR_NO
+	AND A.ITEM_ID        =         B.ITEM_ID
+	AND A.ITEM_SUB_ID    =         B.ITEM_SUB_ID
+    SET (DELETE_DATE, DELETED) = (CURRENT_DATE, 1);
+    
+--------------------------------------------------------------------------------------------------
+	-- Set Overall Status
+-------------------------------------------------------------------------------------------------- 
+	--  STATUS 0: Send the success message to scheduling tool to confirm this procedure has been
+	--  executed successfully
+    
+    IF(LV_ERROR_FLAG = 'Y') THEN
+    	            OP_STATUS := LC_ERROR_TEXT; 			
+    ELSE
+  		            OP_STATUS := LC_SUCCESS_TEXT;				
+	END IF;
+	
+END;

@@ -1,0 +1,240 @@
+PROCEDURE "NDB_MOBILITY"."IFRS_R1.MOBILITY.NDB_MOBILITY::SP_PS_ACCT_BAL" 
+(IN IP_CYCL_ID NVARCHAR(3),
+OUT OP_STATUS NVARCHAR(1000))  
+	LANGUAGE SQLSCRIPT
+	AS
+BEGIN
+--------------------------------------------------------------------------------
+-- Procedure Title : IFRS_R1.MOBILITY.NDB_MOBILITY::SP_EDWMOB_BAN
+--
+-- Created By      : BC_EZ07501(Sameer Kumar Behera)          Date :10/09/2016
+-- 
+-- Procedure Description : 
+--  1.We will Update Account Balance Information of PeopleSoft Customer into NDB layer
+--	2.Provides the subsidy information (effective/expiry dates, rebate type, 
+--    subsidy amount, subsidy duration, etc.) for each contract.
+-- 
+-- 
+-- Project: Bell Canada
+-- 	
+-- 
+-- Release :R1/IFRS
+--------------------------------------------------------------------------------
+--   M O D I F I C A T I O N   H I S T O R Y
+--------------------------------------------------------------------------------
+-- Date        | User ID          | Modification History/Release
+--------------------------------------------------------------------------------
+-- 06/10/2016  | BC_EZ07501       | Updated after unit testing
+-- 25/01/2017  | BC_EZ07674       | Customer History changes
+--------------------------------------------------------------------------------
+-- Description Of the changes 
+--------------------------------------------------------------------------------
+-- Modification Number          :<Assign Some Number> 
+-- Description of Changes Made> :<Updated the logic of NDB_TS write back>       
+--------------------------------------------------------------------------------
+
+	DECLARE LC_ERROR_TEXT 		NVARCHAR(70) DEFAULT 'OUT STATUS IS 1 : INSERT/UPDATE FOR ONE OR MORE RECORD FAILED';
+	DECLARE LC_SUCCESS_TEXT 	NVARCHAR(70) DEFAULT 'OUT STATUS IS 0 : INSERT/UPDATE EXECUTION SUCCESSFUL';
+	DECLARE LV_ERROR_FLAG 		NVARCHAR(1) := 'N';
+	DECLARE LV_CUR_UTC 			TIMESTAMP := CURRENT_TIMESTAMP;
+	DECLARE ERROR_TAB 			TABLE (ERROR_CODE NVARCHAR(100));
+	DECLARE i					INTEGER;
+	DECLARE RECORD_COUNT		INTEGER;
+	DECLARE CURRENT_ERROR		NVARCHAR(100);
+	DECLARE LV_LOOP_ERROR_FLAG  INTEGER := 0;
+	DECLARE LV_PREV_CUSTOMER_ID    NVARCHAR(30) := NULL;
+
+	DECLARE CURSOR CA_PS_ACCT_BAL FOR
+	SELECT
+	 "CUSTOMER_ID",
+	 "NEW_PLATFORM_BALANCE",
+	 "NEW_PLATFORM_BALANCE_EXPIRY_DATE",
+	 "CUSTOMER_EXPIRY_DT",
+	 "ERROR_CODE",
+	 "ERROR_STATUS",
+	 "CYCL_ID" 
+    FROM "_SYS_BIC"."IFRS_R1.MOBILITY.NDB_MOBILITY/CA_PS_ACCT_BAL"
+	(PLACEHOLDER."$$IP_CYCL_ID$$"=> :IP_CYCL_ID)
+	ORDER BY "CYCL_ID", "SEQ_ID";
+
+
+--------------------------------------------------------------------------------------------------
+-- Local Temporary Tables Declaration
+--------------------------------------------------------------------------------------------------	
+ 
+CREATE LOCAL TEMPORARY TABLE #UPDATE_PS_ACCT_BAL (CUSTOMER_ID NVARCHAR(30), CYCL_ID NVARCHAR(3));
+CREATE LOCAL TEMPORARY TABLE #UPDATE_EH_DELETION (CUSTOMER_ID NVARCHAR(30));
+	
+--------------------------------------------------------------------------------------------------
+-- Cursors Loop
+-------------------------------------------------------------------------------------------------- 	
+FOR C_BAL AS CA_PS_ACCT_BAL DO		
+
+--  Define Exit Handler
+	DECLARE EXIT HANDLER FOR SQLEXCEPTION 
+	BEGIN AUTONOMOUS TRANSACTION 
+	
+--    Define Exit Handler
+	  DECLARE EXIT HANDLER FOR SQLEXCEPTION 
+	  BEGIN AUTONOMOUS TRANSACTION 	
+	   
+	-- Do Nothing. Exception Handled to ensure SP does not get terminated 
+	
+ 	  END;
+			
+		      -- Insert record into error table
+		      	INSERT INTO "NDB_MOBILITY"."IFRS_R1.MOBILITY.NDB_MOBILITY::MOBL_CUST_EH"
+			    (
+				    "NEW_PLATFORM_BALANCE",
+				    "BALANCE_EXPIRY_DATE",
+				    "ERROR_CODE",
+				    "TECHNICAL_MESSAGE",
+				    "ERROR_CREATE_TS"
+			    ) 
+			    VALUES 
+			    (	
+			    	C_BAL."NEW_PLATFORM_BALANCE",
+				    C_BAL."NEW_PLATFORM_BALANCE_EXPIRY_DATE",
+				    ::SQL_ERROR_CODE,
+				    ::SQL_ERROR_MESSAGE,
+				    LV_CUR_UTC
+			    );
+			   	         
+	  			LV_ERROR_FLAG := 'Y';
+	  			LV_LOOP_ERROR_FLAG := 1;
+  	END;	  
+  	
+-----------------------------------------------------------------------------------------------   
+    
+-- FOR CLEARING THE VARIABLES
+
+	IF (LV_PREV_CUSTOMER_ID IS NULL OR (C_BAL."CUSTOMER_ID" != LV_PREV_CUSTOMER_ID)) THEN
+
+		LV_LOOP_ERROR_FLAG := 0;
+		LV_PREV_CUSTOMER_ID := C_BAL."CUSTOMER_ID";
+			 	   
+    END IF;
+ -----------------------------------------------------------------------------------------------
+--  Check the Error Status of the Record. If Record is with Error, then send to Error Table
+	IF C_BAL.ERROR_STATUS = '1' THEN
+	
+	--  Call the Stored Procedure to split the concatenated Error Messages into Error Rows
+		CALL "NDB_COMMON"."IFRS_R1.COMMON_COMP.EH::SP_EH_SPLIT_ERRORS"(C_BAL."ERROR_CODE", ERROR_TAB, RECORD_COUNT);
+
+     -- Loop through the Error Records
+		FOR i IN 1 .. :RECORD_COUNT DO
+			
+		 -- Fetch the Error Code
+			CURRENT_ERROR = :ERROR_TAB."ERROR_CODE"[:i];
+			
+		 -- Insert into the Error Table
+		    	INSERT INTO "NDB_MOBILITY"."IFRS_R1.MOBILITY.NDB_MOBILITY::MOBL_CUST_EH"
+			    (
+				    "NEW_PLATFORM_BALANCE",
+				    "BALANCE_EXPIRY_DATE",
+				    "ERROR_CODE",
+				    "ERROR_CREATE_TS"
+			    ) 
+			    VALUES 
+			    (	
+			    	C_BAL."NEW_PLATFORM_BALANCE",
+				    C_BAL."NEW_PLATFORM_BALANCE_EXPIRY_DATE",
+				    :CURRENT_ERROR,
+				    LV_CUR_UTC
+			    );
+		    
+	    -- Set Error Flag				        
+	    LV_ERROR_FLAG := 'Y';
+	    LV_LOOP_ERROR_FLAG := 1;
+	    LV_PREV_CUSTOMER_ID := C_BAL."CUSTOMER_ID";
+	    
+		END FOR;
+						         		        
+-- Processing for Successful Records
+   ELSE
+              	    
+	        IF LV_LOOP_ERROR_FLAG = 1 THEN
+	        
+	        		    	INSERT INTO "NDB_MOBILITY"."IFRS_R1.MOBILITY.NDB_MOBILITY::MOBL_CUST_EH"
+			    (
+				    "NEW_PLATFORM_BALANCE",
+				    "BALANCE_EXPIRY_DATE",
+				    "ERROR_CODE",
+				    "ERROR_CREATE_TS"
+			    ) 
+			    VALUES 
+			    (	
+			    	C_BAL."NEW_PLATFORM_BALANCE",
+				    C_BAL."NEW_PLATFORM_BALANCE_EXPIRY_DATE",
+				    'PREVIOUS VERSION IN ERROR',
+				    LV_CUR_UTC
+			    );
+	ELSE
+	        BEGIN AUTONOMOUS TRANSACTION
+   --     Update Records into the target NDB table   
+ 
+			UPDATE "NDB_MOBILITY"."IFRS_R1.MOBILITY.NDB_MOBILITY::MOBL_CUST" MC
+			SET
+				MC."NEW_PLATFORM_BALANCE" = C_BAL."NEW_PLATFORM_BALANCE"
+				,MC."BALANCE_EXPIRY_DATE" = C_BAL."NEW_PLATFORM_BALANCE_EXPIRY_DATE"
+				,MC."MODIFIED_TS" = :LV_CUR_UTC
+				WHERE MC."SUBSCR_NO" = C_BAL."CUSTOMER_ID" 
+				AND MC.CUSTOMER_EXPIRY_DT = C_BAL."CUSTOMER_EXPIRY_DT"; 
+				
+				LV_PREV_CUSTOMER_ID     :=   C_BAL."CUSTOMER_ID";
+	
+		     END;
+--         Insert PK of successfully processed Records into Local Temp Tables 
+--         for Updating NDB_TS in corresponding Landing Tables records	
+
+		   INSERT INTO #UPDATE_PS_ACCT_BAL ("CUSTOMER_ID","CYCL_ID") 
+			    VALUES (C_BAL."CUSTOMER_ID", C_BAL."CYCL_ID");
+			    
+			    
+		  	INSERT INTO #UPDATE_EH_DELETION ("CUSTOMER_ID") 
+			    VALUES (C_BAL."CUSTOMER_ID");
+			    
+		END IF;
+	END IF;			    
+END FOR;
+--------------------------------------------------------------------------------------------------
+-- Update Landing Tables
+-------------------------------------------------------------------------------------------------- 
+
+-- Update Landing Table IFRS_R1.LAND::NGCC_ACCT
+UPDATE "LAND"."IFRS_R1.LAND::PS_ACCT_BAL" A
+  FROM "LAND"."IFRS_R1.LAND::PS_ACCT_BAL" A 
+ INNER JOIN #UPDATE_PS_ACCT_BAL B 
+    ON A."CUSTOMER_ID" = B."CUSTOMER_ID"
+    AND  A."CYCL_ID" = B."CYCL_ID"
+    SET A.NDB_TS = LV_CUR_UTC
+ WHERE A.NDB_TS IS NULL;
+
+--------------------------------------------------------------------------------------------------
+-- Update Error Table
+--------------------------------------------------------------------------------------------------
+
+UPDATE "NDB_MOBILITY"."IFRS_R1.MOBILITY.NDB_MOBILITY::MOBL_CUST_EH" A
+  FROM "NDB_MOBILITY"."IFRS_R1.MOBILITY.NDB_MOBILITY::MOBL_CUST_EH" A 
+ INNER JOIN #UPDATE_EH_DELETION B
+    ON A."SUBSCR_NO" = B."CUSTOMER_ID"
+    SET (DELETE_DATE, DELETED) = (CURRENT_DATE, 1);
+
+--------------------------------------------------------------------------------------------------
+-- Set Overall Status
+-------------------------------------------------------------------------------------------------- 
+
+--  STATUS 0: Send the success message to scheduling tool to confirm this procedure has been
+--  executed successfully
+    IF(LV_ERROR_FLAG = 'Y') THEN		
+
+     OP_STATUS := LC_ERROR_TEXT;
+			
+    ELSE
+
+  	 OP_STATUS := LC_SUCCESS_TEXT; 	
+				
+	END IF;
+		
+END;
+		    

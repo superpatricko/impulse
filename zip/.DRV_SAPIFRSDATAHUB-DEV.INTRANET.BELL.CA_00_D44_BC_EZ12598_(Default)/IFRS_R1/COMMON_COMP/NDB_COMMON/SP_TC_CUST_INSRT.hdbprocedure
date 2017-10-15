@@ -1,0 +1,62 @@
+PROCEDURE "NDB_COMMON"."IFRS_R1.COMMON_COMP.NDB_COMMON::SP_TC_CUST_INSRT" ( ) 
+	LANGUAGE SQLSCRIPT
+	SQL SECURITY INVOKER 
+	--DEFAULT SCHEMA <default_schema_name>
+	--READS SQL DATA 
+	AS
+	V_CURR_DATE 		DATE 			:= CURRENT_DATE;  
+	V_PROC_ID 	   		INTEGER			:= 30004;
+	V_PROC_NAME 		NVARCHAR(30)	:= 'SP_TC_CUST_INSRT';
+BEGIN
+/***************************** 
+	Write your procedure logic 
+ *****************************/
+ BEGIN
+   /***************************** 
+	 Nested Begin Block for insert
+ 	*****************************/
+ 	
+ 	DECLARE EXIT HANDLER FOR SQLEXCEPTION 
+
+		BEGIN AUTONOMOUS TRANSACTION   
+		
+			INSERT INTO "NDB_COMMON"."IFRS_R1.COMMON_COMP.NDB_COMMON::TC_ERROR_LOG"
+			(
+			 "PROCEDURE_ID","PROCEDURE_NAME", "ERROR_CODE", "ERROR_MESSAGE", "START_END_TIME"
+			)
+			VALUES
+			(
+			V_PROC_ID,
+			V_PROC_NAME,
+			::SQL_ERROR_CODE,
+			'While Insert '|| ::SQL_ERROR_MESSAGE ,
+			V_CURR_DATE
+			);
+			
+		COMMIT;
+		RESIGNAL;
+		END; 
+ 		
+			INSERT INTO "NDB_COMMON"."IFRS_R1.COMMON_COMP.NDB_COMMON::NDB_COMM_CUST"
+			("UNIQUE_PF_NO",
+			"COMMISSION_TYPE",
+			"PRE_POST_TYPE",
+			"BRAND",
+			"CHANNEL_CODE",
+			"SEGMENT",
+			"LOB",
+			"INSRT_TS"
+			)
+			SELECT "NDB_COMMON"."IFRS_R1.COMMON_COMP.NDB_COMMON::UNIQUE_PF_NO".nextval,
+			NC."COMMISSION_TYPE",
+			NC."PRE_POST_TYPE",
+			NC."BRAND",
+			NC."CHANNEL_CODE",
+			NC."SEGMENT",
+			'COMMISSION',
+			V_CURR_DATE FROM "_SYS_BIC"."IFRS_R1.COMMON_COMP.NDB_COMMON/CA_TC_CUST_VW" NC;
+		
+		COMMIT;
+ 		
+ 	END;
+END;

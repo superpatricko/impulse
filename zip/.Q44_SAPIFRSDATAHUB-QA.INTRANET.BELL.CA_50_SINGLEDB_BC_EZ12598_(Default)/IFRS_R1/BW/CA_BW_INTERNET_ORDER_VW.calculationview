@@ -1,0 +1,276 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" schemaVersion="2.3" id="CA_BW_INTERNET_ORDER_VW" applyPrivilegeType="ANALYTIC_PRIVILEGE" checkAnalyticPrivileges="true" defaultClient="$$client$$" defaultLanguage="$$language$$" hierarchiesSQLEnabled="false" translationRelevant="true" visibility="reportingEnabled" calculationScenarioType="TREE_BASED" dataCategory="CUBE" enforceSqlExecution="false" executionSemantic="UNDEFINED" outputViewType="Aggregation">
+  <origin/>
+  <descriptions defaultDescription="CA_BW_INT_ORDER_VW"/>
+  <metadata changedAt="2017-07-24 17:35:45.695"/>
+  <localVariables/>
+  <variableMappings/>
+  <informationModelLayout relativeWidthScenario="39"/>
+  <dataSources>
+    <DataSource id="IFRS_R1.INTERNET.NDB_INTERNET::INT_CUST" type="DATA_BASE_TABLE">
+      <viewAttributes allViewAttributes="true"/>
+      <columnObject schemaName="NDB_INTERNET" columnObjectName="IFRS_R1.INTERNET.NDB_INTERNET::INT_CUST"/>
+    </DataSource>
+    <DataSource id="CA_POB_SRCDOC_ID_MAP_VW" type="CALCULATION_VIEW">
+      <viewAttributes allViewAttributes="true"/>
+      <resourceUri>/IFRS_R1.BW/calculationviews/CA_POB_SRCDOC_ID_MAP_VW</resourceUri>
+    </DataSource>
+    <DataSource id="IFRS_R1.INTERNET.NDB_INTERNET::INT_ORDER" type="DATA_BASE_TABLE">
+      <viewAttributes allViewAttributes="true"/>
+      <columnObject schemaName="NDB_INTERNET" columnObjectName="IFRS_R1.INTERNET.NDB_INTERNET::INT_ORDER"/>
+    </DataSource>
+  </dataSources>
+  <calculationViews>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PR_INT_CUST">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="PRM_CONTR_CUST"/>
+        <viewAttribute id="ALTN_CONTR_NUM"/>
+        <viewAttribute id="SUBMKT"/>
+        <viewAttribute id="CUST_LOC_ID"/>
+        <viewAttribute id="REFERENCE_EFFECTIVE_DT"/>
+        <viewAttribute id="REFERENCE_EXPIRY_DT"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#IFRS_R1.INTERNET.NDB_INTERNET::INT_CUST">
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRM_CONTR_CUST" source="PRM_CONTR_CUST"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ALTN_CONTR_NUM" source="ALTN_CONTR_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBMKT" source="SUBMKT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUST_LOC_ID" source="CUST_LOC_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_EFFECTIVE_DT" source="REFERENCE_EFFECTIVE_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_EXPIRY_DT" source="REFERENCE_EXPIRY_DT"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PR_CA_POB_SRCDOC_ID_MAP_VW">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="POB_ID"/>
+        <viewAttribute id="SRCDOC_ID_ORDER_WO_SUFFIX"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#CA_POB_SRCDOC_ID_MAP_VW">
+        <mapping xsi:type="Calculation:AttributeMapping" target="POB_ID" source="POB_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SRCDOC_ID_ORDER_WO_SUFFIX" source="SRCDOC_ID_ORDER_WO_SUFFIX"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PR_INT_ORDER" filterExpressionLanguage="COLUMN_ENGINE">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="CONTR_TERM"/>
+        <viewAttribute id="RAI_TS_ORDER"/>
+        <viewAttribute id="SRCDOC_ID"/>
+        <viewAttribute id="ALTN_CONTR_NUM"/>
+        <viewAttribute id="PRM_CONTR_CUST"/>
+        <viewAttribute id="EFFECTIVE_DATE"/>
+        <viewAttribute id="HEADER_ID"/>
+        <viewAttribute id="REFERENCE_ID"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="SRCDOC_ID_ORDER_WO_SUFFIX" length="35" expressionLanguage="COLUMN_ENGINE">
+          <formula>leftstr(&quot;SRCDOC_ID&quot;,(instr(&quot;SRCDOC_ID&quot;,'-'))-1)</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#IFRS_R1.INTERNET.NDB_INTERNET::INT_ORDER">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTR_TERM" source="CONTR_TERM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RAI_TS_ORDER" source="RAI_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SRCDOC_ID" source="SRCDOC_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ALTN_CONTR_NUM" source="ALTN_CONTR_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRM_CONTR_CUST" source="PRM_CONTR_CUST"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFFECTIVE_DATE" source="EFFECTIVE_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="HEADER_ID" source="HEADER_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_ID" source="REFERENCE_ID"/>
+      </input>
+      <filter>NOT isNULL(&quot;SRCDOC_ID&quot;)</filter>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="JOIN_INT_ORDER_WTH_CUST" joinType="leftOuter">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="SUBMKT"/>
+        <viewAttribute id="CUST_LOC_ID"/>
+        <viewAttribute id="REFERENCE_EFFECTIVE_DT"/>
+        <viewAttribute id="REFERENCE_EXPIRY_DT"/>
+        <viewAttribute id="SRCDOC_ID_ORDER_WO_SUFFIX"/>
+        <viewAttribute id="CONTR_TERM"/>
+        <viewAttribute id="EFFECTIVE_DATE"/>
+        <viewAttribute id="RAI_TS_ORDER"/>
+        <viewAttribute id="SRCDOC_ID"/>
+        <viewAttribute id="HEADER_ID"/>
+        <viewAttribute id="REFERENCE_ID"/>
+        <viewAttribute hidden="true" id="JOIN$ALTN_CONTR_NUM$ALTN_CONTR_NUM"/>
+        <viewAttribute hidden="true" id="JOIN$PRM_CONTR_CUST$PRM_CONTR_CUST"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#PR_INT_ORDER">
+        <mapping xsi:type="Calculation:AttributeMapping" target="SRCDOC_ID_ORDER_WO_SUFFIX" source="SRCDOC_ID_ORDER_WO_SUFFIX"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTR_TERM" source="CONTR_TERM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFFECTIVE_DATE" source="EFFECTIVE_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RAI_TS_ORDER" source="RAI_TS_ORDER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SRCDOC_ID" source="SRCDOC_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="HEADER_ID" source="HEADER_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_ID" source="REFERENCE_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$PRM_CONTR_CUST$PRM_CONTR_CUST" source="PRM_CONTR_CUST"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$ALTN_CONTR_NUM$ALTN_CONTR_NUM" source="ALTN_CONTR_NUM"/>
+      </input>
+      <input node="#PR_INT_CUST">
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBMKT" source="SUBMKT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUST_LOC_ID" source="CUST_LOC_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_EFFECTIVE_DT" source="REFERENCE_EFFECTIVE_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_EXPIRY_DT" source="REFERENCE_EXPIRY_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$PRM_CONTR_CUST$PRM_CONTR_CUST" source="PRM_CONTR_CUST"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$ALTN_CONTR_NUM$ALTN_CONTR_NUM" source="ALTN_CONTR_NUM"/>
+      </input>
+      <joinAttribute name="JOIN$PRM_CONTR_CUST$PRM_CONTR_CUST"/>
+      <joinAttribute name="JOIN$ALTN_CONTR_NUM$ALTN_CONTR_NUM"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PR_JOIN_INT_ORDER_WTH_CUST" filterExpressionLanguage="COLUMN_ENGINE">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="CONTR_TERM"/>
+        <viewAttribute id="SRCDOC_ID_ORDER_WO_SUFFIX"/>
+        <viewAttribute id="CUST_LOC_ID"/>
+        <viewAttribute id="SUBMKT"/>
+        <viewAttribute id="REFERENCE_EFFECTIVE_DT"/>
+        <viewAttribute id="REFERENCE_EXPIRY_DT"/>
+        <viewAttribute id="EFFECTIVE_DATE"/>
+        <viewAttribute id="RAI_TS_ORDER"/>
+        <viewAttribute id="SRCDOC_ID"/>
+        <viewAttribute id="HEADER_ID"/>
+        <viewAttribute id="REFERENCE_ID"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#JOIN_INT_ORDER_WTH_CUST">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTR_TERM" source="CONTR_TERM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SRCDOC_ID_ORDER_WO_SUFFIX" source="SRCDOC_ID_ORDER_WO_SUFFIX"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUST_LOC_ID" source="CUST_LOC_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBMKT" source="SUBMKT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_EFFECTIVE_DT" source="REFERENCE_EFFECTIVE_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_EXPIRY_DT" source="REFERENCE_EXPIRY_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFFECTIVE_DATE" source="EFFECTIVE_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RAI_TS_ORDER" source="RAI_TS_ORDER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SRCDOC_ID" source="SRCDOC_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="HEADER_ID" source="HEADER_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_ID" source="REFERENCE_ID"/>
+      </input>
+      <filter>(If (isnull(&quot;REFERENCE_EFFECTIVE_DT&quot;), date(19000101), &quot;REFERENCE_EFFECTIVE_DT&quot;) &lt;= &quot;EFFECTIVE_DATE&quot;) and (If (isnull(&quot;REFERENCE_EXPIRY_DT&quot;), date(99991231), &quot;REFERENCE_EXPIRY_DT&quot;) >= &quot;EFFECTIVE_DATE&quot;)</filter>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="JOIN_INT_ORDER_WTH_POB" joinType="inner">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="SUBMKT"/>
+        <viewAttribute id="CUST_LOC_ID"/>
+        <viewAttribute id="CONTR_TERM"/>
+        <viewAttribute id="POB_ID"/>
+        <viewAttribute id="RAI_TS_ORDER"/>
+        <viewAttribute id="SRCDOC_ID"/>
+        <viewAttribute id="HEADER_ID"/>
+        <viewAttribute id="REFERENCE_ID"/>
+        <viewAttribute hidden="true" id="JOIN$SRCDOC_ID_ORDER_WO_SUFFIX$SRCDOC_ID_ORDER_WO_SUFFIX"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#PR_JOIN_INT_ORDER_WTH_CUST">
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBMKT" source="SUBMKT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUST_LOC_ID" source="CUST_LOC_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTR_TERM" source="CONTR_TERM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RAI_TS_ORDER" source="RAI_TS_ORDER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SRCDOC_ID" source="SRCDOC_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="HEADER_ID" source="HEADER_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_ID" source="REFERENCE_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$SRCDOC_ID_ORDER_WO_SUFFIX$SRCDOC_ID_ORDER_WO_SUFFIX" source="SRCDOC_ID_ORDER_WO_SUFFIX"/>
+      </input>
+      <input node="#PR_CA_POB_SRCDOC_ID_MAP_VW">
+        <mapping xsi:type="Calculation:AttributeMapping" target="POB_ID" source="POB_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$SRCDOC_ID_ORDER_WO_SUFFIX$SRCDOC_ID_ORDER_WO_SUFFIX" source="SRCDOC_ID_ORDER_WO_SUFFIX"/>
+      </input>
+      <joinAttribute name="JOIN$SRCDOC_ID_ORDER_WO_SUFFIX$SRCDOC_ID_ORDER_WO_SUFFIX"/>
+    </calculationView>
+  </calculationViews>
+  <logicalModel id="JOIN_INT_ORDER_WTH_POB">
+    <descriptions/>
+    <attributes>
+      <attribute id="SUBMKT" order="1" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SUBMKT"/>
+        <keyMapping columnObjectName="JOIN_INT_ORDER_WTH_POB" columnName="SUBMKT"/>
+      </attribute>
+      <attribute id="CUST_LOC_ID" order="2" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CUST_LOC_ID"/>
+        <keyMapping columnObjectName="JOIN_INT_ORDER_WTH_POB" columnName="CUST_LOC_ID"/>
+      </attribute>
+      <attribute id="CONTR_TERM" order="3" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CONTR_TERM"/>
+        <keyMapping columnObjectName="JOIN_INT_ORDER_WTH_POB" columnName="CONTR_TERM"/>
+      </attribute>
+      <attribute id="POB_ID" order="4" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="POB_ID"/>
+        <keyMapping columnObjectName="JOIN_INT_ORDER_WTH_POB" columnName="POB_ID"/>
+      </attribute>
+      <attribute id="DELTA_TS" order="6" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="DELTA_TS"/>
+        <keyMapping columnObjectName="JOIN_INT_ORDER_WTH_POB" columnName="RAI_TS_ORDER"/>
+      </attribute>
+      <attribute id="SRCDOC_ID" order="7" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SRCDOC_ID"/>
+        <keyMapping columnObjectName="JOIN_INT_ORDER_WTH_POB" columnName="SRCDOC_ID"/>
+      </attribute>
+      <attribute id="HEADER_ID" order="8" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="HEADER_ID"/>
+        <keyMapping columnObjectName="JOIN_INT_ORDER_WTH_POB" columnName="HEADER_ID"/>
+      </attribute>
+      <attribute id="REFERENCE_ID" order="9" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="REFERENCE_ID"/>
+        <keyMapping columnObjectName="JOIN_INT_ORDER_WTH_POB" columnName="REFERENCE_ID"/>
+      </attribute>
+    </attributes>
+    <calculatedAttributes/>
+    <privateDataFoundation>
+      <tableProxies/>
+      <joins/>
+      <layout>
+        <shapes/>
+      </layout>
+    </privateDataFoundation>
+    <baseMeasures/>
+    <calculatedMeasures>
+      <measure id="COUNTER" hidden="false" order="5" aggregationType="sum" measureType="simple" aggregatable="true" calculatedMeasureType="counter" datatype="INTEGER" expressionLanguage="COLUMN_ENGINE">
+        <descriptions defaultDescription="Counter"/>
+        <exceptionAggregation exceptionAggregationType="countDistinct">
+          <attribute attributeName="POB_ID"/>
+        </exceptionAggregation>
+        <formula>1</formula>
+      </measure>
+    </calculatedMeasures>
+    <restrictedMeasures/>
+    <localDimensions/>
+  </logicalModel>
+  <layout>
+    <shapes>
+      <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+        <upperLeftCorner x="176" y="87"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PR_INT_CUST" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="176" y="435"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PR_CA_POB_SRCDOC_ID_MAP_VW" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="253" y="261"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PR_INT_ORDER" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="22" y="435"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="JOIN_INT_ORDER_WTH_CUST" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="99" y="339"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PR_JOIN_INT_ORDER_WTH_CUST" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="99" y="261"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="JOIN_INT_ORDER_WTH_POB" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="176" y="165"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+    </shapes>
+  </layout>
+</Calculation:scenario>

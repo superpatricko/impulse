@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" schemaVersion="2.3" id="CA_TEST" applyPrivilegeType="ANALYTIC_PRIVILEGE" checkAnalyticPrivileges="true" defaultClient="$$client$$" defaultLanguage="$$language$$" hierarchiesSQLEnabled="false" historyEnabled="false" translationRelevant="true" visibility="internal" calculationScenarioType="TREE_BASED" dataCategory="DIMENSION" enforceSqlExecution="false" executionSemantic="UNDEFINED" outputViewType="Projection">
+  <descriptions defaultDescription="CA_TEST"/>
+  <localVariables>
+    <variable id="T_DATE" parameter="true">
+      <descriptions defaultDescription="P_DATE"/>
+      <variableProperties datatype="DATE" mandatory="false">
+        <valueDomain type="empty"/>
+        <selection multiLine="false" type="SingleValue"/>
+      </variableProperties>
+    </variable>
+    <variable id="F_DATE" parameter="true">
+      <descriptions defaultDescription="F_DATE"/>
+      <variableProperties datatype="DATE" mandatory="false">
+        <valueDomain type="empty"/>
+        <selection multiLine="false" type="SingleValue"/>
+      </variableProperties>
+    </variable>
+  </localVariables>
+  <variableMappings/>
+  <informationModelLayout relativeWidthScenario="27"/>
+  <dataSources>
+    <DataSource id="IFRS_R1.COMMON_COMP.NDB_COMMON::TEST_1" type="DATA_BASE_TABLE">
+      <viewAttributes allViewAttributes="true"/>
+      <columnObject schemaName="NDB_COMMON" columnObjectName="IFRS_R1.COMMON_COMP.NDB_COMMON::TEST_1"/>
+    </DataSource>
+  </dataSources>
+  <calculationViews>
+    <calculationView xsi:type="Calculation:ProjectionView" id="Projection_1" filterExpressionLanguage="COLUMN_ENGINE">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="E_ID"/>
+        <viewAttribute id="E_EFF_DT"/>
+        <viewAttribute id="E_EXP_DT"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#IFRS_R1.COMMON_COMP.NDB_COMMON::TEST_1">
+        <mapping xsi:type="Calculation:AttributeMapping" target="E_ID" source="E_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="E_EFF_DT" source="E_EFF_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="E_EXP_DT" source="E_EXP_DT"/>
+      </input>
+      <filter>(&quot;E_EFF_DT&quot; &lt;= '$$T_DATE$$' AND &quot;E_EFF_DT&quot; >= '$$F_DATE$$')</filter>
+    </calculationView>
+  </calculationViews>
+  <logicalModel id="Projection_1">
+    <descriptions/>
+    <attributes>
+      <attribute id="E_ID" order="1" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="E_ID"/>
+        <keyMapping columnObjectName="Projection_1" columnName="E_ID"/>
+      </attribute>
+      <attribute id="E_EFF_DT" order="2" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="E_EFF_DT"/>
+        <keyMapping columnObjectName="Projection_1" columnName="E_EFF_DT"/>
+      </attribute>
+      <attribute id="E_EXP_DT" order="3" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="E_EXP_DT"/>
+        <keyMapping columnObjectName="Projection_1" columnName="E_EXP_DT"/>
+      </attribute>
+    </attributes>
+    <calculatedAttributes/>
+    <privateDataFoundation>
+      <tableProxies/>
+      <joins/>
+      <layout>
+        <shapes/>
+      </layout>
+    </privateDataFoundation>
+    <baseMeasures/>
+    <calculatedMeasures/>
+    <restrictedMeasures/>
+    <localDimensions/>
+  </logicalModel>
+  <layout>
+    <shapes>
+      <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+        <upperLeftCorner x="22" y="87"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Projection_1" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="22" y="165"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+    </shapes>
+  </layout>
+</Calculation:scenario>

@@ -1,0 +1,1086 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" schemaVersion="2.3" id="CA_TV_CUST_POC_EH" applyPrivilegeType="ANALYTIC_PRIVILEGE" checkAnalyticPrivileges="true" defaultClient="$$client$$" defaultLanguage="$$language$$" hierarchiesSQLEnabled="false" translationRelevant="true" visibility="internal" calculationScenarioType="TREE_BASED" dataCategory="DIMENSION" enforceSqlExecution="false" executionSemantic="UNDEFINED" outputViewType="Projection">
+  <descriptions defaultDescription="CA_TV_CUST_POC_EH"/>
+  <localVariables/>
+  <variableMappings/>
+  <informationModelLayout relativeWidthScenario="41"/>
+  <dataSources>
+    <DataSource id="IFRS_R1.BELLTV.NDB_BELLTV::TV_SUBSCRIBER_HIST" type="DATA_BASE_TABLE">
+      <viewAttributes allViewAttributes="true"/>
+      <columnObject schemaName="NDB_TV" columnObjectName="IFRS_R1.BELLTV.NDB_BELLTV::TV_SUBSCRIBER_HIST"/>
+    </DataSource>
+    <DataSource id="CA_TV_PROD_AGNT_REF_NDB_EH" type="CALCULATION_VIEW">
+      <viewAttributes allViewAttributes="true"/>
+      <resourceUri>/IFRS_R1.BELLTV.NDB_BELLTV/calculationviews/CA_TV_PROD_AGNT_REF_NDB_EH</resourceUri>
+    </DataSource>
+    <DataSource id="CA_TV_PROD_PRIN_REF_NDB_EH" type="CALCULATION_VIEW">
+      <viewAttributes allViewAttributes="true"/>
+      <resourceUri>/IFRS_R1.BELLTV.NDB_BELLTV/calculationviews/CA_TV_PROD_PRIN_REF_NDB_EH</resourceUri>
+    </DataSource>
+    <DataSource id="IFRS_R1.BELLTV.NDB_BELLTV::ZTV_CAMPAIGN_CD_REF" type="DATA_BASE_TABLE">
+      <viewAttributes allViewAttributes="true"/>
+      <columnObject schemaName="NDB_TV" columnObjectName="IFRS_R1.BELLTV.NDB_BELLTV::ZTV_CAMPAIGN_CD_REF"/>
+    </DataSource>
+    <DataSource id="IFRS_R1.BELLTV.NDB_BELLTV::TV_CUSTOMER" type="DATA_BASE_TABLE">
+      <viewAttributes allViewAttributes="true"/>
+      <columnObject schemaName="NDB_TV" columnObjectName="IFRS_R1.BELLTV.NDB_BELLTV::TV_CUSTOMER"/>
+    </DataSource>
+    <DataSource id="IFRS_R1.BELLTV.NDB_BELLTV::TV_CUSTOMER_EH" type="DATA_BASE_TABLE">
+      <viewAttributes allViewAttributes="true"/>
+      <columnObject schemaName="NDB_TV" columnObjectName="IFRS_R1.BELLTV.NDB_BELLTV::TV_CUSTOMER_EH"/>
+    </DataSource>
+  </dataSources>
+  <calculationViews>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_SUB_HIST" filterExpressionLanguage="COLUMN_ENGINE">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="PRM_ACCT_NUM"/>
+        <viewAttribute id="ACCT_NUM"/>
+        <viewAttribute id="CUST_PSTL_CD"/>
+        <viewAttribute id="BILL_CYCL"/>
+        <viewAttribute id="PRIN_NUM"/>
+        <viewAttribute id="AGNT_NUM"/>
+        <viewAttribute id="CUST_NM"/>
+        <viewAttribute id="CONNECT_DATE"/>
+        <viewAttribute id="CONTR_STRT_DT"/>
+        <viewAttribute id="SUBS_EFF_DT"/>
+        <viewAttribute id="ORIGINAL_CAMPAIGN_CD"/>
+        <viewAttribute id="PROCESS_IND"/>
+        <viewAttribute id="EXTERNAL_STATUS_CD"/>
+        <viewAttribute id="SP_TV_CUST_TS"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CC_CUST_TY" length="8" expressionLanguage="COLUMN_ENGINE">
+          <formula>'POSTPAID'</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CC_CONTR_TY" length="20" expressionLanguage="COLUMN_ENGINE">
+          <formula>'Residential'</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#IFRS_R1.BELLTV.NDB_BELLTV::TV_SUBSCRIBER_HIST">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUST_PSTL_CD" source="BILL_TO_POSTAL_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_CYCL" source="BILL_CREATE_DAY_OF_MONTH"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUST_NM" source="NAME"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONNECT_DATE" source="CONNECT_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTR_STRT_DT" source="CREATION_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBS_EFF_DT" source="EFF_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ORIGINAL_CAMPAIGN_CD" source="ORIGINAL_CAMPAIGN_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROCESS_IND" source="PROCESS_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXTERNAL_STATUS_CD" source="EXTERNAL_STATUS_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SP_TV_CUST_TS" source="SP_TV_CUST_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRM_ACCT_NUM" source="ACCT_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACCT_NUM" source="ACCT_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRIN_NUM" source="PRIN_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AGNT_NUM" source="AGNT_NUM"/>
+      </input>
+      <filter>isNull(&quot;SP_TV_CUST_TS&quot;) and (not isNull(&quot;PROCESS_IND&quot;))</filter>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_AGNT_REF">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="PRIN_NUM"/>
+        <viewAttribute id="AGNT_NUM"/>
+        <viewAttribute id="CUST_LOC_ID"/>
+        <viewAttribute id="CC_SIBLING_CHECK"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#CA_TV_PROD_AGNT_REF_NDB_EH">
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRIN_NUM" source="PRIN_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AGNT_NUM" source="AGNT_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUST_LOC_ID" source="PROV_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_SIBLING_CHECK" source="CC_SIBLING_CHECK"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="JOIN_AGNT" joinType="leftOuter">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="PRM_ACCT_NUM"/>
+        <viewAttribute id="ACCT_NUM"/>
+        <viewAttribute id="CUST_PSTL_CD"/>
+        <viewAttribute id="BILL_CYCL"/>
+        <viewAttribute id="PRIN_NUM"/>
+        <viewAttribute id="AGNT_NUM"/>
+        <viewAttribute id="CC_CUST_TY"/>
+        <viewAttribute id="CUST_NM"/>
+        <viewAttribute id="CONNECT_DATE"/>
+        <viewAttribute id="CONTR_STRT_DT"/>
+        <viewAttribute id="SUBS_EFF_DT"/>
+        <viewAttribute id="CC_CONTR_TY"/>
+        <viewAttribute id="CUST_LOC_ID"/>
+        <viewAttribute id="ORIGINAL_CAMPAIGN_CD"/>
+        <viewAttribute id="PROCESS_IND"/>
+        <viewAttribute id="EXTERNAL_STATUS_CD"/>
+        <viewAttribute id="PRIN_NUM_RIGHT"/>
+        <viewAttribute id="CC_SIBLING_CHECK"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="IS_20100101" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isNull(&quot;PRIN_NUM_RIGHT&quot;),'1','0')</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CC_SIBLING_ERROR_AGNT" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(&quot;CC_SIBLING_CHECK&quot; = 'X','1','0')</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#PROJ_SUB_HIST">
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRM_ACCT_NUM" source="PRM_ACCT_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACCT_NUM" source="ACCT_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUST_PSTL_CD" source="CUST_PSTL_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_CYCL" source="BILL_CYCL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRIN_NUM" source="PRIN_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AGNT_NUM" source="AGNT_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_CUST_TY" source="CC_CUST_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUST_NM" source="CUST_NM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONNECT_DATE" source="CONNECT_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTR_STRT_DT" source="CONTR_STRT_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBS_EFF_DT" source="SUBS_EFF_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_CONTR_TY" source="CC_CONTR_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ORIGINAL_CAMPAIGN_CD" source="ORIGINAL_CAMPAIGN_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROCESS_IND" source="PROCESS_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXTERNAL_STATUS_CD" source="EXTERNAL_STATUS_CD"/>
+      </input>
+      <input node="#PROJ_AGNT_REF">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUST_LOC_ID" source="CUST_LOC_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRIN_NUM_RIGHT" source="PRIN_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_SIBLING_CHECK" source="CC_SIBLING_CHECK"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRIN_NUM" source="PRIN_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AGNT_NUM" source="AGNT_NUM"/>
+      </input>
+      <joinAttribute name="PRIN_NUM"/>
+      <joinAttribute name="AGNT_NUM"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_PRIN_REF">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="PRIN_NUM"/>
+        <viewAttribute id="TEKLGY_TY"/>
+        <viewAttribute id="CO_CD"/>
+        <viewAttribute id="CC_SIBLING_CHECK"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#CA_TV_PROD_PRIN_REF_NDB_EH">
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRIN_NUM" source="PRIN_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TEKLGY_TY" source="TEKLGY_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CO_CD" source="CO_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_SIBLING_CHECK" source="CC_SIBLING_CHECK"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="JOIN_PRIN_REF" joinType="leftOuter">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="PRM_ACCT_NUM"/>
+        <viewAttribute id="ACCT_NUM"/>
+        <viewAttribute id="CUST_PSTL_CD"/>
+        <viewAttribute id="BILL_CYCL"/>
+        <viewAttribute id="PRIN_NUM"/>
+        <viewAttribute id="AGNT_NUM"/>
+        <viewAttribute id="CC_CUST_TY"/>
+        <viewAttribute id="CUST_NM"/>
+        <viewAttribute id="CONNECT_DATE"/>
+        <viewAttribute id="CONTR_STRT_DT"/>
+        <viewAttribute id="SUBS_EFF_DT"/>
+        <viewAttribute id="CC_CONTR_TY"/>
+        <viewAttribute id="CUST_LOC_ID"/>
+        <viewAttribute id="NETWK_TY"/>
+        <viewAttribute id="CO_CD"/>
+        <viewAttribute id="ORIGINAL_CAMPAIGN_CD"/>
+        <viewAttribute id="PROCESS_IND"/>
+        <viewAttribute id="EXTERNAL_STATUS_CD"/>
+        <viewAttribute id="IS_20100101"/>
+        <viewAttribute id="CC_SIBLING_ERROR_AGNT"/>
+        <viewAttribute id="PRIN_NUM_RIGHT"/>
+        <viewAttribute id="CC_SIBLING_CHECK"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="IS_20100102" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isNull(&quot;PRIN_NUM_RIGHT&quot;),'1','0')</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CC_SIBLING_ERROR_PRIN" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(&quot;CC_SIBLING_CHECK&quot; = 'X','1','0')</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#JOIN_AGNT">
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRM_ACCT_NUM" source="PRM_ACCT_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACCT_NUM" source="ACCT_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUST_PSTL_CD" source="CUST_PSTL_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_CYCL" source="BILL_CYCL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRIN_NUM" source="PRIN_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AGNT_NUM" source="AGNT_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_CUST_TY" source="CC_CUST_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUST_NM" source="CUST_NM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONNECT_DATE" source="CONNECT_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTR_STRT_DT" source="CONTR_STRT_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBS_EFF_DT" source="SUBS_EFF_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_CONTR_TY" source="CC_CONTR_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUST_LOC_ID" source="CUST_LOC_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ORIGINAL_CAMPAIGN_CD" source="ORIGINAL_CAMPAIGN_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROCESS_IND" source="PROCESS_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXTERNAL_STATUS_CD" source="EXTERNAL_STATUS_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20100101" source="IS_20100101"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_SIBLING_ERROR_AGNT" source="CC_SIBLING_ERROR_AGNT"/>
+      </input>
+      <input node="#PROJ_PRIN_REF">
+        <mapping xsi:type="Calculation:AttributeMapping" target="NETWK_TY" source="TEKLGY_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CO_CD" source="CO_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRIN_NUM_RIGHT" source="PRIN_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_SIBLING_CHECK" source="CC_SIBLING_CHECK"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRIN_NUM" source="PRIN_NUM"/>
+      </input>
+      <joinAttribute name="PRIN_NUM"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_SDA_CAMP">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="CAMPAIGN_CD_RIGHT"/>
+        <viewAttribute id="TERM_MONTHS_RIGHT"/>
+        <viewAttribute id="VALID_TO"/>
+        <viewAttribute id="VALID_FROM"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#IFRS_R1.BELLTV.NDB_BELLTV::ZTV_CAMPAIGN_CD_REF">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CAMPAIGN_CD_RIGHT" source="CAMPAIGN_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TERM_MONTHS_RIGHT" source="TERM_MONTHS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VALID_TO" source="VALID_TO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VALID_FROM" source="VALID_FROM"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="JOIN_SDA" dynamic="false" joinType="leftOuter">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="TERM_MONTHS_RIGHT"/>
+        <viewAttribute id="CAMPAIGN_CD_RIGHT"/>
+        <viewAttribute id="PRM_ACCT_NUM"/>
+        <viewAttribute id="ACCT_NUM"/>
+        <viewAttribute id="CUST_PSTL_CD"/>
+        <viewAttribute id="BILL_CYCL"/>
+        <viewAttribute id="PRIN_NUM"/>
+        <viewAttribute id="AGNT_NUM"/>
+        <viewAttribute id="CC_CUST_TY"/>
+        <viewAttribute id="CUST_NM"/>
+        <viewAttribute id="CONNECT_DATE"/>
+        <viewAttribute id="CONTR_STRT_DT"/>
+        <viewAttribute id="SUBS_EFF_DT"/>
+        <viewAttribute id="CC_CONTR_TY"/>
+        <viewAttribute id="CUST_LOC_ID"/>
+        <viewAttribute id="NETWK_TY"/>
+        <viewAttribute id="CO_CD"/>
+        <viewAttribute id="ORIGINAL_CAMPAIGN_CD"/>
+        <viewAttribute id="PROCESS_IND"/>
+        <viewAttribute id="EXTERNAL_STATUS_CD"/>
+        <viewAttribute id="IS_20100101"/>
+        <viewAttribute id="CC_SIBLING_ERROR_AGNT"/>
+        <viewAttribute id="IS_20100102"/>
+        <viewAttribute id="CC_SIBLING_ERROR_PRIN"/>
+        <viewAttribute id="VALID_TO"/>
+        <viewAttribute id="VALID_FROM"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="DATE" id="CC_VALID_FROM" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isnull(&quot;VALID_FROM&quot;),date('19000101'),date(&quot;VALID_FROM&quot;))</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="DATE" id="CC_VALID_TO" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isnull(&quot;VALID_TO&quot;),date('99991231'),date(&quot;VALID_TO&quot;))</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#JOIN_PRIN_REF">
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRM_ACCT_NUM" source="PRM_ACCT_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACCT_NUM" source="ACCT_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUST_PSTL_CD" source="CUST_PSTL_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_CYCL" source="BILL_CYCL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRIN_NUM" source="PRIN_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AGNT_NUM" source="AGNT_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_CUST_TY" source="CC_CUST_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUST_NM" source="CUST_NM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONNECT_DATE" source="CONNECT_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTR_STRT_DT" source="CONTR_STRT_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBS_EFF_DT" source="SUBS_EFF_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_CONTR_TY" source="CC_CONTR_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUST_LOC_ID" source="CUST_LOC_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NETWK_TY" source="NETWK_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CO_CD" source="CO_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ORIGINAL_CAMPAIGN_CD" source="ORIGINAL_CAMPAIGN_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROCESS_IND" source="PROCESS_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXTERNAL_STATUS_CD" source="EXTERNAL_STATUS_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20100101" source="IS_20100101"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_SIBLING_ERROR_AGNT" source="CC_SIBLING_ERROR_AGNT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20100102" source="IS_20100102"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_SIBLING_ERROR_PRIN" source="CC_SIBLING_ERROR_PRIN"/>
+      </input>
+      <input node="#PROJ_SDA_CAMP">
+        <mapping xsi:type="Calculation:AttributeMapping" target="TERM_MONTHS_RIGHT" source="TERM_MONTHS_RIGHT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CAMPAIGN_CD_RIGHT" source="CAMPAIGN_CD_RIGHT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VALID_TO" source="VALID_TO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VALID_FROM" source="VALID_FROM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ORIGINAL_CAMPAIGN_CD" source="CAMPAIGN_CD_RIGHT"/>
+      </input>
+      <joinAttribute name="ORIGINAL_CAMPAIGN_CD"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="NDB_CUST" filterExpressionLanguage="COLUMN_ENGINE">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="ACCT_NUM"/>
+        <viewAttribute id="CONTR_TERM"/>
+        <viewAttribute id="CONTR_END_DT"/>
+        <viewAttribute id="COMIT_TY"/>
+        <viewAttribute id="REFERENCE_EXPIRY_DT"/>
+        <viewAttribute id="KUNNR_SID"/>
+        <viewAttribute id="OB_BAN"/>
+        <viewAttribute id="CUST_ST"/>
+        <viewAttribute id="PRIN_NUM"/>
+        <viewAttribute id="AGNT_NUM"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#IFRS_R1.BELLTV.NDB_BELLTV::TV_CUSTOMER">
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACCT_NUM" source="ACCT_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTR_TERM" source="CONTR_TERM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTR_END_DT" source="CONTR_END_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="COMIT_TY" source="COMIT_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_EXPIRY_DT" source="REFERENCE_EXPIRY_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KUNNR_SID" source="KUNNR_SID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OB_BAN" source="OB_BAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUST_ST" source="CUST_ST"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRIN_NUM" source="PRIN_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AGNT_NUM" source="AGNT_NUM"/>
+      </input>
+      <filter>&quot;REFERENCE_EXPIRY_DT&quot; = '9999.12.31'</filter>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_ACTV_SDA" filterExpressionLanguage="COLUMN_ENGINE">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="PRM_ACCT_NUM"/>
+        <viewAttribute id="ACCT_NUM"/>
+        <viewAttribute id="CUST_PSTL_CD"/>
+        <viewAttribute id="BILL_CYCL"/>
+        <viewAttribute id="PRIN_NUM"/>
+        <viewAttribute id="AGNT_NUM"/>
+        <viewAttribute id="CC_CUST_TY"/>
+        <viewAttribute id="CUST_NM"/>
+        <viewAttribute id="CONNECT_DATE"/>
+        <viewAttribute id="CONTR_STRT_DT"/>
+        <viewAttribute id="SUBS_EFF_DT"/>
+        <viewAttribute id="CC_CONTR_TY"/>
+        <viewAttribute id="CUST_LOC_ID"/>
+        <viewAttribute id="NETWK_TY"/>
+        <viewAttribute id="CO_CD"/>
+        <viewAttribute id="ORIGINAL_CAMPAIGN_CD"/>
+        <viewAttribute id="PROCESS_IND"/>
+        <viewAttribute id="EXTERNAL_STATUS_CD"/>
+        <viewAttribute id="TERM_MONTHS_RIGHT"/>
+        <viewAttribute id="CAMPAIGN_CD_RIGHT"/>
+        <viewAttribute id="IS_20100101"/>
+        <viewAttribute id="IS_20100102"/>
+        <viewAttribute id="CC_SIBLING_ERROR_AGNT"/>
+        <viewAttribute id="CC_SIBLING_ERROR_PRIN"/>
+        <viewAttribute id="CC_VALID_FROM"/>
+        <viewAttribute id="CC_VALID_TO"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#JOIN_SDA">
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRM_ACCT_NUM" source="PRM_ACCT_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACCT_NUM" source="ACCT_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUST_PSTL_CD" source="CUST_PSTL_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_CYCL" source="BILL_CYCL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRIN_NUM" source="PRIN_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AGNT_NUM" source="AGNT_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_CUST_TY" source="CC_CUST_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUST_NM" source="CUST_NM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONNECT_DATE" source="CONNECT_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTR_STRT_DT" source="CONTR_STRT_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBS_EFF_DT" source="SUBS_EFF_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_CONTR_TY" source="CC_CONTR_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUST_LOC_ID" source="CUST_LOC_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NETWK_TY" source="NETWK_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CO_CD" source="CO_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ORIGINAL_CAMPAIGN_CD" source="ORIGINAL_CAMPAIGN_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROCESS_IND" source="PROCESS_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXTERNAL_STATUS_CD" source="EXTERNAL_STATUS_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TERM_MONTHS_RIGHT" source="TERM_MONTHS_RIGHT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CAMPAIGN_CD_RIGHT" source="CAMPAIGN_CD_RIGHT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20100101" source="IS_20100101"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20100102" source="IS_20100102"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_SIBLING_ERROR_AGNT" source="CC_SIBLING_ERROR_AGNT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_SIBLING_ERROR_PRIN" source="CC_SIBLING_ERROR_PRIN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_VALID_FROM" source="CC_VALID_FROM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_VALID_TO" source="CC_VALID_TO"/>
+      </input>
+      <filter>(&quot;SUBS_EFF_DT&quot;>=&quot;CC_VALID_FROM&quot;) and (&quot;SUBS_EFF_DT&quot;&lt;=&quot;CC_VALID_TO&quot;)</filter>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_EH" filterExpressionLanguage="COLUMN_ENGINE">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="ACCT_NUM"/>
+        <viewAttribute id="DELETED"/>
+        <viewAttribute id="REFERENCE_EFFECTIVE_DT"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="DATE" id="CC_REFERENCE_EFFECTIVE_DT" expressionLanguage="COLUMN_ENGINE">
+          <formula>date(&quot;REFERENCE_EFFECTIVE_DT&quot;)</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#IFRS_R1.BELLTV.NDB_BELLTV::TV_CUSTOMER_EH">
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACCT_NUM" source="ACCT_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DELETED" source="DELETED"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_EFFECTIVE_DT" source="REFERENCE_EFFECTIVE_DT"/>
+      </input>
+      <filter>isNull(&quot;DELETED&quot;)</filter>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="JOIN_INCOMING_RECORDS_WITH_EH" joinType="leftOuter">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="ACCT_NUM_EH"/>
+        <viewAttribute id="CC_REFERENCE_EFFECTIVE_DT"/>
+        <viewAttribute id="ACCT_NUM_LAND"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#PROJ_EH">
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACCT_NUM_EH" source="ACCT_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_REFERENCE_EFFECTIVE_DT" source="CC_REFERENCE_EFFECTIVE_DT"/>
+      </input>
+      <input node="#PROJ_ACTV_SDA">
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACCT_NUM_LAND" source="ACCT_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACCT_NUM_EH" source="ACCT_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_REFERENCE_EFFECTIVE_DT" source="SUBS_EFF_DT"/>
+      </input>
+      <joinAttribute name="ACCT_NUM_EH"/>
+      <joinAttribute name="CC_REFERENCE_EFFECTIVE_DT"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_FILTER_INCOMING_RECORDS" filterExpressionLanguage="COLUMN_ENGINE">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="ACCT_NUM_EH"/>
+        <viewAttribute id="ACCT_NUM_LAND"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#JOIN_INCOMING_RECORDS_WITH_EH">
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACCT_NUM_EH" source="ACCT_NUM_EH"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACCT_NUM_LAND" source="ACCT_NUM_LAND"/>
+      </input>
+      <filter>isNull(&quot;ACCT_NUM_LAND&quot;)</filter>
+    </calculationView>
+    <calculationView xsi:type="Calculation:AggregationView" id="AGGR_DISTINCT">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="ACCT_NUM_EH"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#PROJ_FILTER_INCOMING_RECORDS">
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACCT_NUM_EH" source="ACCT_NUM_EH"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="JOIN_EH" joinType="leftOuter">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="ACCT_NUM_EH"/>
+        <viewAttribute id="CC_SIBLING_ERROR_PRIN"/>
+        <viewAttribute id="CC_SIBLING_ERROR_AGNT"/>
+        <viewAttribute id="IS_20100102"/>
+        <viewAttribute id="IS_20100101"/>
+        <viewAttribute id="CAMPAIGN_CD_RIGHT"/>
+        <viewAttribute id="TERM_MONTHS_RIGHT"/>
+        <viewAttribute id="EXTERNAL_STATUS_CD"/>
+        <viewAttribute id="PROCESS_IND"/>
+        <viewAttribute id="ORIGINAL_CAMPAIGN_CD"/>
+        <viewAttribute id="CO_CD"/>
+        <viewAttribute id="NETWK_TY"/>
+        <viewAttribute id="CUST_LOC_ID"/>
+        <viewAttribute id="CC_CONTR_TY"/>
+        <viewAttribute id="SUBS_EFF_DT"/>
+        <viewAttribute id="CONTR_STRT_DT"/>
+        <viewAttribute id="CONNECT_DATE"/>
+        <viewAttribute id="CUST_NM"/>
+        <viewAttribute id="CC_CUST_TY"/>
+        <viewAttribute id="AGNT_NUM"/>
+        <viewAttribute id="PRIN_NUM"/>
+        <viewAttribute id="BILL_CYCL"/>
+        <viewAttribute id="CUST_PSTL_CD"/>
+        <viewAttribute id="ACCT_NUM"/>
+        <viewAttribute id="PRM_ACCT_NUM"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CC_EH_CHECK" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isNull(&quot;ACCT_NUM_EH&quot;),'0','1')</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#PROJ_ACTV_SDA">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_SIBLING_ERROR_PRIN" source="CC_SIBLING_ERROR_PRIN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_SIBLING_ERROR_AGNT" source="CC_SIBLING_ERROR_AGNT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20100102" source="IS_20100102"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20100101" source="IS_20100101"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CAMPAIGN_CD_RIGHT" source="CAMPAIGN_CD_RIGHT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TERM_MONTHS_RIGHT" source="TERM_MONTHS_RIGHT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXTERNAL_STATUS_CD" source="EXTERNAL_STATUS_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROCESS_IND" source="PROCESS_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ORIGINAL_CAMPAIGN_CD" source="ORIGINAL_CAMPAIGN_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CO_CD" source="CO_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NETWK_TY" source="NETWK_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUST_LOC_ID" source="CUST_LOC_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_CONTR_TY" source="CC_CONTR_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBS_EFF_DT" source="SUBS_EFF_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTR_STRT_DT" source="CONTR_STRT_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONNECT_DATE" source="CONNECT_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUST_NM" source="CUST_NM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_CUST_TY" source="CC_CUST_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AGNT_NUM" source="AGNT_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRIN_NUM" source="PRIN_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_CYCL" source="BILL_CYCL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUST_PSTL_CD" source="CUST_PSTL_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACCT_NUM" source="ACCT_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRM_ACCT_NUM" source="PRM_ACCT_NUM"/>
+      </input>
+      <input node="#AGGR_DISTINCT">
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACCT_NUM_EH" source="ACCT_NUM_EH"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACCT_NUM" source="ACCT_NUM_EH"/>
+      </input>
+      <joinAttribute name="ACCT_NUM"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="JOIN_NDB" joinType="leftOuter">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="CONTR_TERM_RIGHT"/>
+        <viewAttribute id="CONTR_END_DT_RIGHT"/>
+        <viewAttribute id="COMIT_TY_RIGHT"/>
+        <viewAttribute id="ACCT_NUM_RIGHT"/>
+        <viewAttribute id="KUNNR_SID_RIGHT"/>
+        <viewAttribute id="OB_BAN_RIGHT"/>
+        <viewAttribute id="CUST_ST_RIGHT"/>
+        <viewAttribute id="ACCT_NUM_EH"/>
+        <viewAttribute id="CC_SIBLING_ERROR_PRIN"/>
+        <viewAttribute id="CC_SIBLING_ERROR_AGNT"/>
+        <viewAttribute id="IS_20100102"/>
+        <viewAttribute id="IS_20100101"/>
+        <viewAttribute id="CAMPAIGN_CD_RIGHT"/>
+        <viewAttribute id="TERM_MONTHS_RIGHT"/>
+        <viewAttribute id="EXTERNAL_STATUS_CD"/>
+        <viewAttribute id="PROCESS_IND"/>
+        <viewAttribute id="ORIGINAL_CAMPAIGN_CD"/>
+        <viewAttribute id="CO_CD"/>
+        <viewAttribute id="NETWK_TY"/>
+        <viewAttribute id="CUST_LOC_ID"/>
+        <viewAttribute id="CC_CONTR_TY"/>
+        <viewAttribute id="SUBS_EFF_DT"/>
+        <viewAttribute id="CONTR_STRT_DT"/>
+        <viewAttribute id="CONNECT_DATE"/>
+        <viewAttribute id="CUST_NM"/>
+        <viewAttribute id="CC_CUST_TY"/>
+        <viewAttribute id="AGNT_NUM"/>
+        <viewAttribute id="PRIN_NUM"/>
+        <viewAttribute id="BILL_CYCL"/>
+        <viewAttribute id="CUST_PSTL_CD"/>
+        <viewAttribute id="ACCT_NUM"/>
+        <viewAttribute id="PRM_ACCT_NUM"/>
+        <viewAttribute id="CC_EH_CHECK"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="INTEGER" id="CC_CONTR_TERM" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(&quot;PROCESS_IND&quot; =  'A',if(isNull(&quot;ORIGINAL_CAMPAIGN_CD&quot;),1,if(not isNull(&quot;CAMPAIGN_CD_RIGHT&quot;),if(&quot;TERM_MONTHS_RIGHT&quot; = 0,1,&quot;TERM_MONTHS_RIGHT&quot;),1)),&quot;CONTR_TERM_RIGHT&quot;)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="DATE" id="CC_CONTR_END_DT" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(&quot;PROCESS_IND&quot; ='A',if(&quot;CC_CONTR_TERM&quot; > 1,addmonths(&quot;CONTR_STRT_DT&quot;,&quot;CC_CONTR_TERM&quot;),date(null)),&quot;CONTR_END_DT_RIGHT&quot;)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CC_COMIT_TY" length="20" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(&quot;PROCESS_IND&quot; ='A',if(&quot;CC_CONTR_TERM&quot; > 1,'TERM','M2M') ,if(&quot;PROCESS_IND&quot; ='R','M2M',&quot;COMIT_TY_RIGHT&quot;))</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="DATE" id="CC_REFERENCE_EXPIRY_DT" expressionLanguage="COLUMN_ENGINE">
+          <formula>'9999.12.31'</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CC_MIN_SPD_CRE_IND" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(&quot;PROCESS_IND&quot; = 'R','X',string(null))</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CC_CUST_ST" length="2" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(&quot;PROCESS_IND&quot; = 'P','P',if(isNull(&quot;EXTERNAL_STATUS_CD&quot;),'A','D'))</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CC_TAX_JURISD_CD" length="4" expressionLanguage="COLUMN_ENGINE">
+          <formula>'CA'+&quot;CUST_LOC_ID&quot;</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="DATE" id="CC_REFERENCE_EXPIRY_DT_UPDATE" expressionLanguage="COLUMN_ENGINE">
+          <formula>adddays(&quot;SUBS_EFF_DT&quot;,-1)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CC_KUNNR_SID" length="10" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isNull(&quot;ACCT_NUM_RIGHT&quot;),string(null),&quot;KUNNR_SID_RIGHT&quot;)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CC_OB_BAN" length="10" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isNull(&quot;ACCT_NUM_RIGHT&quot;),string(null),&quot;OB_BAN_RIGHT&quot;)</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#JOIN_EH">
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACCT_NUM_EH" source="ACCT_NUM_EH"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_SIBLING_ERROR_PRIN" source="CC_SIBLING_ERROR_PRIN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_SIBLING_ERROR_AGNT" source="CC_SIBLING_ERROR_AGNT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20100102" source="IS_20100102"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20100101" source="IS_20100101"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CAMPAIGN_CD_RIGHT" source="CAMPAIGN_CD_RIGHT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TERM_MONTHS_RIGHT" source="TERM_MONTHS_RIGHT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXTERNAL_STATUS_CD" source="EXTERNAL_STATUS_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROCESS_IND" source="PROCESS_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ORIGINAL_CAMPAIGN_CD" source="ORIGINAL_CAMPAIGN_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CO_CD" source="CO_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NETWK_TY" source="NETWK_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUST_LOC_ID" source="CUST_LOC_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_CONTR_TY" source="CC_CONTR_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBS_EFF_DT" source="SUBS_EFF_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTR_STRT_DT" source="CONTR_STRT_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONNECT_DATE" source="CONNECT_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUST_NM" source="CUST_NM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_CUST_TY" source="CC_CUST_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AGNT_NUM" source="AGNT_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRIN_NUM" source="PRIN_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_CYCL" source="BILL_CYCL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUST_PSTL_CD" source="CUST_PSTL_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACCT_NUM" source="ACCT_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRM_ACCT_NUM" source="PRM_ACCT_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_EH_CHECK" source="CC_EH_CHECK"/>
+      </input>
+      <input node="#NDB_CUST">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTR_TERM_RIGHT" source="CONTR_TERM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTR_END_DT_RIGHT" source="CONTR_END_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="COMIT_TY_RIGHT" source="COMIT_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACCT_NUM_RIGHT" source="ACCT_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KUNNR_SID_RIGHT" source="KUNNR_SID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OB_BAN_RIGHT" source="OB_BAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUST_ST_RIGHT" source="CUST_ST"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACCT_NUM" source="ACCT_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRIN_NUM" source="PRIN_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AGNT_NUM" source="AGNT_NUM"/>
+      </input>
+      <joinAttribute name="ACCT_NUM"/>
+      <joinAttribute name="PRIN_NUM"/>
+      <joinAttribute name="AGNT_NUM"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:RankView" id="RANK_EFF_DT">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="CC_SIBLING_ERROR_PRIN"/>
+        <viewAttribute id="CC_SIBLING_ERROR_AGNT"/>
+        <viewAttribute id="IS_20100102"/>
+        <viewAttribute id="IS_20100101"/>
+        <viewAttribute id="ACCT_NUM_RIGHT"/>
+        <viewAttribute id="OB_BAN"/>
+        <viewAttribute id="KUNNR_SID"/>
+        <viewAttribute id="REFERENCE_EXPIRY_DT_UPDATE"/>
+        <viewAttribute id="TAX_JURISD_CD"/>
+        <viewAttribute id="CUST_ST"/>
+        <viewAttribute id="MIN_SPD_CRE_IND"/>
+        <viewAttribute id="REFERENCE_EXPIRY_DT"/>
+        <viewAttribute id="COMIT_TY"/>
+        <viewAttribute id="CONTR_END_DT"/>
+        <viewAttribute id="CONTR_TERM"/>
+        <viewAttribute id="EXTERNAL_STATUS_CD"/>
+        <viewAttribute id="PROCESS_IND"/>
+        <viewAttribute id="ORIGINAL_CAMPAIGN_CD"/>
+        <viewAttribute id="CO_CD"/>
+        <viewAttribute id="NETWK_TY"/>
+        <viewAttribute id="CUST_LOC_ID"/>
+        <viewAttribute id="CONTR_TY"/>
+        <viewAttribute id="SUBS_EFF_DT"/>
+        <viewAttribute id="CONTR_STRT_DT"/>
+        <viewAttribute id="CONNECT_DATE"/>
+        <viewAttribute id="CUST_NM"/>
+        <viewAttribute id="CUST_TY"/>
+        <viewAttribute id="AGNT_NUM"/>
+        <viewAttribute id="PRIN_NUM"/>
+        <viewAttribute id="BILL_CYCL"/>
+        <viewAttribute id="CUST_PSTL_CD"/>
+        <viewAttribute id="ACCT_NUM"/>
+        <viewAttribute id="PRM_ACCT_NUM"/>
+        <viewAttribute id="CAMPAIGN_CD"/>
+        <viewAttribute id="TERM_MONTHS"/>
+        <viewAttribute id="CC_EH_CHECK"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#JOIN_NDB">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_SIBLING_ERROR_PRIN" source="CC_SIBLING_ERROR_PRIN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_SIBLING_ERROR_AGNT" source="CC_SIBLING_ERROR_AGNT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20100102" source="IS_20100102"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20100101" source="IS_20100101"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACCT_NUM_RIGHT" source="ACCT_NUM_RIGHT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OB_BAN" source="CC_OB_BAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KUNNR_SID" source="CC_KUNNR_SID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_EXPIRY_DT_UPDATE" source="CC_REFERENCE_EXPIRY_DT_UPDATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TAX_JURISD_CD" source="CC_TAX_JURISD_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUST_ST" source="CC_CUST_ST"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MIN_SPD_CRE_IND" source="CC_MIN_SPD_CRE_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_EXPIRY_DT" source="CC_REFERENCE_EXPIRY_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="COMIT_TY" source="CC_COMIT_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTR_END_DT" source="CC_CONTR_END_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTR_TERM" source="CC_CONTR_TERM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXTERNAL_STATUS_CD" source="EXTERNAL_STATUS_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROCESS_IND" source="PROCESS_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ORIGINAL_CAMPAIGN_CD" source="ORIGINAL_CAMPAIGN_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CO_CD" source="CO_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NETWK_TY" source="NETWK_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUST_LOC_ID" source="CUST_LOC_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTR_TY" source="CC_CONTR_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBS_EFF_DT" source="SUBS_EFF_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTR_STRT_DT" source="CONTR_STRT_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONNECT_DATE" source="CONNECT_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUST_NM" source="CUST_NM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUST_TY" source="CC_CUST_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AGNT_NUM" source="AGNT_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRIN_NUM" source="PRIN_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_CYCL" source="BILL_CYCL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUST_PSTL_CD" source="CUST_PSTL_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACCT_NUM" source="ACCT_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRM_ACCT_NUM" source="PRM_ACCT_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CAMPAIGN_CD" source="CAMPAIGN_CD_RIGHT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TERM_MONTHS" source="TERM_MONTHS_RIGHT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_EH_CHECK" source="CC_EH_CHECK"/>
+      </input>
+      <windowFunction>
+        <partitionViewAttributeName>ACCT_NUM</partitionViewAttributeName>
+        <order byViewAttributeName="SUBS_EFF_DT" direction="ASC"/>
+        <rankThreshold>
+          <value>1000</value>
+        </rankThreshold>
+        <rankViewAttributeName>Rank_Column</rankViewAttributeName>
+      </windowFunction>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="ERROR_SEMANTICS">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="OB_BAN"/>
+        <viewAttribute id="KUNNR_SID"/>
+        <viewAttribute id="REFERENCE_EXPIRY_DT_UPDATE"/>
+        <viewAttribute id="TAX_JURISD_CD"/>
+        <viewAttribute id="CUST_ST"/>
+        <viewAttribute id="MIN_SPD_CRE_IND"/>
+        <viewAttribute id="REFERENCE_EXPIRY_DT"/>
+        <viewAttribute id="COMIT_TY"/>
+        <viewAttribute id="CONTR_END_DT"/>
+        <viewAttribute id="CONTR_TERM"/>
+        <viewAttribute id="EXTERNAL_STATUS_CD"/>
+        <viewAttribute id="PROCESS_IND"/>
+        <viewAttribute id="ORIGINAL_CAMPAIGN_CD"/>
+        <viewAttribute id="CO_CD"/>
+        <viewAttribute id="NETWK_TY"/>
+        <viewAttribute id="CUST_LOC_ID"/>
+        <viewAttribute id="CONTR_TY"/>
+        <viewAttribute id="SUBS_EFF_DT"/>
+        <viewAttribute id="CONTR_STRT_DT"/>
+        <viewAttribute id="CONNECT_DATE"/>
+        <viewAttribute id="CUST_NM"/>
+        <viewAttribute id="CUST_TY"/>
+        <viewAttribute id="AGNT_NUM"/>
+        <viewAttribute id="PRIN_NUM"/>
+        <viewAttribute id="BILL_CYCL"/>
+        <viewAttribute id="CUST_PSTL_CD"/>
+        <viewAttribute id="ACCT_NUM"/>
+        <viewAttribute id="PRM_ACCT_NUM"/>
+        <viewAttribute id="CAMPAIGN_CD"/>
+        <viewAttribute id="TERM_MONTHS"/>
+        <viewAttribute id="ACCT_NUM_RIGHT"/>
+        <viewAttribute id="IS_20100101"/>
+        <viewAttribute id="IS_20100102"/>
+        <viewAttribute id="CC_SIBLING_ERROR_AGNT"/>
+        <viewAttribute id="CC_SIBLING_ERROR_PRIN"/>
+        <viewAttribute id="CC_EH_CHECK"/>
+        <viewAttribute id="Rank_Column"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CC_EXISTING_RECORD" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isNull(&quot;ACCT_NUM_RIGHT&quot;) and &quot;Rank_Column&quot; = 1,'I','U')</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="ERROR_STATUS" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>if((&quot;IS_20100101&quot;='1') or (&quot;IS_20100102&quot;='1') or  (&quot;CC_SIBLING_ERROR_AGNT&quot;='1') or (&quot;CC_SIBLING_ERROR_PRIN&quot;='1') or (&quot;CC_EH_CHECK&quot;='1'),'1','0')</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="ERROR_CODE" length="500" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(&quot;IS_20100101&quot;='1', '20100101||','') + &#xD;
+if(&quot;IS_20100102&quot;='1', '20100102||','') +&#xD;
+if(&quot;CC_SIBLING_ERROR_AGNT&quot;='1', 'SIBLING_ERROR_AGNT','')  +&#xD;
+if(&quot;CC_SIBLING_ERROR_PRIN&quot;='1', 'SIBLING_ERROR_PRIN','')  +&#xD;
+if(&quot;CC_EH_CHECK&quot;='1', 'RECORD EXISTS IN EH TABLE','') &#xD;
+</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="DATE" id="CC_REFERENCE_EFFECTIVE_DT" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(&quot;CC_EXISTING_RECORD&quot; = 'I',date(1900,01,01),&quot;SUBS_EFF_DT&quot;)</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#RANK_EFF_DT">
+        <mapping xsi:type="Calculation:AttributeMapping" target="OB_BAN" source="OB_BAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KUNNR_SID" source="KUNNR_SID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_EXPIRY_DT_UPDATE" source="REFERENCE_EXPIRY_DT_UPDATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TAX_JURISD_CD" source="TAX_JURISD_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUST_ST" source="CUST_ST"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MIN_SPD_CRE_IND" source="MIN_SPD_CRE_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_EXPIRY_DT" source="REFERENCE_EXPIRY_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="COMIT_TY" source="COMIT_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTR_END_DT" source="CONTR_END_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTR_TERM" source="CONTR_TERM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXTERNAL_STATUS_CD" source="EXTERNAL_STATUS_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROCESS_IND" source="PROCESS_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ORIGINAL_CAMPAIGN_CD" source="ORIGINAL_CAMPAIGN_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CO_CD" source="CO_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NETWK_TY" source="NETWK_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUST_LOC_ID" source="CUST_LOC_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTR_TY" source="CONTR_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBS_EFF_DT" source="SUBS_EFF_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTR_STRT_DT" source="CONTR_STRT_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONNECT_DATE" source="CONNECT_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUST_NM" source="CUST_NM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUST_TY" source="CUST_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AGNT_NUM" source="AGNT_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRIN_NUM" source="PRIN_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_CYCL" source="BILL_CYCL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUST_PSTL_CD" source="CUST_PSTL_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACCT_NUM" source="ACCT_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRM_ACCT_NUM" source="PRM_ACCT_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CAMPAIGN_CD" source="CAMPAIGN_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TERM_MONTHS" source="TERM_MONTHS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACCT_NUM_RIGHT" source="ACCT_NUM_RIGHT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20100101" source="IS_20100101"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20100102" source="IS_20100102"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_SIBLING_ERROR_AGNT" source="CC_SIBLING_ERROR_AGNT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_SIBLING_ERROR_PRIN" source="CC_SIBLING_ERROR_PRIN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_EH_CHECK" source="CC_EH_CHECK"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Rank_Column" source="Rank_Column"/>
+      </input>
+    </calculationView>
+  </calculationViews>
+  <logicalModel id="ERROR_SEMANTICS">
+    <descriptions/>
+    <attributes>
+      <attribute id="OB_BAN" order="1" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="OB_BAN"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="OB_BAN"/>
+      </attribute>
+      <attribute id="KUNNR_SID" order="2" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="KUNNR_SID"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="KUNNR_SID"/>
+      </attribute>
+      <attribute id="REFERENCE_EXPIRY_DT_UPDATE" order="3" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="REFERENCE_EXPIRY_DT_UPDATE"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="REFERENCE_EXPIRY_DT_UPDATE"/>
+      </attribute>
+      <attribute id="TAX_JURISD_CD" order="4" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="TAX_JURISD_CD"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="TAX_JURISD_CD"/>
+      </attribute>
+      <attribute id="CUST_ST" order="5" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CUST_ST"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="CUST_ST"/>
+      </attribute>
+      <attribute id="MIN_SPD_CRE_IND" order="6" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="MIN_SPD_CRE_IND"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="MIN_SPD_CRE_IND"/>
+      </attribute>
+      <attribute id="REFERENCE_EXPIRY_DT" order="7" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="REFERENCE_EXPIRY_DT"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="REFERENCE_EXPIRY_DT"/>
+      </attribute>
+      <attribute id="COMIT_TY" order="8" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="COMIT_TY"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="COMIT_TY"/>
+      </attribute>
+      <attribute id="CONTR_END_DT" order="9" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CONTR_END_DT"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="CONTR_END_DT"/>
+      </attribute>
+      <attribute id="CONTR_TERM" order="10" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CONTR_TERM"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="CONTR_TERM"/>
+      </attribute>
+      <attribute id="EXTERNAL_STATUS_CD" order="11" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="EXTERNAL_STATUS_CD"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="EXTERNAL_STATUS_CD"/>
+      </attribute>
+      <attribute id="PROCESS_IND" order="12" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="PROCESS_IND"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="PROCESS_IND"/>
+      </attribute>
+      <attribute id="ORIGINAL_CAMPAIGN_CD" order="13" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ORIGINAL_CAMPAIGN_CD"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="ORIGINAL_CAMPAIGN_CD"/>
+      </attribute>
+      <attribute id="CO_CD" order="14" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CO_CD"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="CO_CD"/>
+      </attribute>
+      <attribute id="NETWK_TY" order="15" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="NETWK_TY"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="NETWK_TY"/>
+      </attribute>
+      <attribute id="CUST_LOC_ID" order="16" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CUST_LOC_ID"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="CUST_LOC_ID"/>
+      </attribute>
+      <attribute id="CONTR_TY" order="17" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CONTR_TY"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="CONTR_TY"/>
+      </attribute>
+      <attribute id="SUBS_EFF_DT" order="18" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SUBS_EFF_DT"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="SUBS_EFF_DT"/>
+      </attribute>
+      <attribute id="CONTR_STRT_DT" order="19" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CONTR_STRT_DT"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="CONTR_STRT_DT"/>
+      </attribute>
+      <attribute id="CONNECT_DATE" order="20" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CONNECT_DATE"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="CONNECT_DATE"/>
+      </attribute>
+      <attribute id="CUST_NM" order="21" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CUST_NM"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="CUST_NM"/>
+      </attribute>
+      <attribute id="CUST_TY" order="22" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CUST_TY"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="CUST_TY"/>
+      </attribute>
+      <attribute id="AGNT_NUM" order="23" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="AGNT_NUM"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="AGNT_NUM"/>
+      </attribute>
+      <attribute id="PRIN_NUM" order="24" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="PRIN_NUM"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="PRIN_NUM"/>
+      </attribute>
+      <attribute id="BILL_CYCL" order="25" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="BILL_CYCL"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="BILL_CYCL"/>
+      </attribute>
+      <attribute id="CUST_PSTL_CD" order="26" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CUST_PSTL_CD"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="CUST_PSTL_CD"/>
+      </attribute>
+      <attribute id="ACCT_NUM" order="27" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ACCT_NUM"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="ACCT_NUM"/>
+      </attribute>
+      <attribute id="PRM_ACCT_NUM" order="28" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="PRM_ACCT_NUM"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="PRM_ACCT_NUM"/>
+      </attribute>
+      <attribute id="CAMPAIGN_CD" order="29" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CAMPAIGN_CD"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="CAMPAIGN_CD"/>
+      </attribute>
+      <attribute id="TERM_MONTHS" order="30" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="TERM_MONTHS"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="TERM_MONTHS"/>
+      </attribute>
+      <attribute id="FLAG_EXISTING_RECORD" order="31" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="FLAG_EXISTING_RECORD"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="CC_EXISTING_RECORD"/>
+      </attribute>
+      <attribute id="ERROR_STATUS" order="32" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ERROR_STATUS"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="ERROR_STATUS"/>
+      </attribute>
+      <attribute id="ERROR_CODE" order="33" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ERROR_CODE"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="ERROR_CODE"/>
+      </attribute>
+      <attribute id="IS_20100101" order="34" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="IS_20100101"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="IS_20100101"/>
+      </attribute>
+      <attribute id="IS_20100102" order="35" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="IS_20100102"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="IS_20100102"/>
+      </attribute>
+      <attribute id="CC_SIBLING_ERROR_AGNT" order="36" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CC_SIBLING_ERROR_AGNT"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="CC_SIBLING_ERROR_AGNT"/>
+      </attribute>
+      <attribute id="CC_SIBLING_ERROR_PRIN" order="37" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CC_SIBLING_ERROR_PRIN"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="CC_SIBLING_ERROR_PRIN"/>
+      </attribute>
+      <attribute id="REFERENCE_EFFECTIVE_DT" hidden="false" order="38" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="CC_REFERENCE_EFFECTIVE_DT"/>
+      </attribute>
+      <attribute id="CC_EH_CHECK" hidden="false" order="39" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="CC_EH_CHECK"/>
+      </attribute>
+    </attributes>
+    <calculatedAttributes/>
+    <privateDataFoundation>
+      <tableProxies/>
+      <joins/>
+      <layout>
+        <shapes/>
+      </layout>
+    </privateDataFoundation>
+    <baseMeasures/>
+    <calculatedMeasures/>
+    <restrictedMeasures/>
+    <localDimensions/>
+  </logicalModel>
+  <layout>
+    <shapes>
+      <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+        <upperLeftCorner x="99" y="87"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_SUB_HIST" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="96" y="1131"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_AGNT_REF" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="250" y="1131"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="JOIN_AGNT" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="173" y="1035"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_PRIN_REF" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="327" y="1035"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="JOIN_PRIN_REF" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="251" y="939"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_SDA_CAMP" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="97" y="939"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="JOIN_SDA" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="176" y="843"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="NDB_CUST" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="22" y="417"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_ACTV_SDA" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="176" y="765"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_EH" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="22" y="765"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="JOIN_INCOMING_RECORDS_WITH_EH" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="89" y="669"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_FILTER_INCOMING_RECORDS" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="89" y="591"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="AGGR_DISTINCT" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="89" y="513"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="JOIN_EH" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="176" y="417"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="JOIN_NDB" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="99" y="321"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="RANK_EFF_DT" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="99" y="243"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+      <shape expanded="true" modelObjectName="ERROR_SEMANTICS" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="99" y="165"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+    </shapes>
+  </layout>
+</Calculation:scenario>

@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" schemaVersion="2.3" id="CA_MDM_CUST_OFFR" applyPrivilegeType="NONE" checkAnalyticPrivileges="false" defaultClient="$$client$$" defaultLanguage="$$language$$" hierarchiesSQLEnabled="false" translationRelevant="true" visibility="internal" calculationScenarioType="TREE_BASED" dataCategory="DIMENSION" enforceSqlExecution="false" executionSemantic="UNDEFINED" outputViewType="Projection">
+  <descriptions defaultDescription="Landing View - Table MDM_CUST_OFFR"/>
+  <localVariables>
+    <variable id="IP_CYCL_ID" parameter="true">
+      <descriptions defaultDescription="IP_CYCL_ID"/>
+      <variableProperties datatype="NVARCHAR" defaultValue="999" length="3" mandatory="false">
+        <valueDomain type="empty"/>
+        <selection multiLine="false" type="SingleValue"/>
+      </variableProperties>
+    </variable>
+  </localVariables>
+  <variableMappings/>
+  <informationModelLayout relativeWidthScenario="46"/>
+  <dataSources>
+    <DataSource id="IFRS_R1.LAND::MDM_CUST_OFFR" type="DATA_BASE_TABLE">
+      <viewAttributes allViewAttributes="true"/>
+      <columnObject schemaName="LAND" columnObjectName="IFRS_R1.LAND::MDM_CUST_OFFR"/>
+    </DataSource>
+  </dataSources>
+  <calculationViews>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_CUST_OFFR" filterExpressionLanguage="COLUMN_ENGINE">
+      <descriptions>
+        <comment text="MDM Tables are Reference Table and it has no BAN and SUBSCRIBER NO , So no need to have Parent ID here .&#xD;&#xA;We are using this Parent ID check to ensure that if any records  with the same Parent ID are present in error table the whole set of record should not move to the next level.&#xD;&#xA;"/>
+      </descriptions>
+      <viewAttributes>
+        <viewAttribute id="PROD_CD"/>
+        <viewAttribute id="ACCS_SERV_CD"/>
+        <viewAttribute id="BSE_OFFR_CD"/>
+        <viewAttribute id="PROMO_OFFR_CD"/>
+        <viewAttribute id="PRC_STRC_CD"/>
+        <viewAttribute id="ACCS_PROMO"/>
+        <viewAttribute id="ACCS_CHRG"/>
+        <viewAttribute id="VAS_SERV_CD"/>
+        <viewAttribute id="VAS_PROMO"/>
+        <viewAttribute id="VAS_CHRG_ID"/>
+        <viewAttribute id="MODEM_CD"/>
+        <viewAttribute id="MODEM_CHRG_ID"/>
+        <viewAttribute id="NDB_TS"/>
+        <viewAttribute id="SRC_TS"/>
+        <viewAttribute id="CYCL_ID"/>
+        <viewAttribute id="INSRT_TS"/>
+        <viewAttribute id="SEQ_ID"/>
+        <viewAttribute id="PROCESS_ID"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#IFRS_R1.LAND::MDM_CUST_OFFR">
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROD_CD" source="PROD_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACCS_SERV_CD" source="ACCS_SERV_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BSE_OFFR_CD" source="BSE_OFFR_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROMO_OFFR_CD" source="PROMO_OFFR_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRC_STRC_CD" source="PRC_STRC_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACCS_PROMO" source="ACCS_PROMO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACCS_CHRG" source="ACCS_CHRG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VAS_SERV_CD" source="VAS_SERV_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VAS_PROMO" source="VAS_PROMO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VAS_CHRG_ID" source="VAS_CHRG_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MODEM_CD" source="MODEM_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MODEM_CHRG_ID" source="MODEM_CHRG_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NDB_TS" source="NDB_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SRC_TS" source="SRC_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INSRT_TS" source="INSRT_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SEQ_ID" source="SEQ_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROCESS_ID" source="PROCESS_ID"/>
+      </input>
+      <filter>(isNull(&quot;NDB_TS&quot;)) and (&quot;CYCL_ID&quot; &lt;= '$$IP_CYCL_ID$$')</filter>
+    </calculationView>
+  </calculationViews>
+  <logicalModel id="PROJ_CUST_OFFR">
+    <descriptions/>
+    <attributes>
+      <attribute id="PROD_CD" order="1" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="PROD_CD"/>
+        <keyMapping columnObjectName="PROJ_CUST_OFFR" columnName="PROD_CD"/>
+      </attribute>
+      <attribute id="ACCS_SERV_CD" order="2" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ACCS_SERV_CD"/>
+        <keyMapping columnObjectName="PROJ_CUST_OFFR" columnName="ACCS_SERV_CD"/>
+      </attribute>
+      <attribute id="BSE_OFFR_CD" order="3" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="BSE_OFFR_CD"/>
+        <keyMapping columnObjectName="PROJ_CUST_OFFR" columnName="BSE_OFFR_CD"/>
+      </attribute>
+      <attribute id="PROMO_OFFR_CD" order="4" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="PROMO_OFFR_CD"/>
+        <keyMapping columnObjectName="PROJ_CUST_OFFR" columnName="PROMO_OFFR_CD"/>
+      </attribute>
+      <attribute id="PRC_STRC_CD" order="5" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="PRC_STRC_CD"/>
+        <keyMapping columnObjectName="PROJ_CUST_OFFR" columnName="PRC_STRC_CD"/>
+      </attribute>
+      <attribute id="ACCS_PROMO" order="6" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ACCS_PROMO"/>
+        <keyMapping columnObjectName="PROJ_CUST_OFFR" columnName="ACCS_PROMO"/>
+      </attribute>
+      <attribute id="ACCS_CHRG" order="7" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ACCS_CHRG"/>
+        <keyMapping columnObjectName="PROJ_CUST_OFFR" columnName="ACCS_CHRG"/>
+      </attribute>
+      <attribute id="VAS_SERV_CD" order="8" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="VAS_SERV_CD"/>
+        <keyMapping columnObjectName="PROJ_CUST_OFFR" columnName="VAS_SERV_CD"/>
+      </attribute>
+      <attribute id="VAS_PROMO" order="9" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="VAS_PROMO"/>
+        <keyMapping columnObjectName="PROJ_CUST_OFFR" columnName="VAS_PROMO"/>
+      </attribute>
+      <attribute id="VAS_CHRG_ID" order="10" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="VAS_CHRG_ID"/>
+        <keyMapping columnObjectName="PROJ_CUST_OFFR" columnName="VAS_CHRG_ID"/>
+      </attribute>
+      <attribute id="MODEM_CD" order="11" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="MODEM_CD"/>
+        <keyMapping columnObjectName="PROJ_CUST_OFFR" columnName="MODEM_CD"/>
+      </attribute>
+      <attribute id="MODEM_CHRG_ID" order="12" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="MODEM_CHRG_ID"/>
+        <keyMapping columnObjectName="PROJ_CUST_OFFR" columnName="MODEM_CHRG_ID"/>
+      </attribute>
+      <attribute id="NDB_TS" order="13" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="NDB_TS"/>
+        <keyMapping columnObjectName="PROJ_CUST_OFFR" columnName="NDB_TS"/>
+      </attribute>
+      <attribute id="SRC_TS" order="14" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SRC_TS"/>
+        <keyMapping columnObjectName="PROJ_CUST_OFFR" columnName="SRC_TS"/>
+      </attribute>
+      <attribute id="CYCL_ID" order="15" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CYCL_ID"/>
+        <keyMapping columnObjectName="PROJ_CUST_OFFR" columnName="CYCL_ID"/>
+      </attribute>
+      <attribute id="INSRT_TS" order="16" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="INSRT_TS"/>
+        <keyMapping columnObjectName="PROJ_CUST_OFFR" columnName="INSRT_TS"/>
+      </attribute>
+      <attribute id="SEQ_ID" order="17" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SEQ_ID"/>
+        <keyMapping columnObjectName="PROJ_CUST_OFFR" columnName="SEQ_ID"/>
+      </attribute>
+      <attribute id="PROCESS_ID" order="18" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="PROCESS_ID"/>
+        <keyMapping columnObjectName="PROJ_CUST_OFFR" columnName="PROCESS_ID"/>
+      </attribute>
+    </attributes>
+    <calculatedAttributes/>
+    <privateDataFoundation>
+      <tableProxies/>
+      <joins/>
+      <layout>
+        <shapes/>
+      </layout>
+    </privateDataFoundation>
+    <baseMeasures/>
+    <calculatedMeasures/>
+    <restrictedMeasures/>
+    <localDimensions/>
+  </logicalModel>
+  <layout>
+    <shapes>
+      <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+        <upperLeftCorner x="22" y="87"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_CUST_OFFR" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="22" y="165"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+    </shapes>
+  </layout>
+</Calculation:scenario>

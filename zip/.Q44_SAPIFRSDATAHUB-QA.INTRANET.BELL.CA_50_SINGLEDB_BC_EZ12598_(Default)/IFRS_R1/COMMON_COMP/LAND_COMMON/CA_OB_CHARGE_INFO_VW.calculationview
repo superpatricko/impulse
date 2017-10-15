@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:AccessControl="http://www.sap.com/ndb/SQLCoreModelAccessControl.ecore" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" schemaVersion="2.3" id="CA_OB_CHARGE_INFO_VW" applyPrivilegeType="NONE" checkAnalyticPrivileges="false" defaultClient="$$client$$" defaultLanguage="$$language$$" hierarchiesSQLEnabled="false" historyEnabled="false" translationRelevant="true" visibility="internal" calculationScenarioType="TREE_BASED" dataCategory="DIMENSION" enforceSqlExecution="true" executionSemantic="UNDEFINED" outputViewType="Projection">
+  <descriptions defaultDescription="CA_OB_CHARGE_INFO_VW">
+    <comment text="Private view on CHARGE INFO landing with required columns to populate data into NDB CHARGE INFO reference table"/>
+  </descriptions>
+  <localVariables/>
+  <variableMappings/>
+  <informationModelLayout relativeWidthScenario="44"/>
+  <dataSources>
+    <DataSource id="IFRS_R1.LAND::IFRS_OB_CHARGE_INFO" type="DATA_BASE_TABLE">
+      <viewAttributes allViewAttributes="true"/>
+      <columnObject schemaName="LAND" columnObjectName="IFRS_R1.LAND::IFRS_OB_CHARGE_INFO"/>
+    </DataSource>
+  </dataSources>
+  <calculationViews>
+    <calculationView xsi:type="Calculation:ProjectionView" id="Projection_1">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="FEATURE_CODE"/>
+        <viewAttribute id="CHARGE_TYPE"/>
+        <viewAttribute id="FTR_REVENUE_CODE"/>
+        <viewAttribute id="INVOICE_TYPE"/>
+        <viewAttribute id="GL_CHARGE_TYPE"/>
+        <viewAttribute id="GL_CLASSIF_CODE"/>
+        <viewAttribute id="NDB_TS">
+          <filter xsi:type="AccessControl:SingleValueFilter" operator="NL" including="true"/>
+        </viewAttribute>
+        <viewAttribute id="PROFIT_CENTER"/>
+        <viewAttribute id="EFF_DT"/>
+        <viewAttribute id="EXPY_DT"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#IFRS_R1.LAND::IFRS_OB_CHARGE_INFO">
+        <mapping xsi:type="Calculation:AttributeMapping" target="FEATURE_CODE" source="FEATURE_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CHARGE_TYPE" source="CHARGE_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FTR_REVENUE_CODE" source="FTR_REVENUE_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INVOICE_TYPE" source="INVOICE_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GL_CHARGE_TYPE" source="GL_CHARGE_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GL_CLASSIF_CODE" source="GL_CLASSIF_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NDB_TS" source="NDB_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROFIT_CENTER" source="PROFIT_CENTER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFF_DT" source="EFF_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXPY_DT" source="EXPY_DT"/>
+      </input>
+    </calculationView>
+  </calculationViews>
+  <logicalModel id="Projection_1">
+    <descriptions/>
+    <attributes>
+      <attribute id="FEATURE_CODE" order="1" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="FEATURE_CODE"/>
+        <keyMapping columnObjectName="Projection_1" columnName="FEATURE_CODE"/>
+      </attribute>
+      <attribute id="CHARGE_TYPE" order="2" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CHARGE_TYPE"/>
+        <keyMapping columnObjectName="Projection_1" columnName="CHARGE_TYPE"/>
+      </attribute>
+      <attribute id="FTR_REVENUE_CODE" order="3" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="FTR_REVENUE_CODE"/>
+        <keyMapping columnObjectName="Projection_1" columnName="FTR_REVENUE_CODE"/>
+      </attribute>
+      <attribute id="GL_CHARGE_TYPE" order="4" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="GL_CHARGE_TYPE"/>
+        <keyMapping columnObjectName="Projection_1" columnName="GL_CHARGE_TYPE"/>
+      </attribute>
+      <attribute id="INVOICE_TYPE" order="5" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="INVOICE_TYPE"/>
+        <keyMapping columnObjectName="Projection_1" columnName="INVOICE_TYPE"/>
+      </attribute>
+      <attribute id="GL_CLASSIF_CODE" order="6" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="GL_CLASSIF_CODE"/>
+        <keyMapping columnObjectName="Projection_1" columnName="GL_CLASSIF_CODE"/>
+      </attribute>
+      <attribute id="PROFIT_CENTER" order="7" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="PROFIT_CENTER"/>
+        <keyMapping columnObjectName="Projection_1" columnName="PROFIT_CENTER"/>
+      </attribute>
+      <attribute id="EFF_DT" order="8" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="EFF_DT"/>
+        <keyMapping columnObjectName="Projection_1" columnName="EFF_DT"/>
+      </attribute>
+      <attribute id="EXPY_DT" order="9" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="EXPY_DT"/>
+        <keyMapping columnObjectName="Projection_1" columnName="EXPY_DT"/>
+      </attribute>
+    </attributes>
+    <calculatedAttributes/>
+    <privateDataFoundation>
+      <tableProxies/>
+      <joins/>
+      <layout>
+        <shapes/>
+      </layout>
+    </privateDataFoundation>
+    <baseMeasures/>
+    <calculatedMeasures/>
+    <restrictedMeasures/>
+    <localDimensions/>
+  </logicalModel>
+  <layout>
+    <shapes>
+      <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+        <upperLeftCorner x="40" y="85"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Projection_1" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="40" y="190"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+    </shapes>
+  </layout>
+</Calculation:scenario>

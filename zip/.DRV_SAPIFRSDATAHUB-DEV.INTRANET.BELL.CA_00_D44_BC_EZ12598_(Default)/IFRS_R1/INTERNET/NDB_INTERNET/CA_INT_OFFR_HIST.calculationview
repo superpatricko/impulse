@@ -1,0 +1,635 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:AccessControl="http://www.sap.com/ndb/SQLCoreModelAccessControl.ecore" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" xmlns:Variable="http://www.sap.com/ndb/BiModelVariable.ecore" schemaVersion="2.3" id="CA_INT_OFFR_HIST" applyPrivilegeType="NONE" checkAnalyticPrivileges="false" defaultClient="$$client$$" defaultLanguage="$$language$$" hierarchiesSQLEnabled="false" translationRelevant="true" visibility="internal" calculationScenarioType="TREE_BASED" dataCategory="DIMENSION" enforceSqlExecution="false" executionSemantic="UNDEFINED" outputViewType="Projection">
+  <descriptions defaultDescription="CA_INT_OFFR_HIST"/>
+  <localVariables>
+    <variable id="IP_EFF_DT" parameter="true">
+      <descriptions defaultDescription="IP_EFF_DT"/>
+      <variableProperties datatype="DATE" defaultValue="99991231" mandatory="false">
+        <valueDomain type="Date"/>
+        <selection multiLine="false" type="SingleValue"/>
+      </variableProperties>
+    </variable>
+  </localVariables>
+  <variableMappings>
+    <mapping xsi:type="Variable:VariableMapping" dataSource="#CA_INT_OFFR_HIST">
+      <targetVariable name="IP_EFF_DT" resourceUri="/IFRS_R1.INTERNET.LAND_INTERNET/calculationviews/CA_INT_OFFR_HIST"/>
+      <localVariable>#IP_EFF_DT</localVariable>
+    </mapping>
+  </variableMappings>
+  <informationModelLayout relativeWidthScenario="38"/>
+  <dataSources>
+    <DataSource id="CA_INT_OFFR_HIST" type="CALCULATION_VIEW">
+      <viewAttributes allViewAttributes="true"/>
+      <resourceUri>/IFRS_R1.INTERNET.LAND_INTERNET/calculationviews/CA_INT_OFFR_HIST</resourceUri>
+    </DataSource>
+    <DataSource id="IFRS_R1.INTERNET.NDB_INTERNET::INT_OFFR_HIST" type="DATA_BASE_TABLE">
+      <viewAttributes allViewAttributes="true"/>
+      <columnObject schemaName="NDB_INTERNET" columnObjectName="IFRS_R1.INTERNET.NDB_INTERNET::INT_OFFR_HIST"/>
+    </DataSource>
+    <DataSource id="IFRS_R1.INTERNET.NDB_INTERNET::INT_OFFR_HIST_EH" type="DATA_BASE_TABLE">
+      <viewAttributes allViewAttributes="true"/>
+      <columnObject schemaName="NDB_INTERNET" columnObjectName="IFRS_R1.INTERNET.NDB_INTERNET::INT_OFFR_HIST_EH"/>
+    </DataSource>
+  </dataSources>
+  <calculationViews>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_CA_OFFR_HIST">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="CYCL_ID"/>
+        <viewAttribute id="SRC_TS"/>
+        <viewAttribute id="EXPY_DT"/>
+        <viewAttribute id="EFF_DT"/>
+        <viewAttribute id="OFFER_TYPE"/>
+        <viewAttribute id="PRODUCT_TYPE"/>
+        <viewAttribute id="EXPIRATION_DATE"/>
+        <viewAttribute id="EFFECTIVE_DATE"/>
+        <viewAttribute id="SUBSCRIBER_NO"/>
+        <viewAttribute id="OFH_SEQ_NO"/>
+        <viewAttribute id="BAN"/>
+        <viewAttribute id="OFFER_CODE"/>
+        <viewAttribute id="ODS_SYST_CD"/>
+        <viewAttribute id="SEQ_ID"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#CA_INT_OFFR_HIST">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SRC_TS" source="SRC_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXPY_DT" source="EXPY_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFF_DT" source="EFF_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OFFER_TYPE" source="OFFER_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT_TYPE" source="PRODUCT_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXPIRATION_DATE" source="EXPIRATION_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFFECTIVE_DATE" source="EFFECTIVE_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBSCRIBER_NO" source="SUBSCRIBER_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OFH_SEQ_NO" source="OFH_SEQ_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BAN" source="BAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OFFER_CODE" source="OFFER_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ODS_SYST_CD" source="ODS_SYST_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SEQ_ID" source="SEQ_ID"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_NDB_OFFR_HIST">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="ODS_SYST_CD"/>
+        <viewAttribute id="OFFER_CODE"/>
+        <viewAttribute id="BAN"/>
+        <viewAttribute id="OFH_SEQ_NO"/>
+        <viewAttribute id="SUBSCRIBER_NO"/>
+        <viewAttribute id="EFFECTIVE_DATE"/>
+        <viewAttribute id="EXPIRATION_DATE"/>
+        <viewAttribute id="PRODUCT_TYPE"/>
+        <viewAttribute id="OFFER_TYPE"/>
+        <viewAttribute id="REFERENCE_EFFECTIVE_DT"/>
+        <viewAttribute id="REFERENCE_EXPIRY_DT">
+          <filter xsi:type="AccessControl:SingleValueFilter" including="true" value="9999-12-31"/>
+        </viewAttribute>
+        <viewAttribute id="EXECUTION_ID"/>
+        <viewAttribute id="INSRT_TS"/>
+        <viewAttribute id="MODIFIED_TS"/>
+        <viewAttribute id="CONVERSION_IND"/>
+        <viewAttribute id="BATCH_ID"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="DATE" id="CC_EFFECTIVE_DATE" expressionLanguage="COLUMN_ENGINE">
+          <formula>&quot;EFFECTIVE_DATE&quot;</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#IFRS_R1.INTERNET.NDB_INTERNET::INT_OFFR_HIST">
+        <mapping xsi:type="Calculation:AttributeMapping" target="ODS_SYST_CD" source="ODS_SYST_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OFFER_CODE" source="OFFER_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BAN" source="BAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OFH_SEQ_NO" source="OFH_SEQ_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBSCRIBER_NO" source="SUBSCRIBER_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFFECTIVE_DATE" source="EFFECTIVE_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXPIRATION_DATE" source="EXPIRATION_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT_TYPE" source="PRODUCT_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OFFER_TYPE" source="OFFER_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_EFFECTIVE_DT" source="REFERENCE_EFFECTIVE_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_EXPIRY_DT" source="REFERENCE_EXPIRY_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXECUTION_ID" source="EXECUTION_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INSRT_TS" source="INSRT_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MODIFIED_TS" source="MODIFIED_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONVERSION_IND" source="CONVERSION_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BATCH_ID" source="BATCH_ID"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_EH">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="OFFER_CODE"/>
+        <viewAttribute id="BAN"/>
+        <viewAttribute id="OFH_SEQ_NO"/>
+        <viewAttribute id="SUBSCRIBER_NO"/>
+        <viewAttribute id="PRODUCT_TYPE"/>
+        <viewAttribute id="DELETED">
+          <filter xsi:type="AccessControl:SingleValueFilter" operator="NL" including="true"/>
+        </viewAttribute>
+        <viewAttribute id="REFERENCE_EFFECTIVE_DT"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="DATE" id="CC_RERENCE_EFFECTIVE_DT" expressionLanguage="COLUMN_ENGINE">
+          <formula>&quot;REFERENCE_EFFECTIVE_DT&quot;</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="INTEGER" id="CC_OFH_SEQ_NO" expressionLanguage="COLUMN_ENGINE">
+          <formula>&quot;OFH_SEQ_NO&quot;</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#IFRS_R1.INTERNET.NDB_INTERNET::INT_OFFR_HIST_EH">
+        <mapping xsi:type="Calculation:AttributeMapping" target="OFFER_CODE" source="OFFER_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BAN" source="BAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OFH_SEQ_NO" source="OFH_SEQ_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBSCRIBER_NO" source="SUBSCRIBER_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT_TYPE" source="PRODUCT_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DELETED" source="DELETED"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_EFFECTIVE_DT" source="REFERENCE_EFFECTIVE_DT"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="JOIN_INCOMING_RECORDS_WITH_EH" joinOrder="OUTSIDE_IN" joinType="leftOuter">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="BAN_EH"/>
+        <viewAttribute id="BAN_LAND"/>
+        <viewAttribute id="CC_RERENCE_EFFECTIVE_DT"/>
+        <viewAttribute id="OFFER_CODE"/>
+        <viewAttribute id="SUBSCRIBER_NO"/>
+        <viewAttribute id="PRODUCT_TYPE"/>
+        <viewAttribute id="CC_OFH_SEQ_NO"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#PROJ_EH">
+        <mapping xsi:type="Calculation:AttributeMapping" target="BAN_EH" source="BAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_RERENCE_EFFECTIVE_DT" source="CC_RERENCE_EFFECTIVE_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OFFER_CODE" source="OFFER_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBSCRIBER_NO" source="SUBSCRIBER_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT_TYPE" source="PRODUCT_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_OFH_SEQ_NO" source="CC_OFH_SEQ_NO"/>
+      </input>
+      <input node="#PROJ_CA_OFFR_HIST">
+        <mapping xsi:type="Calculation:AttributeMapping" target="BAN_LAND" source="BAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OFFER_CODE" source="OFFER_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BAN_EH" source="BAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBSCRIBER_NO" source="SUBSCRIBER_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT_TYPE" source="PRODUCT_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_OFH_SEQ_NO" source="OFH_SEQ_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_RERENCE_EFFECTIVE_DT" source="EFF_DT"/>
+      </input>
+      <joinAttribute name="OFFER_CODE"/>
+      <joinAttribute name="BAN_EH"/>
+      <joinAttribute name="SUBSCRIBER_NO"/>
+      <joinAttribute name="PRODUCT_TYPE"/>
+      <joinAttribute name="CC_OFH_SEQ_NO"/>
+      <joinAttribute name="CC_RERENCE_EFFECTIVE_DT"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_INCOMING_RECORDS">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="BAN_EH"/>
+        <viewAttribute id="BAN_LAND">
+          <filter xsi:type="AccessControl:SingleValueFilter" operator="NL" including="true"/>
+        </viewAttribute>
+        <viewAttribute id="OFFER_CODE"/>
+        <viewAttribute id="SUBSCRIBER_NO"/>
+        <viewAttribute id="PRODUCT_TYPE"/>
+        <viewAttribute id="CC_OFH_SEQ_NO"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#JOIN_INCOMING_RECORDS_WITH_EH">
+        <mapping xsi:type="Calculation:AttributeMapping" target="BAN_EH" source="BAN_EH"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BAN_LAND" source="BAN_LAND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OFFER_CODE" source="OFFER_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBSCRIBER_NO" source="SUBSCRIBER_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT_TYPE" source="PRODUCT_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_OFH_SEQ_NO" source="CC_OFH_SEQ_NO"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:AggregationView" id="AGGR_DISTINCT">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="BAN_EH"/>
+        <viewAttribute id="OFFER_CODE"/>
+        <viewAttribute id="SUBSCRIBER_NO"/>
+        <viewAttribute id="PRODUCT_TYPE"/>
+        <viewAttribute id="CC_OFH_SEQ_NO"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#PROJ_INCOMING_RECORDS">
+        <mapping xsi:type="Calculation:AttributeMapping" target="BAN_EH" source="BAN_EH"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OFFER_CODE" source="OFFER_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBSCRIBER_NO" source="SUBSCRIBER_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT_TYPE" source="PRODUCT_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_OFH_SEQ_NO" source="CC_OFH_SEQ_NO"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="JOIN_EH" joinOrder="OUTSIDE_IN" joinType="leftOuter">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="CYCL_ID"/>
+        <viewAttribute id="SRC_TS"/>
+        <viewAttribute id="EXPY_DT"/>
+        <viewAttribute id="EFF_DT"/>
+        <viewAttribute id="OFFER_TYPE"/>
+        <viewAttribute id="PRODUCT_TYPE"/>
+        <viewAttribute id="EXPIRATION_DATE"/>
+        <viewAttribute id="EFFECTIVE_DATE"/>
+        <viewAttribute id="SUBSCRIBER_NO"/>
+        <viewAttribute id="OFH_SEQ_NO"/>
+        <viewAttribute id="BAN"/>
+        <viewAttribute id="OFFER_CODE"/>
+        <viewAttribute id="ODS_SYST_CD"/>
+        <viewAttribute id="SEQ_ID"/>
+        <viewAttribute id="BAN_EH"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="IS_20200701" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isnull(&quot;BAN_EH&quot;),'0','1')</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#PROJ_CA_OFFR_HIST">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SRC_TS" source="SRC_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXPY_DT" source="EXPY_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFF_DT" source="EFF_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OFFER_TYPE" source="OFFER_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT_TYPE" source="PRODUCT_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXPIRATION_DATE" source="EXPIRATION_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFFECTIVE_DATE" source="EFFECTIVE_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBSCRIBER_NO" source="SUBSCRIBER_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OFH_SEQ_NO" source="OFH_SEQ_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BAN" source="BAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OFFER_CODE" source="OFFER_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ODS_SYST_CD" source="ODS_SYST_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SEQ_ID" source="SEQ_ID"/>
+      </input>
+      <input node="#AGGR_DISTINCT">
+        <mapping xsi:type="Calculation:AttributeMapping" target="BAN_EH" source="BAN_EH"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OFFER_CODE" source="OFFER_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BAN" source="BAN_EH"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBSCRIBER_NO" source="SUBSCRIBER_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT_TYPE" source="PRODUCT_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OFH_SEQ_NO" source="CC_OFH_SEQ_NO"/>
+      </input>
+      <joinAttribute name="OFFER_CODE"/>
+      <joinAttribute name="BAN"/>
+      <joinAttribute name="SUBSCRIBER_NO"/>
+      <joinAttribute name="PRODUCT_TYPE"/>
+      <joinAttribute name="OFH_SEQ_NO"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="JOIN_VIEW_NDB_OFFR_HIST" joinOrder="OUTSIDE_IN" joinType="leftOuter">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="BAN_RIGHT"/>
+        <viewAttribute id="CYCL_ID"/>
+        <viewAttribute id="SRC_TS"/>
+        <viewAttribute id="EXPY_DT"/>
+        <viewAttribute id="EFF_DT"/>
+        <viewAttribute id="OFFER_TYPE"/>
+        <viewAttribute id="PRODUCT_TYPE"/>
+        <viewAttribute id="EXPIRATION_DATE"/>
+        <viewAttribute id="EFFECTIVE_DATE"/>
+        <viewAttribute id="SUBSCRIBER_NO"/>
+        <viewAttribute id="OFH_SEQ_NO"/>
+        <viewAttribute id="BAN"/>
+        <viewAttribute id="OFFER_CODE"/>
+        <viewAttribute id="ODS_SYST_CD"/>
+        <viewAttribute id="SEQ_ID"/>
+        <viewAttribute id="IS_20200701"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#JOIN_EH">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SRC_TS" source="SRC_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXPY_DT" source="EXPY_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFF_DT" source="EFF_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OFFER_TYPE" source="OFFER_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT_TYPE" source="PRODUCT_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXPIRATION_DATE" source="EXPIRATION_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFFECTIVE_DATE" source="EFFECTIVE_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBSCRIBER_NO" source="SUBSCRIBER_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OFH_SEQ_NO" source="OFH_SEQ_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BAN" source="BAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OFFER_CODE" source="OFFER_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ODS_SYST_CD" source="ODS_SYST_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SEQ_ID" source="SEQ_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20200701" source="IS_20200701"/>
+      </input>
+      <input node="#PROJ_NDB_OFFR_HIST">
+        <mapping xsi:type="Calculation:AttributeMapping" target="BAN_RIGHT" source="BAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BAN" source="BAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OFFER_CODE" source="OFFER_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OFH_SEQ_NO" source="OFH_SEQ_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBSCRIBER_NO" source="SUBSCRIBER_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT_TYPE" source="PRODUCT_TYPE"/>
+      </input>
+      <joinAttribute name="BAN"/>
+      <joinAttribute name="OFFER_CODE"/>
+      <joinAttribute name="OFH_SEQ_NO"/>
+      <joinAttribute name="SUBSCRIBER_NO"/>
+      <joinAttribute name="PRODUCT_TYPE"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:RankView" id="RANK_SAMEDAY_MOD">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="BAN_RIGHT"/>
+        <viewAttribute id="CYCL_ID"/>
+        <viewAttribute id="SRC_TS"/>
+        <viewAttribute id="EXPY_DT"/>
+        <viewAttribute id="EFF_DT"/>
+        <viewAttribute id="OFFER_TYPE"/>
+        <viewAttribute id="PRODUCT_TYPE"/>
+        <viewAttribute id="EXPIRATION_DATE"/>
+        <viewAttribute id="EFFECTIVE_DATE"/>
+        <viewAttribute id="SUBSCRIBER_NO"/>
+        <viewAttribute id="OFH_SEQ_NO"/>
+        <viewAttribute id="BAN"/>
+        <viewAttribute id="OFFER_CODE"/>
+        <viewAttribute id="ODS_SYST_CD"/>
+        <viewAttribute id="SEQ_ID"/>
+        <viewAttribute id="IS_20200701"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#JOIN_VIEW_NDB_OFFR_HIST">
+        <mapping xsi:type="Calculation:AttributeMapping" target="BAN_RIGHT" source="BAN_RIGHT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SRC_TS" source="SRC_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXPY_DT" source="EXPY_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFF_DT" source="EFF_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OFFER_TYPE" source="OFFER_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT_TYPE" source="PRODUCT_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXPIRATION_DATE" source="EXPIRATION_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFFECTIVE_DATE" source="EFFECTIVE_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBSCRIBER_NO" source="SUBSCRIBER_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OFH_SEQ_NO" source="OFH_SEQ_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BAN" source="BAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OFFER_CODE" source="OFFER_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ODS_SYST_CD" source="ODS_SYST_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SEQ_ID" source="SEQ_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20200701" source="IS_20200701"/>
+      </input>
+      <windowFunction>
+        <partitionViewAttributeName>OFFER_CODE</partitionViewAttributeName>
+        <partitionViewAttributeName>BAN</partitionViewAttributeName>
+        <partitionViewAttributeName>OFH_SEQ_NO</partitionViewAttributeName>
+        <partitionViewAttributeName>SUBSCRIBER_NO</partitionViewAttributeName>
+        <partitionViewAttributeName>PRODUCT_TYPE</partitionViewAttributeName>
+        <order byViewAttributeName="EFF_DT" direction="ASC"/>
+        <rankThreshold>
+          <value>100</value>
+        </rankThreshold>
+        <rankViewAttributeName>RANK_SEQ</rankViewAttributeName>
+      </windowFunction>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_INSERT_UPDATE">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="BAN_RIGHT"/>
+        <viewAttribute id="RANK_SEQ"/>
+        <viewAttribute id="CYCL_ID"/>
+        <viewAttribute id="SRC_TS"/>
+        <viewAttribute id="EXPY_DT"/>
+        <viewAttribute id="EFF_DT"/>
+        <viewAttribute id="OFFER_TYPE"/>
+        <viewAttribute id="PRODUCT_TYPE"/>
+        <viewAttribute id="EXPIRATION_DATE"/>
+        <viewAttribute id="EFFECTIVE_DATE"/>
+        <viewAttribute id="SUBSCRIBER_NO"/>
+        <viewAttribute id="OFH_SEQ_NO"/>
+        <viewAttribute id="BAN"/>
+        <viewAttribute id="OFFER_CODE"/>
+        <viewAttribute id="ODS_SYST_CD"/>
+        <viewAttribute id="SEQ_ID"/>
+        <viewAttribute id="IS_20200701"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CC_EXISTING_RECORD" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isNull(&quot;BAN_RIGHT&quot;) and (&quot;RANK_SEQ&quot; = 1) , 'I' , 'U')</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="DATE" id="CC_EFFECTIVE_DATE_PREV_DAY" expressionLanguage="COLUMN_ENGINE">
+          <formula>adddays(&quot;SRC_TS&quot;, -1)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CC_CONCAT_PK" length="100" expressionLanguage="COLUMN_ENGINE">
+          <formula>&quot;OFFER_CODE&quot;+'|'+&quot;BAN&quot;+'|'+string(&quot;OFH_SEQ_NO&quot;)+'|'+&quot;SUBSCRIBER_NO&quot;+'|'+&quot;PRODUCT_TYPE&quot;</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#RANK_SAMEDAY_MOD">
+        <mapping xsi:type="Calculation:AttributeMapping" target="BAN_RIGHT" source="BAN_RIGHT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RANK_SEQ" source="RANK_SEQ"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SRC_TS" source="SRC_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXPY_DT" source="EXPY_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFF_DT" source="EFF_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OFFER_TYPE" source="OFFER_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT_TYPE" source="PRODUCT_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXPIRATION_DATE" source="EXPIRATION_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFFECTIVE_DATE" source="EFFECTIVE_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBSCRIBER_NO" source="SUBSCRIBER_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OFH_SEQ_NO" source="OFH_SEQ_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BAN" source="BAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OFFER_CODE" source="OFFER_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ODS_SYST_CD" source="ODS_SYST_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SEQ_ID" source="SEQ_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20200701" source="IS_20200701"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="ERROR_SEMANTICS">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="CC_EXISTING_RECORD"/>
+        <viewAttribute id="CC_EFFECTIVE_DATE_PREV_DAY"/>
+        <viewAttribute id="CYCL_ID"/>
+        <viewAttribute id="SRC_TS"/>
+        <viewAttribute id="EXPY_DT"/>
+        <viewAttribute id="EFF_DT"/>
+        <viewAttribute id="OFFER_TYPE"/>
+        <viewAttribute id="PRODUCT_TYPE"/>
+        <viewAttribute id="EXPIRATION_DATE"/>
+        <viewAttribute id="EFFECTIVE_DATE"/>
+        <viewAttribute id="SUBSCRIBER_NO"/>
+        <viewAttribute id="OFH_SEQ_NO"/>
+        <viewAttribute id="BAN"/>
+        <viewAttribute id="OFFER_CODE"/>
+        <viewAttribute id="ODS_SYST_CD"/>
+        <viewAttribute id="SEQ_ID"/>
+        <viewAttribute id="IS_20200701"/>
+        <viewAttribute id="CONCAT_PK"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CC_ERROR_STATUS" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>if((&quot;IS_20200701&quot; = '1'),'1','0')</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CC_ERROR_CODE" length="500" expressionLanguage="COLUMN_ENGINE">
+          <formula>if((&quot;IS_20200701&quot; = '1'), '20200701||', '')</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#PROJ_INSERT_UPDATE">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_EXISTING_RECORD" source="CC_EXISTING_RECORD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_EFFECTIVE_DATE_PREV_DAY" source="CC_EFFECTIVE_DATE_PREV_DAY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SRC_TS" source="SRC_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXPY_DT" source="EXPY_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFF_DT" source="EFF_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OFFER_TYPE" source="OFFER_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT_TYPE" source="PRODUCT_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXPIRATION_DATE" source="EXPIRATION_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFFECTIVE_DATE" source="EFFECTIVE_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBSCRIBER_NO" source="SUBSCRIBER_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OFH_SEQ_NO" source="OFH_SEQ_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BAN" source="BAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OFFER_CODE" source="OFFER_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ODS_SYST_CD" source="ODS_SYST_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SEQ_ID" source="SEQ_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20200701" source="IS_20200701"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONCAT_PK" source="CC_CONCAT_PK"/>
+      </input>
+    </calculationView>
+  </calculationViews>
+  <logicalModel id="ERROR_SEMANTICS">
+    <descriptions/>
+    <attributes>
+      <attribute id="FLAG_EXISTING_RECORD" order="1" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="FLAG_EXISTING_RECORD"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="CC_EXISTING_RECORD"/>
+      </attribute>
+      <attribute id="EFFECTIVE_DATE_PREV_DAY" order="2" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="EFFECTIVE_DATE_PREV_DAY"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="CC_EFFECTIVE_DATE_PREV_DAY"/>
+      </attribute>
+      <attribute id="CYCL_ID" order="3" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CYCL_ID"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="CYCL_ID"/>
+      </attribute>
+      <attribute id="SRC_TS" order="4" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SRC_TS"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="SRC_TS"/>
+      </attribute>
+      <attribute id="REFERENCE_EFFECTIVE_DT" order="5" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="REFERENCE_EFFECTIVE_DT"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="EFF_DT"/>
+      </attribute>
+      <attribute id="REFERENCE_EXPIRY_DT" order="6" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="REFERENCE_EXPIRY_DT"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="EXPY_DT"/>
+      </attribute>
+      <attribute id="OFFER_TYPE" order="7" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="OFFER_TYPE"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="OFFER_TYPE"/>
+      </attribute>
+      <attribute id="PRODUCT_TYPE" order="8" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="PRODUCT_TYPE"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="PRODUCT_TYPE"/>
+      </attribute>
+      <attribute id="EXPIRATION_DATE" order="9" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="EXPIRATION_DATE"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="EXPIRATION_DATE"/>
+      </attribute>
+      <attribute id="EFFECTIVE_DATE" order="10" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="EFFECTIVE_DATE"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="EFFECTIVE_DATE"/>
+      </attribute>
+      <attribute id="SUBSCRIBER_NO" order="11" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SUBSCRIBER_NO"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="SUBSCRIBER_NO"/>
+      </attribute>
+      <attribute id="OFH_SEQ_NO" order="12" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="OFH_SEQ_NO"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="OFH_SEQ_NO"/>
+      </attribute>
+      <attribute id="BAN" order="13" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="BAN"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="BAN"/>
+      </attribute>
+      <attribute id="OFFER_CODE" order="14" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="OFFER_CODE"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="OFFER_CODE"/>
+      </attribute>
+      <attribute id="ODS_SYST_CD" order="15" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ODS_SYST_CD"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="ODS_SYST_CD"/>
+      </attribute>
+      <attribute id="SEQ_ID" order="16" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SEQ_ID"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="SEQ_ID"/>
+      </attribute>
+      <attribute id="IS_20200701" order="17" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="IS_20200701"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="IS_20200701"/>
+      </attribute>
+      <attribute id="ERROR_STATUS" order="18" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ERROR_STATUS"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="CC_ERROR_STATUS"/>
+      </attribute>
+      <attribute id="ERROR_CODE" order="19" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ERROR_CODE"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="CC_ERROR_CODE"/>
+      </attribute>
+      <attribute id="CONCAT_PK" order="20" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CONCAT_PK"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="CONCAT_PK"/>
+      </attribute>
+    </attributes>
+    <calculatedAttributes/>
+    <privateDataFoundation>
+      <tableProxies/>
+      <joins/>
+      <layout>
+        <shapes/>
+      </layout>
+    </privateDataFoundation>
+    <baseMeasures/>
+    <calculatedMeasures/>
+    <restrictedMeasures/>
+    <localDimensions/>
+  </logicalModel>
+  <layout>
+    <shapes>
+      <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+        <upperLeftCorner x="253" y="87"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_CA_OFFR_HIST" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="176" y="843"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_NDB_OFFR_HIST" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="330" y="495"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_EH" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="22" y="843"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="JOIN_INCOMING_RECORDS_WITH_EH" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="89" y="747"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_INCOMING_RECORDS" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="89" y="669"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="AGGR_DISTINCT" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="89" y="591"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="JOIN_EH" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="176" y="495"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="JOIN_VIEW_NDB_OFFR_HIST" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="253" y="399"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="RANK_SAMEDAY_MOD" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="253" y="321"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_INSERT_UPDATE" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="253" y="243"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="ERROR_SEMANTICS" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="253" y="165"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+    </shapes>
+  </layout>
+</Calculation:scenario>

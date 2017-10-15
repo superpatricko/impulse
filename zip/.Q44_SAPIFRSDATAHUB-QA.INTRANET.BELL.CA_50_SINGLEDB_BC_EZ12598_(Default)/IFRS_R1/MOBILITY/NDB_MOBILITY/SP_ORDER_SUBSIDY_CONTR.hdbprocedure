@@ -1,0 +1,1064 @@
+PROCEDURE "NDB_MOBILITY"."IFRS_R1.MOBILITY.NDB_MOBILITY::SP_ORDER_SUBSIDY_CONTR"
+ (IN IP_EFF_DT DATE,
+  OUT OP_STATUS  NVARCHAR(100)) 
+  LANGUAGE SQLSCRIPT
+  SQL SECURITY INVOKER 
+	--DEFAULT SCHEMA <default_schema_name>
+	--READS SQL DATA 
+	AS
+BEGIN 
+
+--------------------------------------------------------------------------------------------------
+-- Procedure Title : SP_ORDER_SUBSIDY_CONTR
+-- Created By      : BC_EY94137 (AKANKSHA SINGH)       
+-- Create Date     : 12-05-2017
+-- Description     : It is used to Upsert data in NDB Table.
+--                   SP_ORDER_SUBSIDY_CONTR_TS is updated in Landing Table         
+--                   after data is loaded in NDB.
+-- Project         : Bell Canada
+-- Release         : R1 / IFRS
+--------------------------------------------------------------------------------------------------
+--   M O D I F I C A T I O N   H I S T O R Y
+--------------------------------------------------------------------------------------------------
+-- Date        | User ID          | Modification History/Release
+--------------------------------------------------------------------------------------------------
+--             |                  | 
+--------------------------------------------------------------------------------------------------
+-- Description Of the changes 
+--------------------------------------------------------------------------------------------------
+-- Modification Number          : <Assign Some Number> 
+-- Description of Changes Made> : <Description of Changes>       
+--------------------------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------------------------
+-- Local Variables Declaration
+--------------------------------------------------------------------------------------------------
+
+DECLARE LC_ERROR_TEXT 		NVARCHAR(70) DEFAULT 'OUT STATUS IS 1 : INSERT/UPDATE FOR ONE OR MORE RECORD FAILED';
+DECLARE LC_SUCCESS_TEXT 	NVARCHAR(70) DEFAULT 'OUT STATUS IS 0 : INSERT/UPDATE EXECUTION SUCCESSFUL';
+DECLARE LV_ERROR_FLAG 		NVARCHAR(1) := 'N';
+DECLARE LV_CUR_UTC 			TIMESTAMP := CURRENT_TIMESTAMP;
+
+
+DECLARE ERROR_TAB 			TABLE (ERROR_CODE NVARCHAR(100));
+DECLARE i					INTEGER;
+DECLARE RECORD_COUNT		INTEGER;
+DECLARE CURRENT_ERROR		NVARCHAR(100);
+-- New variables for version sequence check
+DECLARE LV_LOOP_ERROR_FLAG        INTEGER := 0;
+DECLARE LV_PREV_BAN_SUB		  NVARCHAR(41) := NULL;
+
+--------------------------------------------------------------------------------------------------
+-- Cursors Declaration
+-------------------------------------------------------------------------------------------------- 
+
+DECLARE CURSOR C_SUBSIDY_CONTR FOR
+        SELECT "ACTV_CD",
+			   "ACTV_RSN_CD",
+			   "BASE_OPT_SERV_IND",
+			   "BSE_SOC",
+			   "BSE_SOC_AMT",
+			   "BYRS_RMRSE",
+			   "CHRG_TY_CLASSIF",
+			   "CONTR_DEALER_CODE",
+			   "CONTR_ID",
+			   "CONTR_TERM",
+			   "CONTR_TIER",
+			   "CONTR_TY",
+			   "COST_CENTRE",
+			   "EI_GRP_SEQ_NO",
+			   "EQP_SRC",
+			   "EQP_TY",
+			   "GL_ACCOUNT",
+			   "GL_TAX_CD",
+			   "DIST_CHANNEL",
+			   "ITEM_GRP_CD",
+			   "ITEM_STRT_DT",
+			   "ITEM_SUB_ID",
+			   "JURISD_CD",
+			   "MIN_TIER_PRC",
+			   "POB_END_DT",
+			   "PROV_AGR",
+			   "PROV_CUST",
+			   "SERV_TIER",
+			   "SOC_LEV_CD",
+			   "STNDLN_SELL_PRC",
+			   "SUBS_AMT",
+			   "SUBS_EFF_DT",
+			   "SUBS_EXP_DT",
+			   "TERM_M2M",
+			   "TRANS_PRC",
+			   "TRX_SEQ_NO",
+			   "BRND",
+			   "GL_PRICE_PLAN_GRP",
+			   "KUNNR_SID",
+			   "ORIG_CONTR_STRT_DT",
+			   "ORIG_CONTR_TERM",
+			   "ORIG_STNDLN_SELL_PRC",
+			   "ORIG_TRANS_PRC",
+			   "PROMO_CD",
+			   "ITEM_END_DT",
+			   "CONTR_STRT_DT",
+			   "CONTR_END_DT",
+			   "ITEM_ID",
+			   "CONTR_TRANS_DT",
+			   "CONTR_EXPY_DT",
+			   "ITEM_TRANS_DT",
+			   "SUBSCR_NO",
+			   "BAN",
+			   "BATCH_ID",
+			   "VIR_INV_TS",
+			   "CUSTOMER_GROUP",
+               "MATERIAL_GROUP",
+               "REV_ACTG_DOC_NUM",
+               "BANNER",
+               "DEALER",
+               "REV_ACT_DOC_TY",
+               "ART_NUM",
+               "SIM",
+			   "FLAG_EXISTING_RECORD",
+			   "SRC_FILE_NAME",
+               "SALES_DOC_TYP",
+               "REC_EXPIRY_DT",
+			   "ERROR_STATUS",
+			   "ERROR_CODE",
+			   "CC_CONCAT_PK",
+			   "PREV_SUBS",
+			   "CONTR_TRAN_FLG",
+			   "JOURN_DT",
+			   "ORIGINAL_DEALER",
+			   "MANUFACTURE_CODE"
+          FROM "_SYS_BIC"."IFRS_R1.MOBILITY.NDB_MOBILITY/CA_ORDER_SUBSIDY_CONTR" 
+               (PLACEHOLDER."$$IP_EFF_DT$$"=> :IP_EFF_DT) VW
+          WHERE VW.CONTR_TRAN_FLG = 'N'
+      ORDER BY "BAN","CONTR_TRANS_DT","CONTR_EXPY_DT"
+      WITH HINT(NO_CS_JOIN);
+     
+          
+--------------------------------------------------------------------------------------------------
+-- Local Temporary Tables Declaration
+--------------------------------------------------------------------------------------------------  
+CREATE LOCAL TEMPORARY TABLE #UPDATE_NM1_EDW_CONTR(BAN NVARCHAR(9),SUBSCRIBER_NO NVARCHAR(30), EFF_DT DATE);
+CREATE LOCAL TEMPORARY TABLE #UPDATE_NM1_EDW_EQP(BAN NVARCHAR(9), ESN_IMEI NVARCHAR(20), SIM NVARCHAR(20), SUBCR_NO NVARCHAR(30), TRANS_DT DATE);
+CREATE LOCAL TEMPORARY TABLE #UPDATE_EH_DELETION(BAN NVARCHAR(9), CONTR_TRANS_DT NVARCHAR(100), ITEM_ID NVARCHAR(20), ITEM_TRANS_DT NVARCHAR(100),
+												TRX_SEQ_NO NVARCHAR(12), SUBSCR_NO NVARCHAR(30));
+
+--------------------------------------------------------------------------------------------------
+-- Cursors Loop
+-------------------------------------------------------------------------------------------------- 
+
+FOR C_SUB AS C_SUBSIDY_CONTR DO
+
+--  Define Exit Handler
+	DECLARE EXIT HANDLER FOR SQLEXCEPTION 
+	BEGIN AUTONOMOUS TRANSACTION 
+	
+--    Define Exit Handler
+	 DECLARE EXIT HANDLER FOR SQLEXCEPTION 
+	 BEGIN AUTONOMOUS TRANSACTION 	
+	   
+	-- Do Nothing. Exception Handled to ensure SP does not get terminated 
+	
+   END;
+ 	      --Insert record into error table
+ 	      INSERT INTO "NDB_MOBILITY"."IFRS_R1.MOBILITY.NDB_MOBILITY::MOBL_POST_ORDER_EH"(
+					  ACTV_CD,
+					  ACTV_RSN_CD,
+					  BAN,
+					  BASE_OPT_SERV_IND,			 
+				 	  BSE_SOC,
+					  BSE_SOC_AMT,
+					  BYRS_RMRSE,
+					  CHRG_TY_CLASSIF,
+					  CONTR_DEALER_CODE,
+					  CONTR_END_DT,
+					  CONTR_ID,
+					  CONTR_STRT_DT,
+					  CONTR_TERM,
+					  CONTR_TIER,
+					  CONTR_TRANS_DT,
+					  CONTR_TY,
+					  COST_CENTRE,			
+					  EI_GRP_SEQ_NO,
+					  EQP_SRC,
+					  EQP_TY,			
+					  GL_ACCOUNT,
+					  GL_TAX_CD,
+					  INSERT_TS,		
+					  ITEM_END_DT,
+					  ITEM_GRP_CD,
+					  ITEM_ID,
+					  ITEM_STRT_DT,
+					  ITEM_SUB_ID,
+					  ITEM_TRANS_DT,
+					  JURISD_CD,
+					  MIN_TIER_PRC,
+					  POB_END_DT,
+					  PROMO_CD,
+					  PROV_AGR,
+					  PROV_CUST,
+					  BRND,
+					  SERV_TIER,
+					  SOC_LEV_CD,
+					  STNDLN_SELL_PRC,
+					  SUBS_AMT,
+					  SUBS_EFF_DT,
+					  SUBS_EXP_DT,
+					  SUBSCR_NO,
+					  TERM_M2M,
+					  TRANS_PRC,
+					  TRX_SEQ_NO,
+					  GL_PRICE_PLAN_GRP,
+					  KUNNR_SID,
+					  ORIG_CONTR_STRT_DT,
+					  ORIG_CONTR_TERM,
+					  ORIG_STNDLN_SELL_PRC,
+					  ORIG_TRANS_PRC,
+					  BATCH_ID,
+					  VIR_INV_TS,
+					  DIST_CHANNEL,
+					  CUSTOMER_GROUP,
+		              MATERIAL_GROUP,
+		              REV_ACTG_DOC_NUM,
+		              BANNER,
+		              DEALER,
+		              REV_ACT_DOC_TY,
+		              ART_NUM,
+		              JOURN_DT,
+		              "ORIGINAL_DEALER",
+			   		  "MANUFACTURE_CODE",
+					  ERROR_CODE,
+					  TECHNICAL_MESSAGE,
+					  ERROR_CREATE_TS)
+			  VALUES (C_SUB.ACTV_CD,
+					  C_SUB.ACTV_RSN_CD,
+					  C_SUB.BAN,
+					  C_SUB.BASE_OPT_SERV_IND,
+				 	  C_SUB.BSE_SOC,
+					  C_SUB.BSE_SOC_AMT,
+					  C_SUB.BYRS_RMRSE,
+					  C_SUB.CHRG_TY_CLASSIF,
+					  C_SUB.CONTR_DEALER_CODE,
+					  C_SUB.CONTR_END_DT,
+					  C_SUB.CONTR_ID,
+					  C_SUB.CONTR_STRT_DT,
+					  C_SUB.CONTR_TERM,
+					  C_SUB.CONTR_TIER,
+					  C_SUB.CONTR_TRANS_DT,
+					  C_SUB.CONTR_TY,
+					  C_SUB.COST_CENTRE,			 
+					  C_SUB.EI_GRP_SEQ_NO,
+					  C_SUB.EQP_SRC,
+					  C_SUB.EQP_TY,			 
+					  C_SUB.GL_ACCOUNT,
+				      C_SUB.GL_TAX_CD,
+					  LV_CUR_UTC,
+					  C_SUB.ITEM_END_DT,
+					  C_SUB.ITEM_GRP_CD,
+					  C_SUB.ITEM_ID,
+					  C_SUB.ITEM_STRT_DT,
+					  C_SUB.ITEM_SUB_ID,
+					  C_SUB.ITEM_TRANS_DT,
+					  C_SUB.JURISD_CD,
+					  C_SUB.MIN_TIER_PRC,
+					  C_SUB.POB_END_DT,
+					  C_SUB.PROMO_CD,
+					  C_SUB.PROV_AGR,
+					  C_SUB.PROV_CUST,
+				 	  C_SUB.BRND,
+					  C_SUB.SERV_TIER,
+					  C_SUB.SOC_LEV_CD,
+					  C_SUB.STNDLN_SELL_PRC,
+					  C_SUB.SUBS_AMT,
+					  C_SUB.SUBS_EFF_DT,
+					  C_SUB.SUBS_EXP_DT,
+					  C_SUB.SUBSCR_NO,
+					  C_SUB.TERM_M2M,
+					  C_SUB.TRANS_PRC,
+					  C_SUB.TRX_SEQ_NO ,
+					  C_SUB.GL_PRICE_PLAN_GRP,
+					  C_SUB.KUNNR_SID,
+					  C_SUB.ORIG_CONTR_STRT_DT,
+					  C_SUB.ORIG_CONTR_TERM,
+					  C_SUB.ORIG_STNDLN_SELL_PRC,
+					  C_SUB.ORIG_TRANS_PRC,
+					  C_SUB.BATCH_ID,
+					  C_SUB.VIR_INV_TS,
+					  C_SUB.DIST_CHANNEL,
+					  C_SUB.CUSTOMER_GROUP,
+		              C_SUB.MATERIAL_GROUP,
+		              C_SUB.REV_ACTG_DOC_NUM,
+		              C_SUB.BANNER,
+		              C_SUB.DEALER,
+		              C_SUB.REV_ACT_DOC_TY,
+		              C_SUB.ART_NUM,
+		              C_SUB.JOURN_DT,
+		              C_SUB."ORIGINAL_DEALER",
+			   		  C_SUB."MANUFACTURE_CODE",
+ 				      ::SQL_ERROR_CODE,
+					  ::SQL_ERROR_MESSAGE,
+			  		  LV_CUR_UTC);	
+					  
+            LV_ERROR_FLAG := 'Y';
+            
+            LV_LOOP_ERROR_FLAG := 1;
+            
+    END;
+	--------------------------------------------------------------------------------------------------------
+	--------------------------------------------------------------------------------------------------------
+	
+	-- FOR CLEARING THE VARIABLES
+
+	IF (LV_PREV_BAN_SUB IS NULL OR C_SUB."CC_CONCAT_PK" != LV_PREV_BAN_SUB) THEN
+
+		LV_LOOP_ERROR_FLAG := 0;
+		LV_PREV_BAN_SUB := C_SUB."CC_CONCAT_PK";
+			 	   
+    END IF;
+    
+    
+	--------------------------------------------------------------------------------------------------------
+	--------------------------------------------------------------------------------------------------------
+    -- Check the Error Status of the Record. If Record is with Error, then send to Error Table
+    IF C_SUB.ERROR_STATUS = '1' THEN
+    
+       -- Call the Stored Procedure to split the concatenated Error Messages into Error Rows
+       CALL "NDB_COMMON"."IFRS_R1.COMMON_COMP.EH::SP_EH_SPLIT_ERRORS"(C_SUB."ERROR_CODE", ERROR_TAB, RECORD_COUNT);
+       
+       FOR i IN 1 .. :RECORD_COUNT DO
+		    	CURRENT_ERROR = :ERROR_TAB."ERROR_CODE"[:i];
+		    	
+		  --Insert record into error table
+ 	      INSERT INTO "NDB_MOBILITY"."IFRS_R1.MOBILITY.NDB_MOBILITY::MOBL_POST_ORDER_EH"(
+					  ACTV_CD,
+					  ACTV_RSN_CD,
+					  BAN,
+					  BASE_OPT_SERV_IND,			 
+				 	  BSE_SOC,
+					  BSE_SOC_AMT,
+					  BYRS_RMRSE,
+					  CHRG_TY_CLASSIF,
+					  CONTR_DEALER_CODE,
+					  CONTR_END_DT,
+					  CONTR_ID,
+					  CONTR_STRT_DT,
+					  CONTR_TERM,
+					  CONTR_TIER,
+					  CONTR_TRANS_DT,
+					  CONTR_TY,
+					  COST_CENTRE,			
+					  EI_GRP_SEQ_NO,
+					  EQP_SRC,
+					  EQP_TY,			
+					  GL_ACCOUNT,
+					  GL_TAX_CD,
+					  INSERT_TS,		
+					  ITEM_END_DT,
+					  ITEM_GRP_CD,
+					  ITEM_ID,
+					  ITEM_STRT_DT,
+					  ITEM_SUB_ID,
+					  ITEM_TRANS_DT,
+					  JURISD_CD,
+					  MIN_TIER_PRC,
+					  POB_END_DT,
+					  PROMO_CD,
+					  PROV_AGR,
+					  PROV_CUST,
+					  BRND,
+					  SERV_TIER,
+					  SOC_LEV_CD,
+					  STNDLN_SELL_PRC,
+					  SUBS_AMT,
+					  SUBS_EFF_DT,
+					  SUBS_EXP_DT,
+					  SUBSCR_NO,
+					  TERM_M2M,
+					  TRANS_PRC,
+					  TRX_SEQ_NO,
+					  GL_PRICE_PLAN_GRP,
+					  KUNNR_SID,
+					  ORIG_CONTR_STRT_DT,
+					  ORIG_CONTR_TERM,
+					  ORIG_STNDLN_SELL_PRC,
+					  ORIG_TRANS_PRC,
+					  BATCH_ID,
+					  VIR_INV_TS,
+					  DIST_CHANNEL,
+					  CUSTOMER_GROUP,
+		              MATERIAL_GROUP,
+		              REV_ACTG_DOC_NUM,
+		              BANNER,
+		              DEALER,
+		              REV_ACT_DOC_TY,
+		              ART_NUM,
+		              JOURN_DT,
+		              "ORIGINAL_DEALER",
+			   		  "MANUFACTURE_CODE",
+					  ERROR_CODE,
+					  ERROR_CREATE_TS)
+			  VALUES (C_SUB.ACTV_CD,
+					  C_SUB.ACTV_RSN_CD,
+					  C_SUB.BAN,
+					  C_SUB.BASE_OPT_SERV_IND,
+				 	  C_SUB.BSE_SOC,
+					  C_SUB.BSE_SOC_AMT,
+					  C_SUB.BYRS_RMRSE,
+					  C_SUB.CHRG_TY_CLASSIF,
+					  C_SUB.CONTR_DEALER_CODE,
+					  C_SUB.CONTR_END_DT,
+					  C_SUB.CONTR_ID,
+					  C_SUB.CONTR_STRT_DT,
+					  C_SUB.CONTR_TERM,
+					  C_SUB.CONTR_TIER,
+					  C_SUB.CONTR_TRANS_DT,
+					  C_SUB.CONTR_TY,
+					  C_SUB.COST_CENTRE,			 
+					  C_SUB.EI_GRP_SEQ_NO,
+					  C_SUB.EQP_SRC,
+					  C_SUB.EQP_TY,			 
+					  C_SUB.GL_ACCOUNT,
+				      C_SUB.GL_TAX_CD,
+					  LV_CUR_UTC,
+					  C_SUB.ITEM_END_DT,
+					  C_SUB.ITEM_GRP_CD,
+					  C_SUB.ITEM_ID,
+					  C_SUB.ITEM_STRT_DT,
+					  C_SUB.ITEM_SUB_ID,
+					  C_SUB.ITEM_TRANS_DT,
+					  C_SUB.JURISD_CD,
+					  C_SUB.MIN_TIER_PRC,
+					  C_SUB.POB_END_DT,
+					  C_SUB.PROMO_CD,
+					  C_SUB.PROV_AGR,
+					  C_SUB.PROV_CUST,
+				 	  C_SUB.BRND,
+					  C_SUB.SERV_TIER,
+					  C_SUB.SOC_LEV_CD,
+					  C_SUB.STNDLN_SELL_PRC,
+					  C_SUB.SUBS_AMT,
+					  C_SUB.SUBS_EFF_DT,
+					  C_SUB.SUBS_EXP_DT,
+					  C_SUB.SUBSCR_NO,
+					  C_SUB.TERM_M2M,
+					  C_SUB.TRANS_PRC,
+					  C_SUB.TRX_SEQ_NO ,
+					  C_SUB.GL_PRICE_PLAN_GRP,
+					  C_SUB.KUNNR_SID,
+					  C_SUB.ORIG_CONTR_STRT_DT,
+					  C_SUB.ORIG_CONTR_TERM,
+					  C_SUB.ORIG_STNDLN_SELL_PRC,
+					  C_SUB.ORIG_TRANS_PRC,
+					  C_SUB.BATCH_ID,
+					  C_SUB.VIR_INV_TS,
+					  C_SUB.DIST_CHANNEL,
+					  C_SUB.CUSTOMER_GROUP,
+		              C_SUB.MATERIAL_GROUP,
+		              C_SUB.REV_ACTG_DOC_NUM,
+		              C_SUB.BANNER,
+		              C_SUB.DEALER,
+		              C_SUB.REV_ACT_DOC_TY,
+		              C_SUB.ART_NUM,
+		              C_SUB.JOURN_DT,
+		              C_SUB."ORIGINAL_DEALER",
+			   		  C_SUB."MANUFACTURE_CODE",
+                      :CURRENT_ERROR,
+			  		  LV_CUR_UTC);	
+       -- End for inner for loop.     
+       END FOR;
+       
+       -- Set Error Flag				        
+			LV_ERROR_FLAG := 'Y';
+		    LV_LOOP_ERROR_FLAG := 1;
+		    
+		    
+		    	
+-- Processing for Successful Records
+   ELSE 
+         IF C_SUB.ERROR_STATUS = '0' THEN
+	    
+	        IF LV_LOOP_ERROR_FLAG = 1 THEN
+	        
+	        INSERT INTO "NDB_MOBILITY"."IFRS_R1.MOBILITY.NDB_MOBILITY::MOBL_POST_ORDER_EH"(
+					  ACTV_CD,
+					  ACTV_RSN_CD,
+					  BAN,
+					  BASE_OPT_SERV_IND,			 
+				 	  BSE_SOC,
+					  BSE_SOC_AMT,
+					  BYRS_RMRSE,
+					  CHRG_TY_CLASSIF,
+					  CONTR_DEALER_CODE,
+					  CONTR_END_DT,
+					  CONTR_ID,
+					  CONTR_STRT_DT,
+					  CONTR_TERM,
+					  CONTR_TIER,
+					  CONTR_TRANS_DT,
+					  CONTR_TY,
+					  COST_CENTRE,			
+					  EI_GRP_SEQ_NO,
+					  EQP_SRC,
+					  EQP_TY,			
+					  GL_ACCOUNT,
+					  GL_TAX_CD,
+					  INSERT_TS,		
+					  ITEM_END_DT,
+					  ITEM_GRP_CD,
+					  ITEM_ID,
+					  ITEM_STRT_DT,
+					  ITEM_SUB_ID,
+					  ITEM_TRANS_DT,
+					  JURISD_CD,
+					  MIN_TIER_PRC,
+					  POB_END_DT,
+					  PROMO_CD,
+					  PROV_AGR,
+					  PROV_CUST,
+					  BRND,
+					  SERV_TIER,
+					  SOC_LEV_CD,
+					  STNDLN_SELL_PRC,
+					  SUBS_AMT,
+					  SUBS_EFF_DT,
+					  SUBS_EXP_DT,
+					  SUBSCR_NO,
+					  TERM_M2M,
+					  TRANS_PRC,
+					  TRX_SEQ_NO,
+					  GL_PRICE_PLAN_GRP,
+					  KUNNR_SID,
+					  ORIG_CONTR_STRT_DT,
+					  ORIG_CONTR_TERM,
+					  ORIG_STNDLN_SELL_PRC,
+					  ORIG_TRANS_PRC,
+					  BATCH_ID,
+					  VIR_INV_TS,
+					  DIST_CHANNEL,
+					  CUSTOMER_GROUP,
+		              MATERIAL_GROUP,
+		              REV_ACTG_DOC_NUM,
+		              BANNER,
+		              DEALER,
+		              REV_ACT_DOC_TY,
+		              ART_NUM,
+		              JOURN_DT,
+		              "ORIGINAL_DEALER",
+			   		  "MANUFACTURE_CODE",
+					  ERROR_CODE,
+					  ERROR_CREATE_TS)
+			  VALUES (C_SUB.ACTV_CD,
+					  C_SUB.ACTV_RSN_CD,
+					  C_SUB.BAN,
+					  C_SUB.BASE_OPT_SERV_IND,
+				 	  C_SUB.BSE_SOC,
+					  C_SUB.BSE_SOC_AMT,
+					  C_SUB.BYRS_RMRSE,
+					  C_SUB.CHRG_TY_CLASSIF,
+					  C_SUB.CONTR_DEALER_CODE,
+					  C_SUB.CONTR_END_DT,
+					  C_SUB.CONTR_ID,
+					  C_SUB.CONTR_STRT_DT,
+					  C_SUB.CONTR_TERM,
+					  C_SUB.CONTR_TIER,
+					  C_SUB.CONTR_TRANS_DT,
+					  C_SUB.CONTR_TY,
+					  C_SUB.COST_CENTRE,			 
+					  C_SUB.EI_GRP_SEQ_NO,
+					  C_SUB.EQP_SRC,
+					  C_SUB.EQP_TY,			 
+					  C_SUB.GL_ACCOUNT,
+				      C_SUB.GL_TAX_CD,
+					  LV_CUR_UTC,
+					  C_SUB.ITEM_END_DT,
+					  C_SUB.ITEM_GRP_CD,
+					  C_SUB.ITEM_ID,
+					  C_SUB.ITEM_STRT_DT,
+					  C_SUB.ITEM_SUB_ID,
+					  C_SUB.ITEM_TRANS_DT,
+					  C_SUB.JURISD_CD,
+					  C_SUB.MIN_TIER_PRC,
+					  C_SUB.POB_END_DT,
+					  C_SUB.PROMO_CD,
+					  C_SUB.PROV_AGR,
+					  C_SUB.PROV_CUST,
+				 	  C_SUB.BRND,
+					  C_SUB.SERV_TIER,
+					  C_SUB.SOC_LEV_CD,
+					  C_SUB.STNDLN_SELL_PRC,
+					  C_SUB.SUBS_AMT,
+					  C_SUB.SUBS_EFF_DT,
+					  C_SUB.SUBS_EXP_DT,
+					  C_SUB.SUBSCR_NO,
+					  C_SUB.TERM_M2M,
+					  C_SUB.TRANS_PRC,
+					  C_SUB.TRX_SEQ_NO ,
+					  C_SUB.GL_PRICE_PLAN_GRP,
+					  C_SUB.KUNNR_SID,
+					  C_SUB.ORIG_CONTR_STRT_DT,
+					  C_SUB.ORIG_CONTR_TERM,
+					  C_SUB.ORIG_STNDLN_SELL_PRC,
+					  C_SUB.ORIG_TRANS_PRC,
+					  C_SUB.BATCH_ID,
+					  C_SUB.VIR_INV_TS,
+					  C_SUB.DIST_CHANNEL,
+					  C_SUB.CUSTOMER_GROUP,
+		              C_SUB.MATERIAL_GROUP,
+		              C_SUB.REV_ACTG_DOC_NUM,
+		              C_SUB.BANNER,
+		              C_SUB.DEALER,
+		              C_SUB.REV_ACT_DOC_TY,
+		              C_SUB.ART_NUM,
+		              C_SUB.JOURN_DT,
+		              C_SUB."ORIGINAL_DEALER",
+			   		  C_SUB."MANUFACTURE_CODE",
+                      :CURRENT_ERROR,
+			  		  LV_CUR_UTC);
+		    
+       
+       
+      
+    ELSEIF (C_SUB.FLAG_EXISTING_RECORD = 'U') AND (C_SUB.ITEM_END_DT IS NOT NULL) THEN 
+          
+           BEGIN AUTONOMOUS TRANSACTION
+		    	
+		    	UPDATE "NDB_MOBILITY"."IFRS_R1.MOBILITY.NDB_MOBILITY::MOBL_POST_ORDER" ORD 
+				   SET POB_END_DT  = C_SUB.ITEM_END_DT,
+					   MODIFIED_TS = :LV_CUR_UTC 
+				 WHERE C_SUB.BAN   = ORD.BAN 
+				   AND C_SUB.SUBSCR_NO = ORD.SUBSCR_NO 
+				   AND C_SUB.ITEM_ID   = ORD.ITEM_ID
+				   AND POB_END_DT      = '99991231';		    	
+		    	
+		    	--Insert modification data into NDB ORDER table
+                INSERT INTO "NDB_MOBILITY"."IFRS_R1.MOBILITY.NDB_MOBILITY::MOBL_POST_ORDER"(
+							 ACTV_CD,
+							 ACTV_RSN_CD,
+							 BAN,
+							 BASE_OPT_SERV_IND,			 
+						 	 BSE_SOC,
+							 BSE_SOC_AMT,
+							 BYRS_RMRSE,
+							 CHRG_TY_CLASSIF,
+							 CONTR_DEALER_CODE,
+							 CONTR_END_DT,
+							 CONTR_ID,
+							 CONTR_STRT_DT,
+							 CONTR_TERM,
+							 CONTR_TIER,
+							 CONTR_TRANS_DT,
+							 CONTR_TY,
+							 COST_CENTRE,			
+							 EI_GRP_SEQ_NO,
+							 EQP_SRC,
+							 EQP_TY,			
+							 GL_ACCOUNT,
+							 GL_TAX_CD,
+							 INSERT_TS,		
+							 ITEM_END_DT,
+							 ITEM_GRP_CD,
+							 ITEM_ID,
+							 ITEM_STRT_DT,
+							 ITEM_SUB_ID,
+							 ITEM_TRANS_DT,
+							 JURISD_CD,
+							 MIN_TIER_PRC,
+							 POB_END_DT,
+							 PROMO_CD,
+							 PROV_AGR,
+							 PROV_CUST,
+							 BRND,
+							 SERV_TIER,
+							 SOC_LEV_CD,
+							 STNDLN_SELL_PRC,
+							 SUBS_AMT,
+							 SUBS_EFF_DT,
+							 SUBS_EXP_DT,
+							 SUBSCR_NO,
+							 TERM_M2M,
+							 TRANS_PRC,
+							 TRX_SEQ_NO,
+							 GL_PRICE_PLAN_GRP,
+							 KUNNR_SID,
+							 ORIG_CONTR_STRT_DT,
+							 ORIG_CONTR_TERM,
+							 ORIG_STNDLN_SELL_PRC,
+							 ORIG_TRANS_PRC,
+							 BATCH_ID,
+							 VIR_INV_TS,
+							 DIST_CHANNEL,
+							 CUSTOMER_GROUP,
+				             MATERIAL_GROUP,
+				             REV_ACTG_DOC_NUM,
+				             BANNER,
+				             DEALER,
+				             REV_ACT_DOC_TY,
+				             ART_NUM,
+				             JOURN_DT,
+				             "ORIGINAL_DEALER",
+			   		         "MANUFACTURE_CODE"
+ 				      )
+							 
+					 VALUES (C_SUB.ACTV_CD,
+							 C_SUB.ACTV_RSN_CD,
+							 C_SUB.BAN,
+							 C_SUB.BASE_OPT_SERV_IND,
+						 	 C_SUB.BSE_SOC,
+							 C_SUB.BSE_SOC_AMT,
+							 C_SUB.BYRS_RMRSE,
+							 C_SUB.CHRG_TY_CLASSIF,
+							 C_SUB.CONTR_DEALER_CODE,
+							 C_SUB.CONTR_END_DT,
+							 C_SUB.CONTR_ID,
+							 C_SUB.CONTR_STRT_DT,
+							 C_SUB.CONTR_TERM,
+							 C_SUB.CONTR_TIER,
+							 C_SUB.CONTR_TRANS_DT,
+							 C_SUB.CONTR_TY,
+							 C_SUB.COST_CENTRE,			 
+							 C_SUB.EI_GRP_SEQ_NO,
+							 C_SUB.EQP_SRC,
+							 C_SUB.EQP_TY,			 
+							 C_SUB.GL_ACCOUNT,
+						     C_SUB.GL_TAX_CD,
+							 LV_CUR_UTC,
+							 C_SUB.ITEM_END_DT,
+							 C_SUB.ITEM_GRP_CD,
+							 C_SUB.ITEM_ID,
+							 C_SUB.ITEM_STRT_DT,
+							 C_SUB.ITEM_SUB_ID,
+							 C_SUB.ITEM_TRANS_DT,
+							 C_SUB.JURISD_CD,
+							 C_SUB.MIN_TIER_PRC,
+							 C_SUB.POB_END_DT,
+							 C_SUB.PROMO_CD,
+							 C_SUB.PROV_AGR,
+							 C_SUB.PROV_CUST,
+						 	 C_SUB.BRND,
+							 C_SUB.SERV_TIER,
+							 C_SUB.SOC_LEV_CD,
+							 C_SUB.STNDLN_SELL_PRC,
+							 C_SUB.SUBS_AMT,
+							 C_SUB.SUBS_EFF_DT,
+							 C_SUB.SUBS_EXP_DT,
+							 C_SUB.SUBSCR_NO,
+							 C_SUB.TERM_M2M,
+							 C_SUB.TRANS_PRC,
+							 C_SUB.TRX_SEQ_NO ,
+							 C_SUB.GL_PRICE_PLAN_GRP,
+							 C_SUB.KUNNR_SID,
+							 C_SUB.ORIG_CONTR_STRT_DT,
+							 C_SUB.ORIG_CONTR_TERM,
+							 C_SUB.ORIG_STNDLN_SELL_PRC,
+							 C_SUB.ORIG_TRANS_PRC,
+							 C_SUB.BATCH_ID,
+							 C_SUB.VIR_INV_TS,
+							 C_SUB.DIST_CHANNEL,
+							 C_SUB.CUSTOMER_GROUP,
+				             C_SUB.MATERIAL_GROUP,
+				             C_SUB.REV_ACTG_DOC_NUM,
+				             C_SUB.BANNER,
+				             C_SUB.DEALER,
+				             C_SUB.REV_ACT_DOC_TY,
+				             C_SUB.ART_NUM,
+				             C_SUB.JOURN_DT,
+				             C_SUB."ORIGINAL_DEALER",
+			   		  	     C_SUB."MANUFACTURE_CODE"
+ 				      				             );	
+							 
+				UPDATE "NDB_COMMON"."IFRS_R1.COMMON_COMP.NDB_COMMON::P77_TRANS_DEVICES" P
+ 				   SET P."POST_MOBL_SUBSCR"   = C_SUB."SUBSCR_NO"
+       			 WHERE P."PRIMARY_SERIAL_NUM" = C_SUB."ITEM_ID"
+       			   AND P."SRC_FILE_NAME" = C_SUB."SRC_FILE_NAME"
+       			   AND P."SALES_DOC_TYP" = C_SUB."SALES_DOC_TYP"
+       			   AND P."REC_EXPIRY_DT" = C_SUB."REC_EXPIRY_DT"
+       			   AND P."POST_MOBL_SUBSCR" IS NULL;  
+       			   
+       			 
+       			    
+           END;
+		
+		        -- Insert PK of successfully processed Records into Local Temp Tables 
+				-- For Updating NDB_TS in corresponding Landing Tables records
+                INSERT INTO #UPDATE_NM1_EDW_CONTR
+					   (BAN,
+						SUBSCRIBER_NO,
+						EFF_DT)
+					   	VALUES (C_SUB."BAN",
+					    C_SUB."SUBSCR_NO",
+					    C_SUB."CONTR_TRANS_DT");  
+					INSERT INTO #UPDATE_NM1_EDW_EQP
+					   (BAN,
+						ESN_IMEI,
+						SIM,
+						SUBCR_NO,
+						TRANS_DT)
+					   	VALUES (C_SUB."BAN",
+					    C_SUB."ITEM_ID",
+					    C_SUB."SIM",
+					    C_SUB."SUBSCR_NO",
+					    C_SUB."ITEM_TRANS_DT"); 
+					    
+				INSERT INTO #UPDATE_EH_DELETION
+						    (BAN,
+						    CONTR_TRANS_DT,
+						    ITEM_ID,
+						    ITEM_TRANS_DT,
+							TRX_SEQ_NO,
+							SUBSCR_NO)     
+	 	     	  	VALUES (C_SUB."BAN",
+	 	     	  			C_SUB.CONTR_TRANS_DT,
+	 	     	  			C_SUB."ITEM_ID",
+				 			C_SUB."ITEM_TRANS_DT",
+						 	C_SUB."TRX_SEQ_NO",
+						 	C_SUB."SUBSCR_NO");
+						 	
+    ELSEIF (C_SUB.FLAG_EXISTING_RECORD = 'I') THEN
+    
+    BEGIN AUTONOMOUS TRANSACTION
+       ----Insert New data into NDB ORDER table 						 	    
+       INSERT INTO "NDB_MOBILITY"."IFRS_R1.MOBILITY.NDB_MOBILITY::MOBL_POST_ORDER"(
+					ACTV_CD,
+				    ACTV_RSN_CD,
+					BAN,
+					BASE_OPT_SERV_IND,			 
+					BSE_SOC,
+					BSE_SOC_AMT,
+					BYRS_RMRSE,
+					CHRG_TY_CLASSIF,
+					CONTR_DEALER_CODE,
+					CONTR_END_DT,
+					CONTR_ID,
+					CONTR_STRT_DT,
+					CONTR_TERM,
+					CONTR_TIER,
+					CONTR_TRANS_DT,
+					CONTR_TY,
+					COST_CENTRE,			
+					EI_GRP_SEQ_NO,
+					EQP_SRC,
+					EQP_TY,			
+					GL_ACCOUNT,
+					GL_TAX_CD,
+					INSERT_TS,		
+					ITEM_END_DT,
+					ITEM_GRP_CD,
+					ITEM_ID,
+					ITEM_STRT_DT,
+					ITEM_SUB_ID,
+					ITEM_TRANS_DT,
+					JURISD_CD,
+					MIN_TIER_PRC,
+					POB_END_DT,
+					PROMO_CD,
+					PROV_AGR,
+					PROV_CUST,
+					BRND,
+					SERV_TIER,
+					SOC_LEV_CD,
+					STNDLN_SELL_PRC,
+					SUBS_AMT,
+					SUBS_EFF_DT,
+					SUBS_EXP_DT,
+					SUBSCR_NO,
+					TERM_M2M,
+					TRANS_PRC,
+					TRX_SEQ_NO,
+					GL_PRICE_PLAN_GRP,
+					KUNNR_SID,
+					ORIG_CONTR_STRT_DT,
+					ORIG_CONTR_TERM,
+					ORIG_STNDLN_SELL_PRC,
+					ORIG_TRANS_PRC,
+					BATCH_ID,
+					VIR_INV_TS,
+					DIST_CHANNEL,
+					CUSTOMER_GROUP,
+				    MATERIAL_GROUP,
+				    REV_ACTG_DOC_NUM,
+				    BANNER,
+				    DEALER,
+				    REV_ACT_DOC_TY,
+				    ART_NUM,
+				    JOURN_DT,
+				    "ORIGINAL_DEALER",
+			   		"MANUFACTURE_CODE"
+				    )
+							 
+			VALUES (C_SUB.ACTV_CD,
+					C_SUB.ACTV_RSN_CD,
+					C_SUB.BAN,
+					C_SUB.BASE_OPT_SERV_IND,
+					C_SUB.BSE_SOC,
+					C_SUB.BSE_SOC_AMT,
+					C_SUB.BYRS_RMRSE,
+					C_SUB.CHRG_TY_CLASSIF,
+					C_SUB.CONTR_DEALER_CODE,
+					C_SUB.CONTR_END_DT,
+					C_SUB.CONTR_ID,
+					C_SUB.CONTR_STRT_DT,
+					C_SUB.CONTR_TERM,
+					C_SUB.CONTR_TIER,
+					C_SUB.CONTR_TRANS_DT,
+					C_SUB.CONTR_TY,
+					C_SUB.COST_CENTRE,			 
+					C_SUB.EI_GRP_SEQ_NO,
+					C_SUB.EQP_SRC,
+					C_SUB.EQP_TY,			 
+					C_SUB.GL_ACCOUNT,
+					C_SUB.GL_TAX_CD,
+					LV_CUR_UTC,
+					C_SUB.ITEM_END_DT,
+					C_SUB.ITEM_GRP_CD,
+					C_SUB.ITEM_ID,
+					C_SUB.ITEM_STRT_DT,
+					C_SUB.ITEM_SUB_ID,
+					C_SUB.ITEM_TRANS_DT,
+					C_SUB.JURISD_CD,
+					C_SUB.MIN_TIER_PRC,
+					C_SUB.POB_END_DT,
+					C_SUB.PROMO_CD,
+					C_SUB.PROV_AGR,
+					C_SUB.PROV_CUST,
+					C_SUB.BRND,
+					C_SUB.SERV_TIER,
+					C_SUB.SOC_LEV_CD,
+					C_SUB.STNDLN_SELL_PRC,
+					C_SUB.SUBS_AMT,
+					C_SUB.SUBS_EFF_DT,
+					C_SUB.SUBS_EXP_DT,
+					C_SUB.SUBSCR_NO,
+					C_SUB.TERM_M2M,
+					C_SUB.TRANS_PRC,
+					C_SUB.TRX_SEQ_NO ,
+					C_SUB.GL_PRICE_PLAN_GRP,
+					C_SUB.KUNNR_SID,
+					C_SUB.ORIG_CONTR_STRT_DT,
+					C_SUB.ORIG_CONTR_TERM,
+					C_SUB.ORIG_STNDLN_SELL_PRC,
+					C_SUB.ORIG_TRANS_PRC,
+					C_SUB.BATCH_ID,
+					C_SUB.VIR_INV_TS,
+					C_SUB.DIST_CHANNEL,
+					C_SUB.CUSTOMER_GROUP,
+				    C_SUB.MATERIAL_GROUP,
+				    C_SUB.REV_ACTG_DOC_NUM,
+				    C_SUB.BANNER,
+				    C_SUB.DEALER,
+				    C_SUB.REV_ACT_DOC_TY,
+				    C_SUB.ART_NUM,
+				    C_SUB.JOURN_DT,
+				    C_SUB."ORIGINAL_DEALER",
+			   		C_SUB."MANUFACTURE_CODE"
+				    );
+				    
+					
+					
+					
+			UPDATE "NDB_COMMON"."IFRS_R1.COMMON_COMP.NDB_COMMON::P77_TRANS_DEVICES" P
+ 			   SET P."POST_MOBL_SUBSCR"   = C_SUB."SUBSCR_NO"
+       		 WHERE P."PRIMARY_SERIAL_NUM" = C_SUB."ITEM_ID"
+       		   AND P."SRC_FILE_NAME" = C_SUB."SRC_FILE_NAME"
+       		   AND P."SALES_DOC_TYP" = C_SUB."SALES_DOC_TYP"
+       		   AND P."REC_EXPIRY_DT" = C_SUB."REC_EXPIRY_DT"
+       		   AND P."POST_MOBL_SUBSCR" IS NULL ;
+       		 
+       		 END;
+                -- Insert PK of successfully processed Records into Local Temp Tables 
+				-- For Updating NDB_TS in corresponding Landing Tables records
+            INSERT INTO #UPDATE_NM1_EDW_CONTR
+					   (BAN,
+						SUBSCRIBER_NO,
+						EFF_DT)
+					   	VALUES (C_SUB."BAN",
+					    C_SUB."SUBSCR_NO",
+					    C_SUB."CONTR_TRANS_DT");  
+					INSERT INTO #UPDATE_NM1_EDW_EQP
+					   (BAN,
+						ESN_IMEI,
+						SIM,
+						SUBCR_NO,
+						TRANS_DT)
+					   	VALUES (C_SUB."BAN",
+					    C_SUB."ITEM_ID",
+					    C_SUB."SIM",
+					    C_SUB."SUBSCR_NO",
+					    C_SUB."ITEM_TRANS_DT");
+					    
+			INSERT INTO #UPDATE_EH_DELETION
+						(BAN,
+						 CONTR_TRANS_DT,
+						 ITEM_ID,
+						 ITEM_TRANS_DT,
+				         TRX_SEQ_NO,
+						 SUBSCR_NO)     
+	 	     	 VALUES (C_SUB."BAN",
+	 	     	  		 C_SUB.CONTR_TRANS_DT,
+	 	     	  		 C_SUB."ITEM_ID",
+				 		 C_SUB."ITEM_TRANS_DT",
+						 C_SUB."TRX_SEQ_NO",
+						 C_SUB."SUBSCR_NO");  
+						 
+    END IF;
+    END IF;
+    END IF;
+END FOR;  
+
+-- Update Landing Table IFRS_R1.LAND::NM1_EDW_CONTR
+    UPDATE "LAND"."IFRS_R1.LAND::NM1_EDW_CONTR" A 
+	FROM "LAND"."IFRS_R1.LAND::NM1_EDW_CONTR" A
+	INNER JOIN #UPDATE_NM1_EDW_CONTR B 
+	ON A.BAN = B.BAN
+	AND A.SUBSCRIBER_NO = B.SUBSCRIBER_NO
+	AND A.EFF_DT = B.EFF_DT
+	SET A.SP_ORDER_SUBSIDY_CONTR_TS = LV_CUR_UTC 
+	WHERE A.SP_ORDER_SUBSIDY_CONTR_TS IS NULL;
+    
+     -- Update NDB_TS with current_timestamp for the records that has been processed  
+	UPDATE "LAND"."IFRS_R1.LAND::NM1_EDW_EQP" A
+	FROM "LAND"."IFRS_R1.LAND::NM1_EDW_EQP" A 
+	INNER JOIN #UPDATE_NM1_EDW_EQP B 	 
+	ON A.BAN = B.BAN
+	AND A.ESN_IMEI = B.ESN_IMEI
+	AND A.SIM = B.SIM
+	AND A.SUBCR_NO = B.SUBCR_NO
+	AND A.TRANS_DT = B.TRANS_DT
+	SET A.SP_ORDER_SUBSIDY_CONTR_TS = LV_CUR_UTC 
+	WHERE A.SP_ORDER_SUBSIDY_CONTR_TS IS NULL;
+    
+--------------------------------------------------------------------------------------------------
+	-- Update Error Table
+--------------------------------------------------------------------------------------------------
+
+    UPDATE "NDB_MOBILITY"."IFRS_R1.MOBILITY.NDB_MOBILITY::MOBL_POST_ORDER_EH" A
+    FROM "NDB_MOBILITY"."IFRS_R1.MOBILITY.NDB_MOBILITY::MOBL_POST_ORDER_EH" A 
+    INNER JOIN #UPDATE_EH_DELETION B       
+    ON A."BAN" = B."BAN"
+    AND A."CONTR_TRANS_DT" = B."CONTR_TRANS_DT"
+    AND A."ITEM_ID" =  B."ITEM_ID"
+    AND A."ITEM_TRANS_DT" = B."ITEM_TRANS_DT"
+    AND A."TRX_SEQ_NO" = B."TRX_SEQ_NO"
+    AND A."SUBSCR_NO" = B."SUBSCR_NO"
+    SET (DELETE_DATE, DELETED) = (CURRENT_DATE, 1);       
+       
+
+--------------------------------------------------------------------------------------------------
+	-- Update NDB Table MOBL_POST_EQP
+--------------------------------------------------------------------------------------------------
+   UPDATE "NDB_MOBILITY"."IFRS_R1.MOBILITY.NDB_MOBILITY::MOBL_POST_EQP" E
+   SET  E.CONTRACT_TRANSFER ='Y'
+   WHERE EXISTS (SELECT 1 FROM "_SYS_BIC"."IFRS_R1.MOBILITY.NDB_MOBILITY/CA_ORDER_SUBSIDY_CONTR" F
+              WHERE E.SUBSCR_NO = F.PREV_SUBS
+                AND F.CONTR_TRAN_FLG = 'Y')    ; 
+----------------------------------------------------------------------------------------------------
+	-- Set Overall Status
+----------------------------------------------------------------------------------------------------- 
+	--  STATUS 0: Send the success message to scheduling tool to confirm this procedure has been
+	--  executed successfully
+    IF(LV_ERROR_FLAG = 'Y') THEN
+     OP_STATUS := LC_ERROR_TEXT; 			
+    ELSE
+  	 OP_STATUS := LC_SUCCESS_TEXT;				
+	END IF;		
+
+END;

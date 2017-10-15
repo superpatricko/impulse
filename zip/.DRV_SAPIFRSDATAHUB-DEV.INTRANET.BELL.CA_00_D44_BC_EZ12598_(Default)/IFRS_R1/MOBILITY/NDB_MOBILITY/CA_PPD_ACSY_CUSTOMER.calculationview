@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:AccessControl="http://www.sap.com/ndb/SQLCoreModelAccessControl.ecore" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" schemaVersion="2.3" id="CA_PPD_ACSY_CUSTOMER" applyPrivilegeType="ANALYTIC_PRIVILEGE" checkAnalyticPrivileges="true" defaultClient="$$client$$" defaultLanguage="$$language$$" hierarchiesSQLEnabled="false" translationRelevant="true" visibility="internal" calculationScenarioType="TREE_BASED" dataCategory="DIMENSION" enforceSqlExecution="false" executionSemantic="UNDEFINED" outputViewType="Projection">
+  <descriptions defaultDescription="CA_PPD_ACSY_CUSTOMER"/>
+  <localVariables/>
+  <variableMappings/>
+  <informationModelLayout relativeWidthScenario="31"/>
+  <dataSources>
+    <DataSource id="IFRS_R1.MOBILITY.NDB_MOBILITY::PPD_ACSY_CUSTOMER" type="DATA_BASE_TABLE">
+      <viewAttributes allViewAttributes="true"/>
+      <columnObject schemaName="NDB_MOBILITY" columnObjectName="IFRS_R1.MOBILITY.NDB_MOBILITY::PPD_ACSY_CUSTOMER"/>
+    </DataSource>
+    <DataSource id="IFRS_R1.MOBILITY.NDB_MOBILITY::PPD_BILLING" type="DATA_BASE_TABLE">
+      <viewAttributes allViewAttributes="true"/>
+      <columnObject schemaName="NDB_MOBILITY" columnObjectName="IFRS_R1.MOBILITY.NDB_MOBILITY::PPD_BILLING"/>
+    </DataSource>
+  </dataSources>
+  <calculationViews>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_PPD_ACSY_CUST">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="UNIQUE_ACC_NO"/>
+        <viewAttribute id="ACSY_KUNNR_SID"/>
+        <viewAttribute id="MODIFIED_TS"/>
+        <viewAttribute id="COMPANY_CD"/>
+        <viewAttribute id="REV_PROFIT_CTR"/>
+        <viewAttribute id="REV_GL_ACT_NUM"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#IFRS_R1.MOBILITY.NDB_MOBILITY::PPD_ACSY_CUSTOMER">
+        <mapping xsi:type="Calculation:AttributeMapping" target="UNIQUE_ACC_NO" source="UNIQUE_ACC_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACSY_KUNNR_SID" source="ACSY_KUNNR_SID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MODIFIED_TS" source="MODIFIED_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="COMPANY_CD" source="COMPANY_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REV_PROFIT_CTR" source="REV_PROFIT_CTR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REV_GL_ACT_NUM" source="REV_GL_ACT_NUM"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_PPD_BILLING">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="ACSY_KUNNR_SID">
+          <filter xsi:type="AccessControl:SingleValueFilter" operator="NL" including="true"/>
+        </viewAttribute>
+        <viewAttribute id="COMPANY_CODE"/>
+        <viewAttribute id="COST_CENTER"/>
+        <viewAttribute id="GL_ACCOUNT"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#IFRS_R1.MOBILITY.NDB_MOBILITY::PPD_BILLING">
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACSY_KUNNR_SID" source="ACSY_KUNNR_SID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="COMPANY_CODE" source="COMPANY_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="COST_CENTER" source="COST_CENTER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GL_ACCOUNT" source="GL_ACCOUNT"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="JOIN_ACSY_BILL" joinType="leftOuter">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="UNIQUE_ACC_NO"/>
+        <viewAttribute id="ACSY_KUNNR_SID"/>
+        <viewAttribute id="MODIFIED_TS"/>
+        <viewAttribute id="COMPANY_CD"/>
+        <viewAttribute id="REV_PROFIT_CTR"/>
+        <viewAttribute id="REV_GL_ACT_NUM"/>
+        <viewAttribute id="COMPANY_CODE_RIGHT"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="IS_20402301" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isnull(&quot;COMPANY_CODE_RIGHT&quot;), '1','0')</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#PROJ_PPD_ACSY_CUST">
+        <mapping xsi:type="Calculation:AttributeMapping" target="UNIQUE_ACC_NO" source="UNIQUE_ACC_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACSY_KUNNR_SID" source="ACSY_KUNNR_SID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MODIFIED_TS" source="MODIFIED_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="COMPANY_CD" source="COMPANY_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REV_PROFIT_CTR" source="REV_PROFIT_CTR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REV_GL_ACT_NUM" source="REV_GL_ACT_NUM"/>
+      </input>
+      <input node="#PROJ_PPD_BILLING">
+        <mapping xsi:type="Calculation:AttributeMapping" target="COMPANY_CODE_RIGHT" source="COMPANY_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="COMPANY_CD" source="COMPANY_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REV_PROFIT_CTR" source="COST_CENTER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REV_GL_ACT_NUM" source="GL_ACCOUNT"/>
+      </input>
+      <joinAttribute name="COMPANY_CD"/>
+      <joinAttribute name="REV_PROFIT_CTR"/>
+      <joinAttribute name="REV_GL_ACT_NUM"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="ERROR_SEMANTICS">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="ACSY_KUNNR_SID"/>
+        <viewAttribute id="MODIFIED_TS"/>
+        <viewAttribute id="IS_20402301"/>
+        <viewAttribute id="COMPANY_CD"/>
+        <viewAttribute id="REV_PROFIT_CTR"/>
+        <viewAttribute id="REV_GL_ACT_NUM"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="ERROR_STATUS" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>if((&quot;IS_20402301&quot;='1' ) ,'1','0')</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="ERROR_CODE" length="200" expressionLanguage="COLUMN_ENGINE">
+          <formula>if (&quot;IS_20402301&quot; ='1', '20402301||','')</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#JOIN_ACSY_BILL">
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACSY_KUNNR_SID" source="ACSY_KUNNR_SID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MODIFIED_TS" source="MODIFIED_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20402301" source="IS_20402301"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="COMPANY_CD" source="COMPANY_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REV_PROFIT_CTR" source="REV_PROFIT_CTR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REV_GL_ACT_NUM" source="REV_GL_ACT_NUM"/>
+      </input>
+    </calculationView>
+  </calculationViews>
+  <logicalModel id="ERROR_SEMANTICS">
+    <descriptions/>
+    <attributes>
+      <attribute id="ACSY_KUNNR_SID" order="1" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ACSY_KUNNR_SID"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="ACSY_KUNNR_SID"/>
+      </attribute>
+      <attribute id="MODIFIED_TS" order="2" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="MODIFIED_TS"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="MODIFIED_TS"/>
+      </attribute>
+      <attribute id="IS_20402301" hidden="false" order="3" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="IS_20402301"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="IS_20402301"/>
+      </attribute>
+      <attribute id="ERROR_STATUS" order="4" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ERROR_STATUS"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="ERROR_STATUS"/>
+      </attribute>
+      <attribute id="ERROR_CODE" order="5" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ERROR_CODE"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="ERROR_CODE"/>
+      </attribute>
+      <attribute id="COMPANY_CODE" order="6" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="COMPANY_CODE"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="COMPANY_CD"/>
+      </attribute>
+      <attribute id="COST_CENTER" order="7" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="COST_CENTER"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="REV_PROFIT_CTR"/>
+      </attribute>
+      <attribute id="GL_ACCOUNT" order="8" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="GL_ACCOUNT"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="REV_GL_ACT_NUM"/>
+      </attribute>
+    </attributes>
+    <calculatedAttributes/>
+    <privateDataFoundation>
+      <tableProxies/>
+      <joins/>
+      <layout>
+        <shapes/>
+      </layout>
+    </privateDataFoundation>
+    <baseMeasures/>
+    <calculatedMeasures/>
+    <restrictedMeasures/>
+    <localDimensions/>
+  </logicalModel>
+  <layout>
+    <shapes>
+      <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+        <upperLeftCorner x="99" y="87"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_PPD_ACSY_CUST" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="22" y="339"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_PPD_BILLING" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="176" y="339"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="JOIN_ACSY_BILL" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="99" y="243"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="ERROR_SEMANTICS" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="99" y="165"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+    </shapes>
+  </layout>
+</Calculation:scenario>

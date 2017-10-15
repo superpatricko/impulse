@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:AccessControl="http://www.sap.com/ndb/SQLCoreModelAccessControl.ecore" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" schemaVersion="2.3" id="CA_PRODUCT_BELLTV_BILLING" applyPrivilegeType="NONE" cacheEnabled="true" checkAnalyticPrivileges="false" defaultClient="$$client$$" defaultLanguage="$$language$$" hierarchiesSQLEnabled="false" translationRelevant="true" visibility="reportingEnabled" calculationScenarioType="TREE_BASED" dataCategory="CUBE" enforceSqlExecution="true" executionSemantic="UNDEFINED" outputViewType="Aggregation">
+  <origin/>
+  <descriptions defaultDescription="CA_PRODUCT_BELLTV_BILLING"/>
+  <metadata changedAt="2017-07-12 14:31:43.271"/>
+  <localVariables/>
+  <variableMappings/>
+  <informationModelLayout relativeWidthScenario="31"/>
+  <dataSources>
+    <DataSource id="IFRS_R1.BELLTV.NDB_BELLTV::TV_ORDER" type="DATA_BASE_TABLE">
+      <viewAttributes allViewAttributes="true"/>
+      <columnObject schemaName="NDB_TV" columnObjectName="IFRS_R1.BELLTV.NDB_BELLTV::TV_ORDER"/>
+    </DataSource>
+    <DataSource id="IFRS_R1.BELLTV.NDB_BELLTV::TV_BILLING" type="DATA_BASE_TABLE">
+      <viewAttributes allViewAttributes="true"/>
+      <columnObject schemaName="NDB_TV" columnObjectName="IFRS_R1.BELLTV.NDB_BELLTV::TV_BILLING"/>
+    </DataSource>
+  </dataSources>
+  <calculationViews>
+    <calculationView xsi:type="Calculation:ProjectionView" id="TV_ORDER">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="FEATURE_CODE"/>
+        <viewAttribute id="CODE"/>
+        <viewAttribute id="DSCT_IND"/>
+        <viewAttribute id="REVENUE_CD"/>
+        <viewAttribute id="MAND_STNDLN_PRC"/>
+        <viewAttribute id="MAND_TRANS_PRC"/>
+        <viewAttribute id="OPT_STNDLN_PRC"/>
+        <viewAttribute id="OPT_TRANS_PRC"/>
+        <viewAttribute id="VALID_FROM"/>
+        <viewAttribute id="ACCT_NUM"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#IFRS_R1.BELLTV.NDB_BELLTV::TV_ORDER">
+        <mapping xsi:type="Calculation:AttributeMapping" target="FEATURE_CODE" source="PKG_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CODE" source="ITEM_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DSCT_IND" source="DSCT_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REVENUE_CD" source="REVENUE_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MAND_STNDLN_PRC" source="MAND_STNDLN_PRC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MAND_TRANS_PRC" source="MAND_TRANS_PRC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OPT_STNDLN_PRC" source="OPT_STNDLN_PRC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OPT_TRANS_PRC" source="OPT_TRANS_PRC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VALID_FROM" source="EVNT_EFF_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACCT_NUM" source="ACCT_NUM"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="TV_BILLING">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="FEATURE_CODE"/>
+        <viewAttribute id="CODE"/>
+        <viewAttribute id="DSCT_IND"/>
+        <viewAttribute id="REVNU_CD"/>
+        <viewAttribute id="DUOTRIO_IND"/>
+        <viewAttribute id="VALID_FROM"/>
+        <viewAttribute id="ACCT_NUM"/>
+        <viewAttribute id="PMP_TS">
+          <filter xsi:type="AccessControl:SingleValueFilter" operator="NL" including="true"/>
+        </viewAttribute>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#IFRS_R1.BELLTV.NDB_BELLTV::TV_BILLING">
+        <mapping xsi:type="Calculation:AttributeMapping" target="FEATURE_CODE" source="EVNT_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CODE" source="ITEM_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DSCT_IND" source="DSCT_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REVNU_CD" source="REVNU_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DUOTRIO_IND" source="DUOTRIO_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VALID_FROM" source="TRANS_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACCT_NUM" source="ACCT_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PMP_TS" source="PMP_TS"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="Join_ORDER_BILLING" joinType="leftOuter">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="MAND_STNDLN_PRC"/>
+        <viewAttribute id="MAND_TRANS_PRC"/>
+        <viewAttribute id="OPT_STNDLN_PRC"/>
+        <viewAttribute id="OPT_TRANS_PRC"/>
+        <viewAttribute id="FEATURE_CODE"/>
+        <viewAttribute id="CODE"/>
+        <viewAttribute id="DUOTRIO_IND"/>
+        <viewAttribute id="VALID_FROM"/>
+        <viewAttribute id="REVENUE_CD"/>
+        <viewAttribute id="DSCT_IND"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CHARGE_TYPE" length="9" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(&#xD;
+( (isNull(&quot;DSCT_IND&quot;)  or &quot;DSCT_IND&quot;='') and &quot;REVENUE_CD&quot;='R' and ((not isNull(&quot;MAND_STNDLN_PRC&quot;)) or (not isNull(&quot;MAND_TRANS_PRC&quot;)))), 'BASE_SRVC',&#xD;
+   if(&#xD;
+      ( (isNull(&quot;DSCT_IND&quot;)  or &quot;DSCT_IND&quot;='') and &quot;REVENUE_CD&quot;='R' and ((not isNull(&quot;OPT_STNDLN_PRC&quot;)) or (not isNull(&quot;OPT_TRANS_PRC&quot;)))), 'OPT', &#xD;
+       if(&#xD;
+         (( isNull(&quot;DSCT_IND&quot;)  or &quot;DSCT_IND&quot;='') and &quot;REVENUE_CD&quot;='O'),'OTC',&#xD;
+          if(&quot;DSCT_IND&quot;='X' and &quot;DUOTRIO_IND&quot; !='DUO' and &quot;DUOTRIO_IND&quot; !='TRIO','OTHERDISC',&#xD;
+             if(&quot;DUOTRIO_IND&quot; ='DUO','DUO',&#xD;
+                if(&quot;DUOTRIO_IND&quot; ='TRIO', 'TRIO','OTHER')&#xD;
+               )&#xD;
+            )&#xD;
+          )&#xD;
+      )&#xD;
+ )</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CODE_TYPE" length="5" expressionLanguage="COLUMN_ENGINE">
+          <formula>if((&quot;CHARGE_TYPE&quot; = 'BASE_SRVC'),&#xD;
+       if((isnull(&quot;CODE&quot;)),'SERVICE','PACKAGE'),       &#xD;
+              if(( &quot;CHARGE_TYPE&quot; = 'OPT' or &quot;CHARGE_TYPE&quot; = 'OTC' ),&#xD;
+                     if(isnull(&quot;DSCT_IND&quot;),'ITEM','DISCOUNT'),&#xD;
+                            'DISC'))</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#TV_BILLING">
+        <mapping xsi:type="Calculation:AttributeMapping" target="FEATURE_CODE" source="FEATURE_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CODE" source="CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DUOTRIO_IND" source="DUOTRIO_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VALID_FROM" source="VALID_FROM"/>
+      </input>
+      <input node="#TV_ORDER">
+        <mapping xsi:type="Calculation:AttributeMapping" target="MAND_STNDLN_PRC" source="MAND_STNDLN_PRC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MAND_TRANS_PRC" source="MAND_TRANS_PRC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OPT_STNDLN_PRC" source="OPT_STNDLN_PRC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OPT_TRANS_PRC" source="OPT_TRANS_PRC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REVENUE_CD" source="REVENUE_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DSCT_IND" source="DSCT_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FEATURE_CODE" source="FEATURE_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CODE" source="CODE"/>
+      </input>
+      <joinAttribute name="FEATURE_CODE"/>
+      <joinAttribute name="CODE"/>
+    </calculationView>
+  </calculationViews>
+  <logicalModel id="Join_ORDER_BILLING">
+    <descriptions/>
+    <attributes>
+      <attribute id="CHARGE_TYPE" order="1" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CHARGE_TYPE"/>
+        <keyMapping columnObjectName="Join_ORDER_BILLING" columnName="CHARGE_TYPE"/>
+      </attribute>
+      <attribute id="CODE_TYPE" order="3" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CODE_TYPE"/>
+        <keyMapping columnObjectName="Join_ORDER_BILLING" columnName="CODE_TYPE"/>
+      </attribute>
+      <attribute id="FEATURE_CODE" key="true" order="4" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="FEATURE_CODE"/>
+        <keyMapping columnObjectName="Join_ORDER_BILLING" columnName="FEATURE_CODE"/>
+      </attribute>
+      <attribute id="CODE" key="true" order="12" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CODE"/>
+        <keyMapping columnObjectName="Join_ORDER_BILLING" columnName="CODE"/>
+      </attribute>
+    </attributes>
+    <calculatedAttributes>
+      <calculatedAttribute id="LOB" hidden="false" order="2" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="LOB"/>
+        <keyCalculation datatype="NVARCHAR" expressionLanguage="COLUMN_ENGINE" length="3">
+          <formula>'BTV'</formula>
+        </keyCalculation>
+      </calculatedAttribute>
+      <calculatedAttribute id="CODE_DESCRIPTION" hidden="false" order="5" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CODE_DESCRIPTION"/>
+        <keyCalculation datatype="NVARCHAR" expressionLanguage="COLUMN_ENGINE" length="250">
+          <formula>'Not Available in source Table'</formula>
+        </keyCalculation>
+      </calculatedAttribute>
+      <calculatedAttribute id="SOURCE_SYSTEM" hidden="false" key="true" order="6" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SOURCE_SYSTEM"/>
+        <keyCalculation datatype="NVARCHAR" expressionLanguage="COLUMN_ENGINE" length="20">
+          <formula>'Bell TV'</formula>
+        </keyCalculation>
+      </calculatedAttribute>
+      <calculatedAttribute id="CODE_ORDERING" hidden="false" order="8" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CODE_ORDERING"/>
+        <keyCalculation datatype="NVARCHAR" expressionLanguage="COLUMN_ENGINE" length="18">
+          <formula>&quot;CODE&quot;+'-'+&quot;FEATURE_CODE&quot;</formula>
+        </keyCalculation>
+      </calculatedAttribute>
+      <calculatedAttribute id="SOURCE_SYSTEM_ORDERING" hidden="false" order="9" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SOURCE_SYSTEM_ORDERING"/>
+        <keyCalculation datatype="NVARCHAR" expressionLanguage="COLUMN_ENGINE" length="18">
+          <formula>'Bell TV'</formula>
+        </keyCalculation>
+      </calculatedAttribute>
+      <calculatedAttribute id="CODE_BILLING" hidden="false" order="10" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CODE_BILLING"/>
+        <keyCalculation datatype="NVARCHAR" expressionLanguage="COLUMN_ENGINE" length="37">
+          <formula>&quot;CODE&quot;+'-'+&quot;FEATURE_CODE&quot;</formula>
+        </keyCalculation>
+      </calculatedAttribute>
+      <calculatedAttribute id="SOURCE_SYSTEM_BILLING" hidden="false" order="11" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SOURCE_SYSTEM_BILLING"/>
+        <keyCalculation datatype="NVARCHAR" expressionLanguage="COLUMN_ENGINE" length="18">
+          <formula>'Bell TV'</formula>
+        </keyCalculation>
+      </calculatedAttribute>
+      <calculatedAttribute id="TABLE_FLAG" hidden="false" order="13" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="TABLE_FLAG"/>
+        <keyCalculation datatype="NVARCHAR" expressionLanguage="COLUMN_ENGINE" length="1">
+          <formula>'B'</formula>
+        </keyCalculation>
+      </calculatedAttribute>
+    </calculatedAttributes>
+    <privateDataFoundation>
+      <tableProxies/>
+      <joins/>
+      <layout>
+        <shapes/>
+      </layout>
+    </privateDataFoundation>
+    <baseMeasures>
+      <measure id="VALID_FROM" order="7" aggregationType="min" measureType="simple">
+        <descriptions defaultDescription="VALID_FROM"/>
+        <measureMapping columnObjectName="Join_ORDER_BILLING" columnName="VALID_FROM"/>
+      </measure>
+    </baseMeasures>
+    <calculatedMeasures/>
+    <restrictedMeasures/>
+    <localDimensions/>
+  </logicalModel>
+  <layout>
+    <shapes>
+      <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+        <upperLeftCorner x="99" y="87"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+      <shape expanded="true" modelObjectName="TV_ORDER" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="176" y="261"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="TV_BILLING" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="22" y="261"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Join_ORDER_BILLING" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="99" y="165"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+    </shapes>
+  </layout>
+</Calculation:scenario>

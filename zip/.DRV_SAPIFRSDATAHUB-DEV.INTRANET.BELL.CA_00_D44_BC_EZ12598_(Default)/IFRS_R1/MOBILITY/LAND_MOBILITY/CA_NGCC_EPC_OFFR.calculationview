@@ -1,0 +1,322 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:AccessControl="http://www.sap.com/ndb/SQLCoreModelAccessControl.ecore" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" xmlns:Variable="http://www.sap.com/ndb/BiModelVariable.ecore" schemaVersion="2.3" id="CA_NGCC_EPC_OFFR" applyPrivilegeType="NONE" checkAnalyticPrivileges="false" defaultClient="$$client$$" defaultLanguage="$$language$$" hierarchiesSQLEnabled="false" historyEnabled="false" translationRelevant="true" visibility="internal" calculationScenarioType="TREE_BASED" dataCategory="DIMENSION" enforceSqlExecution="false" executionSemantic="UNDEFINED" outputViewType="Projection">
+  <descriptions defaultDescription="Landing View - Table NGCC_EPC_OFFR"/>
+  <localVariables>
+    <variable id="IP_CYCL_ID" parameter="true">
+      <descriptions defaultDescription="IP_CYCL_ID"/>
+      <variableProperties datatype="NVARCHAR" defaultValue="999" length="3" mandatory="false">
+        <valueDomain type="empty"/>
+        <selection multiLine="false" type="SingleValue"/>
+      </variableProperties>
+    </variable>
+  </localVariables>
+  <variableMappings>
+    <mapping xsi:type="Variable:ConstantVariableMapping" dataSource="#CA_EH_ERROR_TABLE" value="1363">
+      <targetVariable name="IP_JOB_ID" resourceUri="/IFRS_R1.LAND.EH/calculationviews/CA_EH_ERROR_TABLE"/>
+    </mapping>
+  </variableMappings>
+  <informationModelLayout relativeWidthScenario="34"/>
+  <dataSources>
+    <DataSource id="IFRS_R1.LAND::NGCC_EPC_OFFR" type="DATA_BASE_TABLE">
+      <viewAttributes allViewAttributes="true"/>
+      <columnObject schemaName="LAND" columnObjectName="IFRS_R1.LAND::NGCC_EPC_OFFR"/>
+    </DataSource>
+    <DataSource id="CA_EH_ERROR_TABLE" type="CALCULATION_VIEW">
+      <viewAttributes allViewAttributes="true"/>
+      <resourceUri>/IFRS_R1.LAND.EH/calculationviews/CA_EH_ERROR_TABLE</resourceUri>
+    </DataSource>
+  </dataSources>
+  <calculationViews>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_NGCC_EPC_OFFR">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="CURRENCY_CODE"/>
+        <viewAttribute id="EFF_DATE"/>
+        <viewAttribute id="EFF_SALE_DATE"/>
+        <viewAttribute id="EXP_DATE"/>
+        <viewAttribute id="EXP_SALE_DATE"/>
+        <viewAttribute id="OFFER_ID"/>
+        <viewAttribute id="OFFER_LEVEL"/>
+        <viewAttribute id="OFFER_NAME"/>
+        <viewAttribute id="OFFER_PROPERTIES"/>
+        <viewAttribute id="OFFER_TYPE"/>
+        <viewAttribute id="RECORD_TYPE"/>
+        <viewAttribute id="CYCL_ID">
+          <filter xsi:type="AccessControl:SingleValueFilter" operator="LE" including="true" value="$$IP_CYCL_ID$$"/>
+        </viewAttribute>
+        <viewAttribute id="INSRT_TS"/>
+        <viewAttribute id="NDB_TS">
+          <filter xsi:type="AccessControl:SingleValueFilter" operator="NL" including="true"/>
+        </viewAttribute>
+        <viewAttribute id="NDB_MART"/>
+        <viewAttribute id="SEQ_ID"/>
+        <viewAttribute id="SRC_TS"/>
+        <viewAttribute id="PROCESS_ID"/>
+        <viewAttribute id="EPC_OFR_PRIMARY_KEY"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CC_VERSION_CHECK" length="200" expressionLanguage="COLUMN_ENGINE">
+          <formula>&quot;EPC_OFR_PRIMARY_KEY&quot;</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#IFRS_R1.LAND::NGCC_EPC_OFFR">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CURRENCY_CODE" source="CURRENCY_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFF_DATE" source="EFF_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFF_SALE_DATE" source="EFF_SALE_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXP_DATE" source="EXP_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXP_SALE_DATE" source="EXP_SALE_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OFFER_ID" source="OFFER_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OFFER_LEVEL" source="OFFER_LEVEL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OFFER_NAME" source="OFFER_NAME"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OFFER_PROPERTIES" source="OFFER_PROPERTIES"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OFFER_TYPE" source="OFFER_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RECORD_TYPE" source="RECORD_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INSRT_TS" source="INSRT_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NDB_TS" source="NDB_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NDB_MART" source="NDB_MART"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SEQ_ID" source="SEQ_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SRC_TS" source="SRC_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROCESS_ID" source="PROCESS_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EPC_OFR_PRIMARY_KEY" source="EPC_OFR_PRIMARY_KEY"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_ETL_ERROR">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="PARENT_KEY"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#CA_EH_ERROR_TABLE">
+        <mapping xsi:type="Calculation:AttributeMapping" target="PARENT_KEY" source="PARENT_KEY"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="JOIN_EH" joinType="leftOuter">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="CURRENCY_CODE"/>
+        <viewAttribute id="EFF_DATE"/>
+        <viewAttribute id="EFF_SALE_DATE"/>
+        <viewAttribute id="EXP_DATE"/>
+        <viewAttribute id="EXP_SALE_DATE"/>
+        <viewAttribute id="OFFER_ID"/>
+        <viewAttribute id="OFFER_LEVEL"/>
+        <viewAttribute id="OFFER_NAME"/>
+        <viewAttribute id="OFFER_PROPERTIES"/>
+        <viewAttribute id="OFFER_TYPE"/>
+        <viewAttribute id="RECORD_TYPE"/>
+        <viewAttribute id="EPC_OFR_PRIMARY_KEY"/>
+        <viewAttribute id="CYCL_ID"/>
+        <viewAttribute id="INSRT_TS"/>
+        <viewAttribute id="NDB_TS"/>
+        <viewAttribute id="NDB_MART"/>
+        <viewAttribute id="SEQ_ID"/>
+        <viewAttribute id="SRC_TS"/>
+        <viewAttribute id="PROCESS_ID"/>
+        <viewAttribute id="CC_VERSION_CHECK"/>
+        <viewAttribute id="PARENT_KEY_ERROR"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#PROJ_NGCC_EPC_OFFR">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CURRENCY_CODE" source="CURRENCY_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFF_DATE" source="EFF_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFF_SALE_DATE" source="EFF_SALE_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXP_DATE" source="EXP_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXP_SALE_DATE" source="EXP_SALE_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OFFER_ID" source="OFFER_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OFFER_LEVEL" source="OFFER_LEVEL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OFFER_NAME" source="OFFER_NAME"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OFFER_PROPERTIES" source="OFFER_PROPERTIES"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OFFER_TYPE" source="OFFER_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RECORD_TYPE" source="RECORD_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EPC_OFR_PRIMARY_KEY" source="EPC_OFR_PRIMARY_KEY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INSRT_TS" source="INSRT_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NDB_TS" source="NDB_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NDB_MART" source="NDB_MART"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SEQ_ID" source="SEQ_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SRC_TS" source="SRC_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROCESS_ID" source="PROCESS_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_VERSION_CHECK" source="CC_VERSION_CHECK"/>
+      </input>
+      <input node="#PROJ_ETL_ERROR">
+        <mapping xsi:type="Calculation:AttributeMapping" target="PARENT_KEY_ERROR" source="PARENT_KEY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_VERSION_CHECK" source="PARENT_KEY"/>
+      </input>
+      <joinAttribute name="CC_VERSION_CHECK"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_ERROR_fILE">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="PROCESS_ID"/>
+        <viewAttribute id="SRC_TS"/>
+        <viewAttribute id="SEQ_ID"/>
+        <viewAttribute id="NDB_MART"/>
+        <viewAttribute id="NDB_TS"/>
+        <viewAttribute id="INSRT_TS"/>
+        <viewAttribute id="CYCL_ID"/>
+        <viewAttribute id="EPC_OFR_PRIMARY_KEY"/>
+        <viewAttribute id="RECORD_TYPE"/>
+        <viewAttribute id="OFFER_TYPE"/>
+        <viewAttribute id="OFFER_PROPERTIES"/>
+        <viewAttribute id="OFFER_NAME"/>
+        <viewAttribute id="OFFER_LEVEL"/>
+        <viewAttribute id="OFFER_ID"/>
+        <viewAttribute id="EXP_SALE_DATE"/>
+        <viewAttribute id="EXP_DATE"/>
+        <viewAttribute id="EFF_SALE_DATE"/>
+        <viewAttribute id="EFF_DATE"/>
+        <viewAttribute id="CURRENCY_CODE"/>
+        <viewAttribute id="CC_VERSION_CHECK"/>
+        <viewAttribute id="PARENT_KEY_ERROR">
+          <filter xsi:type="AccessControl:SingleValueFilter" operator="NL" including="true"/>
+        </viewAttribute>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#JOIN_EH">
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROCESS_ID" source="PROCESS_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SRC_TS" source="SRC_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SEQ_ID" source="SEQ_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NDB_MART" source="NDB_MART"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NDB_TS" source="NDB_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INSRT_TS" source="INSRT_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EPC_OFR_PRIMARY_KEY" source="EPC_OFR_PRIMARY_KEY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RECORD_TYPE" source="RECORD_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OFFER_TYPE" source="OFFER_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OFFER_PROPERTIES" source="OFFER_PROPERTIES"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OFFER_NAME" source="OFFER_NAME"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OFFER_LEVEL" source="OFFER_LEVEL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OFFER_ID" source="OFFER_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXP_SALE_DATE" source="EXP_SALE_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXP_DATE" source="EXP_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFF_SALE_DATE" source="EFF_SALE_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFF_DATE" source="EFF_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CURRENCY_CODE" source="CURRENCY_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_VERSION_CHECK" source="CC_VERSION_CHECK"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PARENT_KEY_ERROR" source="PARENT_KEY_ERROR"/>
+      </input>
+    </calculationView>
+  </calculationViews>
+  <logicalModel id="PROJ_ERROR_fILE">
+    <descriptions/>
+    <attributes>
+      <attribute id="PROCESS_ID" order="1" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="PROCESS_ID"/>
+        <keyMapping columnObjectName="PROJ_ERROR_fILE" columnName="PROCESS_ID"/>
+      </attribute>
+      <attribute id="SRC_TS" order="2" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SRC_TS"/>
+        <keyMapping columnObjectName="PROJ_ERROR_fILE" columnName="SRC_TS"/>
+      </attribute>
+      <attribute id="SEQ_ID" order="3" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SEQ_ID"/>
+        <keyMapping columnObjectName="PROJ_ERROR_fILE" columnName="SEQ_ID"/>
+      </attribute>
+      <attribute id="NDB_MART" order="4" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="NDB_MART"/>
+        <keyMapping columnObjectName="PROJ_ERROR_fILE" columnName="NDB_MART"/>
+      </attribute>
+      <attribute id="NDB_TS" order="5" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="NDB_TS"/>
+        <keyMapping columnObjectName="PROJ_ERROR_fILE" columnName="NDB_TS"/>
+      </attribute>
+      <attribute id="INSRT_TS" order="6" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="INSRT_TS"/>
+        <keyMapping columnObjectName="PROJ_ERROR_fILE" columnName="INSRT_TS"/>
+      </attribute>
+      <attribute id="CYCL_ID" order="7" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CYCL_ID"/>
+        <keyMapping columnObjectName="PROJ_ERROR_fILE" columnName="CYCL_ID"/>
+      </attribute>
+      <attribute id="EPC_OFR_PRIMARY_KEY" order="8" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="EPC OFR PRIMARY KEY"/>
+        <keyMapping columnObjectName="PROJ_ERROR_fILE" columnName="EPC_OFR_PRIMARY_KEY"/>
+      </attribute>
+      <attribute id="RECORD_TYPE" order="9" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="RECORD_TYPE"/>
+        <keyMapping columnObjectName="PROJ_ERROR_fILE" columnName="RECORD_TYPE"/>
+      </attribute>
+      <attribute id="OFFER_TYPE" order="10" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="OFFER_TYPE"/>
+        <keyMapping columnObjectName="PROJ_ERROR_fILE" columnName="OFFER_TYPE"/>
+      </attribute>
+      <attribute id="OFFER_PROPERTIES" order="11" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="OFFER_PROPERTIES"/>
+        <keyMapping columnObjectName="PROJ_ERROR_fILE" columnName="OFFER_PROPERTIES"/>
+      </attribute>
+      <attribute id="OFFER_NAME" order="12" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="OFFER_NAME"/>
+        <keyMapping columnObjectName="PROJ_ERROR_fILE" columnName="OFFER_NAME"/>
+      </attribute>
+      <attribute id="OFFER_LEVEL" order="13" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="OFFER_LEVEL"/>
+        <keyMapping columnObjectName="PROJ_ERROR_fILE" columnName="OFFER_LEVEL"/>
+      </attribute>
+      <attribute id="OFFER_ID" order="14" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="OFFER_ID"/>
+        <keyMapping columnObjectName="PROJ_ERROR_fILE" columnName="OFFER_ID"/>
+      </attribute>
+      <attribute id="EXP_SALE_DATE" order="15" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="EXP_SALE_DATE"/>
+        <keyMapping columnObjectName="PROJ_ERROR_fILE" columnName="EXP_SALE_DATE"/>
+      </attribute>
+      <attribute id="EXP_DATE" order="16" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="EXP_DATE"/>
+        <keyMapping columnObjectName="PROJ_ERROR_fILE" columnName="EXP_DATE"/>
+      </attribute>
+      <attribute id="EFF_SALE_DATE" order="17" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="EFF_SALE_DATE"/>
+        <keyMapping columnObjectName="PROJ_ERROR_fILE" columnName="EFF_SALE_DATE"/>
+      </attribute>
+      <attribute id="EFF_DATE" order="18" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="EFF_DATE"/>
+        <keyMapping columnObjectName="PROJ_ERROR_fILE" columnName="EFF_DATE"/>
+      </attribute>
+      <attribute id="CURRENCY_CODE" order="19" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CURRENCY_CODE"/>
+        <keyMapping columnObjectName="PROJ_ERROR_fILE" columnName="CURRENCY_CODE"/>
+      </attribute>
+      <attribute id="CC_VERSION_CHECK" order="20" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CC_VERSION_CHECK"/>
+        <keyMapping columnObjectName="PROJ_ERROR_fILE" columnName="CC_VERSION_CHECK"/>
+      </attribute>
+    </attributes>
+    <calculatedAttributes/>
+    <privateDataFoundation>
+      <tableProxies/>
+      <joins/>
+      <layout>
+        <shapes/>
+      </layout>
+    </privateDataFoundation>
+    <baseMeasures/>
+    <calculatedMeasures/>
+    <restrictedMeasures/>
+    <localDimensions/>
+  </logicalModel>
+  <layout>
+    <shapes>
+      <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+        <upperLeftCorner x="99" y="87"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_NGCC_EPC_OFFR" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="22" y="339"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_ETL_ERROR" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="176" y="339"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="JOIN_EH" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="99" y="243"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_ERROR_fILE" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="99" y="165"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+    </shapes>
+  </layout>
+</Calculation:scenario>

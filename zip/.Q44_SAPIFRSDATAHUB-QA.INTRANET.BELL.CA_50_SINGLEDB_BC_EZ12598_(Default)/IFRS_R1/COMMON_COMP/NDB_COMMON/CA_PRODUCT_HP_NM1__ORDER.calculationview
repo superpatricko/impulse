@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:AccessControl="http://www.sap.com/ndb/SQLCoreModelAccessControl.ecore" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" schemaVersion="2.3" id="CA_PRODUCT_HP_NM1__ORDER" applyPrivilegeType="NONE" checkAnalyticPrivileges="false" defaultClient="$$client$$" defaultLanguage="$$language$$" hierarchiesSQLEnabled="false" translationRelevant="true" visibility="reportingEnabled" calculationScenarioType="TREE_BASED" dataCategory="CUBE" enforceSqlExecution="true" executionSemantic="UNDEFINED" outputViewType="Aggregation">
+  <origin/>
+  <descriptions defaultDescription="CA_PRODUCT_HP_NM1__ORDER"/>
+  <localVariables/>
+  <variableMappings/>
+  <informationModelLayout relativeWidthScenario="28"/>
+  <dataSources>
+    <DataSource id="IFRS_R1.HP.NDB_HP::HP_NM1_ORDER" type="DATA_BASE_TABLE">
+      <viewAttributes allViewAttributes="true"/>
+      <columnObject schemaName="NDB_HP" columnObjectName="IFRS_R1.HP.NDB_HP::HP_NM1_ORDER"/>
+    </DataSource>
+  </dataSources>
+  <calculationViews>
+    <calculationView xsi:type="Calculation:ProjectionView" id="HP_NM1_ORDER">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="SOC_CODE"/>
+        <viewAttribute id="POB_EFFV_DATE"/>
+        <viewAttribute id="FEATURE_CODE"/>
+        <viewAttribute id="PMP_TS">
+          <filter xsi:type="AccessControl:SingleValueFilter" operator="NL" including="true"/>
+        </viewAttribute>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CHARGE_TYPE" length="9" expressionLanguage="COLUMN_ENGINE">
+          <formula>'OPT'</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="LOB" length="3" expressionLanguage="COLUMN_ENGINE">
+          <formula>'HP'</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CODE_TYPE" length="5" expressionLanguage="COLUMN_ENGINE">
+          <formula>'SOC'</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CODE" length="18" expressionLanguage="COLUMN_ENGINE">
+          <formula>&quot;SOC_CODE&quot;</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CODE_DESCRIPTION" length="250" expressionLanguage="COLUMN_ENGINE">
+          <formula>''</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="SOURCE_SYSTEM" length="20" expressionLanguage="COLUMN_ENGINE">
+          <formula>'NM1IPBB/ NM1-EDW'</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="DATE" id="VALID_FROM" expressionLanguage="COLUMN_ENGINE">
+          <formula>&quot;POB_EFFV_DATE&quot;</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CODE_ORDERING" length="18" expressionLanguage="COLUMN_ENGINE">
+          <formula>'N/A'</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="SOURCE_SYSTEM_ORDERING" length="18" expressionLanguage="COLUMN_ENGINE">
+          <formula>'NM1IPBB/ NM1-EDW'</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CODE_BILLING" length="31" expressionLanguage="COLUMN_ENGINE">
+          <formula>'N/A'</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="SOURCE_SYSTEM_BILLING" length="18" expressionLanguage="COLUMN_ENGINE">
+          <formula>'NM1IPBB'</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="TABLE_FLAG" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>'O'</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#IFRS_R1.HP.NDB_HP::HP_NM1_ORDER">
+        <mapping xsi:type="Calculation:AttributeMapping" target="SOC_CODE" source="SOC_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="POB_EFFV_DATE" source="POB_EFFV_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FEATURE_CODE" source="FEATURE_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PMP_TS" source="PMP_TS"/>
+      </input>
+    </calculationView>
+  </calculationViews>
+  <logicalModel id="HP_NM1_ORDER">
+    <descriptions/>
+    <attributes>
+      <attribute id="CHARGE_TYPE" order="1" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CHARGE_TYPE"/>
+        <keyMapping columnObjectName="HP_NM1_ORDER" columnName="CHARGE_TYPE"/>
+      </attribute>
+      <attribute id="LOB" order="2" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="LOB"/>
+        <keyMapping columnObjectName="HP_NM1_ORDER" columnName="LOB"/>
+      </attribute>
+      <attribute id="CODE_TYPE" order="3" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CODE_TYPE"/>
+        <keyMapping columnObjectName="HP_NM1_ORDER" columnName="CODE_TYPE"/>
+      </attribute>
+      <attribute id="CODE" key="true" order="4" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CODE"/>
+        <keyMapping columnObjectName="HP_NM1_ORDER" columnName="CODE"/>
+      </attribute>
+      <attribute id="CODE_DESCRIPTION" order="5" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CODE_DESCRIPTION"/>
+        <keyMapping columnObjectName="HP_NM1_ORDER" columnName="CODE_DESCRIPTION"/>
+      </attribute>
+      <attribute id="SOURCE_SYSTEM" key="true" order="6" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SOURCE_SYSTEM"/>
+        <keyMapping columnObjectName="HP_NM1_ORDER" columnName="SOURCE_SYSTEM"/>
+      </attribute>
+      <attribute id="CODE_ORDERING" order="8" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CODE_ORDERING"/>
+        <keyMapping columnObjectName="HP_NM1_ORDER" columnName="CODE_ORDERING"/>
+      </attribute>
+      <attribute id="SOURCE_SYSTEM_ORDERING" order="9" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SOURCE_SYSTEM_ORDERING"/>
+        <keyMapping columnObjectName="HP_NM1_ORDER" columnName="SOURCE_SYSTEM_ORDERING"/>
+      </attribute>
+      <attribute id="CODE_BILLING" order="10" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CODE_BILLING"/>
+        <keyMapping columnObjectName="HP_NM1_ORDER" columnName="CODE_BILLING"/>
+      </attribute>
+      <attribute id="SOURCE_SYSTEM_BILLING" order="11" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SOURCE_SYSTEM_BILLING"/>
+        <keyMapping columnObjectName="HP_NM1_ORDER" columnName="SOURCE_SYSTEM_BILLING"/>
+      </attribute>
+      <attribute id="FEATURE_CODE" key="true" order="12" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="FEATURE_CODE"/>
+        <keyMapping columnObjectName="HP_NM1_ORDER" columnName="FEATURE_CODE"/>
+      </attribute>
+      <attribute id="TABLE_FLAG" order="13" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="TABLE_FLAG"/>
+        <keyMapping columnObjectName="HP_NM1_ORDER" columnName="TABLE_FLAG"/>
+      </attribute>
+    </attributes>
+    <calculatedAttributes/>
+    <privateDataFoundation>
+      <tableProxies/>
+      <joins/>
+      <layout>
+        <shapes/>
+      </layout>
+    </privateDataFoundation>
+    <baseMeasures>
+      <measure id="VALID_FROM" order="7" aggregationType="min" measureType="simple">
+        <descriptions defaultDescription="VALID_FROM"/>
+        <measureMapping columnObjectName="HP_NM1_ORDER" columnName="VALID_FROM"/>
+      </measure>
+    </baseMeasures>
+    <calculatedMeasures/>
+    <restrictedMeasures/>
+    <localDimensions/>
+  </logicalModel>
+  <layout>
+    <shapes>
+      <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+        <upperLeftCorner x="22" y="87"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+      <shape expanded="true" modelObjectName="HP_NM1_ORDER" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="22" y="165"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+    </shapes>
+  </layout>
+</Calculation:scenario>

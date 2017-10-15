@@ -1,0 +1,312 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" xmlns:Variable="http://www.sap.com/ndb/BiModelVariable.ecore" schemaVersion="2.3" id="CA_ARICS_MCC_ONA" applyPrivilegeType="NONE" checkAnalyticPrivileges="false" defaultClient="$$client$$" defaultLanguage="$$language$$" hierarchiesSQLEnabled="false" translationRelevant="true" visibility="internal" calculationScenarioType="TREE_BASED" dataCategory="DIMENSION" enforceSqlExecution="false" executionSemantic="UNDEFINED" outputViewType="Projection">
+  <descriptions defaultDescription="Landing View - Table ARICS_MCC_ONA">
+    <comment text="Private View on ARICS_MCC_ONA table"/>
+  </descriptions>
+  <localVariables/>
+  <variableMappings>
+    <mapping xsi:type="Variable:ConstantVariableMapping" dataSource="#CA_EH_ERROR_TABLE" value="1306">
+      <targetVariable name="IP_JOB_ID" resourceUri="/IFRS_R1.LAND.EH/calculationviews/CA_EH_ERROR_TABLE"/>
+    </mapping>
+  </variableMappings>
+  <informationModelLayout relativeWidthScenario="43"/>
+  <dataSources>
+    <DataSource id="IFRS_R1.LAND::ARICS_MCC_ONA" type="DATA_BASE_TABLE">
+      <viewAttributes allViewAttributes="true"/>
+      <columnObject schemaName="LAND" columnObjectName="IFRS_R1.LAND::ARICS_MCC_ONA"/>
+    </DataSource>
+    <DataSource id="CA_EH_ERROR_TABLE" type="CALCULATION_VIEW">
+      <viewAttributes allViewAttributes="true"/>
+      <resourceUri>/IFRS_R1.LAND.EH/calculationviews/CA_EH_ERROR_TABLE</resourceUri>
+    </DataSource>
+  </dataSources>
+  <calculationViews>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_ARICS_MCC_ONA" filterExpressionLanguage="COLUMN_ENGINE">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="BASIC_ADJ_AMNT"/>
+        <viewAttribute id="REC_TYPE"/>
+        <viewAttribute id="CUST_ACC_NUM"/>
+        <viewAttribute id="INPUT_NPA"/>
+        <viewAttribute id="INPUT_NXX"/>
+        <viewAttribute id="INPUT_LINE_NUM"/>
+        <viewAttribute id="INPUT_SUFFIX_CD"/>
+        <viewAttribute id="INPUT_CUST_CD"/>
+        <viewAttribute id="ACTION_CD"/>
+        <viewAttribute id="TYPE_CD"/>
+        <viewAttribute id="REF_JRNL_ACC_CD"/>
+        <viewAttribute id="PRO_DT"/>
+        <viewAttribute id="NDB_TS"/>
+        <viewAttribute id="CYCL_ID"/>
+        <viewAttribute id="INSRT_TS"/>
+        <viewAttribute id="SEQ_ID"/>
+        <viewAttribute id="SRC_TS"/>
+        <viewAttribute id="PROCESS_ID"/>
+        <viewAttribute id="MCC_ONA_PRIMARY_KEY"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CC_VERSION_CHECK" length="200" expressionLanguage="COLUMN_ENGINE">
+          <formula>'XYZ'</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#IFRS_R1.LAND::ARICS_MCC_ONA">
+        <mapping xsi:type="Calculation:AttributeMapping" target="BASIC_ADJ_AMNT" source="BASIC_ADJ_AMNT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REC_TYPE" source="REC_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUST_ACC_NUM" source="CUST_ACC_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INPUT_NPA" source="INPUT_NPA"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INPUT_NXX" source="INPUT_NXX"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INPUT_LINE_NUM" source="INPUT_LINE_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INPUT_SUFFIX_CD" source="INPUT_SUFFIX_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INPUT_CUST_CD" source="INPUT_CUST_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACTION_CD" source="ACTION_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TYPE_CD" source="TYPE_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REF_JRNL_ACC_CD" source="REF_JRNL_ACC_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRO_DT" source="PRO_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NDB_TS" source="NDB_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INSRT_TS" source="INSRT_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SEQ_ID" source="SEQ_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SRC_TS" source="SRC_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROCESS_ID" source="PROCESS_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MCC_ONA_PRIMARY_KEY" source="MCC_ONA_PRIMARY_KEY"/>
+      </input>
+      <filter>(&quot;REC_TYPE&quot; ='41') and (isNull(&quot;NDB_TS&quot;))</filter>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_ERROR_TABLE">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="PARENT_KEY"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#CA_EH_ERROR_TABLE">
+        <mapping xsi:type="Calculation:AttributeMapping" target="PARENT_KEY" source="PARENT_KEY"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="JOIN" joinOrder="OUTSIDE_IN" joinType="leftOuter">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="BASIC_ADJ_AMNT"/>
+        <viewAttribute id="REC_TYPE"/>
+        <viewAttribute id="CUST_ACC_NUM"/>
+        <viewAttribute id="INPUT_NPA"/>
+        <viewAttribute id="INPUT_NXX"/>
+        <viewAttribute id="INPUT_LINE_NUM"/>
+        <viewAttribute id="INPUT_SUFFIX_CD"/>
+        <viewAttribute id="INPUT_CUST_CD"/>
+        <viewAttribute id="ACTION_CD"/>
+        <viewAttribute id="TYPE_CD"/>
+        <viewAttribute id="REF_JRNL_ACC_CD"/>
+        <viewAttribute id="PRO_DT"/>
+        <viewAttribute id="NDB_TS"/>
+        <viewAttribute id="CC_VERSION_CHECK"/>
+        <viewAttribute id="PARENT_KEY_ERROR"/>
+        <viewAttribute id="CYCL_ID"/>
+        <viewAttribute id="INSRT_TS"/>
+        <viewAttribute id="SEQ_ID"/>
+        <viewAttribute id="SRC_TS"/>
+        <viewAttribute id="PROCESS_ID"/>
+        <viewAttribute id="MCC_ONA_PRIMARY_KEY"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#PROJ_ARICS_MCC_ONA">
+        <mapping xsi:type="Calculation:AttributeMapping" target="BASIC_ADJ_AMNT" source="BASIC_ADJ_AMNT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REC_TYPE" source="REC_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUST_ACC_NUM" source="CUST_ACC_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INPUT_NPA" source="INPUT_NPA"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INPUT_NXX" source="INPUT_NXX"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INPUT_LINE_NUM" source="INPUT_LINE_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INPUT_SUFFIX_CD" source="INPUT_SUFFIX_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INPUT_CUST_CD" source="INPUT_CUST_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACTION_CD" source="ACTION_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TYPE_CD" source="TYPE_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REF_JRNL_ACC_CD" source="REF_JRNL_ACC_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRO_DT" source="PRO_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NDB_TS" source="NDB_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_VERSION_CHECK" source="CC_VERSION_CHECK"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INSRT_TS" source="INSRT_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SEQ_ID" source="SEQ_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SRC_TS" source="SRC_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROCESS_ID" source="PROCESS_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MCC_ONA_PRIMARY_KEY" source="MCC_ONA_PRIMARY_KEY"/>
+      </input>
+      <input node="#PROJ_ERROR_TABLE">
+        <mapping xsi:type="Calculation:AttributeMapping" target="PARENT_KEY_ERROR" source="PARENT_KEY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_VERSION_CHECK" source="PARENT_KEY"/>
+      </input>
+      <joinAttribute name="CC_VERSION_CHECK"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_ERROR_FILTER" filterExpressionLanguage="COLUMN_ENGINE">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="PRO_DT"/>
+        <viewAttribute id="REF_JRNL_ACC_CD"/>
+        <viewAttribute id="TYPE_CD"/>
+        <viewAttribute id="ACTION_CD"/>
+        <viewAttribute id="INPUT_CUST_CD"/>
+        <viewAttribute id="INPUT_SUFFIX_CD"/>
+        <viewAttribute id="INPUT_LINE_NUM"/>
+        <viewAttribute id="INPUT_NXX"/>
+        <viewAttribute id="INPUT_NPA"/>
+        <viewAttribute id="CUST_ACC_NUM"/>
+        <viewAttribute id="REC_TYPE"/>
+        <viewAttribute id="BASIC_ADJ_AMNT"/>
+        <viewAttribute id="NDB_TS"/>
+        <viewAttribute id="CC_VERSION_CHECK"/>
+        <viewAttribute id="PARENT_KEY_ERROR"/>
+        <viewAttribute id="CYCL_ID"/>
+        <viewAttribute id="INSRT_TS"/>
+        <viewAttribute id="SEQ_ID"/>
+        <viewAttribute id="SRC_TS"/>
+        <viewAttribute id="PROCESS_ID"/>
+        <viewAttribute id="MCC_ONA_PRIMARY_KEY"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#JOIN">
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRO_DT" source="PRO_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REF_JRNL_ACC_CD" source="REF_JRNL_ACC_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TYPE_CD" source="TYPE_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACTION_CD" source="ACTION_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INPUT_CUST_CD" source="INPUT_CUST_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INPUT_SUFFIX_CD" source="INPUT_SUFFIX_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INPUT_LINE_NUM" source="INPUT_LINE_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INPUT_NXX" source="INPUT_NXX"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INPUT_NPA" source="INPUT_NPA"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUST_ACC_NUM" source="CUST_ACC_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REC_TYPE" source="REC_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BASIC_ADJ_AMNT" source="BASIC_ADJ_AMNT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NDB_TS" source="NDB_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_VERSION_CHECK" source="CC_VERSION_CHECK"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PARENT_KEY_ERROR" source="PARENT_KEY_ERROR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INSRT_TS" source="INSRT_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SEQ_ID" source="SEQ_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SRC_TS" source="SRC_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROCESS_ID" source="PROCESS_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MCC_ONA_PRIMARY_KEY" source="MCC_ONA_PRIMARY_KEY"/>
+      </input>
+      <filter>isNull(&quot;PARENT_KEY_ERROR&quot;)</filter>
+    </calculationView>
+  </calculationViews>
+  <logicalModel id="PROJ_ERROR_FILTER">
+    <descriptions/>
+    <attributes>
+      <attribute id="PRO_DT" order="1" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="PRO_DT"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="PRO_DT"/>
+      </attribute>
+      <attribute id="REF_JRNL_ACC_CD" order="2" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="REF_JRNL_ACC_CD"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="REF_JRNL_ACC_CD"/>
+      </attribute>
+      <attribute id="TYPE_CD" order="3" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="TYPE_CD"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="TYPE_CD"/>
+      </attribute>
+      <attribute id="ACTION_CD" order="4" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ACTION_CD"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="ACTION_CD"/>
+      </attribute>
+      <attribute id="INPUT_CUST_CD" order="5" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="INPUT_CUST_CD"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="INPUT_CUST_CD"/>
+      </attribute>
+      <attribute id="INPUT_SUFFIX_CD" order="6" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="INPUT_SUFFIX_CD"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="INPUT_SUFFIX_CD"/>
+      </attribute>
+      <attribute id="INPUT_LINE_NUM" order="7" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="INPUT_LINE_NUM"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="INPUT_LINE_NUM"/>
+      </attribute>
+      <attribute id="INPUT_NXX" order="8" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="INPUT_NXX"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="INPUT_NXX"/>
+      </attribute>
+      <attribute id="INPUT_NPA" order="9" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="INPUT_NPA"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="INPUT_NPA"/>
+      </attribute>
+      <attribute id="CUST_ACC_NUM" order="10" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CUST_ACC_NUM"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="CUST_ACC_NUM"/>
+      </attribute>
+      <attribute id="REC_TYPE" order="11" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="REC_TYPE"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="REC_TYPE"/>
+      </attribute>
+      <attribute id="BASIC_ADJ_AMNT" order="12" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="BASIC_ADJ_AMNT"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="BASIC_ADJ_AMNT"/>
+      </attribute>
+      <attribute id="NDB_TS" order="13" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="NDB_TS"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="NDB_TS"/>
+      </attribute>
+      <attribute id="CYCL_ID" order="14" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CYCL_ID"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="CYCL_ID"/>
+      </attribute>
+      <attribute id="INSRT_TS" order="15" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="INSRT_TS"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="INSRT_TS"/>
+      </attribute>
+      <attribute id="SEQ_ID" order="16" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SEQ_ID"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="SEQ_ID"/>
+      </attribute>
+      <attribute id="SRC_TS" order="17" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SRC_TS"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="SRC_TS"/>
+      </attribute>
+      <attribute id="PROCESS_ID" order="18" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="PROCESS_ID"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="PROCESS_ID"/>
+      </attribute>
+      <attribute id="CC_VERSION_CHECK" order="19" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CC_VERSION_CHECK"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="CC_VERSION_CHECK"/>
+      </attribute>
+      <attribute id="MCC_ONA_PRIMARY_KEY" order="20" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="MCC_ONA_PRIMARY_KEY"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="MCC_ONA_PRIMARY_KEY"/>
+      </attribute>
+    </attributes>
+    <calculatedAttributes/>
+    <privateDataFoundation>
+      <tableProxies/>
+      <joins/>
+      <layout>
+        <shapes/>
+      </layout>
+    </privateDataFoundation>
+    <baseMeasures/>
+    <calculatedMeasures/>
+    <restrictedMeasures/>
+    <localDimensions/>
+  </logicalModel>
+  <layout>
+    <shapes>
+      <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+        <upperLeftCorner x="99" y="87"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_ARICS_MCC_ONA" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="22" y="339"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_ERROR_TABLE" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="176" y="339"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="JOIN" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="99" y="243"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_ERROR_FILTER" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="99" y="165"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+    </shapes>
+  </layout>
+</Calculation:scenario>

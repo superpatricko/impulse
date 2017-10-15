@@ -1,0 +1,824 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:AccessControl="http://www.sap.com/ndb/SQLCoreModelAccessControl.ecore" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" xmlns:Variable="http://www.sap.com/ndb/BiModelVariable.ecore" schemaVersion="2.3" id="CA_PB_CHG_ADJ" applyPrivilegeType="NONE" checkAnalyticPrivileges="false" defaultClient="$$client$$" defaultLanguage="$$language$$" hierarchiesSQLEnabled="false" translationRelevant="true" visibility="internal" calculationScenarioType="TREE_BASED" dataCategory="DIMENSION" enforceSqlExecution="false" executionSemantic="UNDEFINED" outputViewType="Projection">
+  <descriptions defaultDescription="CA_PB_CHG_ADJ"/>
+  <localVariables>
+    <variable id="IP_EFF_DT" parameter="true">
+      <descriptions defaultDescription="IP_EFF_DT"/>
+      <variableProperties datatype="DATE" defaultValue="99991231" mandatory="false">
+        <valueDomain type="Date"/>
+        <selection multiLine="false" type="SingleValue"/>
+      </variableProperties>
+    </variable>
+  </localVariables>
+  <variableMappings>
+    <mapping xsi:type="Variable:VariableMapping" dataSource="#CA_INT_POSTBILL">
+      <targetVariable name="IP_EFF_DT" resourceUri="/IFRS_R1.INTERNET.LAND_INTERNET/calculationviews/CA_INT_POSTBILL"/>
+      <localVariable>#IP_EFF_DT</localVariable>
+    </mapping>
+    <mapping xsi:type="Variable:VariableMapping" dataSource="#CA_INT_ADJUSTMENT_HIST">
+      <targetVariable name="IP_EFF_DT" resourceUri="/IFRS_R1.INTERNET.LAND_INTERNET/calculationviews/CA_INT_ADJUSTMENT_HIST"/>
+      <localVariable>#IP_EFF_DT</localVariable>
+    </mapping>
+    <mapping xsi:type="Variable:VariableMapping" dataSource="#CA_INT_CHARGE_HIST">
+      <targetVariable name="IP_EFF_DT" resourceUri="/IFRS_R1.INTERNET.LAND_INTERNET/calculationviews/CA_INT_CHARGE_HIST"/>
+      <localVariable>#IP_EFF_DT</localVariable>
+    </mapping>
+  </variableMappings>
+  <informationModelLayout relativeWidthScenario="53"/>
+  <dataSources>
+    <DataSource id="CA_INT_POSTBILL" type="CALCULATION_VIEW">
+      <viewAttributes allViewAttributes="true"/>
+      <resourceUri>/IFRS_R1.INTERNET.LAND_INTERNET/calculationviews/CA_INT_POSTBILL</resourceUri>
+    </DataSource>
+    <DataSource id="CA_INT_ADJUSTMENT_HIST" type="CALCULATION_VIEW">
+      <viewAttributes allViewAttributes="true"/>
+      <resourceUri>/IFRS_R1.INTERNET.LAND_INTERNET/calculationviews/CA_INT_ADJUSTMENT_HIST</resourceUri>
+    </DataSource>
+    <DataSource id="CA_INT_CHARGE_HIST" type="CALCULATION_VIEW">
+      <viewAttributes allViewAttributes="true"/>
+      <resourceUri>/IFRS_R1.INTERNET.LAND_INTERNET/calculationviews/CA_INT_CHARGE_HIST</resourceUri>
+    </DataSource>
+  </dataSources>
+  <calculationViews>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_PB_PV">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="JRNL_DATE"/>
+        <viewAttribute id="OVER_USE_IND"/>
+        <viewAttribute id="TRANS_TYPE"/>
+        <viewAttribute id="ACCRL_IND"/>
+        <viewAttribute id="TAX_PROVINCE"/>
+        <viewAttribute id="CHRG_TY"/>
+        <viewAttribute id="CYCLE_CLOSE_DATE"/>
+        <viewAttribute id="ACTV_AMT"/>
+        <viewAttribute id="BFR_DISC_AMT"/>
+        <viewAttribute id="ACTV_BILL_SEQ_NO"/>
+        <viewAttribute id="DISC_AMT"/>
+        <viewAttribute id="DISC_PCT"/>
+        <viewAttribute id="PRIOD_CVRG_END_DT"/>
+        <viewAttribute id="PRIOD_CVRG_START_DT"/>
+        <viewAttribute id="DISC_CD"/>
+        <viewAttribute id="CYCLE_STRT_DT"/>
+        <viewAttribute id="CYCLE_RUN_YR"/>
+        <viewAttribute id="CYCLE_RUN_MTH"/>
+        <viewAttribute id="BAL_IMPCT_CD"/>
+        <viewAttribute id="CYCLE_CD"/>
+        <viewAttribute id="CHARG_SEQ_NO"/>
+        <viewAttribute id="ACTV_RSN_CD"/>
+        <viewAttribute id="ACTV_CD"/>
+        <viewAttribute id="SUB_NO"/>
+        <viewAttribute id="FTR_REVENUE_CD"/>
+        <viewAttribute id="FTR_CD"/>
+        <viewAttribute id="SOC"/>
+        <viewAttribute id="ACTV_SEQ_NO"/>
+        <viewAttribute id="ENT_SEQ_NO"/>
+        <viewAttribute id="BAN"/>
+        <viewAttribute id="CYCL_ID"/>
+        <viewAttribute id="EFFECTIVE_DATE"/>
+        <viewAttribute id="EFF_DT"/>
+        <viewAttribute id="EXPY_DT"/>
+        <viewAttribute id="SEQ_ID"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#CA_INT_POSTBILL">
+        <mapping xsi:type="Calculation:AttributeMapping" target="JRNL_DATE" source="JRNL_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OVER_USE_IND" source="OVER_USE_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRANS_TYPE" source="TRANS_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACCRL_IND" source="ACCRL_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TAX_PROVINCE" source="TAX_PROVINCE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CHRG_TY" source="CHRG_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCLE_CLOSE_DATE" source="CYCLE_CLOSE_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACTV_AMT" source="ACTV_AMT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BFR_DISC_AMT" source="BFR_DISC_AMT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACTV_BILL_SEQ_NO" source="ACTV_BILL_SEQ_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DISC_AMT" source="DISC_AMT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DISC_PCT" source="DISC_PCT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRIOD_CVRG_END_DT" source="PRIOD_CVRG_END_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRIOD_CVRG_START_DT" source="PRIOD_CVRG_START_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DISC_CD" source="DISC_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCLE_STRT_DT" source="CYCLE_STRT_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCLE_RUN_YR" source="CYCLE_RUN_YR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCLE_RUN_MTH" source="CYCLE_RUN_MTH"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BAL_IMPCT_CD" source="BAL_IMPCT_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCLE_CD" source="CYCLE_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CHARG_SEQ_NO" source="CHARG_SEQ_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACTV_RSN_CD" source="ACTV_RSN_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACTV_CD" source="ACTV_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUB_NO" source="SUB_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FTR_REVENUE_CD" source="FTR_REVENUE_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FTR_CD" source="FTR_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SOC" source="SOC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACTV_SEQ_NO" source="ACTV_SEQ_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ENT_SEQ_NO" source="ENT_SEQ_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BAN" source="BAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFFECTIVE_DATE" source="EFFECTIVE_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFF_DT" source="EFF_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXPY_DT" source="EXPY_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SEQ_ID" source="SEQ_ID"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_ADJ_HIST">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="BAN"/>
+        <viewAttribute id="ENT_SEQ_NO"/>
+        <viewAttribute id="ACTV_SEQ_NO"/>
+        <viewAttribute id="EFF_DT"/>
+        <viewAttribute id="PRODUCT_TYPE"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CC_BAN" length="10" expressionLanguage="COLUMN_ENGINE">
+          <formula>&quot;BAN&quot;</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#CA_INT_ADJUSTMENT_HIST">
+        <mapping xsi:type="Calculation:AttributeMapping" target="BAN" source="BAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ENT_SEQ_NO" source="ENT_SEQ_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACTV_SEQ_NO" source="ACTV_SEQ_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFF_DT" source="EFF_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT_TYPE" source="PRODUCT_TYPE"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_PB_CHG">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="JRNL_DATE"/>
+        <viewAttribute id="OVER_USE_IND"/>
+        <viewAttribute id="TRANS_TYPE"/>
+        <viewAttribute id="ACCRL_IND"/>
+        <viewAttribute id="TAX_PROVINCE"/>
+        <viewAttribute id="CHRG_TY"/>
+        <viewAttribute id="CYCLE_CLOSE_DATE"/>
+        <viewAttribute id="ACTV_AMT"/>
+        <viewAttribute id="BFR_DISC_AMT"/>
+        <viewAttribute id="ACTV_BILL_SEQ_NO"/>
+        <viewAttribute id="DISC_AMT"/>
+        <viewAttribute id="DISC_PCT"/>
+        <viewAttribute id="PRIOD_CVRG_END_DT"/>
+        <viewAttribute id="PRIOD_CVRG_START_DT"/>
+        <viewAttribute id="DISC_CD"/>
+        <viewAttribute id="CYCLE_STRT_DT"/>
+        <viewAttribute id="CYCLE_RUN_YR"/>
+        <viewAttribute id="CYCLE_RUN_MTH"/>
+        <viewAttribute id="BAL_IMPCT_CD"/>
+        <viewAttribute id="CYCLE_CD"/>
+        <viewAttribute id="CHARG_SEQ_NO"/>
+        <viewAttribute id="ACTV_RSN_CD"/>
+        <viewAttribute id="ACTV_CD">
+          <filter xsi:type="AccessControl:SingleValueFilter" including="true" value="CHG"/>
+        </viewAttribute>
+        <viewAttribute id="SUB_NO"/>
+        <viewAttribute id="FTR_REVENUE_CD"/>
+        <viewAttribute id="FTR_CD"/>
+        <viewAttribute id="SOC"/>
+        <viewAttribute id="ACTV_SEQ_NO"/>
+        <viewAttribute id="ENT_SEQ_NO"/>
+        <viewAttribute id="BAN"/>
+        <viewAttribute id="CYCL_ID"/>
+        <viewAttribute id="EFFECTIVE_DATE"/>
+        <viewAttribute id="EFF_DT"/>
+        <viewAttribute id="EXPY_DT"/>
+        <viewAttribute id="SEQ_ID"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#PROJ_PB_PV">
+        <mapping xsi:type="Calculation:AttributeMapping" target="JRNL_DATE" source="JRNL_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OVER_USE_IND" source="OVER_USE_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRANS_TYPE" source="TRANS_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACCRL_IND" source="ACCRL_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TAX_PROVINCE" source="TAX_PROVINCE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CHRG_TY" source="CHRG_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCLE_CLOSE_DATE" source="CYCLE_CLOSE_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACTV_AMT" source="ACTV_AMT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BFR_DISC_AMT" source="BFR_DISC_AMT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACTV_BILL_SEQ_NO" source="ACTV_BILL_SEQ_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DISC_AMT" source="DISC_AMT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DISC_PCT" source="DISC_PCT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRIOD_CVRG_END_DT" source="PRIOD_CVRG_END_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRIOD_CVRG_START_DT" source="PRIOD_CVRG_START_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DISC_CD" source="DISC_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCLE_STRT_DT" source="CYCLE_STRT_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCLE_RUN_YR" source="CYCLE_RUN_YR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCLE_RUN_MTH" source="CYCLE_RUN_MTH"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BAL_IMPCT_CD" source="BAL_IMPCT_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCLE_CD" source="CYCLE_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CHARG_SEQ_NO" source="CHARG_SEQ_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACTV_RSN_CD" source="ACTV_RSN_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACTV_CD" source="ACTV_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUB_NO" source="SUB_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FTR_REVENUE_CD" source="FTR_REVENUE_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FTR_CD" source="FTR_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SOC" source="SOC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACTV_SEQ_NO" source="ACTV_SEQ_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ENT_SEQ_NO" source="ENT_SEQ_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BAN" source="BAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFFECTIVE_DATE" source="EFFECTIVE_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFF_DT" source="EFF_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXPY_DT" source="EXPY_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SEQ_ID" source="SEQ_ID"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_PB_ADJ_ADJR" filterExpressionLanguage="COLUMN_ENGINE">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="JRNL_DATE"/>
+        <viewAttribute id="OVER_USE_IND"/>
+        <viewAttribute id="TRANS_TYPE"/>
+        <viewAttribute id="ACCRL_IND"/>
+        <viewAttribute id="TAX_PROVINCE"/>
+        <viewAttribute id="CHRG_TY"/>
+        <viewAttribute id="CYCLE_CLOSE_DATE"/>
+        <viewAttribute id="ACTV_AMT"/>
+        <viewAttribute id="BFR_DISC_AMT"/>
+        <viewAttribute id="ACTV_BILL_SEQ_NO"/>
+        <viewAttribute id="DISC_AMT"/>
+        <viewAttribute id="DISC_PCT"/>
+        <viewAttribute id="PRIOD_CVRG_END_DT"/>
+        <viewAttribute id="PRIOD_CVRG_START_DT"/>
+        <viewAttribute id="DISC_CD"/>
+        <viewAttribute id="CYCLE_STRT_DT"/>
+        <viewAttribute id="CYCLE_RUN_YR"/>
+        <viewAttribute id="CYCLE_RUN_MTH"/>
+        <viewAttribute id="BAL_IMPCT_CD"/>
+        <viewAttribute id="CYCLE_CD"/>
+        <viewAttribute id="CHARG_SEQ_NO"/>
+        <viewAttribute id="ACTV_RSN_CD"/>
+        <viewAttribute id="ACTV_CD"/>
+        <viewAttribute id="SUB_NO"/>
+        <viewAttribute id="FTR_REVENUE_CD"/>
+        <viewAttribute id="FTR_CD"/>
+        <viewAttribute id="SOC"/>
+        <viewAttribute id="ACTV_SEQ_NO"/>
+        <viewAttribute id="ENT_SEQ_NO"/>
+        <viewAttribute id="BAN"/>
+        <viewAttribute id="CYCL_ID"/>
+        <viewAttribute id="EFFECTIVE_DATE"/>
+        <viewAttribute id="EFF_DT"/>
+        <viewAttribute id="EXPY_DT"/>
+        <viewAttribute id="SEQ_ID"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#PROJ_PB_PV">
+        <mapping xsi:type="Calculation:AttributeMapping" target="JRNL_DATE" source="JRNL_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OVER_USE_IND" source="OVER_USE_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRANS_TYPE" source="TRANS_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACCRL_IND" source="ACCRL_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TAX_PROVINCE" source="TAX_PROVINCE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CHRG_TY" source="CHRG_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCLE_CLOSE_DATE" source="CYCLE_CLOSE_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACTV_AMT" source="ACTV_AMT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BFR_DISC_AMT" source="BFR_DISC_AMT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACTV_BILL_SEQ_NO" source="ACTV_BILL_SEQ_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DISC_AMT" source="DISC_AMT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DISC_PCT" source="DISC_PCT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRIOD_CVRG_END_DT" source="PRIOD_CVRG_END_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRIOD_CVRG_START_DT" source="PRIOD_CVRG_START_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DISC_CD" source="DISC_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCLE_STRT_DT" source="CYCLE_STRT_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCLE_RUN_YR" source="CYCLE_RUN_YR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCLE_RUN_MTH" source="CYCLE_RUN_MTH"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BAL_IMPCT_CD" source="BAL_IMPCT_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCLE_CD" source="CYCLE_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CHARG_SEQ_NO" source="CHARG_SEQ_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACTV_RSN_CD" source="ACTV_RSN_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACTV_CD" source="ACTV_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUB_NO" source="SUB_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FTR_REVENUE_CD" source="FTR_REVENUE_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FTR_CD" source="FTR_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SOC" source="SOC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACTV_SEQ_NO" source="ACTV_SEQ_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ENT_SEQ_NO" source="ENT_SEQ_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BAN" source="BAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFFECTIVE_DATE" source="EFFECTIVE_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFF_DT" source="EFF_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXPY_DT" source="EXPY_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SEQ_ID" source="SEQ_ID"/>
+      </input>
+      <filter>((&quot;ACTV_CD&quot; ='ADJ') or (&quot;ACTV_CD&quot; ='ADJR'))</filter>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_CHG_HIST">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="BAN"/>
+        <viewAttribute id="ENT_SEQ_NO"/>
+        <viewAttribute id="ACTV_SEQ_NO"/>
+        <viewAttribute id="EFF_DT"/>
+        <viewAttribute id="PRODUCT_TYPE"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CC_BAN" length="10" expressionLanguage="COLUMN_ENGINE">
+          <formula>&quot;BAN&quot;</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#CA_INT_CHARGE_HIST">
+        <mapping xsi:type="Calculation:AttributeMapping" target="BAN" source="BAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ENT_SEQ_NO" source="ENT_SEQ_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACTV_SEQ_NO" source="ACTV_SEQ_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFF_DT" source="EFF_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT_TYPE" source="PRODUCT_TYPE"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="JOIN_ADJ_ADJR" joinOrder="OUTSIDE_IN" joinType="leftOuter">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="JRNL_DATE"/>
+        <viewAttribute id="OVER_USE_IND"/>
+        <viewAttribute id="TRANS_TYPE"/>
+        <viewAttribute id="ACCRL_IND"/>
+        <viewAttribute id="TAX_PROVINCE"/>
+        <viewAttribute id="CHRG_TY"/>
+        <viewAttribute id="CYCLE_CLOSE_DATE"/>
+        <viewAttribute id="ACTV_AMT"/>
+        <viewAttribute id="BFR_DISC_AMT"/>
+        <viewAttribute id="ACTV_BILL_SEQ_NO"/>
+        <viewAttribute id="DISC_AMT"/>
+        <viewAttribute id="DISC_PCT"/>
+        <viewAttribute id="PRIOD_CVRG_END_DT"/>
+        <viewAttribute id="PRIOD_CVRG_START_DT"/>
+        <viewAttribute id="DISC_CD"/>
+        <viewAttribute id="CYCLE_STRT_DT"/>
+        <viewAttribute id="CYCLE_RUN_YR"/>
+        <viewAttribute id="CYCLE_RUN_MTH"/>
+        <viewAttribute id="BAL_IMPCT_CD"/>
+        <viewAttribute id="CYCLE_CD"/>
+        <viewAttribute id="CHARG_SEQ_NO"/>
+        <viewAttribute id="ACTV_RSN_CD"/>
+        <viewAttribute id="ACTV_CD"/>
+        <viewAttribute id="SUB_NO"/>
+        <viewAttribute id="FTR_REVENUE_CD"/>
+        <viewAttribute id="FTR_CD"/>
+        <viewAttribute id="SOC"/>
+        <viewAttribute id="ACTV_SEQ_NO"/>
+        <viewAttribute id="ENT_SEQ_NO"/>
+        <viewAttribute id="BAN"/>
+        <viewAttribute id="CYCL_ID"/>
+        <viewAttribute id="EFFECTIVE_DATE"/>
+        <viewAttribute id="EFF_DT"/>
+        <viewAttribute id="EXPY_DT"/>
+        <viewAttribute id="PRODUCT_TYPE"/>
+        <viewAttribute id="SEQ_ID"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#PROJ_PB_ADJ_ADJR">
+        <mapping xsi:type="Calculation:AttributeMapping" target="JRNL_DATE" source="JRNL_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OVER_USE_IND" source="OVER_USE_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRANS_TYPE" source="TRANS_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACCRL_IND" source="ACCRL_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TAX_PROVINCE" source="TAX_PROVINCE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CHRG_TY" source="CHRG_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCLE_CLOSE_DATE" source="CYCLE_CLOSE_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACTV_AMT" source="ACTV_AMT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BFR_DISC_AMT" source="BFR_DISC_AMT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACTV_BILL_SEQ_NO" source="ACTV_BILL_SEQ_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DISC_AMT" source="DISC_AMT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DISC_PCT" source="DISC_PCT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRIOD_CVRG_END_DT" source="PRIOD_CVRG_END_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRIOD_CVRG_START_DT" source="PRIOD_CVRG_START_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DISC_CD" source="DISC_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCLE_STRT_DT" source="CYCLE_STRT_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCLE_RUN_YR" source="CYCLE_RUN_YR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCLE_RUN_MTH" source="CYCLE_RUN_MTH"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BAL_IMPCT_CD" source="BAL_IMPCT_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCLE_CD" source="CYCLE_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CHARG_SEQ_NO" source="CHARG_SEQ_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACTV_RSN_CD" source="ACTV_RSN_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACTV_CD" source="ACTV_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUB_NO" source="SUB_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FTR_REVENUE_CD" source="FTR_REVENUE_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FTR_CD" source="FTR_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SOC" source="SOC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACTV_SEQ_NO" source="ACTV_SEQ_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ENT_SEQ_NO" source="ENT_SEQ_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BAN" source="BAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFFECTIVE_DATE" source="EFFECTIVE_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFF_DT" source="EFF_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXPY_DT" source="EXPY_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SEQ_ID" source="SEQ_ID"/>
+      </input>
+      <input node="#PROJ_ADJ_HIST">
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT_TYPE" source="PRODUCT_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BAN" source="CC_BAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFF_DT" source="EFF_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ENT_SEQ_NO" source="ENT_SEQ_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACTV_SEQ_NO" source="ACTV_SEQ_NO"/>
+      </input>
+      <joinAttribute name="BAN"/>
+      <joinAttribute name="EFF_DT"/>
+      <joinAttribute name="ENT_SEQ_NO"/>
+      <joinAttribute name="ACTV_SEQ_NO"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="JOIN_CHG" joinOrder="OUTSIDE_IN" joinType="leftOuter">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="JRNL_DATE"/>
+        <viewAttribute id="OVER_USE_IND"/>
+        <viewAttribute id="TRANS_TYPE"/>
+        <viewAttribute id="ACCRL_IND"/>
+        <viewAttribute id="TAX_PROVINCE"/>
+        <viewAttribute id="CHRG_TY"/>
+        <viewAttribute id="CYCLE_CLOSE_DATE"/>
+        <viewAttribute id="ACTV_AMT"/>
+        <viewAttribute id="BFR_DISC_AMT"/>
+        <viewAttribute id="ACTV_BILL_SEQ_NO"/>
+        <viewAttribute id="DISC_AMT"/>
+        <viewAttribute id="DISC_PCT"/>
+        <viewAttribute id="PRIOD_CVRG_END_DT"/>
+        <viewAttribute id="PRIOD_CVRG_START_DT"/>
+        <viewAttribute id="DISC_CD"/>
+        <viewAttribute id="CYCLE_STRT_DT"/>
+        <viewAttribute id="CYCLE_RUN_YR"/>
+        <viewAttribute id="CYCLE_RUN_MTH"/>
+        <viewAttribute id="BAL_IMPCT_CD"/>
+        <viewAttribute id="CYCLE_CD"/>
+        <viewAttribute id="CHARG_SEQ_NO"/>
+        <viewAttribute id="ACTV_RSN_CD"/>
+        <viewAttribute id="ACTV_CD"/>
+        <viewAttribute id="SUB_NO"/>
+        <viewAttribute id="FTR_REVENUE_CD"/>
+        <viewAttribute id="FTR_CD"/>
+        <viewAttribute id="SOC"/>
+        <viewAttribute id="ACTV_SEQ_NO"/>
+        <viewAttribute id="ENT_SEQ_NO"/>
+        <viewAttribute id="BAN"/>
+        <viewAttribute id="CYCL_ID"/>
+        <viewAttribute id="EFFECTIVE_DATE"/>
+        <viewAttribute id="EFF_DT"/>
+        <viewAttribute id="EXPY_DT"/>
+        <viewAttribute id="PRODUCT_TYPE"/>
+        <viewAttribute id="SEQ_ID"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#PROJ_PB_CHG">
+        <mapping xsi:type="Calculation:AttributeMapping" target="JRNL_DATE" source="JRNL_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OVER_USE_IND" source="OVER_USE_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRANS_TYPE" source="TRANS_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACCRL_IND" source="ACCRL_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TAX_PROVINCE" source="TAX_PROVINCE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CHRG_TY" source="CHRG_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCLE_CLOSE_DATE" source="CYCLE_CLOSE_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACTV_AMT" source="ACTV_AMT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BFR_DISC_AMT" source="BFR_DISC_AMT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACTV_BILL_SEQ_NO" source="ACTV_BILL_SEQ_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DISC_AMT" source="DISC_AMT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DISC_PCT" source="DISC_PCT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRIOD_CVRG_END_DT" source="PRIOD_CVRG_END_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRIOD_CVRG_START_DT" source="PRIOD_CVRG_START_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DISC_CD" source="DISC_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCLE_STRT_DT" source="CYCLE_STRT_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCLE_RUN_YR" source="CYCLE_RUN_YR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCLE_RUN_MTH" source="CYCLE_RUN_MTH"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BAL_IMPCT_CD" source="BAL_IMPCT_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCLE_CD" source="CYCLE_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CHARG_SEQ_NO" source="CHARG_SEQ_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACTV_RSN_CD" source="ACTV_RSN_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACTV_CD" source="ACTV_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUB_NO" source="SUB_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FTR_REVENUE_CD" source="FTR_REVENUE_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FTR_CD" source="FTR_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SOC" source="SOC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACTV_SEQ_NO" source="ACTV_SEQ_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ENT_SEQ_NO" source="ENT_SEQ_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BAN" source="BAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFFECTIVE_DATE" source="EFFECTIVE_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFF_DT" source="EFF_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXPY_DT" source="EXPY_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SEQ_ID" source="SEQ_ID"/>
+      </input>
+      <input node="#PROJ_CHG_HIST">
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT_TYPE" source="PRODUCT_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BAN" source="CC_BAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFF_DT" source="EFF_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ENT_SEQ_NO" source="ENT_SEQ_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACTV_SEQ_NO" source="ACTV_SEQ_NO"/>
+      </input>
+      <joinAttribute name="BAN"/>
+      <joinAttribute name="EFF_DT"/>
+      <joinAttribute name="ENT_SEQ_NO"/>
+      <joinAttribute name="ACTV_SEQ_NO"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:UnionView" id="UNION_PROD_TYP">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="JRNL_DATE"/>
+        <viewAttribute id="OVER_USE_IND"/>
+        <viewAttribute id="TRANS_TYPE"/>
+        <viewAttribute id="ACCRL_IND"/>
+        <viewAttribute id="TAX_PROVINCE"/>
+        <viewAttribute id="CHRG_TY"/>
+        <viewAttribute id="CYCLE_CLOSE_DATE"/>
+        <viewAttribute id="ACTV_AMT"/>
+        <viewAttribute id="BFR_DISC_AMT"/>
+        <viewAttribute id="ACTV_BILL_SEQ_NO"/>
+        <viewAttribute id="DISC_AMT"/>
+        <viewAttribute id="DISC_PCT"/>
+        <viewAttribute id="PRIOD_CVRG_END_DT"/>
+        <viewAttribute id="PRIOD_CVRG_START_DT"/>
+        <viewAttribute id="DISC_CD"/>
+        <viewAttribute id="CYCLE_STRT_DT"/>
+        <viewAttribute id="CYCLE_RUN_YR"/>
+        <viewAttribute id="CYCLE_RUN_MTH"/>
+        <viewAttribute id="BAL_IMPCT_CD"/>
+        <viewAttribute id="CYCLE_CD"/>
+        <viewAttribute id="CHARG_SEQ_NO"/>
+        <viewAttribute id="ACTV_RSN_CD"/>
+        <viewAttribute id="ACTV_CD"/>
+        <viewAttribute id="SUB_NO"/>
+        <viewAttribute id="FTR_REVENUE_CD"/>
+        <viewAttribute id="FTR_CD"/>
+        <viewAttribute id="SOC"/>
+        <viewAttribute id="ACTV_SEQ_NO"/>
+        <viewAttribute id="ENT_SEQ_NO"/>
+        <viewAttribute id="BAN"/>
+        <viewAttribute id="CYCL_ID"/>
+        <viewAttribute id="EFFECTIVE_DATE"/>
+        <viewAttribute id="EFF_DT"/>
+        <viewAttribute id="EXPY_DT"/>
+        <viewAttribute id="PRODUCT_TYPE"/>
+        <viewAttribute id="SEQ_ID"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input emptyUnionBehavior="NO_ROW" node="#JOIN_ADJ_ADJR">
+        <mapping xsi:type="Calculation:AttributeMapping" target="JRNL_DATE" source="JRNL_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OVER_USE_IND" source="OVER_USE_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRANS_TYPE" source="TRANS_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACCRL_IND" source="ACCRL_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TAX_PROVINCE" source="TAX_PROVINCE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CHRG_TY" source="CHRG_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCLE_CLOSE_DATE" source="CYCLE_CLOSE_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACTV_AMT" source="ACTV_AMT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BFR_DISC_AMT" source="BFR_DISC_AMT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACTV_BILL_SEQ_NO" source="ACTV_BILL_SEQ_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DISC_AMT" source="DISC_AMT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DISC_PCT" source="DISC_PCT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRIOD_CVRG_END_DT" source="PRIOD_CVRG_END_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRIOD_CVRG_START_DT" source="PRIOD_CVRG_START_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DISC_CD" source="DISC_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCLE_STRT_DT" source="CYCLE_STRT_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCLE_RUN_YR" source="CYCLE_RUN_YR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCLE_RUN_MTH" source="CYCLE_RUN_MTH"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BAL_IMPCT_CD" source="BAL_IMPCT_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCLE_CD" source="CYCLE_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CHARG_SEQ_NO" source="CHARG_SEQ_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACTV_RSN_CD" source="ACTV_RSN_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACTV_CD" source="ACTV_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUB_NO" source="SUB_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FTR_REVENUE_CD" source="FTR_REVENUE_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FTR_CD" source="FTR_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SOC" source="SOC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACTV_SEQ_NO" source="ACTV_SEQ_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ENT_SEQ_NO" source="ENT_SEQ_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BAN" source="BAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFFECTIVE_DATE" source="EFFECTIVE_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFF_DT" source="EFF_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXPY_DT" source="EXPY_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT_TYPE" source="PRODUCT_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SEQ_ID" source="SEQ_ID"/>
+      </input>
+      <input emptyUnionBehavior="NO_ROW" node="#JOIN_CHG">
+        <mapping xsi:type="Calculation:AttributeMapping" target="JRNL_DATE" source="JRNL_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OVER_USE_IND" source="OVER_USE_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRANS_TYPE" source="TRANS_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACCRL_IND" source="ACCRL_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TAX_PROVINCE" source="TAX_PROVINCE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CHRG_TY" source="CHRG_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCLE_CLOSE_DATE" source="CYCLE_CLOSE_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACTV_AMT" source="ACTV_AMT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BFR_DISC_AMT" source="BFR_DISC_AMT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACTV_BILL_SEQ_NO" source="ACTV_BILL_SEQ_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DISC_AMT" source="DISC_AMT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DISC_PCT" source="DISC_PCT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRIOD_CVRG_END_DT" source="PRIOD_CVRG_END_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRIOD_CVRG_START_DT" source="PRIOD_CVRG_START_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DISC_CD" source="DISC_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCLE_STRT_DT" source="CYCLE_STRT_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCLE_RUN_YR" source="CYCLE_RUN_YR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCLE_RUN_MTH" source="CYCLE_RUN_MTH"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BAL_IMPCT_CD" source="BAL_IMPCT_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCLE_CD" source="CYCLE_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CHARG_SEQ_NO" source="CHARG_SEQ_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACTV_RSN_CD" source="ACTV_RSN_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACTV_CD" source="ACTV_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUB_NO" source="SUB_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FTR_REVENUE_CD" source="FTR_REVENUE_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FTR_CD" source="FTR_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SOC" source="SOC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACTV_SEQ_NO" source="ACTV_SEQ_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ENT_SEQ_NO" source="ENT_SEQ_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BAN" source="BAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFFECTIVE_DATE" source="EFFECTIVE_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFF_DT" source="EFF_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXPY_DT" source="EXPY_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT_TYPE" source="PRODUCT_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SEQ_ID" source="SEQ_ID"/>
+      </input>
+    </calculationView>
+  </calculationViews>
+  <logicalModel id="UNION_PROD_TYP">
+    <descriptions/>
+    <attributes>
+      <attribute id="JRNL_DATE" order="1" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="JRNL_DATE"/>
+        <keyMapping columnObjectName="UNION_PROD_TYP" columnName="JRNL_DATE"/>
+      </attribute>
+      <attribute id="OVER_USE_IND" order="2" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="OVER_USE_IND"/>
+        <keyMapping columnObjectName="UNION_PROD_TYP" columnName="OVER_USE_IND"/>
+      </attribute>
+      <attribute id="TRANS_TYPE" order="3" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="TRANS_TYPE"/>
+        <keyMapping columnObjectName="UNION_PROD_TYP" columnName="TRANS_TYPE"/>
+      </attribute>
+      <attribute id="ACCRL_IND" order="4" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ACCRL_IND"/>
+        <keyMapping columnObjectName="UNION_PROD_TYP" columnName="ACCRL_IND"/>
+      </attribute>
+      <attribute id="TAX_PROVINCE" order="5" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="TAX_PROVINCE"/>
+        <keyMapping columnObjectName="UNION_PROD_TYP" columnName="TAX_PROVINCE"/>
+      </attribute>
+      <attribute id="CHRG_TY" order="6" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CHRG_TY"/>
+        <keyMapping columnObjectName="UNION_PROD_TYP" columnName="CHRG_TY"/>
+      </attribute>
+      <attribute id="CYCLE_CLOSE_DATE" order="7" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CYCLE_CLOSE_DATE"/>
+        <keyMapping columnObjectName="UNION_PROD_TYP" columnName="CYCLE_CLOSE_DATE"/>
+      </attribute>
+      <attribute id="ACTV_AMT" order="8" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ACTV_AMT"/>
+        <keyMapping columnObjectName="UNION_PROD_TYP" columnName="ACTV_AMT"/>
+      </attribute>
+      <attribute id="BFR_DISC_AMT" order="9" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="BFR_DISC_AMT"/>
+        <keyMapping columnObjectName="UNION_PROD_TYP" columnName="BFR_DISC_AMT"/>
+      </attribute>
+      <attribute id="ACTV_BILL_SEQ_NO" order="10" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ACTV_BILL_SEQ_NO"/>
+        <keyMapping columnObjectName="UNION_PROD_TYP" columnName="ACTV_BILL_SEQ_NO"/>
+      </attribute>
+      <attribute id="DISC_AMT" order="11" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="DISC_AMT"/>
+        <keyMapping columnObjectName="UNION_PROD_TYP" columnName="DISC_AMT"/>
+      </attribute>
+      <attribute id="DISC_PCT" order="12" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="DISC_PCT"/>
+        <keyMapping columnObjectName="UNION_PROD_TYP" columnName="DISC_PCT"/>
+      </attribute>
+      <attribute id="PRIOD_CVRG_END_DT" order="13" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="PRIOD_CVRG_END_DT"/>
+        <keyMapping columnObjectName="UNION_PROD_TYP" columnName="PRIOD_CVRG_END_DT"/>
+      </attribute>
+      <attribute id="PRIOD_CVRG_START_DT" order="14" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="PRIOD_CVRG_START_DT"/>
+        <keyMapping columnObjectName="UNION_PROD_TYP" columnName="PRIOD_CVRG_START_DT"/>
+      </attribute>
+      <attribute id="DISC_CD" order="15" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="DISC_CD"/>
+        <keyMapping columnObjectName="UNION_PROD_TYP" columnName="DISC_CD"/>
+      </attribute>
+      <attribute id="CYCLE_STRT_DT" order="16" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CYCLE_STRT_DT"/>
+        <keyMapping columnObjectName="UNION_PROD_TYP" columnName="CYCLE_STRT_DT"/>
+      </attribute>
+      <attribute id="CYCLE_RUN_YR" order="17" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CYCLE_RUN_YR"/>
+        <keyMapping columnObjectName="UNION_PROD_TYP" columnName="CYCLE_RUN_YR"/>
+      </attribute>
+      <attribute id="CYCLE_RUN_MTH" order="18" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CYCLE_RUN_MTH"/>
+        <keyMapping columnObjectName="UNION_PROD_TYP" columnName="CYCLE_RUN_MTH"/>
+      </attribute>
+      <attribute id="BAL_IMPCT_CD" order="19" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="BAL_IMPCT_CD"/>
+        <keyMapping columnObjectName="UNION_PROD_TYP" columnName="BAL_IMPCT_CD"/>
+      </attribute>
+      <attribute id="CYCLE_CD" order="20" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CYCLE_CD"/>
+        <keyMapping columnObjectName="UNION_PROD_TYP" columnName="CYCLE_CD"/>
+      </attribute>
+      <attribute id="CHARG_SEQ_NO" order="21" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CHARG_SEQ_NO"/>
+        <keyMapping columnObjectName="UNION_PROD_TYP" columnName="CHARG_SEQ_NO"/>
+      </attribute>
+      <attribute id="ACTV_RSN_CD" order="22" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ACTV_RSN_CD"/>
+        <keyMapping columnObjectName="UNION_PROD_TYP" columnName="ACTV_RSN_CD"/>
+      </attribute>
+      <attribute id="ACTV_CD" order="23" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ACTV_CD"/>
+        <keyMapping columnObjectName="UNION_PROD_TYP" columnName="ACTV_CD"/>
+      </attribute>
+      <attribute id="SUB_NO" order="24" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SUB_NO"/>
+        <keyMapping columnObjectName="UNION_PROD_TYP" columnName="SUB_NO"/>
+      </attribute>
+      <attribute id="FTR_REVENUE_CD" order="25" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="FTR_REVENUE_CD"/>
+        <keyMapping columnObjectName="UNION_PROD_TYP" columnName="FTR_REVENUE_CD"/>
+      </attribute>
+      <attribute id="FTR_CD" order="26" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="FTR_CD"/>
+        <keyMapping columnObjectName="UNION_PROD_TYP" columnName="FTR_CD"/>
+      </attribute>
+      <attribute id="SOC" order="27" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SOC"/>
+        <keyMapping columnObjectName="UNION_PROD_TYP" columnName="SOC"/>
+      </attribute>
+      <attribute id="ACTV_SEQ_NO" order="28" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ACTV_SEQ_NO"/>
+        <keyMapping columnObjectName="UNION_PROD_TYP" columnName="ACTV_SEQ_NO"/>
+      </attribute>
+      <attribute id="ENT_SEQ_NO" order="29" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ENT_SEQ_NO"/>
+        <keyMapping columnObjectName="UNION_PROD_TYP" columnName="ENT_SEQ_NO"/>
+      </attribute>
+      <attribute id="BAN" order="30" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="BAN"/>
+        <keyMapping columnObjectName="UNION_PROD_TYP" columnName="BAN"/>
+      </attribute>
+      <attribute id="CYCL_ID" order="31" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CYCL_ID"/>
+        <keyMapping columnObjectName="UNION_PROD_TYP" columnName="CYCL_ID"/>
+      </attribute>
+      <attribute id="EFFECTIVE_DATE" order="32" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="EFFECTIVE_DATE"/>
+        <keyMapping columnObjectName="UNION_PROD_TYP" columnName="EFFECTIVE_DATE"/>
+      </attribute>
+      <attribute id="EFF_DT" order="33" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="EFF_DT"/>
+        <keyMapping columnObjectName="UNION_PROD_TYP" columnName="EFF_DT"/>
+      </attribute>
+      <attribute id="EXPY_DT" order="34" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="EXPY_DT"/>
+        <keyMapping columnObjectName="UNION_PROD_TYP" columnName="EXPY_DT"/>
+      </attribute>
+      <attribute id="PRODUCT_TYPE" order="35" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="PRODUCT_TYPE"/>
+        <keyMapping columnObjectName="UNION_PROD_TYP" columnName="PRODUCT_TYPE"/>
+      </attribute>
+      <attribute id="SEQ_ID" order="36" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SEQ_ID"/>
+        <keyMapping columnObjectName="UNION_PROD_TYP" columnName="SEQ_ID"/>
+      </attribute>
+    </attributes>
+    <calculatedAttributes/>
+    <privateDataFoundation>
+      <tableProxies/>
+      <joins/>
+      <layout>
+        <shapes/>
+      </layout>
+    </privateDataFoundation>
+    <baseMeasures/>
+    <calculatedMeasures/>
+    <restrictedMeasures/>
+    <localDimensions/>
+  </logicalModel>
+  <layout>
+    <shapes>
+      <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+        <upperLeftCorner x="253" y="87"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_PB_PV" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="253" y="455"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_ADJ_HIST" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="22" y="377"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_PB_CHG" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="330" y="377"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_PB_ADJ_ADJR" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="176" y="377"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_CHG_HIST" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="484" y="377"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="JOIN_ADJ_ADJR" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="176" y="281"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="JOIN_CHG" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="330" y="281"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="UNION_PROD_TYP" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="253" y="165"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+    </shapes>
+  </layout>
+</Calculation:scenario>

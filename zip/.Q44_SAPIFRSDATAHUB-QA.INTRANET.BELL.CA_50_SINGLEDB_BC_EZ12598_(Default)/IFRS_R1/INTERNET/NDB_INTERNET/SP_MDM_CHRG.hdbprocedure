@@ -1,0 +1,266 @@
+PROCEDURE "NDB_INTERNET"."IFRS_R1.INTERNET.NDB_INTERNET::SP_MDM_CHRG"
+(IN IP_CYCL_ID NVARCHAR(3),
+OUT OP_STATUS NVARCHAR(100)) 
+	LANGUAGE SQLSCRIPT
+	SQL SECURITY INVOKER
+	AS
+
+BEGIN
+--------------------------------------------------------------------------------------------------
+-- Procedure Title : SP_MDM_CHRG
+-- Created By      : BC_EY96110  (Arpit)       
+-- Create Date     : 04-18-2017
+-- Description     : Data Inserted using Calculation View - CA_MDM_CHRG.
+--                   to NDB Table - MDM_CHRG Using this stored procedure.
+--                   MDM CHARGE includes data from landing table MDM_CHRG.			
+-- Project         : Bell Canada
+-- Release         : R1 / IFRS
+--------------------------------------------------------------------------------------------------
+--   M O D I F I C A T I O N   H I S T O R Y
+--------------------------------------------------------------------------------------------------
+-- Date        | User ID          | Modification History/Release
+--------------------------------------------------------------------------------------------------
+--             |                  | 
+--------------------------------------------------------------------------------------------------
+-- Description Of the changes 
+--------------------------------------------------------------------------------------------------
+-- Modification Number          : <Assign Some Number> 
+-- Description of Changes Made> : <Description of Changes>       
+--------------------------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------------------------
+-- Local Variables Declaration
+--------------------------------------------------------------------------------------------------
+
+DECLARE LC_ERROR_TEXT 		NVARCHAR(70) DEFAULT 'OUT STATUS IS 1 : INSERT/UPDATE FOR ONE OR MORE RECORD FAILED';
+DECLARE LC_SUCCESS_TEXT 	NVARCHAR(70) DEFAULT 'OUT STATUS IS 0 : INSERT/UPDATE EXECUTION SUCCESSFUL';
+DECLARE LV_ERROR_FLAG 		NVARCHAR(1) := 'N';
+DECLARE LV_CUR_UTC 			TIMESTAMP := CURRENT_TIMESTAMP;
+DECLARE ERROR_TAB 			TABLE (ERROR_CODE NVARCHAR(100));
+DECLARE i					INTEGER;
+DECLARE RECORD_COUNT		INTEGER;
+DECLARE CURRENT_ERROR		NVARCHAR(100);
+
+--------------------------------------------------------------------------------------------------
+-- Cursors Declaration
+-------------------------------------------------------------------------------------------------- 
+ DECLARE CURSOR C_MDM_CHRG FOR
+		 SELECT "CHRG_ID",
+				"ASSOC_SRVC_CD",
+				"REFERENCE_EFFECTIVE_DT",
+				"REFERENCE_EXPIRY_DT",
+				"CHRG_COND",
+				"CYCL_ID",
+				"CHRG_CD",
+				"SEQ_ID",
+				"EFFECTIVE_DATE_PREV_DAY",
+				"FLAG_EXISTING_RECORD" 
+		   FROM "_SYS_BIC"."IFRS_R1.INTERNET.NDB_INTERNET/CA_MDM_CHRG"
+		        (PLACEHOLDER."$$IP_CYCL_ID$$" => :IP_CYCL_ID)
+	   ORDER BY "CYCL_ID", "SEQ_ID";
+
+--------------------------------------------------------------------------------------------------
+-- Local Temporary Tables Declaration
+-------------------------------------------------------------------------------------------------- 
+
+CREATE LOCAL TEMPORARY TABLE #UPDATE_MDM_CHRG (CHRG_ID NVARCHAR(16), CHRG_COND NVARCHAR(50),
+CYCL_ID NVARCHAR(3));
+
+CREATE LOCAL TEMPORARY TABLE #UPDATE_EH_DELETION (CHRG_ID NVARCHAR(16), CHRG_COND NVARCHAR(50),
+REFERENCE_EFFECTIVE_DT DATE);
+        	  
+--------------------------------------------------------------------------------------------------
+-- Cursors Loop
+--------------------------------------------------------------------------------------------------  
+
+FOR CUR_MDM_CHRG AS C_MDM_CHRG DO
+
+--  Define Exit Handler
+	DECLARE EXIT HANDLER FOR SQLEXCEPTION 
+	BEGIN AUTONOMOUS TRANSACTION 
+	
+--    Define Exit Handler
+	  DECLARE EXIT HANDLER FOR SQLEXCEPTION 
+	  BEGIN AUTONOMOUS TRANSACTION 	
+	   
+	-- Do Nothing. Exception Handled to ensure SP does not get terminated 
+	
+ 	  END;
+ 	  
+   -- Insert record into error table
+   	    INSERT INTO "NDB_INTERNET"."IFRS_R1.INTERNET.NDB_INTERNET::MDM_CHRG_EH"(
+   	  			    "CHRG_ID",
+   	  			    "CHRG_COND",
+					"ASSOC_SRVC_CD",
+					"CHRG_CD",
+					"REFERENCE_EFFECTIVE_DT",
+					"REFERENCE_EXPIRY_DT",
+					"ERROR_CODE",
+					"TECHNICAL_MESSAGE",
+					"ERROR_CREATE_TS")
+					
+		    VALUES(	CUR_MDM_CHRG."CHRG_ID",
+		   		    CUR_MDM_CHRG."CHRG_COND",
+					CUR_MDM_CHRG."ASSOC_SRVC_CD",
+					CUR_MDM_CHRG."CHRG_CD",
+					CUR_MDM_CHRG."REFERENCE_EFFECTIVE_DT",
+					CUR_MDM_CHRG."REFERENCE_EXPIRY_DT",
+					::SQL_ERROR_CODE,
+		            ::SQL_ERROR_MESSAGE,
+		            LV_CUR_UTC);
+
+	  	LV_ERROR_FLAG := 'Y';
+    
+         
+    END;
+    
+
+-- Processing for Successful Records
+   
+
+--   If Record exists in the Target NDB Table
+     IF CUR_MDM_CHRG.FLAG_EXISTING_RECORD = 'U' THEN
+       BEGIN AUTONOMOUS TRANSACTION 
+
+	--     Update the target NDB table
+		   UPDATE "NDB_INTERNET"."IFRS_R1.INTERNET.NDB_INTERNET::MDM_CHRG" NDB 
+			  SET  NDB.REFERENCE_EXPIRY_DT   = CUR_MDM_CHRG.EFFECTIVE_DATE_PREV_DAY,
+		 		   NDB.MODIFIED_TS           = LV_CUR_UTC 
+			WHERE  CUR_MDM_CHRG."CHRG_ID"    = NDB."CHRG_ID" AND 
+			       CUR_MDM_CHRG."CHRG_COND"  = NDB."CHRG_COND" AND 
+				   NDB.REFERENCE_EXPIRY_DT   = '99991231';		      
+		  
+		 --    Insert the Incoming new record
+		        INSERT INTO "NDB_INTERNET"."IFRS_R1.INTERNET.NDB_INTERNET::MDM_CHRG"(
+		   	  			    "CHRG_ID",
+		   	  			    "CHRG_COND",
+							"ASSOC_SRVC_CD",
+							"CHRG_CD",
+							"REFERENCE_EFFECTIVE_DT",
+							"REFERENCE_EXPIRY_DT",
+							"INSRT_TS",
+		                    "MODIFIED_TS")
+				 VALUES     (CUR_MDM_CHRG.CHRG_ID,
+				             CUR_MDM_CHRG."CHRG_COND",
+							 CUR_MDM_CHRG."ASSOC_SRVC_CD",
+							 CUR_MDM_CHRG."CHRG_CD",
+							 CUR_MDM_CHRG."REFERENCE_EFFECTIVE_DT",
+							 CUR_MDM_CHRG."REFERENCE_EXPIRY_DT",
+							 LV_CUR_UTC,
+		                     LV_CUR_UTC);
+       END;
+					 
+--         Insert PK of successfully processed Records into Local Temp Tables 
+--         for Updating NDB_TS in corresponding Landing Tables records
+		   INSERT INTO #UPDATE_MDM_CHRG
+					   ("CHRG_ID",  
+					    "CHRG_COND", 
+					   	"CYCL_ID"
+					   	) 
+			    VALUES (CUR_MDM_CHRG."CHRG_ID", 
+				 		CUR_MDM_CHRG."CHRG_COND", 
+					   	CUR_MDM_CHRG."CYCL_ID"
+					   	);
+					   					   	    		
+		   INSERT INTO #UPDATE_EH_DELETION
+					   ("CHRG_ID",  
+					    "CHRG_COND", 
+					   	"REFERENCE_EFFECTIVE_DT"
+					   	) 
+			    VALUES (CUR_MDM_CHRG."CHRG_ID", 
+				 		CUR_MDM_CHRG."CHRG_COND", 
+					   	CUR_MDM_CHRG."REFERENCE_EFFECTIVE_DT"
+					   	);
+					   	                	
+     ELSEIF CUR_MDM_CHRG.FLAG_EXISTING_RECORD = 'I' THEN
+    
+--    Insert Records into the target NDB table
+        INSERT INTO "NDB_INTERNET"."IFRS_R1.INTERNET.NDB_INTERNET::MDM_CHRG"(
+   	  			    "CHRG_ID",
+   	  			    "CHRG_COND",
+					"ASSOC_SRVC_CD",
+					"CHRG_CD",
+					"REFERENCE_EFFECTIVE_DT",
+					"REFERENCE_EXPIRY_DT",
+					"INSRT_TS")
+		    VALUES (
+		            CUR_MDM_CHRG.CHRG_ID,
+		            CUR_MDM_CHRG."CHRG_COND",
+					CUR_MDM_CHRG."ASSOC_SRVC_CD",
+					CUR_MDM_CHRG."CHRG_CD",
+					CUR_MDM_CHRG."REFERENCE_EFFECTIVE_DT",
+					CUR_MDM_CHRG."REFERENCE_EXPIRY_DT",
+					LV_CUR_UTC
+                   );
+		
+					 
+--         Insert PK of successfully processed Records into Local Temp Tables 
+--         for Updating NDB_TS in corresponding Landing Tables records
+	       INSERT INTO #UPDATE_MDM_CHRG
+					   ("CHRG_ID",  
+					    "CHRG_COND", 
+					   	"CYCL_ID"
+					   	) 
+			    VALUES (CUR_MDM_CHRG."CHRG_ID", 
+				 		CUR_MDM_CHRG."CHRG_COND", 
+					   	CUR_MDM_CHRG."CYCL_ID"
+					   	);
+					   					   	    		
+		   INSERT INTO #UPDATE_EH_DELETION
+					   ("CHRG_ID",  
+					    "CHRG_COND", 
+					   	"REFERENCE_EFFECTIVE_DT"
+					   	) 
+			    VALUES (CUR_MDM_CHRG."CHRG_ID", 
+				 		CUR_MDM_CHRG."CHRG_COND", 
+					   	CUR_MDM_CHRG."REFERENCE_EFFECTIVE_DT"
+					   	);                	
+    					   	 
+     END IF;
+    
+
+END FOR;	
+				   			    
+
+--------------------------------------------------------------------------------------------------
+-- Update Landing Tables
+-------------------------------------------------------------------------------------------------- 
+
+-- Update Landing Table IFRS_R1.LAND::MDM_CHRG
+UPDATE "LAND"."IFRS_R1.LAND::MDM_CHRG"  A
+  FROM "LAND"."IFRS_R1.LAND::MDM_CHRG"  A 
+ INNER JOIN #UPDATE_MDM_CHRG B 
+    ON A."CHRG_ID"   = B."CHRG_ID" 
+   AND A."CHRG_COND" = B."CHRG_COND"
+   SET NDB_TS        = LV_CUR_UTC
+ WHERE A.NDB_TS IS NULL;
+
+--------------------------------------------------------------------------------------------------
+-- Update Error Table
+--------------------------------------------------------------------------------------------------
+
+  UPDATE "NDB_INTERNET"."IFRS_R1.INTERNET.NDB_INTERNET::MDM_CHRG_EH" A
+    FROM "NDB_INTERNET"."IFRS_R1.INTERNET.NDB_INTERNET::MDM_CHRG_EH" A 
+   INNER JOIN #UPDATE_EH_DELETION B
+      ON A."CHRG_ID"             = B."CHRG_ID"
+     AND A."CHRG_COND"           = B."CHRG_COND"
+     SET (DELETE_DATE, DELETED)  = (CURRENT_DATE, 1);
+
+--------------------------------------------------------------------------------------------------
+-- Set Overall Status
+-------------------------------------------------------------------------------------------------- 
+
+--  STATUS 0: Send the success message to scheduling tool to confirm this procedure has been
+--  executed successfully
+    IF(LV_ERROR_FLAG = 'Y') THEN		
+
+     OP_STATUS := LC_ERROR_TEXT; 
+			
+    ELSE
+
+  	 OP_STATUS := LC_SUCCESS_TEXT; 	
+				
+	END IF;
+	
+END;
+   

@@ -1,0 +1,319 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:AccessControl="http://www.sap.com/ndb/SQLCoreModelAccessControl.ecore" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" xmlns:Variable="http://www.sap.com/ndb/BiModelVariable.ecore" schemaVersion="2.3" id="CA_PS_TRANS_DATA" applyPrivilegeType="NONE" checkAnalyticPrivileges="false" defaultClient="$$client$$" defaultLanguage="$$language$$" hierarchiesSQLEnabled="false" historyEnabled="false" translationRelevant="true" visibility="internal" calculationScenarioType="TREE_BASED" dataCategory="DIMENSION" enforceSqlExecution="false" executionSemantic="UNDEFINED" outputViewType="Projection">
+  <descriptions defaultDescription="Landing View - Table PS_TRANS_DATA"/>
+  <localVariables>
+    <variable id="IP_TRANS_DT" parameter="true">
+      <descriptions defaultDescription="IP_TRANS_DT"/>
+      <variableProperties datatype="DATE" defaultValue="99991231" mandatory="false">
+        <valueDomain type="empty"/>
+        <selection multiLine="false" type="SingleValue"/>
+      </variableProperties>
+    </variable>
+  </localVariables>
+  <variableMappings>
+    <mapping xsi:type="Variable:ConstantVariableMapping" dataSource="#CA_EH_ERROR_TABLE" value="1042">
+      <targetVariable name="IP_JOB_ID" resourceUri="/IFRS_R1.LAND.EH/calculationviews/CA_EH_ERROR_TABLE"/>
+    </mapping>
+  </variableMappings>
+  <informationModelLayout relativeWidthScenario="61"/>
+  <dataSources>
+    <DataSource id="IFRS_R1.LAND::PS_TRANS_DATA" type="DATA_BASE_TABLE">
+      <viewAttributes allViewAttributes="true"/>
+      <columnObject schemaName="LAND" columnObjectName="IFRS_R1.LAND::PS_TRANS_DATA"/>
+    </DataSource>
+    <DataSource id="CA_EH_ERROR_TABLE" type="CALCULATION_VIEW">
+      <viewAttributes allViewAttributes="true"/>
+      <resourceUri>/IFRS_R1.LAND.EH/calculationviews/CA_EH_ERROR_TABLE</resourceUri>
+    </DataSource>
+  </dataSources>
+  <calculationViews>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_PS_TRANS_DATA" filterExpressionLanguage="COLUMN_ENGINE">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="AWARD_CREDIT"/>
+        <viewAttribute id="ADJ_CD"/>
+        <viewAttribute id="ANNIVERSARY_DT"/>
+        <viewAttribute id="X_REF_ORD_ID"/>
+        <viewAttribute id="CUST_ID"/>
+        <viewAttribute id="INVC_NO"/>
+        <viewAttribute id="MDN"/>
+        <viewAttribute id="ORD_TY"/>
+        <viewAttribute id="PROD_ID"/>
+        <viewAttribute id="RGN"/>
+        <viewAttribute id="TRANSID"/>
+        <viewAttribute id="TRANS_DT"/>
+        <viewAttribute id="CYCL_ID"/>
+        <viewAttribute id="INSRT_TS"/>
+        <viewAttribute id="NDB_TS"/>
+        <viewAttribute id="NDB_MART"/>
+        <viewAttribute id="SEQ_ID"/>
+        <viewAttribute id="SRC_TS"/>
+        <viewAttribute id="PROCESS_ID"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CC_PARENT_KEY" length="200" expressionLanguage="COLUMN_ENGINE">
+          <formula>&quot;TRANSID&quot;</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#IFRS_R1.LAND::PS_TRANS_DATA">
+        <mapping xsi:type="Calculation:AttributeMapping" target="AWARD_CREDIT" source="ADJ_AMT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ADJ_CD" source="ADJ_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ANNIVERSARY_DT" source="ANNIVERSARY_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="X_REF_ORD_ID" source="X_REF_ORD_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUST_ID" source="CUST_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INVC_NO" source="INVC_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MDN" source="MDN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ORD_TY" source="ORD_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROD_ID" source="PROD_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RGN" source="RGN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRANSID" source="TRANSID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRANS_DT" source="TRANS_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INSRT_TS" source="INSRT_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NDB_TS" source="NDB_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NDB_MART" source="NDB_MART"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SEQ_ID" source="SEQ_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SRC_TS" source="SRC_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROCESS_ID" source="PROCESS_ID"/>
+      </input>
+      <filter>(isNull(&quot;NDB_TS&quot;) and (&quot;TRANS_DT&quot; &lt;= '$$IP_TRANS_DT$$'))</filter>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_ERROR_TABLE">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="PARENT_KEY"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#CA_EH_ERROR_TABLE">
+        <mapping xsi:type="Calculation:AttributeMapping" target="PARENT_KEY" source="PARENT_KEY"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="JOIN" joinOrder="OUTSIDE_IN" joinType="leftOuter">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="AWARD_CREDIT"/>
+        <viewAttribute id="ADJ_CD"/>
+        <viewAttribute id="ANNIVERSARY_DT"/>
+        <viewAttribute id="X_REF_ORD_ID"/>
+        <viewAttribute id="CUST_ID"/>
+        <viewAttribute id="INVC_NO"/>
+        <viewAttribute id="MDN"/>
+        <viewAttribute id="ORD_TY"/>
+        <viewAttribute id="PROD_ID"/>
+        <viewAttribute id="RGN"/>
+        <viewAttribute id="TRANSID"/>
+        <viewAttribute id="TRANS_DT"/>
+        <viewAttribute id="CYCL_ID"/>
+        <viewAttribute id="INSRT_TS"/>
+        <viewAttribute id="NDB_TS"/>
+        <viewAttribute id="NDB_MART"/>
+        <viewAttribute id="SEQ_ID"/>
+        <viewAttribute id="SRC_TS"/>
+        <viewAttribute id="PROCESS_ID"/>
+        <viewAttribute id="CC_PARENT_KEY"/>
+        <viewAttribute id="PARENT_KEY_ERROR"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#PROJ_PS_TRANS_DATA">
+        <mapping xsi:type="Calculation:AttributeMapping" target="AWARD_CREDIT" source="AWARD_CREDIT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ADJ_CD" source="ADJ_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ANNIVERSARY_DT" source="ANNIVERSARY_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="X_REF_ORD_ID" source="X_REF_ORD_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUST_ID" source="CUST_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INVC_NO" source="INVC_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MDN" source="MDN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ORD_TY" source="ORD_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROD_ID" source="PROD_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RGN" source="RGN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRANSID" source="TRANSID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRANS_DT" source="TRANS_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INSRT_TS" source="INSRT_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NDB_TS" source="NDB_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NDB_MART" source="NDB_MART"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SEQ_ID" source="SEQ_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SRC_TS" source="SRC_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROCESS_ID" source="PROCESS_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_PARENT_KEY" source="CC_PARENT_KEY"/>
+      </input>
+      <input node="#PROJ_ERROR_TABLE">
+        <mapping xsi:type="Calculation:AttributeMapping" target="PARENT_KEY_ERROR" source="PARENT_KEY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_PARENT_KEY" source="PARENT_KEY"/>
+      </input>
+      <joinAttribute name="CC_PARENT_KEY"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_ERROR_FILTER">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="AWARD_CREDIT"/>
+        <viewAttribute id="ADJ_CD"/>
+        <viewAttribute id="ANNIVERSARY_DT"/>
+        <viewAttribute id="X_REF_ORD_ID"/>
+        <viewAttribute id="CUST_ID"/>
+        <viewAttribute id="INVC_NO"/>
+        <viewAttribute id="MDN"/>
+        <viewAttribute id="ORD_TY"/>
+        <viewAttribute id="PROD_ID"/>
+        <viewAttribute id="RGN"/>
+        <viewAttribute id="TRANSID"/>
+        <viewAttribute id="TRANS_DT"/>
+        <viewAttribute id="CYCL_ID"/>
+        <viewAttribute id="INSRT_TS"/>
+        <viewAttribute id="NDB_TS"/>
+        <viewAttribute id="NDB_MART"/>
+        <viewAttribute id="SEQ_ID"/>
+        <viewAttribute id="SRC_TS"/>
+        <viewAttribute id="PROCESS_ID"/>
+        <viewAttribute id="CC_PARENT_KEY"/>
+        <viewAttribute id="PARENT_KEY_ERROR">
+          <filter xsi:type="AccessControl:SingleValueFilter" operator="NL" including="true"/>
+        </viewAttribute>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#JOIN">
+        <mapping xsi:type="Calculation:AttributeMapping" target="AWARD_CREDIT" source="AWARD_CREDIT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ADJ_CD" source="ADJ_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ANNIVERSARY_DT" source="ANNIVERSARY_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="X_REF_ORD_ID" source="X_REF_ORD_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUST_ID" source="CUST_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INVC_NO" source="INVC_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MDN" source="MDN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ORD_TY" source="ORD_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROD_ID" source="PROD_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RGN" source="RGN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRANSID" source="TRANSID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRANS_DT" source="TRANS_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INSRT_TS" source="INSRT_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NDB_TS" source="NDB_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NDB_MART" source="NDB_MART"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SEQ_ID" source="SEQ_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SRC_TS" source="SRC_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROCESS_ID" source="PROCESS_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_PARENT_KEY" source="CC_PARENT_KEY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PARENT_KEY_ERROR" source="PARENT_KEY_ERROR"/>
+      </input>
+    </calculationView>
+  </calculationViews>
+  <logicalModel id="PROJ_ERROR_FILTER">
+    <descriptions/>
+    <attributes>
+      <attribute id="AWARD_CREDIT" order="1" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="AWARD_CREDIT"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="AWARD_CREDIT"/>
+      </attribute>
+      <attribute id="ADJ_CD" order="2" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ADJ_CD"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="ADJ_CD"/>
+      </attribute>
+      <attribute id="ANNIVERSARY_DT" order="3" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ANNIVERSARY_DT"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="ANNIVERSARY_DT"/>
+      </attribute>
+      <attribute id="X_REF_ORD_ID" order="4" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="X_REF_ORD_ID"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="X_REF_ORD_ID"/>
+      </attribute>
+      <attribute id="CUST_ID" order="5" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CUST_ID"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="CUST_ID"/>
+      </attribute>
+      <attribute id="INVC_NO" order="6" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="INVC_NO"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="INVC_NO"/>
+      </attribute>
+      <attribute id="MDN" order="7" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="MDN"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="MDN"/>
+      </attribute>
+      <attribute id="ORD_TY" order="8" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ORD_TY"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="ORD_TY"/>
+      </attribute>
+      <attribute id="PROD_ID" order="9" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="PROD_ID"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="PROD_ID"/>
+      </attribute>
+      <attribute id="RGN" order="10" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="RGN"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="RGN"/>
+      </attribute>
+      <attribute id="TRANSID" order="11" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="TRANSID"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="TRANSID"/>
+      </attribute>
+      <attribute id="TRANS_DT" order="12" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="TRANS_DT"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="TRANS_DT"/>
+      </attribute>
+      <attribute id="CYCL_ID" order="13" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CYCL_ID"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="CYCL_ID"/>
+      </attribute>
+      <attribute id="INSRT_TS" order="14" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="INSRT_TS"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="INSRT_TS"/>
+      </attribute>
+      <attribute id="NDB_TS" order="15" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="NDB_TS"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="NDB_TS"/>
+      </attribute>
+      <attribute id="NDB_MART" order="16" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="NDB_MART"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="NDB_MART"/>
+      </attribute>
+      <attribute id="SEQ_ID" order="17" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SEQ_ID"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="SEQ_ID"/>
+      </attribute>
+      <attribute id="SRC_TS" order="18" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SRC_TS"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="SRC_TS"/>
+      </attribute>
+      <attribute id="PROCESS_ID" order="19" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="PROCESS_ID"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="PROCESS_ID"/>
+      </attribute>
+      <attribute id="CC_PARENT_KEY" order="20" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CC_PARENT_KEY"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="CC_PARENT_KEY"/>
+      </attribute>
+    </attributes>
+    <calculatedAttributes/>
+    <privateDataFoundation>
+      <tableProxies/>
+      <joins/>
+      <layout>
+        <shapes/>
+      </layout>
+    </privateDataFoundation>
+    <baseMeasures/>
+    <calculatedMeasures/>
+    <restrictedMeasures/>
+    <localDimensions/>
+  </logicalModel>
+  <layout>
+    <shapes>
+      <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+        <upperLeftCorner x="99" y="87"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_PS_TRANS_DATA" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="22" y="339"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_ERROR_TABLE" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="176" y="339"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="JOIN" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="99" y="243"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_ERROR_FILTER" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="99" y="165"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+    </shapes>
+  </layout>
+</Calculation:scenario>

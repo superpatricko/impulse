@@ -1,0 +1,538 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:AccessControl="http://www.sap.com/ndb/SQLCoreModelAccessControl.ecore" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" xmlns:Variable="http://www.sap.com/ndb/BiModelVariable.ecore" schemaVersion="2.3" id="CA_INT_OFFR_REL" applyPrivilegeType="NONE" checkAnalyticPrivileges="false" defaultClient="$$client$$" defaultLanguage="$$language$$" hierarchiesSQLEnabled="false" translationRelevant="true" visibility="internal" calculationScenarioType="TREE_BASED" dataCategory="DIMENSION" enforceSqlExecution="false" executionSemantic="UNDEFINED" outputViewType="Projection">
+  <descriptions defaultDescription="CA_INT_OFFR_REL"/>
+  <localVariables>
+    <variable id="IP_EFF_DT" parameter="true">
+      <descriptions defaultDescription="IP_EFF_DT"/>
+      <variableProperties datatype="DATE" defaultValue="99991231" mandatory="false">
+        <valueDomain type="Date"/>
+        <selection multiLine="false" type="SingleValue"/>
+      </variableProperties>
+    </variable>
+  </localVariables>
+  <variableMappings>
+    <mapping xsi:type="Variable:VariableMapping" dataSource="#CA_INT_OFFR_REL">
+      <targetVariable name="IP_EFF_DT" resourceUri="/IFRS_R1.INTERNET.LAND_INTERNET/calculationviews/CA_INT_OFFR_REL"/>
+      <localVariable>#IP_EFF_DT</localVariable>
+    </mapping>
+  </variableMappings>
+  <informationModelLayout relativeWidthScenario="41"/>
+  <dataSources>
+    <DataSource id="CA_INT_OFFR_REL" type="CALCULATION_VIEW">
+      <viewAttributes allViewAttributes="true"/>
+      <resourceUri>/IFRS_R1.INTERNET.LAND_INTERNET/calculationviews/CA_INT_OFFR_REL</resourceUri>
+    </DataSource>
+    <DataSource id="IFRS_R1.INTERNET.NDB_INTERNET::INT_OFFR_REL" type="DATA_BASE_TABLE">
+      <viewAttributes allViewAttributes="true"/>
+      <columnObject schemaName="NDB_INTERNET" columnObjectName="IFRS_R1.INTERNET.NDB_INTERNET::INT_OFFR_REL"/>
+    </DataSource>
+    <DataSource id="IFRS_R1.INTERNET.NDB_INTERNET::INT_OFFR_REL_EH" type="DATA_BASE_TABLE">
+      <viewAttributes allViewAttributes="true"/>
+      <columnObject schemaName="NDB_INTERNET" columnObjectName="IFRS_R1.INTERNET.NDB_INTERNET::INT_OFFR_REL_EH"/>
+    </DataSource>
+  </dataSources>
+  <calculationViews>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_CA_OFFR_REL">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="CYCL_ID"/>
+        <viewAttribute id="ODS_SYST_CD"/>
+        <viewAttribute id="REUSE_STRTERKIT_IND"/>
+        <viewAttribute id="REL_TY"/>
+        <viewAttribute id="REL_CODE"/>
+        <viewAttribute id="OFFR_EFF_DT"/>
+        <viewAttribute id="OFFR_CD"/>
+        <viewAttribute id="EXPY_DT"/>
+        <viewAttribute id="EFF_DT"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#CA_INT_OFFR_REL">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ODS_SYST_CD" source="ODS_SYST_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REUSE_STRTERKIT_IND" source="REUSE_STRTERKIT_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REL_TY" source="REL_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REL_CODE" source="REL_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OFFR_EFF_DT" source="OFFR_EFF_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OFFR_CD" source="OFFR_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXPY_DT" source="EXPY_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFF_DT" source="EFF_DT"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_NDB_OFFR_REL" filterExpressionLanguage="COLUMN_ENGINE">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="OFFR_CD"/>
+        <viewAttribute id="OFFR_EFF_DT"/>
+        <viewAttribute id="REL_CODE"/>
+        <viewAttribute id="REL_TY"/>
+        <viewAttribute id="REUSE_STRTERKIT_IND"/>
+        <viewAttribute id="REFERENCE_EFFECTIVE_DT"/>
+        <viewAttribute id="REFERENCE_EXPIRY_DT"/>
+        <viewAttribute id="EXECUTION_ID"/>
+        <viewAttribute id="MODIFIED_TS"/>
+        <viewAttribute id="BATCH_ID"/>
+        <viewAttribute id="INSERT_TS"/>
+        <viewAttribute id="CONVERSION_IND"/>
+        <viewAttribute id="ODS_SYST_CD"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#IFRS_R1.INTERNET.NDB_INTERNET::INT_OFFR_REL">
+        <mapping xsi:type="Calculation:AttributeMapping" target="OFFR_CD" source="OFFR_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OFFR_EFF_DT" source="OFFR_EFF_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REL_CODE" source="REL_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REL_TY" source="REL_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REUSE_STRTERKIT_IND" source="REUSE_STRTERKIT_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_EFFECTIVE_DT" source="REFERENCE_EFFECTIVE_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_EXPIRY_DT" source="REFERENCE_EXPIRY_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXECUTION_ID" source="EXECUTION_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MODIFIED_TS" source="MODIFIED_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BATCH_ID" source="BATCH_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INSERT_TS" source="INSERT_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONVERSION_IND" source="CONVERSION_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ODS_SYST_CD" source="ODS_SYST_CD"/>
+      </input>
+      <filter>(&quot;REFERENCE_EXPIRY_DT&quot; ='9999-12-31')</filter>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_EH">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="OFFR_CD"/>
+        <viewAttribute id="OFFR_EFF_DT"/>
+        <viewAttribute id="REL_CODE"/>
+        <viewAttribute id="REL_TY"/>
+        <viewAttribute id="DELETED">
+          <filter xsi:type="AccessControl:SingleValueFilter" operator="NL" including="true"/>
+        </viewAttribute>
+        <viewAttribute id="REFERENCE_EFFECTIVE_DT"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="DATE" id="CC_REFERENCE_EFFECTIVE_DT" expressionLanguage="COLUMN_ENGINE">
+          <formula>&quot;REFERENCE_EFFECTIVE_DT&quot;</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="DATE" id="CC_OFFR_EFF_DT" expressionLanguage="COLUMN_ENGINE">
+          <formula>&quot;OFFR_EFF_DT&quot;</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#IFRS_R1.INTERNET.NDB_INTERNET::INT_OFFR_REL_EH">
+        <mapping xsi:type="Calculation:AttributeMapping" target="OFFR_CD" source="OFFR_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OFFR_EFF_DT" source="OFFR_EFF_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REL_CODE" source="REL_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REL_TY" source="REL_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DELETED" source="DELETED"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_EFFECTIVE_DT" source="REFERENCE_EFFECTIVE_DT"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="JOIN_INCOMING_rECORDS_WITH_EH" joinOrder="OUTSIDE_IN" joinType="leftOuter">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="OFFR_CD_EH"/>
+        <viewAttribute id="OFFR_CD_LAND"/>
+        <viewAttribute id="CC_OFFR_EFF_DT"/>
+        <viewAttribute id="REL_CODE"/>
+        <viewAttribute id="REL_TY"/>
+        <viewAttribute hidden="true" id="JOIN$CC_REFERENCE_EFFECTIVE_DT$EFF_DT"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#PROJ_EH">
+        <mapping xsi:type="Calculation:AttributeMapping" target="OFFR_CD_EH" source="OFFR_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_OFFR_EFF_DT" source="CC_OFFR_EFF_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REL_CODE" source="REL_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REL_TY" source="REL_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$CC_REFERENCE_EFFECTIVE_DT$EFF_DT" source="CC_REFERENCE_EFFECTIVE_DT"/>
+      </input>
+      <input node="#PROJ_CA_OFFR_REL">
+        <mapping xsi:type="Calculation:AttributeMapping" target="OFFR_CD_LAND" source="OFFR_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OFFR_CD_EH" source="OFFR_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_OFFR_EFF_DT" source="OFFR_EFF_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REL_CODE" source="REL_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REL_TY" source="REL_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$CC_REFERENCE_EFFECTIVE_DT$EFF_DT" source="EFF_DT"/>
+      </input>
+      <joinAttribute name="OFFR_CD_EH"/>
+      <joinAttribute name="CC_OFFR_EFF_DT"/>
+      <joinAttribute name="REL_CODE"/>
+      <joinAttribute name="REL_TY"/>
+      <joinAttribute name="JOIN$CC_REFERENCE_EFFECTIVE_DT$EFF_DT"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_INCOMING_RECORDS">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="OFFR_CD_EH"/>
+        <viewAttribute id="OFFR_CD_LAND">
+          <filter xsi:type="AccessControl:SingleValueFilter" operator="NL" including="true"/>
+        </viewAttribute>
+        <viewAttribute id="CC_OFFR_EFF_DT"/>
+        <viewAttribute id="REL_CODE"/>
+        <viewAttribute id="REL_TY"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#JOIN_INCOMING_rECORDS_WITH_EH">
+        <mapping xsi:type="Calculation:AttributeMapping" target="OFFR_CD_EH" source="OFFR_CD_EH"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OFFR_CD_LAND" source="OFFR_CD_LAND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_OFFR_EFF_DT" source="CC_OFFR_EFF_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REL_CODE" source="REL_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REL_TY" source="REL_TY"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:AggregationView" id="AGGR_DISTINCT">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="OFFR_CD_EH"/>
+        <viewAttribute id="CC_OFFR_EFF_DT"/>
+        <viewAttribute id="REL_CODE"/>
+        <viewAttribute id="REL_TY"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#PROJ_INCOMING_RECORDS">
+        <mapping xsi:type="Calculation:AttributeMapping" target="OFFR_CD_EH" source="OFFR_CD_EH"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_OFFR_EFF_DT" source="CC_OFFR_EFF_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REL_CODE" source="REL_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REL_TY" source="REL_TY"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="JOIN_EH" joinOrder="OUTSIDE_IN" joinType="leftOuter">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="CYCL_ID"/>
+        <viewAttribute id="ODS_SYST_CD"/>
+        <viewAttribute id="REUSE_STRTERKIT_IND"/>
+        <viewAttribute id="REL_TY"/>
+        <viewAttribute id="REL_CODE"/>
+        <viewAttribute id="OFFR_EFF_DT"/>
+        <viewAttribute id="OFFR_CD"/>
+        <viewAttribute id="EXPY_DT"/>
+        <viewAttribute id="EFF_DT"/>
+        <viewAttribute id="OFFR_CD_EH"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="IS_20200801" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isnull(&quot;OFFR_CD_EH&quot;),'0','1')</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#PROJ_CA_OFFR_REL">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ODS_SYST_CD" source="ODS_SYST_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REUSE_STRTERKIT_IND" source="REUSE_STRTERKIT_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REL_TY" source="REL_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REL_CODE" source="REL_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OFFR_EFF_DT" source="OFFR_EFF_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OFFR_CD" source="OFFR_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXPY_DT" source="EXPY_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFF_DT" source="EFF_DT"/>
+      </input>
+      <input node="#AGGR_DISTINCT">
+        <mapping xsi:type="Calculation:AttributeMapping" target="OFFR_CD_EH" source="OFFR_CD_EH"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OFFR_EFF_DT" source="CC_OFFR_EFF_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OFFR_CD" source="OFFR_CD_EH"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REL_CODE" source="REL_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REL_TY" source="REL_TY"/>
+      </input>
+      <joinAttribute name="OFFR_EFF_DT"/>
+      <joinAttribute name="OFFR_CD"/>
+      <joinAttribute name="REL_CODE"/>
+      <joinAttribute name="REL_TY"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="JOIN_VIEW_NDB_OFFR_HIST" joinOrder="OUTSIDE_IN" joinType="leftOuter">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="OFFR_CD_RIGHT"/>
+        <viewAttribute id="CYCL_ID"/>
+        <viewAttribute id="ODS_SYST_CD"/>
+        <viewAttribute id="REUSE_STRTERKIT_IND"/>
+        <viewAttribute id="REL_TY"/>
+        <viewAttribute id="REL_CODE"/>
+        <viewAttribute id="OFFR_EFF_DT"/>
+        <viewAttribute id="OFFR_CD"/>
+        <viewAttribute id="EXPY_DT"/>
+        <viewAttribute id="EFF_DT"/>
+        <viewAttribute id="IS_20200801"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#JOIN_EH">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ODS_SYST_CD" source="ODS_SYST_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REUSE_STRTERKIT_IND" source="REUSE_STRTERKIT_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REL_TY" source="REL_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REL_CODE" source="REL_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OFFR_EFF_DT" source="OFFR_EFF_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OFFR_CD" source="OFFR_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXPY_DT" source="EXPY_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFF_DT" source="EFF_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20200801" source="IS_20200801"/>
+      </input>
+      <input node="#PROJ_NDB_OFFR_REL">
+        <mapping xsi:type="Calculation:AttributeMapping" target="OFFR_CD_RIGHT" source="OFFR_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OFFR_CD" source="OFFR_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OFFR_EFF_DT" source="OFFR_EFF_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REL_CODE" source="REL_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REL_TY" source="REL_TY"/>
+      </input>
+      <joinAttribute name="OFFR_CD"/>
+      <joinAttribute name="OFFR_EFF_DT"/>
+      <joinAttribute name="REL_CODE"/>
+      <joinAttribute name="REL_TY"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:RankView" id="RANK_SAMEDAY_MOD">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="OFFR_CD_RIGHT"/>
+        <viewAttribute id="CYCL_ID"/>
+        <viewAttribute id="ODS_SYST_CD"/>
+        <viewAttribute id="REUSE_STRTERKIT_IND"/>
+        <viewAttribute id="REL_TY"/>
+        <viewAttribute id="REL_CODE"/>
+        <viewAttribute id="OFFR_EFF_DT"/>
+        <viewAttribute id="OFFR_CD"/>
+        <viewAttribute id="EXPY_DT"/>
+        <viewAttribute id="EFF_DT"/>
+        <viewAttribute id="IS_20200801"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#JOIN_VIEW_NDB_OFFR_HIST">
+        <mapping xsi:type="Calculation:AttributeMapping" target="OFFR_CD_RIGHT" source="OFFR_CD_RIGHT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ODS_SYST_CD" source="ODS_SYST_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REUSE_STRTERKIT_IND" source="REUSE_STRTERKIT_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REL_TY" source="REL_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REL_CODE" source="REL_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OFFR_EFF_DT" source="OFFR_EFF_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OFFR_CD" source="OFFR_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXPY_DT" source="EXPY_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFF_DT" source="EFF_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20200801" source="IS_20200801"/>
+      </input>
+      <windowFunction>
+        <partitionViewAttributeName>OFFR_CD</partitionViewAttributeName>
+        <partitionViewAttributeName>OFFR_EFF_DT</partitionViewAttributeName>
+        <partitionViewAttributeName>REL_CODE</partitionViewAttributeName>
+        <partitionViewAttributeName>REL_TY</partitionViewAttributeName>
+        <order byViewAttributeName="EFF_DT" direction="ASC"/>
+        <rankThreshold>
+          <value>100</value>
+        </rankThreshold>
+        <rankViewAttributeName>RANK_SEQ</rankViewAttributeName>
+      </windowFunction>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_INSERT_UPDATE">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="OFFR_CD_RIGHT"/>
+        <viewAttribute id="RANK_SEQ"/>
+        <viewAttribute id="CYCL_ID"/>
+        <viewAttribute id="ODS_SYST_CD"/>
+        <viewAttribute id="REUSE_STRTERKIT_IND"/>
+        <viewAttribute id="REL_TY"/>
+        <viewAttribute id="REL_CODE"/>
+        <viewAttribute id="OFFR_EFF_DT"/>
+        <viewAttribute id="OFFR_CD"/>
+        <viewAttribute id="EXPY_DT"/>
+        <viewAttribute id="EFF_DT"/>
+        <viewAttribute id="IS_20200801"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CC_EXISTING_RECORD" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>IF(isNull(&quot;OFFR_CD_RIGHT&quot;) and (&quot;RANK_SEQ&quot; = 1),'I','U')</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="DATE" id="CC_EFFECTIVE_DATE_PREV_DAY" expressionLanguage="COLUMN_ENGINE">
+          <formula>adddays(&quot;EFF_DT&quot;,-1)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CC_CONCAT_PK" length="48" expressionLanguage="COLUMN_ENGINE">
+          <formula>&quot;OFFR_CD&quot;+'|'+string(&quot;OFFR_EFF_DT&quot;)+'|'+&quot;REL_CODE&quot;+'|'+&quot;REL_TY&quot;</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="DATE" id="CC_REFERENCE_EFFECTIVE_DT" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(&quot;CC_EXISTING_RECORD&quot;='I',date('19000101'),&quot;EFF_DT&quot;)</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#RANK_SAMEDAY_MOD">
+        <mapping xsi:type="Calculation:AttributeMapping" target="OFFR_CD_RIGHT" source="OFFR_CD_RIGHT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RANK_SEQ" source="RANK_SEQ"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ODS_SYST_CD" source="ODS_SYST_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REUSE_STRTERKIT_IND" source="REUSE_STRTERKIT_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REL_TY" source="REL_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REL_CODE" source="REL_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OFFR_EFF_DT" source="OFFR_EFF_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OFFR_CD" source="OFFR_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXPY_DT" source="EXPY_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFF_DT" source="EFF_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20200801" source="IS_20200801"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="ERROR_SEMANTICS">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="CYCL_ID"/>
+        <viewAttribute id="ODS_SYST_CD"/>
+        <viewAttribute id="REUSE_STRTERKIT_IND"/>
+        <viewAttribute id="REL_TY"/>
+        <viewAttribute id="REL_CODE"/>
+        <viewAttribute id="OFFR_EFF_DT"/>
+        <viewAttribute id="OFFR_CD"/>
+        <viewAttribute id="EXPY_DT"/>
+        <viewAttribute id="EFF_DT"/>
+        <viewAttribute id="IS_20200801"/>
+        <viewAttribute id="FLAG_EXISTING_RECORD"/>
+        <viewAttribute id="EFFECTIVE_DATE_PREV_DAY"/>
+        <viewAttribute id="CONCAT_PK"/>
+        <viewAttribute id="REFERENCE_EFFECTIVE_DT"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="ERROR_STATUS" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>if((&quot;IS_20200801&quot;= '1'),'1','0')</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="ERROR_CODE" length="500" expressionLanguage="COLUMN_ENGINE">
+          <formula>if((&quot;IS_20200801&quot;= '1'), '20200801||','')</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#PROJ_INSERT_UPDATE">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ODS_SYST_CD" source="ODS_SYST_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REUSE_STRTERKIT_IND" source="REUSE_STRTERKIT_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REL_TY" source="REL_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REL_CODE" source="REL_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OFFR_EFF_DT" source="OFFR_EFF_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OFFR_CD" source="OFFR_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXPY_DT" source="EXPY_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFF_DT" source="EFF_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20200801" source="IS_20200801"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FLAG_EXISTING_RECORD" source="CC_EXISTING_RECORD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFFECTIVE_DATE_PREV_DAY" source="CC_EFFECTIVE_DATE_PREV_DAY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONCAT_PK" source="CC_CONCAT_PK"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_EFFECTIVE_DT" source="CC_REFERENCE_EFFECTIVE_DT"/>
+      </input>
+    </calculationView>
+  </calculationViews>
+  <logicalModel id="ERROR_SEMANTICS">
+    <descriptions/>
+    <attributes>
+      <attribute id="CYCL_ID" order="1" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CYCL_ID"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="CYCL_ID"/>
+      </attribute>
+      <attribute id="ODS_SYST_CD" order="2" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ODS_SYST_CD"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="ODS_SYST_CD"/>
+      </attribute>
+      <attribute id="REUSE_STRTERKIT_IND" order="3" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="REUSE_STRTERKIT_IND"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="REUSE_STRTERKIT_IND"/>
+      </attribute>
+      <attribute id="REL_TY" order="4" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="REL_TY"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="REL_TY"/>
+      </attribute>
+      <attribute id="REL_CODE" order="5" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="REL_CODE"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="REL_CODE"/>
+      </attribute>
+      <attribute id="OFFR_EFF_DT" order="6" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="OFFR_EFF_DT"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="OFFR_EFF_DT"/>
+      </attribute>
+      <attribute id="OFFR_CD" order="7" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="OFFR_CD"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="OFFR_CD"/>
+      </attribute>
+      <attribute id="REFERENCE_EXPIRY_DT" order="8" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="REFERENCE_EXPIRY_DT"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="EXPY_DT"/>
+      </attribute>
+      <attribute id="EFF_DT" order="9" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="EFF_DT"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="EFF_DT"/>
+      </attribute>
+      <attribute id="IS_20200801" order="10" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="IS_20200801"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="IS_20200801"/>
+      </attribute>
+      <attribute id="FLAG_EXISTING_RECORD" order="11" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="FLAG_EXISTING_RECORD"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="FLAG_EXISTING_RECORD"/>
+      </attribute>
+      <attribute id="EFFECTIVE_DATE_PREV_DAY" order="12" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="EFFECTIVE_DATE_PREV_DAY"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="EFFECTIVE_DATE_PREV_DAY"/>
+      </attribute>
+      <attribute id="ERROR_STATUS" order="13" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ERROR_STATUS"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="ERROR_STATUS"/>
+      </attribute>
+      <attribute id="ERROR_CODE" order="14" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ERROR_CODE"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="ERROR_CODE"/>
+      </attribute>
+      <attribute id="CONCAT_PK" order="15" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CONCAT_PK"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="CONCAT_PK"/>
+      </attribute>
+      <attribute id="REFERENCE_EFFECTIVE_DT" order="16" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="REFERENCE_EFFECTIVE_DT"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="REFERENCE_EFFECTIVE_DT"/>
+      </attribute>
+    </attributes>
+    <calculatedAttributes/>
+    <privateDataFoundation>
+      <tableProxies/>
+      <joins/>
+      <layout>
+        <shapes/>
+      </layout>
+    </privateDataFoundation>
+    <baseMeasures/>
+    <calculatedMeasures/>
+    <restrictedMeasures/>
+    <localDimensions/>
+  </logicalModel>
+  <layout>
+    <shapes>
+      <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+        <upperLeftCorner x="253" y="87"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_CA_OFFR_REL" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="176" y="843"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_NDB_OFFR_REL" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="330" y="495"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_EH" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="22" y="843"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="JOIN_INCOMING_rECORDS_WITH_EH" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="89" y="747"/>
+        <rectangleSize height="88" width="140"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_INCOMING_RECORDS" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="89" y="669"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="AGGR_DISTINCT" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="89" y="591"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="JOIN_EH" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="176" y="495"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="JOIN_VIEW_NDB_OFFR_HIST" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="253" y="399"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="RANK_SAMEDAY_MOD" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="253" y="321"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_INSERT_UPDATE" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="253" y="243"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="ERROR_SEMANTICS" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="253" y="165"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+    </shapes>
+  </layout>
+</Calculation:scenario>

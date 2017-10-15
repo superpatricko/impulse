@@ -1,0 +1,455 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:AccessControl="http://www.sap.com/ndb/SQLCoreModelAccessControl.ecore" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" xmlns:Variable="http://www.sap.com/ndb/BiModelVariable.ecore" schemaVersion="2.3" id="CA_INT_ORDR_PROD_MSTR" applyPrivilegeType="NONE" checkAnalyticPrivileges="false" defaultClient="$$client$$" defaultLanguage="$$language$$" hierarchiesSQLEnabled="false" translationRelevant="true" visibility="internal" calculationScenarioType="TREE_BASED" dataCategory="DIMENSION" enforceSqlExecution="false" executionSemantic="UNDEFINED" outputViewType="Projection">
+  <descriptions defaultDescription="CA_INT_PROD_MSTR_ORDR"/>
+  <metadata changedAt="2017-07-27 03:57:45.786"/>
+  <localVariables>
+    <variable id="IP_BILL_DAY" parameter="true">
+      <descriptions defaultDescription="IP_BILL_DAY"/>
+      <variableProperties datatype="DATE" defaultExpressionLanguage="COLUMN_ENGINE" mandatory="false">
+        <valueDomain type="empty"/>
+        <selection multiLine="false" type="SingleValue"/>
+        <defaultExpression>date(now() )</defaultExpression>
+      </variableProperties>
+    </variable>
+  </localVariables>
+  <variableMappings>
+    <mapping xsi:type="Variable:VariableMapping" dataSource="#CA_INT_ORDR_BASE_FILTER">
+      <targetVariable name="IP_BILL_DAY" resourceUri="/IFRS_R1.INTERNET.RAI_INTERNET/calculationviews/CA_INT_ORDR_BASE_FILTER"/>
+      <localVariable>#IP_BILL_DAY</localVariable>
+    </mapping>
+  </variableMappings>
+  <informationModelLayout relativeWidthScenario="45"/>
+  <dataSources>
+    <DataSource id="CA_INT_ORDR_BASE_FILTER" type="CALCULATION_VIEW">
+      <viewAttributes allViewAttributes="true"/>
+      <resourceUri>/IFRS_R1.INTERNET.RAI_INTERNET/calculationviews/CA_INT_ORDR_BASE_FILTER</resourceUri>
+    </DataSource>
+    <DataSource id="MARA" type="DATA_BASE_TABLE">
+      <viewAttributes allViewAttributes="true"/>
+      <columnObject schemaName="SDA" columnObjectName="MARA"/>
+    </DataSource>
+    <DataSource id="IFRS_R1.COMMON_COMP.RAI_COMMON::CHARGE_TYPE" type="DATA_BASE_TABLE">
+      <viewAttributes allViewAttributes="true"/>
+      <columnObject schemaName="RAI_COMMON" columnObjectName="IFRS_R1.COMMON_COMP.RAI_COMMON::CHARGE_TYPE"/>
+    </DataSource>
+  </dataSources>
+  <calculationViews>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_ORDER_BASE_FILTER">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="PRM_CONTR_CUST"/>
+        <viewAttribute id="ALTN_CONTR_NUM"/>
+        <viewAttribute id="SOC"/>
+        <viewAttribute id="HW_CLASS"/>
+        <viewAttribute id="REC_IND"/>
+        <viewAttribute id="OPT_SRVC"/>
+        <viewAttribute id="COMPOUND_KEY"/>
+        <viewAttribute id="STDALN_SELL_PRC"/>
+        <viewAttribute id="ITEM_TRANS_PRICE"/>
+        <viewAttribute id="CONTR_TERM"/>
+        <viewAttribute id="EFFECTIVE_DATE"/>
+        <viewAttribute id="PRDCT_TYP"/>
+        <viewAttribute id="REFERENCE_EFFECTIVE_DT"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CC_FEATURE_CODE" length="50" expressionLanguage="COLUMN_ENGINE">
+          <formula>&quot;COMPOUND_KEY&quot; + &quot;REC_IND&quot;</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#CA_INT_ORDR_BASE_FILTER">
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRM_CONTR_CUST" source="PRM_CONTR_CUST"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ALTN_CONTR_NUM" source="ALTN_CONTR_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SOC" source="SOC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="HW_CLASS" source="HW_CLASS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REC_IND" source="REC_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OPT_SRVC" source="OPT_SRVC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="COMPOUND_KEY" source="COMPOUND_KEY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="STDALN_SELL_PRC" source="STDALN_SELL_PRC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_TRANS_PRICE" source="ITEM_TRANS_PRICE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTR_TERM" source="CONTR_TERM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFFECTIVE_DATE" source="EFFECTIVE_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRDCT_TYP" source="PRDCT_TYP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_EFFECTIVE_DT" source="REFERENCE_EFFECTIVE_DT"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_EQUIPMENT_RECORDS" filterExpressionLanguage="COLUMN_ENGINE">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="PRM_CONTR_CUST"/>
+        <viewAttribute id="ALTN_CONTR_NUM"/>
+        <viewAttribute id="SOC"/>
+        <viewAttribute id="HW_CLASS"/>
+        <viewAttribute id="REC_IND"/>
+        <viewAttribute id="STDALN_SELL_PRC"/>
+        <viewAttribute id="ITEM_TRANS_PRICE"/>
+        <viewAttribute id="CONTR_TERM"/>
+        <viewAttribute id="EFFECTIVE_DATE"/>
+        <viewAttribute id="PRDCT_TYP"/>
+        <viewAttribute id="COMPOUND_KEY"/>
+        <viewAttribute id="REFERENCE_EFFECTIVE_DT"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CC_CHARGE_TYPE" length="20" expressionLanguage="COLUMN_ENGINE">
+          <formula>'EQPT'</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#PROJ_ORDER_BASE_FILTER">
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRM_CONTR_CUST" source="PRM_CONTR_CUST"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ALTN_CONTR_NUM" source="ALTN_CONTR_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SOC" source="SOC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="HW_CLASS" source="HW_CLASS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REC_IND" source="REC_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="STDALN_SELL_PRC" source="STDALN_SELL_PRC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_TRANS_PRICE" source="ITEM_TRANS_PRICE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTR_TERM" source="CONTR_TERM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFFECTIVE_DATE" source="EFFECTIVE_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRDCT_TYP" source="PRDCT_TYP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="COMPOUND_KEY" source="COMPOUND_KEY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_EFFECTIVE_DT" source="REFERENCE_EFFECTIVE_DT"/>
+      </input>
+      <filter>(not isNull(&quot;HW_CLASS&quot;)) and (&quot;REC_IND&quot; ='I')</filter>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_NEW_SOC" filterExpressionLanguage="COLUMN_ENGINE">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="PRM_CONTR_CUST"/>
+        <viewAttribute id="ALTN_CONTR_NUM"/>
+        <viewAttribute id="SOC"/>
+        <viewAttribute id="HW_CLASS"/>
+        <viewAttribute id="REC_IND"/>
+        <viewAttribute id="OPT_SRVC"/>
+        <viewAttribute id="STDALN_SELL_PRC"/>
+        <viewAttribute id="ITEM_TRANS_PRICE"/>
+        <viewAttribute id="CONTR_TERM"/>
+        <viewAttribute id="EFFECTIVE_DATE"/>
+        <viewAttribute id="PRDCT_TYP"/>
+        <viewAttribute id="COMPOUND_KEY"/>
+        <viewAttribute id="REFERENCE_EFFECTIVE_DT"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#PROJ_ORDER_BASE_FILTER">
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRM_CONTR_CUST" source="PRM_CONTR_CUST"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ALTN_CONTR_NUM" source="ALTN_CONTR_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SOC" source="SOC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="HW_CLASS" source="HW_CLASS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REC_IND" source="REC_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OPT_SRVC" source="OPT_SRVC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="STDALN_SELL_PRC" source="STDALN_SELL_PRC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_TRANS_PRICE" source="ITEM_TRANS_PRICE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTR_TERM" source="CONTR_TERM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFFECTIVE_DATE" source="EFFECTIVE_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRDCT_TYP" source="PRDCT_TYP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="COMPOUND_KEY" source="COMPOUND_KEY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_EFFECTIVE_DT" source="REFERENCE_EFFECTIVE_DT"/>
+      </input>
+      <filter>(&quot;REC_IND&quot; ='I') and (isNull(&quot;HW_CLASS&quot;)) and (not(isNull(&quot;SOC&quot;)))</filter>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_MARA" filterExpressionLanguage="COLUMN_ENGINE">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="BISMT"/>
+        <viewAttribute id="MATKL"/>
+        <viewAttribute id="NORMT"/>
+        <viewAttribute id="LVORM"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#MARA">
+        <mapping xsi:type="Calculation:AttributeMapping" target="BISMT" source="BISMT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MATKL" source="MATKL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NORMT" source="NORMT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LVORM" source="LVORM"/>
+      </input>
+      <filter>(isNull(&quot;LVORM&quot;) or &quot;LVORM&quot;='')</filter>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="JOIN_NEW_MARA" joinType="leftOuter">
+      <descriptions>
+        <comment text="Join Errors will be raised as 30300501"/>
+      </descriptions>
+      <viewAttributes>
+        <viewAttribute id="PRM_CONTR_CUST"/>
+        <viewAttribute id="ALTN_CONTR_NUM"/>
+        <viewAttribute id="SOC"/>
+        <viewAttribute id="HW_CLASS"/>
+        <viewAttribute id="REC_IND"/>
+        <viewAttribute id="OPT_SRVC"/>
+        <viewAttribute id="MATKL"/>
+        <viewAttribute id="STDALN_SELL_PRC"/>
+        <viewAttribute id="ITEM_TRANS_PRICE"/>
+        <viewAttribute id="CONTR_TERM"/>
+        <viewAttribute id="BISMT_RIGHT"/>
+        <viewAttribute id="EFFECTIVE_DATE"/>
+        <viewAttribute id="PRDCT_TYP"/>
+        <viewAttribute id="COMPOUND_KEY"/>
+        <viewAttribute id="REFERENCE_EFFECTIVE_DT"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="IS_30300501" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isNull(&quot;BISMT_RIGHT&quot;),'1','0')</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#PROJ_NEW_SOC">
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRM_CONTR_CUST" source="PRM_CONTR_CUST"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ALTN_CONTR_NUM" source="ALTN_CONTR_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SOC" source="SOC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="HW_CLASS" source="HW_CLASS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REC_IND" source="REC_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OPT_SRVC" source="OPT_SRVC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="STDALN_SELL_PRC" source="STDALN_SELL_PRC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_TRANS_PRICE" source="ITEM_TRANS_PRICE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTR_TERM" source="CONTR_TERM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFFECTIVE_DATE" source="EFFECTIVE_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRDCT_TYP" source="PRDCT_TYP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="COMPOUND_KEY" source="COMPOUND_KEY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_EFFECTIVE_DT" source="REFERENCE_EFFECTIVE_DT"/>
+      </input>
+      <input node="#PROJ_MARA">
+        <mapping xsi:type="Calculation:AttributeMapping" target="MATKL" source="MATKL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BISMT_RIGHT" source="BISMT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SOC" source="BISMT"/>
+      </input>
+      <joinAttribute name="SOC"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:UnionView" id="UNION_CHARGE_TYPE">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="PRM_CONTR_CUST"/>
+        <viewAttribute id="ALTN_CONTR_NUM"/>
+        <viewAttribute id="SOC"/>
+        <viewAttribute id="CC_CHARGE_TYPE"/>
+        <viewAttribute id="STDALN_SELL_PRC"/>
+        <viewAttribute id="ITEM_TRANS_PRICE"/>
+        <viewAttribute id="CONTR_TERM"/>
+        <viewAttribute datatype="NVARCHAR" id="IS_30300501" length="1" scale="0"/>
+        <viewAttribute datatype="DATE" id="EFFECTIVE_DATE" length="10" scale="0"/>
+        <viewAttribute datatype="NVARCHAR" id="PRDCT_TYP" length="1" scale="0"/>
+        <viewAttribute id="COMPOUND_KEY"/>
+        <viewAttribute id="REFERENCE_EFFECTIVE_DT"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CC_RULE_PATH" length="2" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(&quot;CC_CHARGE_TYPE&quot;='EQPT' and &quot;STDALN_SELL_PRC&quot;=&quot;ITEM_TRANS_PRICE&quot;,'A1',&#xD;
+if(&quot;CC_CHARGE_TYPE&quot;='EQPT' and &quot;ITEM_TRANS_PRICE&quot; &lt; &quot;STDALN_SELL_PRC&quot;,'A2', &#xD;
+if(&quot;CC_CHARGE_TYPE&quot;='BASE_SRVC' ,'B2',&#xD;
+if(&quot;CC_CHARGE_TYPE&quot;='OPT','C1',&#xD;
+if(&quot;CC_CHARGE_TYPE&quot;='OTC','D1',&#xD;
+if(&quot;CC_CHARGE_TYPE&quot;='OTHERDISC','F1',&#xD;
+if(&quot;CC_CHARGE_TYPE&quot;='DUO','G1',&#xD;
+if(&quot;CC_CHARGE_TYPE&quot;='TRIO','H1',&#xD;
+if(&quot;CC_CHARGE_TYPE&quot;='OTHER','O1','')))))))))</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input emptyUnionBehavior="NO_ROW" node="#PROJ_EQUIPMENT_RECORDS">
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRM_CONTR_CUST" source="PRM_CONTR_CUST"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ALTN_CONTR_NUM" source="ALTN_CONTR_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SOC" source="SOC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_CHARGE_TYPE" source="CC_CHARGE_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="STDALN_SELL_PRC" source="STDALN_SELL_PRC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_TRANS_PRICE" source="ITEM_TRANS_PRICE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTR_TERM" source="CONTR_TERM"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="IS_30300501" null="false" value="0"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFFECTIVE_DATE" source="EFFECTIVE_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRDCT_TYP" source="PRDCT_TYP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="COMPOUND_KEY" source="COMPOUND_KEY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_EFFECTIVE_DT" source="REFERENCE_EFFECTIVE_DT"/>
+      </input>
+      <input emptyUnionBehavior="NO_ROW" node="#JOIN_NEW_MARA">
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRM_CONTR_CUST" source="PRM_CONTR_CUST"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ALTN_CONTR_NUM" source="ALTN_CONTR_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SOC" source="SOC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_CHARGE_TYPE" source="MATKL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="STDALN_SELL_PRC" source="STDALN_SELL_PRC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_TRANS_PRICE" source="ITEM_TRANS_PRICE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTR_TERM" source="CONTR_TERM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30300501" source="IS_30300501"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFFECTIVE_DATE" source="EFFECTIVE_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRDCT_TYP" source="PRDCT_TYP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="COMPOUND_KEY" source="COMPOUND_KEY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_EFFECTIVE_DT" source="REFERENCE_EFFECTIVE_DT"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_CHRG_TYPE_POB_TYPE">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="LOB">
+          <filter xsi:type="AccessControl:SingleValueFilter" including="true" value="INT"/>
+        </viewAttribute>
+        <viewAttribute id="CHARGE_TYPE"/>
+        <viewAttribute id="RULE_PATH"/>
+        <viewAttribute id="POB_TYPE"/>
+        <viewAttribute id="VALUE_RELEVANT"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#IFRS_R1.COMMON_COMP.RAI_COMMON::CHARGE_TYPE">
+        <mapping xsi:type="Calculation:AttributeMapping" target="LOB" source="LOB"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CHARGE_TYPE" source="CHARGE_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RULE_PATH" source="RULE_PATH"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="POB_TYPE" source="POB_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VALUE_RELEVANT" source="VALUE_RELEVANT"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="JOIN_POB_TYPE" dynamic="false" joinType="leftOuter">
+      <descriptions>
+        <comment text="Join Errors will be raised as 30300502&#xD;&#xA;Value error on POB_TYPE will be raised as IS_30300503"/>
+      </descriptions>
+      <viewAttributes>
+        <viewAttribute id="POB_TYPE"/>
+        <viewAttribute id="PRM_CONTR_CUST"/>
+        <viewAttribute id="ALTN_CONTR_NUM"/>
+        <viewAttribute id="SOC"/>
+        <viewAttribute id="CC_CHARGE_TYPE"/>
+        <viewAttribute id="VALUE_RELEVANT"/>
+        <viewAttribute id="CHARGE_TYPE_RIGHT"/>
+        <viewAttribute id="RULE_PATH"/>
+        <viewAttribute id="IS_30300501"/>
+        <viewAttribute id="EFFECTIVE_DATE"/>
+        <viewAttribute id="PRDCT_TYP"/>
+        <viewAttribute id="COMPOUND_KEY"/>
+        <viewAttribute id="REFERENCE_EFFECTIVE_DT"/>
+        <viewAttribute hidden="true" id="JOIN$CC_RULE_PATH$RULE_PATH"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="IS_30300502" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isNull(&quot;CHARGE_TYPE_RIGHT&quot;),'1','0')</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="IS_30300503" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isNull(&quot;POB_TYPE&quot;),'1','0')</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#UNION_CHARGE_TYPE">
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRM_CONTR_CUST" source="PRM_CONTR_CUST"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ALTN_CONTR_NUM" source="ALTN_CONTR_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SOC" source="SOC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_CHARGE_TYPE" source="CC_CHARGE_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30300501" source="IS_30300501"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFFECTIVE_DATE" source="EFFECTIVE_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRDCT_TYP" source="PRDCT_TYP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="COMPOUND_KEY" source="COMPOUND_KEY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_EFFECTIVE_DT" source="REFERENCE_EFFECTIVE_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$CC_RULE_PATH$RULE_PATH" source="CC_RULE_PATH"/>
+      </input>
+      <input node="#PROJ_CHRG_TYPE_POB_TYPE">
+        <mapping xsi:type="Calculation:AttributeMapping" target="POB_TYPE" source="POB_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VALUE_RELEVANT" source="VALUE_RELEVANT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CHARGE_TYPE_RIGHT" source="CHARGE_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RULE_PATH" source="RULE_PATH"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_CHARGE_TYPE" source="CHARGE_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$CC_RULE_PATH$RULE_PATH" source="RULE_PATH"/>
+      </input>
+      <joinAttribute name="CC_CHARGE_TYPE"/>
+      <joinAttribute name="JOIN$CC_RULE_PATH$RULE_PATH"/>
+    </calculationView>
+  </calculationViews>
+  <logicalModel id="JOIN_POB_TYPE">
+    <descriptions/>
+    <attributes>
+      <attribute id="POB_TYPE" order="1" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="POB_TYPE"/>
+        <keyMapping columnObjectName="JOIN_POB_TYPE" columnName="POB_TYPE"/>
+      </attribute>
+      <attribute id="PRM_CONTR_CUST" order="2" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="PRM_CONTR_CUST"/>
+        <keyMapping columnObjectName="JOIN_POB_TYPE" columnName="PRM_CONTR_CUST"/>
+      </attribute>
+      <attribute id="ALTN_CONTR_NUM" order="3" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ALTN_CONTR_NUM"/>
+        <keyMapping columnObjectName="JOIN_POB_TYPE" columnName="ALTN_CONTR_NUM"/>
+      </attribute>
+      <attribute id="SOC" order="4" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SOC"/>
+        <keyMapping columnObjectName="JOIN_POB_TYPE" columnName="SOC"/>
+      </attribute>
+      <attribute id="CC_CHARGE_TYPE" order="5" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CC_CHARGE_TYPE"/>
+        <keyMapping columnObjectName="JOIN_POB_TYPE" columnName="CC_CHARGE_TYPE"/>
+      </attribute>
+      <attribute id="VALUE_RELEVANT" order="6" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="VALUE_RELEVANT"/>
+        <keyMapping columnObjectName="JOIN_POB_TYPE" columnName="VALUE_RELEVANT"/>
+      </attribute>
+      <attribute id="RULE_PATH" order="7" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="RULE_PATH"/>
+        <keyMapping columnObjectName="JOIN_POB_TYPE" columnName="RULE_PATH"/>
+      </attribute>
+      <attribute id="IS_30300501" order="8" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="IS_30300501"/>
+        <keyMapping columnObjectName="JOIN_POB_TYPE" columnName="IS_30300501"/>
+      </attribute>
+      <attribute id="IS_30300502" order="9" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="IS_30300502"/>
+        <keyMapping columnObjectName="JOIN_POB_TYPE" columnName="IS_30300502"/>
+      </attribute>
+      <attribute id="IS_30300503" order="10" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="IS_30300503"/>
+        <keyMapping columnObjectName="JOIN_POB_TYPE" columnName="IS_30300503"/>
+      </attribute>
+      <attribute id="EFFECTIVE_DATE" order="11" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="EFFECTIVE_DATE"/>
+        <keyMapping columnObjectName="JOIN_POB_TYPE" columnName="EFFECTIVE_DATE"/>
+      </attribute>
+      <attribute id="PRDCT_TYP" order="12" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="PRDCT_TYP"/>
+        <keyMapping columnObjectName="JOIN_POB_TYPE" columnName="PRDCT_TYP"/>
+      </attribute>
+      <attribute id="COMPOUND_KEY" order="13" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions/>
+        <keyMapping columnObjectName="JOIN_POB_TYPE" columnName="COMPOUND_KEY"/>
+      </attribute>
+      <attribute id="REFERENCE_EFFECTIVE_DT" order="14" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="REFERENCE_EFFECTIVE_DATE"/>
+        <keyMapping columnObjectName="JOIN_POB_TYPE" columnName="REFERENCE_EFFECTIVE_DT"/>
+      </attribute>
+    </attributes>
+    <calculatedAttributes/>
+    <privateDataFoundation>
+      <tableProxies/>
+      <joins/>
+      <layout>
+        <shapes/>
+      </layout>
+    </privateDataFoundation>
+    <baseMeasures/>
+    <calculatedMeasures/>
+    <restrictedMeasures/>
+    <localDimensions/>
+  </logicalModel>
+  <layout>
+    <shapes>
+      <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+        <upperLeftCorner x="99" y="87"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_ORDER_BASE_FILTER" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="99" y="551"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_EQUIPMENT_RECORDS" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="99" y="377"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_NEW_SOC" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="187" y="473"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_MARA" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="341" y="473"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="JOIN_NEW_MARA" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="253" y="377"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="UNION_CHARGE_TYPE" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="176" y="261"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_CHRG_TYPE_POB_TYPE" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="22" y="261"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="JOIN_POB_TYPE" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="99" y="165"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+    </shapes>
+  </layout>
+</Calculation:scenario>

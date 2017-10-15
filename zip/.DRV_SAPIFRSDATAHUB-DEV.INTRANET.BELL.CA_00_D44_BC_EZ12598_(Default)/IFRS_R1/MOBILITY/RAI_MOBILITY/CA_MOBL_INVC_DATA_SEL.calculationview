@@ -1,0 +1,680 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" xmlns:Variable="http://www.sap.com/ndb/BiModelVariable.ecore" schemaVersion="2.3" id="CA_MOBL_INVC_DATA_SEL" applyPrivilegeType="NONE" checkAnalyticPrivileges="false" defaultClient="$$client$$" defaultLanguage="$$language$$" hierarchiesSQLEnabled="false" translationRelevant="true" visibility="internal" calculationScenarioType="TREE_BASED" dataCategory="DIMENSION" enforceSqlExecution="false" executionSemantic="UNDEFINED" outputViewType="Projection">
+  <descriptions defaultDescription="CA_MOBL_INVC_DATA_SEL"/>
+  <localVariables>
+    <variable id="IP_BILL_DATE" parameter="true">
+      <descriptions defaultDescription="IP_BILL_DATE"/>
+      <variableProperties datatype="DATE" defaultExpressionLanguage="COLUMN_ENGINE" mandatory="false">
+        <valueDomain type="empty"/>
+        <selection multiLine="false" type="SingleValue"/>
+        <defaultExpression>DATE(NOW())</defaultExpression>
+      </variableProperties>
+    </variable>
+  </localVariables>
+  <variableMappings>
+    <mapping xsi:type="Variable:VariableMapping" dataSource="#CA_MOBL_BILLING">
+      <targetVariable name="IP_BILL_DATE" resourceUri="/IFRS_R1.MOBILITY.RAI_MOBILITY.PRIVATE/calculationviews/CA_MOBL_BILLING"/>
+      <localVariable>#IP_BILL_DATE</localVariable>
+    </mapping>
+  </variableMappings>
+  <informationModelLayout relativeWidthScenario="54"/>
+  <dataSources>
+    <DataSource id="CA_MOBL_BILLING" type="CALCULATION_VIEW">
+      <viewAttributes allViewAttributes="true"/>
+      <resourceUri>/IFRS_R1.MOBILITY.RAI_MOBILITY.PRIVATE/calculationviews/CA_MOBL_BILLING</resourceUri>
+    </DataSource>
+    <DataSource id="IFRS_R1.MOBILITY.NDB_MOBILITY::MOBL_CUST" type="DATA_BASE_TABLE">
+      <viewAttributes allViewAttributes="true"/>
+      <columnObject schemaName="NDB_MOBILITY" columnObjectName="IFRS_R1.MOBILITY.NDB_MOBILITY::MOBL_CUST"/>
+    </DataSource>
+    <DataSource id="ZFENSCOCODE" type="DATA_BASE_TABLE">
+      <viewAttributes allViewAttributes="true"/>
+      <columnObject schemaName="SDA" columnObjectName="ZFENSCOCODE"/>
+    </DataSource>
+  </dataSources>
+  <calculationViews>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_MOBL_BILLING" filterExpressionLanguage="COLUMN_ENGINE">
+      <descriptions>
+        <comment text="Value error on JOURN_DT will be raised here as 30401501.&#xD;&#xA;Value error on INSERT_TS will be raised here as 30401502.&#xD;&#xA;Value error on CYCL_ID will be raised here as 30401503.&#xD;&#xA;Value error on GL_ACCT_NO will be raised here as 30401504.&#xD;&#xA;Value error on GL_PRICE_PLAN_GRP will be raised here as 30401505.&#xD;&#xA;"/>
+      </descriptions>
+      <viewAttributes>
+        <viewAttribute id="BAN"/>
+        <viewAttribute id="JOURN_DT"/>
+        <viewAttribute id="SUBSCR_NO"/>
+        <viewAttribute id="GL_ACCT_NO"/>
+        <viewAttribute id="GL_COST_CENTRE"/>
+        <viewAttribute id="AMT"/>
+        <viewAttribute id="EXECUTION_ID"/>
+        <viewAttribute id="INSERT_TS"/>
+        <viewAttribute id="HEADER_ID"/>
+        <viewAttribute id="ITEM_ID"/>
+        <viewAttribute id="ITEM_SUB_ID"/>
+        <viewAttribute id="GL_PRICE_PLAN_GRP"/>
+        <viewAttribute id="PROV"/>
+        <viewAttribute id="CONVERSION_IND"/>
+        <viewAttribute id="CYCL_ID"/>
+        <viewAttribute id="VIRTUAL_INV_FLAG"/>
+        <viewAttribute id="AR_ACTV"/>
+        <viewAttribute id="ENT_SEQ_NO"/>
+        <viewAttribute id="TRANS_TY"/>
+        <viewAttribute id="CR_DR_IND"/>
+        <viewAttribute id="BILL_PRIMARY_KEY"/>
+        <viewAttribute id="DEALER"/>
+        <viewAttribute id="CHRG_TY_CLASSIF"/>
+        <viewAttribute id="GL_JURISD_CD"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="IS_30401501" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isNull(&quot;JOURN_DT&quot;),'1','0')</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="IS_30401502" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isNull(&quot;INSERT_TS&quot;),'1','0')</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="IS_30401503" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isNull(&quot;CYCL_ID&quot;) or &quot;CYCL_ID&quot;='','1','0')</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="IS_30401504" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isNull(&quot;GL_ACCT_NO&quot;) or &quot;GL_ACCT_NO&quot;=''or strlen(&quot;GL_ACCT_NO&quot;) &lt; 7 or leftstr(ltrim(&quot;GL_ACCT_NO&quot;,'0'),1)!='4','1','0')</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#CA_MOBL_BILLING">
+        <mapping xsi:type="Calculation:AttributeMapping" target="BAN" source="BAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="JOURN_DT" source="JOURN_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBSCR_NO" source="SUBSCR_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GL_ACCT_NO" source="GL_ACCT_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GL_COST_CENTRE" source="GL_COST_CENTRE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AMT" source="AMT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXECUTION_ID" source="EXECUTION_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INSERT_TS" source="INSERT_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="HEADER_ID" source="HEADER_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_ID" source="ITEM_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_SUB_ID" source="ITEM_SUB_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GL_PRICE_PLAN_GRP" source="GL_PRICE_PLAN_GRP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROV" source="PROV"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONVERSION_IND" source="CONVERSION_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VIRTUAL_INV_FLAG" source="VIRTUAL_INV_FLAG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AR_ACTV" source="AR_ACTV"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ENT_SEQ_NO" source="ENT_SEQ_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRANS_TY" source="TRANS_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CR_DR_IND" source="CR_DR_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_PRIMARY_KEY" source="BILL_PRIMARY_KEY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DEALER" source="DEALER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CHRG_TY_CLASSIF" source="CHRG_TY_CLASSIF"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GL_JURISD_CD" source="GL_JURISD_CD"/>
+      </input>
+      <filter>(isNull(&quot;VIRTUAL_INV_FLAG&quot;) or &quot;VIRTUAL_INV_FLAG&quot;='')&#xD;
+or (&quot;CHRG_TY_CLASSIF&quot;='APLBB' and  &quot;VIRTUAL_INV_FLAG&quot;='X')</filter>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_MOBL_CUST">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="SUBSCR_NO"/>
+        <viewAttribute id="ACCT_SUB_TY"/>
+        <viewAttribute id="ACCT_TY"/>
+        <viewAttribute id="BAN"/>
+        <viewAttribute id="BAN_PROV_CD"/>
+        <viewAttribute id="LGL_ENTT"/>
+        <viewAttribute id="MKT_SEG"/>
+        <viewAttribute id="BUS_ENTT"/>
+        <viewAttribute id="CUSTOMER_EXPIRY_DT"/>
+        <viewAttribute id="BRND"/>
+        <viewAttribute id="CUSTOMER_EFFECTIVE_DT"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#IFRS_R1.MOBILITY.NDB_MOBILITY::MOBL_CUST">
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBSCR_NO" source="SUBSCR_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACCT_SUB_TY" source="ACCT_SUB_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACCT_TY" source="ACCT_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BAN" source="BAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BAN_PROV_CD" source="BAN_PROV_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LGL_ENTT" source="LGL_ENTT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MKT_SEG" source="MKT_SEG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUS_ENTT" source="BUS_ENTT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_EXPIRY_DT" source="CUSTOMER_EXPIRY_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BRND" source="BRND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_EFFECTIVE_DT" source="CUSTOMER_EFFECTIVE_DT"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_ZFENSCOCODE">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="LEGAL_ENTITY"/>
+        <viewAttribute id="COMP_CODE"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#ZFENSCOCODE">
+        <mapping xsi:type="Calculation:AttributeMapping" target="LEGAL_ENTITY" source="LEGAL_ENTITY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="COMP_CODE" source="COMP_CODE"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="JOIN_BILLING_CUST" cardinality="CN_1" joinOrder="OUTSIDE_IN" joinType="leftOuter">
+      <descriptions>
+        <comment text="Join errors will be raised as 30401507.&#xD;&#xA;Value error on BUS_ENTT will be raised here as 30401508.&#xD;&#xA;Value error on ACCT_TY will be raised here as 30401509.&#xD;&#xA;Value error on ACCT_SUB_TY will be raised here as 30401510.&#xD;&#xA;Value error on MKT_SEG will be raised here as 30401511."/>
+      </descriptions>
+      <viewAttributes>
+        <viewAttribute id="BAN"/>
+        <viewAttribute id="JOURN_DT"/>
+        <viewAttribute id="SUBSCR_NO"/>
+        <viewAttribute id="GL_ACCT_NO"/>
+        <viewAttribute id="GL_COST_CENTRE"/>
+        <viewAttribute id="AMT"/>
+        <viewAttribute id="EXECUTION_ID"/>
+        <viewAttribute id="INSERT_TS"/>
+        <viewAttribute id="HEADER_ID"/>
+        <viewAttribute id="ITEM_ID"/>
+        <viewAttribute id="ITEM_SUB_ID"/>
+        <viewAttribute id="GL_PRICE_PLAN_GRP"/>
+        <viewAttribute id="PROV"/>
+        <viewAttribute id="CONVERSION_IND"/>
+        <viewAttribute id="CYCL_ID"/>
+        <viewAttribute id="ACCT_SUB_TY"/>
+        <viewAttribute id="ACCT_TY"/>
+        <viewAttribute id="BAN_PROV_CD"/>
+        <viewAttribute id="LGL_ENTT"/>
+        <viewAttribute id="MKT_SEG"/>
+        <viewAttribute id="BAN_RIGHT"/>
+        <viewAttribute id="BUS_ENTT"/>
+        <viewAttribute id="IS_30401501"/>
+        <viewAttribute id="IS_30401502"/>
+        <viewAttribute id="IS_30401503"/>
+        <viewAttribute id="IS_30401504"/>
+        <viewAttribute id="AR_ACTV"/>
+        <viewAttribute id="ENT_SEQ_NO"/>
+        <viewAttribute id="TRANS_TY"/>
+        <viewAttribute id="CR_DR_IND"/>
+        <viewAttribute id="BRND"/>
+        <viewAttribute id="CUSTOMER_EFFECTIVE_DT"/>
+        <viewAttribute id="CUSTOMER_EXPIRY_DT"/>
+        <viewAttribute id="BILL_PRIMARY_KEY"/>
+        <viewAttribute id="DEALER"/>
+        <viewAttribute id="CHRG_TY_CLASSIF"/>
+        <viewAttribute id="GL_JURISD_CD"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="IS_30401507" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isNull(&quot;BAN_RIGHT&quot;),'1','0')</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="IS_30401508" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isNull(&quot;BUS_ENTT&quot;) or &quot;BUS_ENTT&quot;='','1','0')</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="IS_30401509" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isNull(&quot;ACCT_TY&quot;) or &quot;ACCT_TY&quot;='','1','0')</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="IS_30401510" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isNull(&quot;ACCT_SUB_TY&quot;) or &quot;ACCT_SUB_TY&quot;='','1','0')</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="IS_30401511" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isNull(&quot;MKT_SEG&quot;) or &quot;MKT_SEG&quot;='','1','0')</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="DATE" id="CC_CUST_REFERENCE_EXPIRY_DT" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isnull(&quot;CUSTOMER_EXPIRY_DT&quot;),date('9999-12-31'),&quot;CUSTOMER_EXPIRY_DT&quot;)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="DATE" id="CC_CUST_REFERENCE_EFFECTIVE_DT" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isnull(&quot;CUSTOMER_EFFECTIVE_DT&quot;),date('1900-01-01'),&quot;CUSTOMER_EFFECTIVE_DT&quot;)</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#PROJ_MOBL_BILLING">
+        <mapping xsi:type="Calculation:AttributeMapping" target="BAN" source="BAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="JOURN_DT" source="JOURN_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBSCR_NO" source="SUBSCR_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GL_ACCT_NO" source="GL_ACCT_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GL_COST_CENTRE" source="GL_COST_CENTRE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AMT" source="AMT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXECUTION_ID" source="EXECUTION_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INSERT_TS" source="INSERT_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="HEADER_ID" source="HEADER_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_ID" source="ITEM_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_SUB_ID" source="ITEM_SUB_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GL_PRICE_PLAN_GRP" source="GL_PRICE_PLAN_GRP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROV" source="PROV"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONVERSION_IND" source="CONVERSION_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30401501" source="IS_30401501"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30401502" source="IS_30401502"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30401503" source="IS_30401503"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30401504" source="IS_30401504"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AR_ACTV" source="AR_ACTV"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ENT_SEQ_NO" source="ENT_SEQ_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRANS_TY" source="TRANS_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CR_DR_IND" source="CR_DR_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_PRIMARY_KEY" source="BILL_PRIMARY_KEY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DEALER" source="DEALER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CHRG_TY_CLASSIF" source="CHRG_TY_CLASSIF"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GL_JURISD_CD" source="GL_JURISD_CD"/>
+      </input>
+      <input node="#PROJ_MOBL_CUST">
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACCT_SUB_TY" source="ACCT_SUB_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACCT_TY" source="ACCT_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BAN_PROV_CD" source="BAN_PROV_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LGL_ENTT" source="LGL_ENTT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MKT_SEG" source="MKT_SEG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BAN_RIGHT" source="BAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUS_ENTT" source="BUS_ENTT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BRND" source="BRND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_EFFECTIVE_DT" source="CUSTOMER_EFFECTIVE_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_EXPIRY_DT" source="CUSTOMER_EXPIRY_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBSCR_NO" source="SUBSCR_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BAN" source="BAN"/>
+      </input>
+      <joinAttribute name="SUBSCR_NO"/>
+      <joinAttribute name="BAN"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_BILLING_CUSTOMER_TJ" filterExpressionLanguage="COLUMN_ENGINE">
+      <descriptions>
+        <comment text="The temporal join of billing to customer ensure that we select the customer that is valid on the journalization date of the billing"/>
+      </descriptions>
+      <viewAttributes>
+        <viewAttribute id="BAN"/>
+        <viewAttribute id="JOURN_DT"/>
+        <viewAttribute id="SUBSCR_NO"/>
+        <viewAttribute id="GL_ACCT_NO"/>
+        <viewAttribute id="GL_COST_CENTRE"/>
+        <viewAttribute id="AMT"/>
+        <viewAttribute id="EXECUTION_ID"/>
+        <viewAttribute id="INSERT_TS"/>
+        <viewAttribute id="HEADER_ID"/>
+        <viewAttribute id="ITEM_ID"/>
+        <viewAttribute id="ITEM_SUB_ID"/>
+        <viewAttribute id="GL_PRICE_PLAN_GRP"/>
+        <viewAttribute id="PROV"/>
+        <viewAttribute id="CONVERSION_IND"/>
+        <viewAttribute id="CYCL_ID"/>
+        <viewAttribute id="ACCT_SUB_TY"/>
+        <viewAttribute id="ACCT_TY"/>
+        <viewAttribute id="BAN_PROV_CD"/>
+        <viewAttribute id="LGL_ENTT"/>
+        <viewAttribute id="MKT_SEG"/>
+        <viewAttribute id="BUS_ENTT"/>
+        <viewAttribute id="IS_30401504"/>
+        <viewAttribute id="IS_30401503"/>
+        <viewAttribute id="IS_30401502"/>
+        <viewAttribute id="IS_30401511"/>
+        <viewAttribute id="IS_30401510"/>
+        <viewAttribute id="IS_30401509"/>
+        <viewAttribute id="IS_30401501"/>
+        <viewAttribute id="AR_ACTV"/>
+        <viewAttribute id="IS_30401507"/>
+        <viewAttribute id="IS_30401508"/>
+        <viewAttribute id="ENT_SEQ_NO"/>
+        <viewAttribute id="TRANS_TY"/>
+        <viewAttribute id="CR_DR_IND"/>
+        <viewAttribute id="BRND"/>
+        <viewAttribute id="CC_CUST_REFERENCE_EXPIRY_DT"/>
+        <viewAttribute id="CC_CUST_REFERENCE_EFFECTIVE_DT"/>
+        <viewAttribute id="BILL_PRIMARY_KEY"/>
+        <viewAttribute id="DEALER"/>
+        <viewAttribute id="CHRG_TY_CLASSIF"/>
+        <viewAttribute id="GL_JURISD_CD"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#JOIN_BILLING_CUST">
+        <mapping xsi:type="Calculation:AttributeMapping" target="BAN" source="BAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="JOURN_DT" source="JOURN_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBSCR_NO" source="SUBSCR_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GL_ACCT_NO" source="GL_ACCT_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GL_COST_CENTRE" source="GL_COST_CENTRE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AMT" source="AMT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXECUTION_ID" source="EXECUTION_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INSERT_TS" source="INSERT_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="HEADER_ID" source="HEADER_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_ID" source="ITEM_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_SUB_ID" source="ITEM_SUB_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GL_PRICE_PLAN_GRP" source="GL_PRICE_PLAN_GRP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROV" source="PROV"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONVERSION_IND" source="CONVERSION_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACCT_SUB_TY" source="ACCT_SUB_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACCT_TY" source="ACCT_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BAN_PROV_CD" source="BAN_PROV_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LGL_ENTT" source="LGL_ENTT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MKT_SEG" source="MKT_SEG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUS_ENTT" source="BUS_ENTT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30401504" source="IS_30401504"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30401503" source="IS_30401503"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30401502" source="IS_30401502"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30401511" source="IS_30401511"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30401510" source="IS_30401510"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30401509" source="IS_30401509"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30401501" source="IS_30401501"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AR_ACTV" source="AR_ACTV"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30401507" source="IS_30401507"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30401508" source="IS_30401508"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ENT_SEQ_NO" source="ENT_SEQ_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRANS_TY" source="TRANS_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CR_DR_IND" source="CR_DR_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BRND" source="BRND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_CUST_REFERENCE_EXPIRY_DT" source="CC_CUST_REFERENCE_EXPIRY_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_CUST_REFERENCE_EFFECTIVE_DT" source="CC_CUST_REFERENCE_EFFECTIVE_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_PRIMARY_KEY" source="BILL_PRIMARY_KEY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DEALER" source="DEALER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CHRG_TY_CLASSIF" source="CHRG_TY_CLASSIF"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GL_JURISD_CD" source="GL_JURISD_CD"/>
+      </input>
+      <filter>(&quot;JOURN_DT&quot;>=&quot;CC_CUST_REFERENCE_EFFECTIVE_DT&quot;)  AND (&quot;JOURN_DT&quot;&lt;=&quot;CC_CUST_REFERENCE_EXPIRY_DT&quot;)</filter>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="JOIN_BILLING_SDA" cardinality="CN_1" joinOrder="OUTSIDE_IN" joinType="leftOuter">
+      <descriptions>
+        <comment text="Join errors will be raised as 30401512.&#xD;&#xA;Value error on COMP_CODE will be raised here as 30401513.&#xD;&#xA;Value error on AR_ACTV filed for COMP_CODE,'21' will be raised here as 30401514."/>
+      </descriptions>
+      <viewAttributes>
+        <viewAttribute id="COMP_CODE"/>
+        <viewAttribute id="LEGAL_ENTITY_RIGHT"/>
+        <viewAttribute id="BAN"/>
+        <viewAttribute id="JOURN_DT"/>
+        <viewAttribute id="SUBSCR_NO"/>
+        <viewAttribute id="GL_ACCT_NO"/>
+        <viewAttribute id="GL_COST_CENTRE"/>
+        <viewAttribute id="AMT"/>
+        <viewAttribute id="EXECUTION_ID"/>
+        <viewAttribute id="INSERT_TS"/>
+        <viewAttribute id="HEADER_ID"/>
+        <viewAttribute id="ITEM_ID"/>
+        <viewAttribute id="ITEM_SUB_ID"/>
+        <viewAttribute id="GL_PRICE_PLAN_GRP"/>
+        <viewAttribute id="PROV"/>
+        <viewAttribute id="CONVERSION_IND"/>
+        <viewAttribute id="CYCL_ID"/>
+        <viewAttribute id="ACCT_SUB_TY"/>
+        <viewAttribute id="ACCT_TY"/>
+        <viewAttribute id="BAN_PROV_CD"/>
+        <viewAttribute id="LGL_ENTT"/>
+        <viewAttribute id="MKT_SEG"/>
+        <viewAttribute id="BUS_ENTT"/>
+        <viewAttribute id="IS_30401504"/>
+        <viewAttribute id="IS_30401503"/>
+        <viewAttribute id="IS_30401502"/>
+        <viewAttribute id="IS_30401511"/>
+        <viewAttribute id="IS_30401510"/>
+        <viewAttribute id="IS_30401509"/>
+        <viewAttribute id="IS_30401501"/>
+        <viewAttribute id="AR_ACTV"/>
+        <viewAttribute id="IS_30401507"/>
+        <viewAttribute id="IS_30401508"/>
+        <viewAttribute id="ENT_SEQ_NO"/>
+        <viewAttribute id="TRANS_TY"/>
+        <viewAttribute id="CR_DR_IND"/>
+        <viewAttribute id="BRND"/>
+        <viewAttribute id="BILL_PRIMARY_KEY"/>
+        <viewAttribute id="DEALER"/>
+        <viewAttribute id="CHRG_TY_CLASSIF"/>
+        <viewAttribute id="GL_JURISD_CD"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="IS_30401512" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isNull(&quot;LEGAL_ENTITY_RIGHT&quot;),'1','0')</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="IS_30401513" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isNull(&quot;COMP_CODE&quot;) or (not in (&quot;COMP_CODE&quot;,'10','21')),'1','0')</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="IS_30401514" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isNull(&quot;COMP_CODE&quot;),'1',if(&quot;COMP_CODE&quot;='21',if(isNull(&quot;AR_ACTV&quot;) or &quot;AR_ACTV&quot;='','1','0'),'0'))</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#PROJ_BILLING_CUSTOMER_TJ">
+        <mapping xsi:type="Calculation:AttributeMapping" target="BAN" source="BAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="JOURN_DT" source="JOURN_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBSCR_NO" source="SUBSCR_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GL_ACCT_NO" source="GL_ACCT_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GL_COST_CENTRE" source="GL_COST_CENTRE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AMT" source="AMT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXECUTION_ID" source="EXECUTION_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INSERT_TS" source="INSERT_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="HEADER_ID" source="HEADER_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_ID" source="ITEM_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_SUB_ID" source="ITEM_SUB_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GL_PRICE_PLAN_GRP" source="GL_PRICE_PLAN_GRP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROV" source="PROV"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONVERSION_IND" source="CONVERSION_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACCT_SUB_TY" source="ACCT_SUB_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACCT_TY" source="ACCT_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BAN_PROV_CD" source="BAN_PROV_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LGL_ENTT" source="LGL_ENTT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MKT_SEG" source="MKT_SEG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUS_ENTT" source="BUS_ENTT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30401504" source="IS_30401504"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30401503" source="IS_30401503"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30401502" source="IS_30401502"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30401511" source="IS_30401511"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30401510" source="IS_30401510"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30401509" source="IS_30401509"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30401501" source="IS_30401501"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AR_ACTV" source="AR_ACTV"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30401507" source="IS_30401507"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30401508" source="IS_30401508"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ENT_SEQ_NO" source="ENT_SEQ_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRANS_TY" source="TRANS_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CR_DR_IND" source="CR_DR_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BRND" source="BRND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_PRIMARY_KEY" source="BILL_PRIMARY_KEY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DEALER" source="DEALER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CHRG_TY_CLASSIF" source="CHRG_TY_CLASSIF"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GL_JURISD_CD" source="GL_JURISD_CD"/>
+      </input>
+      <input node="#PROJ_ZFENSCOCODE">
+        <mapping xsi:type="Calculation:AttributeMapping" target="COMP_CODE" source="COMP_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LEGAL_ENTITY_RIGHT" source="LEGAL_ENTITY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUS_ENTT" source="LEGAL_ENTITY"/>
+      </input>
+      <joinAttribute name="BUS_ENTT"/>
+    </calculationView>
+  </calculationViews>
+  <logicalModel id="JOIN_BILLING_SDA">
+    <descriptions/>
+    <attributes>
+      <attribute id="JOURN_DT" order="1" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="JOURN_DT"/>
+        <keyMapping columnObjectName="JOIN_BILLING_SDA" columnName="JOURN_DT"/>
+      </attribute>
+      <attribute id="SUBSCR_NO" order="2" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SUBSCR_NO"/>
+        <keyMapping columnObjectName="JOIN_BILLING_SDA" columnName="SUBSCR_NO"/>
+      </attribute>
+      <attribute id="GL_ACCT_NO" order="3" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="GL_ACCT_NO"/>
+        <keyMapping columnObjectName="JOIN_BILLING_SDA" columnName="GL_ACCT_NO"/>
+      </attribute>
+      <attribute id="GL_COST_CENTRE" order="4" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="GL_COST_CENTRE"/>
+        <keyMapping columnObjectName="JOIN_BILLING_SDA" columnName="GL_COST_CENTRE"/>
+      </attribute>
+      <attribute id="AMT" order="5" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="AMT"/>
+        <keyMapping columnObjectName="JOIN_BILLING_SDA" columnName="AMT"/>
+      </attribute>
+      <attribute id="EXECUTION_ID" order="6" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="EXECUTION_ID"/>
+        <keyMapping columnObjectName="JOIN_BILLING_SDA" columnName="EXECUTION_ID"/>
+      </attribute>
+      <attribute id="INSERT_TS" order="7" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="INSERT_TS"/>
+        <keyMapping columnObjectName="JOIN_BILLING_SDA" columnName="INSERT_TS"/>
+      </attribute>
+      <attribute id="HEADER_ID" order="8" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="HEADER_ID"/>
+        <keyMapping columnObjectName="JOIN_BILLING_SDA" columnName="HEADER_ID"/>
+      </attribute>
+      <attribute id="ITEM_ID" order="9" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ITEM_ID"/>
+        <keyMapping columnObjectName="JOIN_BILLING_SDA" columnName="ITEM_ID"/>
+      </attribute>
+      <attribute id="ITEM_SUB_ID" order="10" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ITEM_SUB_ID"/>
+        <keyMapping columnObjectName="JOIN_BILLING_SDA" columnName="ITEM_SUB_ID"/>
+      </attribute>
+      <attribute id="GL_PRICE_PLAN_GRP" order="11" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="GL_PRICE_PLAN_GRP"/>
+        <keyMapping columnObjectName="JOIN_BILLING_SDA" columnName="GL_PRICE_PLAN_GRP"/>
+      </attribute>
+      <attribute id="PROV" order="12" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="PROV"/>
+        <keyMapping columnObjectName="JOIN_BILLING_SDA" columnName="PROV"/>
+      </attribute>
+      <attribute id="COMP_CODE" order="13" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="COMP_CODE"/>
+        <keyMapping columnObjectName="JOIN_BILLING_SDA" columnName="COMP_CODE"/>
+      </attribute>
+      <attribute id="BAN" order="14" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="BAN"/>
+        <keyMapping columnObjectName="JOIN_BILLING_SDA" columnName="BAN"/>
+      </attribute>
+      <attribute id="CONVERSION_IND" order="15" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CONVERSION IND"/>
+        <keyMapping columnObjectName="JOIN_BILLING_SDA" columnName="CONVERSION_IND"/>
+      </attribute>
+      <attribute id="CYCL_ID" order="16" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CYCL ID"/>
+        <keyMapping columnObjectName="JOIN_BILLING_SDA" columnName="CYCL_ID"/>
+      </attribute>
+      <attribute id="ACCT_SUB_TY" order="17" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ACCT_SUB_TY"/>
+        <keyMapping columnObjectName="JOIN_BILLING_SDA" columnName="ACCT_SUB_TY"/>
+      </attribute>
+      <attribute id="ACCT_TY" order="18" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ACCT_TY"/>
+        <keyMapping columnObjectName="JOIN_BILLING_SDA" columnName="ACCT_TY"/>
+      </attribute>
+      <attribute id="BAN_PROV_CD" order="19" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="BAN_PROV_CD"/>
+        <keyMapping columnObjectName="JOIN_BILLING_SDA" columnName="BAN_PROV_CD"/>
+      </attribute>
+      <attribute id="LGL_ENTT" order="20" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="LGL_ENTT"/>
+        <keyMapping columnObjectName="JOIN_BILLING_SDA" columnName="LGL_ENTT"/>
+      </attribute>
+      <attribute id="MKT_SEG" order="21" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="MKT_SEG"/>
+        <keyMapping columnObjectName="JOIN_BILLING_SDA" columnName="MKT_SEG"/>
+      </attribute>
+      <attribute id="AR_ACTV" order="22" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="AR ACTV"/>
+        <keyMapping columnObjectName="JOIN_BILLING_SDA" columnName="AR_ACTV"/>
+      </attribute>
+      <attribute id="IS_30401501" order="23" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="IS_30401501"/>
+        <keyMapping columnObjectName="JOIN_BILLING_SDA" columnName="IS_30401501"/>
+      </attribute>
+      <attribute id="IS_30401502" order="24" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="IS_30401502"/>
+        <keyMapping columnObjectName="JOIN_BILLING_SDA" columnName="IS_30401502"/>
+      </attribute>
+      <attribute id="IS_30401503" order="25" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="IS_30401503"/>
+        <keyMapping columnObjectName="JOIN_BILLING_SDA" columnName="IS_30401503"/>
+      </attribute>
+      <attribute id="IS_30401504" order="26" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="IS_30401504"/>
+        <keyMapping columnObjectName="JOIN_BILLING_SDA" columnName="IS_30401504"/>
+      </attribute>
+      <attribute id="IS_30401507" order="27" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="IS_30401507"/>
+        <keyMapping columnObjectName="JOIN_BILLING_SDA" columnName="IS_30401507"/>
+      </attribute>
+      <attribute id="IS_30401508" order="28" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="IS_30401508"/>
+        <keyMapping columnObjectName="JOIN_BILLING_SDA" columnName="IS_30401508"/>
+      </attribute>
+      <attribute id="IS_30401509" order="29" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="IS_30401509"/>
+        <keyMapping columnObjectName="JOIN_BILLING_SDA" columnName="IS_30401509"/>
+      </attribute>
+      <attribute id="IS_30401510" order="30" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="IS_30401510"/>
+        <keyMapping columnObjectName="JOIN_BILLING_SDA" columnName="IS_30401510"/>
+      </attribute>
+      <attribute id="IS_30401511" order="31" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="IS_30401511"/>
+        <keyMapping columnObjectName="JOIN_BILLING_SDA" columnName="IS_30401511"/>
+      </attribute>
+      <attribute id="IS_30401512" order="32" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="IS_30401512"/>
+        <keyMapping columnObjectName="JOIN_BILLING_SDA" columnName="IS_30401512"/>
+      </attribute>
+      <attribute id="IS_30401513" order="33" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="IS_30401513"/>
+        <keyMapping columnObjectName="JOIN_BILLING_SDA" columnName="IS_30401513"/>
+      </attribute>
+      <attribute id="IS_30401514" order="34" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="IS_30401514"/>
+        <keyMapping columnObjectName="JOIN_BILLING_SDA" columnName="IS_30401514"/>
+      </attribute>
+      <attribute id="ENT_SEQ_NO" order="35" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ENT SEQ NO"/>
+        <keyMapping columnObjectName="JOIN_BILLING_SDA" columnName="ENT_SEQ_NO"/>
+      </attribute>
+      <attribute id="TRANS_TY" order="36" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="TRANS TY"/>
+        <keyMapping columnObjectName="JOIN_BILLING_SDA" columnName="TRANS_TY"/>
+      </attribute>
+      <attribute id="CR_DR_IND" order="37" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CR DR IND"/>
+        <keyMapping columnObjectName="JOIN_BILLING_SDA" columnName="CR_DR_IND"/>
+      </attribute>
+      <attribute id="BRND" order="38" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="BRND"/>
+        <keyMapping columnObjectName="JOIN_BILLING_SDA" columnName="BRND"/>
+      </attribute>
+      <attribute id="BILL_PRIMARY_KEY" order="39" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="BILL_PRIMARY_KEY"/>
+        <keyMapping columnObjectName="JOIN_BILLING_SDA" columnName="BILL_PRIMARY_KEY"/>
+      </attribute>
+      <attribute id="DEALER" order="40" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="DEALER"/>
+        <keyMapping columnObjectName="JOIN_BILLING_SDA" columnName="DEALER"/>
+      </attribute>
+      <attribute id="CHRG_TY_CLASSIF" order="41" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CHRG_TY_CLASSIF"/>
+        <keyMapping columnObjectName="JOIN_BILLING_SDA" columnName="CHRG_TY_CLASSIF"/>
+      </attribute>
+      <attribute id="GL_JURISD_CD" order="42" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="GL JURISD CD"/>
+        <keyMapping columnObjectName="JOIN_BILLING_SDA" columnName="GL_JURISD_CD"/>
+      </attribute>
+    </attributes>
+    <calculatedAttributes/>
+    <privateDataFoundation>
+      <tableProxies/>
+      <joins/>
+      <layout>
+        <shapes/>
+      </layout>
+    </privateDataFoundation>
+    <baseMeasures/>
+    <calculatedMeasures/>
+    <restrictedMeasures/>
+    <localDimensions/>
+  </logicalModel>
+  <layout>
+    <shapes>
+      <shape expanded="false" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+        <upperLeftCorner x="176" y="87"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_MOBL_BILLING" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="22" y="417"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_MOBL_CUST" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="176" y="417"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_ZFENSCOCODE" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="253" y="243"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="JOIN_BILLING_CUST" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="99" y="321"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_BILLING_CUSTOMER_TJ" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="99" y="243"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+      <shape expanded="true" modelObjectName="JOIN_BILLING_SDA" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="176" y="147"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+    </shapes>
+  </layout>
+</Calculation:scenario>

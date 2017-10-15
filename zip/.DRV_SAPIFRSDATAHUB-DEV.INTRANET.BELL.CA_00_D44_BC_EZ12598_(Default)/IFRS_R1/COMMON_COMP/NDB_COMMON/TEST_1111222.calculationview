@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" schemaVersion="2.3" id="TEST_1111222" applyPrivilegeType="ANALYTIC_PRIVILEGE" checkAnalyticPrivileges="true" defaultClient="$$client$$" defaultLanguage="$$language$$" hierarchiesSQLEnabled="false" translationRelevant="true" visibility="internal" calculationScenarioType="TREE_BASED" dataCategory="DIMENSION" enforceSqlExecution="false" executionSemantic="UNDEFINED" outputViewType="Projection">
+  <descriptions defaultDescription="TEST_1111222"/>
+  <localVariables/>
+  <variableMappings/>
+  <informationModelLayout relativeWidthScenario="40"/>
+  <dataSources>
+    <DataSource id="IFRS_R1.LAND::PS_JRNL_DATA" type="DATA_BASE_TABLE">
+      <viewAttributes allViewAttributes="true"/>
+      <columnObject schemaName="LAND" columnObjectName="IFRS_R1.LAND::PS_JRNL_DATA"/>
+    </DataSource>
+  </dataSources>
+  <calculationViews>
+    <calculationView xsi:type="Calculation:ProjectionView" id="Projection_1">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="CUST_ID"/>
+        <viewAttribute id="PS_CR_GL_ACCT"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="PS" length="100" expressionLanguage="COLUMN_ENGINE">
+          <formula>if (leftstr('10_SSHFASJHDF',3)  != '10_','no','yes')</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#IFRS_R1.LAND::PS_JRNL_DATA">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUST_ID" source="CUST_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PS_CR_GL_ACCT" source="PS_CR_GL_ACCT"/>
+      </input>
+    </calculationView>
+  </calculationViews>
+  <logicalModel id="Projection_1">
+    <descriptions/>
+    <attributes>
+      <attribute id="CUST_ID" order="1" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CUST ID"/>
+        <keyMapping columnObjectName="Projection_1" columnName="CUST_ID"/>
+      </attribute>
+      <attribute id="PS_CR_GL_ACCT" order="2" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="PS CR GL ACCT"/>
+        <keyMapping columnObjectName="Projection_1" columnName="PS_CR_GL_ACCT"/>
+      </attribute>
+      <attribute id="PS" order="3" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="PS"/>
+        <keyMapping columnObjectName="Projection_1" columnName="PS"/>
+      </attribute>
+    </attributes>
+    <calculatedAttributes/>
+    <privateDataFoundation>
+      <tableProxies/>
+      <joins/>
+      <layout>
+        <shapes/>
+      </layout>
+    </privateDataFoundation>
+    <baseMeasures/>
+    <calculatedMeasures/>
+    <restrictedMeasures/>
+    <localDimensions/>
+  </logicalModel>
+  <layout>
+    <shapes>
+      <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+        <upperLeftCorner x="40" y="85"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Projection_1" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="40" y="210"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+    </shapes>
+  </layout>
+</Calculation:scenario>

@@ -1,0 +1,371 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" schemaVersion="2.3" id="CA_BW_EXTRACT_MOB_PRE_VW" applyPrivilegeType="ANALYTIC_PRIVILEGE" checkAnalyticPrivileges="true" defaultClient="$$client$$" defaultLanguage="$$language$$" hierarchiesSQLEnabled="false" historyEnabled="false" translationRelevant="true" visibility="reportingEnabled" calculationScenarioType="TREE_BASED" dataCategory="CUBE" enforceSqlExecution="false" executionSemantic="UNDEFINED" outputViewType="Aggregation">
+  <origin/>
+  <descriptions defaultDescription="Calculation View for Mobility Prepaid POB Attributes"/>
+  <metadata changedAt="2017-07-18 20:21:44.395"/>
+  <localVariables/>
+  <variableMappings/>
+  <informationModelLayout relativeWidthScenario="36"/>
+  <dataSources>
+    <DataSource id="IFRS_R1.MOBILITY.NDB_MOBILITY::PPD_ORDER" type="DATA_BASE_TABLE">
+      <viewAttributes allViewAttributes="true"/>
+      <columnObject schemaName="NDB_MOBILITY" columnObjectName="IFRS_R1.MOBILITY.NDB_MOBILITY::PPD_ORDER"/>
+    </DataSource>
+    <DataSource id="IFRS_R1.MOBILITY.NDB_MOBILITY::PPD_BILLING" type="DATA_BASE_TABLE">
+      <viewAttributes allViewAttributes="true"/>
+      <columnObject schemaName="NDB_MOBILITY" columnObjectName="IFRS_R1.MOBILITY.NDB_MOBILITY::PPD_BILLING"/>
+    </DataSource>
+    <DataSource id="CA_BW_TRANS_DEVICE_VW" type="CALCULATION_VIEW">
+      <viewAttributes allViewAttributes="true"/>
+      <resourceUri>/IFRS_R1.BW/calculationviews/CA_BW_TRANS_DEVICE_VW</resourceUri>
+    </DataSource>
+    <DataSource id="CA_POB_SRCDOC_ID_MAP_VW" type="CALCULATION_VIEW">
+      <viewAttributes allViewAttributes="true"/>
+      <resourceUri>/IFRS_R1.BW/calculationviews/CA_POB_SRCDOC_ID_MAP_VW</resourceUri>
+    </DataSource>
+  </dataSources>
+  <calculationViews>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PR_PPD_ORDER">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="SRCDOC_ID"/>
+        <viewAttribute id="SOURCE_CODE"/>
+        <viewAttribute id="DEALER_ID"/>
+        <viewAttribute id="SERIAL_NO"/>
+        <viewAttribute id="ORDER_ID"/>
+        <viewAttribute id="CUSTOMER_ID"/>
+        <viewAttribute id="PRODUCT_ID"/>
+        <viewAttribute id="SAP_ARTICLE_NO"/>
+        <viewAttribute id="SOURCE_IDENTIFIER"/>
+        <viewAttribute id="RAI_TS"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="SAP_ARTICLE_NO_TRIM" length="18" expressionLanguage="COLUMN_ENGINE">
+          <formula>ltrim(&quot;SAP_ARTICLE_NO&quot;, '0')</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#IFRS_R1.MOBILITY.NDB_MOBILITY::PPD_ORDER">
+        <mapping xsi:type="Calculation:AttributeMapping" target="SRCDOC_ID" source="SRCDOC_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SOURCE_CODE" source="SOURCE_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DEALER_ID" source="DEALER_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SERIAL_NO" source="SERIAL_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ORDER_ID" source="ORDER_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_ID" source="CUSTOMER_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT_ID" source="PRODUCT_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SAP_ARTICLE_NO" source="SAP_ARTICLE_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SOURCE_IDENTIFIER" source="SOURCE_IDENTIFIER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RAI_TS" source="RAI_TS"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PR_PPD_BILLING" filterExpressionLanguage="COLUMN_ENGINE">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="CUSTOMER_ID"/>
+        <viewAttribute id="PRODUCT_ID"/>
+        <viewAttribute id="ORDER_ID"/>
+        <viewAttribute id="SRCDOC_ID"/>
+        <viewAttribute id="START_DATE"/>
+        <viewAttribute id="END_DATE"/>
+        <viewAttribute id="POSTING_DATE"/>
+        <viewAttribute id="RAI_TS"/>
+        <viewAttribute id="HEADER_ID"/>
+        <viewAttribute id="REFERENCE_ID"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#IFRS_R1.MOBILITY.NDB_MOBILITY::PPD_BILLING">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_ID" source="CUSTOMER_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT_ID" source="PRODUCT_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ORDER_ID" source="ORDER_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SRCDOC_ID" source="SRCDOC_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="START_DATE" source="START_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="END_DATE" source="END_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="POSTING_DATE" source="POSTING_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RAI_TS" source="RAI_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="HEADER_ID" source="HEADER_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_ID" source="REFERENCE_ID"/>
+      </input>
+      <filter>NOT isNULL (&quot;SRCDOC_ID&quot;)</filter>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PR_CA_BW_TRANS_DEVICE_VW">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="DIST_CHANNEL"/>
+        <viewAttribute id="ART_NUM"/>
+        <viewAttribute id="BRND_CD"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="ART_NUM_TRIM" length="18" expressionLanguage="COLUMN_ENGINE">
+          <formula>ltrim(&quot;ART_NUM&quot;, '0')</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#CA_BW_TRANS_DEVICE_VW">
+        <mapping xsi:type="Calculation:AttributeMapping" target="DIST_CHANNEL" source="DIST_CHANNEL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ART_NUM" source="ART_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BRND_CD" source="BRND_CD"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="JOIN_ORDER_DEVICE" joinType="leftOuter">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="SRCDOC_ID_ORDER"/>
+        <viewAttribute id="SOURCE_CODE"/>
+        <viewAttribute id="DEALER_ID"/>
+        <viewAttribute id="SERIAL_NO"/>
+        <viewAttribute id="ORDER_ID"/>
+        <viewAttribute id="CUSTOMER_ID"/>
+        <viewAttribute id="PRODUCT_ID"/>
+        <viewAttribute id="SOURCE_IDENTIFIER"/>
+        <viewAttribute id="BRND_CD"/>
+        <viewAttribute id="DIST_CHANNEL"/>
+        <viewAttribute id="RAI_TS_ORDER"/>
+        <viewAttribute hidden="true" id="JOIN$SAP_ARTICLE_NO_TRIM$ART_NUM_TRIM"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="SERIAL_NO_HANDSET" length="30" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(&quot;SOURCE_IDENTIFIER&quot;='VirginOrder',&quot;SERIAL_NO&quot;,'')</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#PR_PPD_ORDER">
+        <mapping xsi:type="Calculation:AttributeMapping" target="SRCDOC_ID_ORDER" source="SRCDOC_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SOURCE_CODE" source="SOURCE_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DEALER_ID" source="DEALER_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SERIAL_NO" source="SERIAL_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ORDER_ID" source="ORDER_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_ID" source="CUSTOMER_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT_ID" source="PRODUCT_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SOURCE_IDENTIFIER" source="SOURCE_IDENTIFIER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RAI_TS_ORDER" source="RAI_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$SAP_ARTICLE_NO_TRIM$ART_NUM_TRIM" source="SAP_ARTICLE_NO_TRIM"/>
+      </input>
+      <input node="#PR_CA_BW_TRANS_DEVICE_VW">
+        <mapping xsi:type="Calculation:AttributeMapping" target="BRND_CD" source="BRND_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DIST_CHANNEL" source="DIST_CHANNEL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$SAP_ARTICLE_NO_TRIM$ART_NUM_TRIM" source="ART_NUM_TRIM"/>
+      </input>
+      <joinAttribute name="JOIN$SAP_ARTICLE_NO_TRIM$ART_NUM_TRIM"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="JOIN_ORDER_BILLING" joinType="leftOuter">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="SRCDOC_ID_ORDER"/>
+        <viewAttribute id="SOURCE_CODE"/>
+        <viewAttribute id="DEALER_ID"/>
+        <viewAttribute id="SRCDOC_ID_BILLING"/>
+        <viewAttribute id="SERIAL_NO_HANDSET"/>
+        <viewAttribute id="START_DATE"/>
+        <viewAttribute id="END_DATE"/>
+        <viewAttribute id="BRND_CD"/>
+        <viewAttribute id="DIST_CHANNEL"/>
+        <viewAttribute id="POSTING_DATE"/>
+        <viewAttribute id="RAI_TS_ORDER"/>
+        <viewAttribute id="RAI_TS_BILLING"/>
+        <viewAttribute id="HEADER_ID"/>
+        <viewAttribute id="REFERENCE_ID"/>
+        <viewAttribute hidden="true" id="JOIN$PRODUCT_ID$PRODUCT_ID"/>
+        <viewAttribute hidden="true" id="JOIN$ORDER_ID$ORDER_ID"/>
+        <viewAttribute hidden="true" id="JOIN$CUSTOMER_ID$CUSTOMER_ID"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="SRCDOC_ID_BILLING_WO_SUFFIX" length="60" expressionLanguage="COLUMN_ENGINE">
+          <formula>leftstr(&quot;SRCDOC_ID_BILLING&quot;,(instr(&quot;SRCDOC_ID_BILLING&quot;,'-'))-1)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="TIMESTAMP" id="DELTA_TS" expressionLanguage="COLUMN_ENGINE">
+          <formula>if (&quot;RAI_TS_BILLING&quot; >= if(isnull(&quot;RAI_TS_ORDER&quot;),date(19000101),&quot;RAI_TS_ORDER&quot;),&#xD;
+&quot;RAI_TS_BILLING&quot;,&quot;RAI_TS_ORDER&quot;)</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#PR_PPD_BILLING">
+        <mapping xsi:type="Calculation:AttributeMapping" target="SRCDOC_ID_BILLING" source="SRCDOC_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="START_DATE" source="START_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="END_DATE" source="END_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="POSTING_DATE" source="POSTING_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RAI_TS_BILLING" source="RAI_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="HEADER_ID" source="HEADER_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_ID" source="REFERENCE_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$ORDER_ID$ORDER_ID" source="ORDER_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$CUSTOMER_ID$CUSTOMER_ID" source="CUSTOMER_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$PRODUCT_ID$PRODUCT_ID" source="PRODUCT_ID"/>
+      </input>
+      <input node="#JOIN_ORDER_DEVICE">
+        <mapping xsi:type="Calculation:AttributeMapping" target="SRCDOC_ID_ORDER" source="SRCDOC_ID_ORDER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SOURCE_CODE" source="SOURCE_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DEALER_ID" source="DEALER_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SERIAL_NO_HANDSET" source="SERIAL_NO_HANDSET"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BRND_CD" source="BRND_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DIST_CHANNEL" source="DIST_CHANNEL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RAI_TS_ORDER" source="RAI_TS_ORDER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$ORDER_ID$ORDER_ID" source="ORDER_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$CUSTOMER_ID$CUSTOMER_ID" source="CUSTOMER_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$PRODUCT_ID$PRODUCT_ID" source="PRODUCT_ID"/>
+      </input>
+      <joinAttribute name="JOIN$ORDER_ID$ORDER_ID"/>
+      <joinAttribute name="JOIN$CUSTOMER_ID$CUSTOMER_ID"/>
+      <joinAttribute name="JOIN$PRODUCT_ID$PRODUCT_ID"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PR_CA_POB_SRCDOC_ID_MAP_VW">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="POB_ID"/>
+        <viewAttribute id="SRCDOC_ID_BILLING_WO_SUFFIX"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#CA_POB_SRCDOC_ID_MAP_VW">
+        <mapping xsi:type="Calculation:AttributeMapping" target="POB_ID" source="POB_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SRCDOC_ID_BILLING_WO_SUFFIX" source="SRCDOC_ID_BILLING_WO_SUFFIX"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="JOIN_MOB_PRE_POB" joinType="inner">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="POB_ID"/>
+        <viewAttribute id="SOURCE_CODE"/>
+        <viewAttribute id="DEALER_ID"/>
+        <viewAttribute id="SERIAL_NO_HANDSET"/>
+        <viewAttribute id="START_DATE"/>
+        <viewAttribute id="END_DATE"/>
+        <viewAttribute id="DELTA_TS"/>
+        <viewAttribute id="BRND_CD"/>
+        <viewAttribute id="DIST_CHANNEL"/>
+        <viewAttribute id="POSTING_DATE"/>
+        <viewAttribute id="SRCDOC_ID_BILLING"/>
+        <viewAttribute id="HEADER_ID"/>
+        <viewAttribute id="REFERENCE_ID"/>
+        <viewAttribute hidden="true" id="JOIN$SRCDOC_ID_BILLING_WO_SUFFIX$SRCDOC_ID_BILLING_WO_SUFFIX"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#JOIN_ORDER_BILLING">
+        <mapping xsi:type="Calculation:AttributeMapping" target="SOURCE_CODE" source="SOURCE_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DEALER_ID" source="DEALER_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SERIAL_NO_HANDSET" source="SERIAL_NO_HANDSET"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="START_DATE" source="START_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="END_DATE" source="END_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DELTA_TS" source="DELTA_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BRND_CD" source="BRND_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DIST_CHANNEL" source="DIST_CHANNEL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="POSTING_DATE" source="POSTING_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SRCDOC_ID_BILLING" source="SRCDOC_ID_BILLING"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="HEADER_ID" source="HEADER_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_ID" source="REFERENCE_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$SRCDOC_ID_BILLING_WO_SUFFIX$SRCDOC_ID_BILLING_WO_SUFFIX" source="SRCDOC_ID_BILLING_WO_SUFFIX"/>
+      </input>
+      <input node="#PR_CA_POB_SRCDOC_ID_MAP_VW">
+        <mapping xsi:type="Calculation:AttributeMapping" target="POB_ID" source="POB_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$SRCDOC_ID_BILLING_WO_SUFFIX$SRCDOC_ID_BILLING_WO_SUFFIX" source="SRCDOC_ID_BILLING_WO_SUFFIX"/>
+      </input>
+      <joinAttribute name="JOIN$SRCDOC_ID_BILLING_WO_SUFFIX$SRCDOC_ID_BILLING_WO_SUFFIX"/>
+    </calculationView>
+  </calculationViews>
+  <logicalModel id="JOIN_MOB_PRE_POB">
+    <descriptions/>
+    <attributes>
+      <attribute id="POB_ID" order="2" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="POB_ID"/>
+        <keyMapping columnObjectName="JOIN_MOB_PRE_POB" columnName="POB_ID"/>
+      </attribute>
+      <attribute id="SOURCE_CODE" order="3" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SOURCE_CODE"/>
+        <keyMapping columnObjectName="JOIN_MOB_PRE_POB" columnName="SOURCE_CODE"/>
+      </attribute>
+      <attribute id="DEALER_ID" order="4" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="DEALER_ID"/>
+        <keyMapping columnObjectName="JOIN_MOB_PRE_POB" columnName="DEALER_ID"/>
+      </attribute>
+      <attribute id="SERIAL_NO_HANDSET" order="5" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SERIAL_NO_HANDSET"/>
+        <keyMapping columnObjectName="JOIN_MOB_PRE_POB" columnName="SERIAL_NO_HANDSET"/>
+      </attribute>
+      <attribute id="START_DATE" order="6" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="START_DATE"/>
+        <keyMapping columnObjectName="JOIN_MOB_PRE_POB" columnName="START_DATE"/>
+      </attribute>
+      <attribute id="END_DATE" order="7" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="END_DATE"/>
+        <keyMapping columnObjectName="JOIN_MOB_PRE_POB" columnName="END_DATE"/>
+      </attribute>
+      <attribute id="DELTA_TS" order="8" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="DELTA_TS"/>
+        <keyMapping columnObjectName="JOIN_MOB_PRE_POB" columnName="DELTA_TS"/>
+      </attribute>
+      <attribute id="BRND_CD" order="9" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="BRND_CD"/>
+        <keyMapping columnObjectName="JOIN_MOB_PRE_POB" columnName="BRND_CD"/>
+      </attribute>
+      <attribute id="DIST_CHANNEL" order="10" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="DIST_CHANNEL"/>
+        <keyMapping columnObjectName="JOIN_MOB_PRE_POB" columnName="DIST_CHANNEL"/>
+      </attribute>
+      <attribute id="POSTING_DATE" order="11" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="POSTING_DATE"/>
+        <keyMapping columnObjectName="JOIN_MOB_PRE_POB" columnName="POSTING_DATE"/>
+      </attribute>
+      <attribute id="SRCDOC_ID" order="12" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SRCDOC_ID"/>
+        <keyMapping columnObjectName="JOIN_MOB_PRE_POB" columnName="SRCDOC_ID_BILLING"/>
+      </attribute>
+      <attribute id="HEADER_ID" order="13" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="HEADER_ID"/>
+        <keyMapping columnObjectName="JOIN_MOB_PRE_POB" columnName="HEADER_ID"/>
+      </attribute>
+      <attribute id="REFERENCE_ID" order="14" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="REFERENCE_ID"/>
+        <keyMapping columnObjectName="JOIN_MOB_PRE_POB" columnName="REFERENCE_ID"/>
+      </attribute>
+    </attributes>
+    <calculatedAttributes/>
+    <privateDataFoundation>
+      <tableProxies/>
+      <joins/>
+      <layout>
+        <shapes/>
+      </layout>
+    </privateDataFoundation>
+    <baseMeasures/>
+    <calculatedMeasures>
+      <measure id="COUNTER" hidden="false" order="1" aggregationType="sum" measureType="simple" aggregatable="true" calculatedMeasureType="counter" datatype="INTEGER" expressionLanguage="COLUMN_ENGINE">
+        <descriptions defaultDescription="COUNTER"/>
+        <exceptionAggregation exceptionAggregationType="countDistinct">
+          <attribute attributeName="POB_ID"/>
+        </exceptionAggregation>
+        <formula>1</formula>
+      </measure>
+    </calculatedMeasures>
+    <restrictedMeasures/>
+    <localDimensions/>
+  </logicalModel>
+  <layout>
+    <shapes>
+      <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+        <upperLeftCorner x="175" y="87"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PR_PPD_ORDER" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="99" y="453"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PR_PPD_BILLING" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="22" y="357"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PR_CA_BW_TRANS_DEVICE_VW" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="253" y="453"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="JOIN_ORDER_DEVICE" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="176" y="357"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="JOIN_ORDER_BILLING" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="98" y="261"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PR_CA_POB_SRCDOC_ID_MAP_VW" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="252" y="261"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="JOIN_MOB_PRE_POB" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="175" y="165"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+    </shapes>
+  </layout>
+</Calculation:scenario>

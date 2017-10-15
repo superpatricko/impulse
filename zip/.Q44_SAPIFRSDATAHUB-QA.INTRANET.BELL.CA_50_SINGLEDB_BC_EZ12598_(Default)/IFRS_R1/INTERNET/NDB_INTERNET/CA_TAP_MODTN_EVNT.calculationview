@@ -1,0 +1,315 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" xmlns:Variable="http://www.sap.com/ndb/BiModelVariable.ecore" schemaVersion="2.3" id="CA_TAP_MODTN_EVNT" applyPrivilegeType="NONE" checkAnalyticPrivileges="false" defaultClient="$$client$$" defaultLanguage="$$language$$" hierarchiesSQLEnabled="false" translationRelevant="true" visibility="internal" calculationScenarioType="TREE_BASED" dataCategory="DIMENSION" enforceSqlExecution="false" executionSemantic="UNDEFINED" outputViewType="Projection">
+  <descriptions defaultDescription="CA_TAP_MODTN_EVNT"/>
+  <localVariables>
+    <variable id="IP_CID_DATE" parameter="true">
+      <descriptions defaultDescription="IP_CID_DATE"/>
+      <variableProperties datatype="DATE" defaultValue="99991231" mandatory="false">
+        <valueDomain type="Date"/>
+        <selection multiLine="false" type="SingleValue"/>
+      </variableProperties>
+    </variable>
+  </localVariables>
+  <variableMappings>
+    <mapping xsi:type="Variable:VariableMapping" dataSource="#CA_TAP_MODTN_EVNT">
+      <targetVariable name="IP_CID_DATE" resourceUri="/IFRS_R1.INTERNET.LAND_INTERNET/calculationviews/CA_TAP_MODTN_EVNT"/>
+      <localVariable>#IP_CID_DATE</localVariable>
+    </mapping>
+  </variableMappings>
+  <informationModelLayout relativeWidthScenario="43"/>
+  <dataSources>
+    <DataSource id="IFRS_R1.INTERNET.NDB_INTERNET::INT_MODTN_EVNT" type="DATA_BASE_TABLE">
+      <viewAttributes allViewAttributes="true"/>
+      <columnObject schemaName="NDB_INTERNET" columnObjectName="IFRS_R1.INTERNET.NDB_INTERNET::INT_MODTN_EVNT"/>
+    </DataSource>
+    <DataSource id="CA_TAP_MODTN_EVNT" type="CALCULATION_VIEW">
+      <viewAttributes allViewAttributes="true"/>
+      <resourceUri>/IFRS_R1.INTERNET.LAND_INTERNET/calculationviews/CA_TAP_MODTN_EVNT</resourceUri>
+    </DataSource>
+  </dataSources>
+  <calculationViews>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_NDB">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="PRM_CONTR_CUST"/>
+        <viewAttribute id="ALTN_CONTR_NUM"/>
+        <viewAttribute id="CONTR_UNQ_ID"/>
+        <viewAttribute id="EVNT_STATE"/>
+        <viewAttribute id="EVNT_ID"/>
+        <viewAttribute id="EVNT_EFF_DT"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#IFRS_R1.INTERNET.NDB_INTERNET::INT_MODTN_EVNT">
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRM_CONTR_CUST" source="PRM_CONTR_CUST"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ALTN_CONTR_NUM" source="ALTN_CONTR_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTR_UNQ_ID" source="CONTR_UNQ_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EVNT_STATE" source="EVNT_STATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EVNT_ID" source="EVNT_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EVNT_EFF_DT" source="EVNT_EFF_DT"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_VIEW">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="ALTN_CONTR_NUM"/>
+        <viewAttribute id="CONTR_UNQ_ID"/>
+        <viewAttribute id="EVNT_EFF_DT"/>
+        <viewAttribute id="EVNT_ID"/>
+        <viewAttribute id="EVNT_STATE"/>
+        <viewAttribute id="EVNT_TY_CD"/>
+        <viewAttribute id="PRM_CONTR_CUST"/>
+        <viewAttribute id="RACTVN_DT"/>
+        <viewAttribute id="TEMP_SEAS_SUSPN"/>
+        <viewAttribute id="CYCL_ID"/>
+        <viewAttribute id="SEQ_ID"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#CA_TAP_MODTN_EVNT">
+        <mapping xsi:type="Calculation:AttributeMapping" target="ALTN_CONTR_NUM" source="ALTN_CONTR_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTR_UNQ_ID" source="CONTR_UNQ_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EVNT_EFF_DT" source="EVNT_EFF_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EVNT_ID" source="EVNT_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EVNT_STATE" source="EVNT_STATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EVNT_TY_CD" source="EVNT_TY_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRM_CONTR_CUST" source="PRM_CONTR_CUST"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RACTVN_DT" source="RACTVN_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TEMP_SEAS_SUSPN" source="TEMP_SEAS_SUSPN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SEQ_ID" source="SEQ_ID"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="JOIN" joinType="leftOuter">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="ALTN_CONTR_NUM"/>
+        <viewAttribute id="CONTR_UNQ_ID"/>
+        <viewAttribute id="EVNT_EFF_DT"/>
+        <viewAttribute id="EVNT_ID"/>
+        <viewAttribute id="EVNT_STATE"/>
+        <viewAttribute id="EVNT_TY_CD"/>
+        <viewAttribute id="PRM_CONTR_CUST"/>
+        <viewAttribute id="RACTVN_DT"/>
+        <viewAttribute id="TEMP_SEAS_SUSPN"/>
+        <viewAttribute id="ALTN_CONTR_NUM_RIGHT"/>
+        <viewAttribute id="CYCL_ID"/>
+        <viewAttribute id="SEQ_ID"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#PROJ_VIEW">
+        <mapping xsi:type="Calculation:AttributeMapping" target="ALTN_CONTR_NUM" source="ALTN_CONTR_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTR_UNQ_ID" source="CONTR_UNQ_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EVNT_EFF_DT" source="EVNT_EFF_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EVNT_ID" source="EVNT_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EVNT_STATE" source="EVNT_STATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EVNT_TY_CD" source="EVNT_TY_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRM_CONTR_CUST" source="PRM_CONTR_CUST"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RACTVN_DT" source="RACTVN_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TEMP_SEAS_SUSPN" source="TEMP_SEAS_SUSPN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SEQ_ID" source="SEQ_ID"/>
+      </input>
+      <input node="#PROJ_NDB">
+        <mapping xsi:type="Calculation:AttributeMapping" target="ALTN_CONTR_NUM_RIGHT" source="ALTN_CONTR_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ALTN_CONTR_NUM" source="ALTN_CONTR_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRM_CONTR_CUST" source="PRM_CONTR_CUST"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTR_UNQ_ID" source="CONTR_UNQ_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EVNT_ID" source="EVNT_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EVNT_STATE" source="EVNT_STATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EVNT_EFF_DT" source="EVNT_EFF_DT"/>
+      </input>
+      <joinAttribute name="ALTN_CONTR_NUM"/>
+      <joinAttribute name="PRM_CONTR_CUST"/>
+      <joinAttribute name="CONTR_UNQ_ID"/>
+      <joinAttribute name="EVNT_ID"/>
+      <joinAttribute name="EVNT_STATE"/>
+      <joinAttribute name="EVNT_EFF_DT"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_ERROR">
+      <descriptions>
+        <comment text="Functional Error will be raised as 20202301&#xD;&#xA;&#xD;&#xA;ALTN_CONTR_NUM already exists in INT_MODTN_EVNT NDB table for ALTN_CONTR_NUM  in CA_TAP_MODTN_EVNT view. Always new ALTN_CONTR_NUM is expected from CA_TAP_MODTN_EVNT .&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;"/>
+      </descriptions>
+      <viewAttributes>
+        <viewAttribute id="ALTN_CONTR_NUM"/>
+        <viewAttribute id="CONTR_UNQ_ID"/>
+        <viewAttribute id="EVNT_EFF_DT"/>
+        <viewAttribute id="EVNT_ID"/>
+        <viewAttribute id="EVNT_STATE"/>
+        <viewAttribute id="EVNT_TY_CD"/>
+        <viewAttribute id="PRM_CONTR_CUST"/>
+        <viewAttribute id="RACTVN_DT"/>
+        <viewAttribute id="TEMP_SEAS_SUSPN"/>
+        <viewAttribute id="ALTN_CONTR_NUM_RIGHT"/>
+        <viewAttribute id="CYCL_ID"/>
+        <viewAttribute id="SEQ_ID"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CC_EXISTING_RECORD" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isNull(&quot;ALTN_CONTR_NUM_RIGHT&quot;) , 'I' , 'U')</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="IS_20202301" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isNull(&quot;ALTN_CONTR_NUM_RIGHT&quot;),'0','1')</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#JOIN">
+        <mapping xsi:type="Calculation:AttributeMapping" target="ALTN_CONTR_NUM" source="ALTN_CONTR_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTR_UNQ_ID" source="CONTR_UNQ_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EVNT_EFF_DT" source="EVNT_EFF_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EVNT_ID" source="EVNT_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EVNT_STATE" source="EVNT_STATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EVNT_TY_CD" source="EVNT_TY_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRM_CONTR_CUST" source="PRM_CONTR_CUST"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RACTVN_DT" source="RACTVN_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TEMP_SEAS_SUSPN" source="TEMP_SEAS_SUSPN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ALTN_CONTR_NUM_RIGHT" source="ALTN_CONTR_NUM_RIGHT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SEQ_ID" source="SEQ_ID"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="ERROR_SEMANTICS">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="ALTN_CONTR_NUM"/>
+        <viewAttribute id="CONTR_UNQ_ID"/>
+        <viewAttribute id="EVNT_EFF_DT"/>
+        <viewAttribute id="EVNT_ID"/>
+        <viewAttribute id="EVNT_STATE"/>
+        <viewAttribute id="EVNT_TY_CD"/>
+        <viewAttribute id="PRM_CONTR_CUST"/>
+        <viewAttribute id="RACTVN_DT"/>
+        <viewAttribute id="TEMP_SEAS_SUSPN"/>
+        <viewAttribute id="CC_EXISTING_RECORD"/>
+        <viewAttribute id="IS_20202301"/>
+        <viewAttribute id="CYCL_ID"/>
+        <viewAttribute id="SEQ_ID"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="ERROR_CODE" length="500" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(&quot;IS_20202301&quot;='1', '20202301||','')</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="ERROR_STATUS" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(&quot;IS_20202301&quot;='1','1','0')</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#PROJ_ERROR">
+        <mapping xsi:type="Calculation:AttributeMapping" target="ALTN_CONTR_NUM" source="ALTN_CONTR_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTR_UNQ_ID" source="CONTR_UNQ_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EVNT_EFF_DT" source="EVNT_EFF_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EVNT_ID" source="EVNT_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EVNT_STATE" source="EVNT_STATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EVNT_TY_CD" source="EVNT_TY_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRM_CONTR_CUST" source="PRM_CONTR_CUST"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RACTVN_DT" source="RACTVN_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TEMP_SEAS_SUSPN" source="TEMP_SEAS_SUSPN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_EXISTING_RECORD" source="CC_EXISTING_RECORD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20202301" source="IS_20202301"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SEQ_ID" source="SEQ_ID"/>
+      </input>
+    </calculationView>
+  </calculationViews>
+  <logicalModel id="ERROR_SEMANTICS">
+    <descriptions/>
+    <attributes>
+      <attribute id="ALTN_CONTR_NUM" order="1" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ALTN_CONTR_NUM"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="ALTN_CONTR_NUM"/>
+      </attribute>
+      <attribute id="CONTR_UNQ_ID" order="2" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CONTR_UNQ_ID"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="CONTR_UNQ_ID"/>
+      </attribute>
+      <attribute id="EVNT_EFF_DT" order="3" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="EVNT_EFF_DT"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="EVNT_EFF_DT"/>
+      </attribute>
+      <attribute id="EVNT_ID" order="4" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="EVNT_ID"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="EVNT_ID"/>
+      </attribute>
+      <attribute id="EVNT_STATE" order="5" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="EVNT_STATE"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="EVNT_STATE"/>
+      </attribute>
+      <attribute id="EVNT_TY_CD" order="6" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="EVNT_TY_CD"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="EVNT_TY_CD"/>
+      </attribute>
+      <attribute id="PRM_CONTR_CUST" order="7" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="PRM_CONTR_CUST"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="PRM_CONTR_CUST"/>
+      </attribute>
+      <attribute id="RACTVN_DT" order="8" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="RACTVN_DT"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="RACTVN_DT"/>
+      </attribute>
+      <attribute id="TEMP_SEAS_SUSPN" order="9" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="TEMP_SEAS_SUSPN"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="TEMP_SEAS_SUSPN"/>
+      </attribute>
+      <attribute id="FLAG_EXISTING_RECORD" order="10" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="FLAG_EXISTING_RECORD"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="CC_EXISTING_RECORD"/>
+      </attribute>
+      <attribute id="ERROR_CODE" order="11" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ERROR_CODE"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="ERROR_CODE"/>
+      </attribute>
+      <attribute id="CYCL_ID" order="12" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CYCL_ID"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="CYCL_ID"/>
+      </attribute>
+      <attribute id="SEQ_ID" order="13" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SEQ_ID"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="SEQ_ID"/>
+      </attribute>
+      <attribute id="IS_20202301" order="14" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="IS_20202301"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="IS_20202301"/>
+      </attribute>
+      <attribute id="ERROR_STATUS" order="15" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ERROR_STATUS"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="ERROR_STATUS"/>
+      </attribute>
+    </attributes>
+    <calculatedAttributes/>
+    <privateDataFoundation>
+      <tableProxies/>
+      <joins/>
+      <layout>
+        <shapes/>
+      </layout>
+    </privateDataFoundation>
+    <baseMeasures/>
+    <calculatedMeasures/>
+    <restrictedMeasures/>
+    <localDimensions/>
+  </logicalModel>
+  <layout>
+    <shapes>
+      <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+        <upperLeftCorner x="99" y="87"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_NDB" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="176" y="417"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_VIEW" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="22" y="417"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="JOIN" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="99" y="321"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_ERROR" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="99" y="243"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+      <shape expanded="true" modelObjectName="ERROR_SEMANTICS" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="99" y="165"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+    </shapes>
+  </layout>
+</Calculation:scenario>

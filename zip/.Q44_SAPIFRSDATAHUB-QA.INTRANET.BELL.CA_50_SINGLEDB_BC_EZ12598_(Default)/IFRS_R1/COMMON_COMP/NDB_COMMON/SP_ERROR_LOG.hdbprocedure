@@ -1,0 +1,61 @@
+PROCEDURE "NDB_COMMON"."IFRS_R1.COMMON_COMP.NDB_COMMON::SP_ERROR_LOG"     
+    (
+    	IN IP_EVENT    NVARCHAR(30),
+        IN IP_PROC_ID  NVARCHAR(500),
+        IN IP_ERR_CD   NVARCHAR(200),
+        IN IP_ERR_MSG  NVARCHAR(2000),
+        IN IP_TIME     DATE 
+     ) 
+	LANGUAGE SQLSCRIPT
+	--SQL SECURITY INVOKER 
+	--DEFAULT SCHEMA <default_schema_name>
+	--READS SQL DATA 
+	AS
+BEGIN 
+----------------------------------------------------------------------------------------------------
+-- Procedure Title : IFRS_R1.COMMON_COMP.NDB_COMMON::SP_ERROR_LOG
+----------------------------------------------------------------------------------------------------
+-- Created By      : BC_EY44387(Gunjan Joshi)          Date : 10/09/2016
+----------------------------------------------------------------------------------------------------
+-- Procedure Description : The purpose of the Procedure is to modularize the process of updating the
+--						   database table ERROR_LOG with the input parameter values.
+--						   The procedure will be used:
+--							1. To capture Error or Success Message.
+--							2. To track each LOB Error/Success message.
+--							3. To get the EVENT ID to filter out the LOB wise messages.
+--							4. To capture the timestamp of the procedure run.
+
+----------------------------------------------------------------------------------------------------
+-- Release :R1/IFRS
+----------------------------------------------------------------------------------------------------
+--   M O D I F I C A T I O N   H I S T O R Y
+----------------------------------------------------------------------------------------------------
+-- Date        | User ID                | Modification History/Release
+----------------------------------------------------------------------------------------------------
+-- 28/01/2017  | BC_EY94137/Akanksha    | update length of input parameter as a fix for defect 1160
+----------------------------------------------------------------------------------------------------
+-- Description Of the changes 
+----------------------------------------------------------------------------------------------------
+-- Modification Number          : 
+-- Description of Changes Made> :     
+----------------------------------------------------------------------------------------------------
+
+/* Inserting Input parameter values as the records of the databse table ERROR_LOG*/ 
+INSERT INTO "NDB_COMMON"."IFRS_R1.COMMON_COMP.NDB_COMMON::ERROR_LOG"
+( 
+	EVENT,
+    PROC_ID,
+    ERROR_CODE,
+    ERROR_MESSAGE,
+    START_END_TIME 
+)
+VALUES
+( 
+	IP_EVENT,
+    IP_PROC_ID,
+    IP_ERR_CD,
+    IP_ERR_MSG,
+    IP_TIME 
+);
+
+END;

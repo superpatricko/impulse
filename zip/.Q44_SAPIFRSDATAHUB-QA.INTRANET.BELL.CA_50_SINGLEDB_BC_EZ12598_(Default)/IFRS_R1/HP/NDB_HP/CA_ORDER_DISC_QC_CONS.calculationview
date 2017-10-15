@@ -1,0 +1,1000 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" xmlns:Variable="http://www.sap.com/ndb/BiModelVariable.ecore" schemaVersion="2.3" id="CA_ORDER_DISC_QC_CONS" applyPrivilegeType="NONE" checkAnalyticPrivileges="false" defaultClient="$$client$$" defaultLanguage="$$language$$" hierarchiesSQLEnabled="false" translationRelevant="false" visibility="reportingEnabled" calculationScenarioType="TREE_BASED" dataCategory="CUBE" enforceSqlExecution="false" executionSemantic="UNDEFINED" outputViewType="Aggregation">
+  <descriptions defaultDescription="CA_ORDER_DISC_QC_CONS">
+    <comment text="This Harmonization view is Consolidated View of Discount Item, Customer and Pricing data for Quebec region.It includes data from CA_BCRIS_DISC_QC_VW,HP_CUSTOMER,MDM DISCOUNT Tables"/>
+  </descriptions>
+  <localVariables>
+    <variable id="IP_CYCL_ID" parameter="true">
+      <descriptions defaultDescription="IP_CYCL_ID"/>
+      <variableProperties datatype="NVARCHAR" defaultValue="999" length="3" mandatory="false">
+        <valueDomain type="empty"/>
+        <selection multiLine="false" type="SingleValue"/>
+      </variableProperties>
+    </variable>
+  </localVariables>
+  <variableMappings>
+    <mapping xsi:type="Variable:VariableMapping" dataSource="#CA_BCRIS_DSCT_INFO_QC">
+      <targetVariable name="IP_CYCL_ID" resourceUri="/IFRS_R1.HP.LAND_HP/calculationviews/CA_BCRIS_DSCT_INFO_QC"/>
+      <localVariable>#IP_CYCL_ID</localVariable>
+    </mapping>
+  </variableMappings>
+  <informationModelLayout relativeWidthScenario="60"/>
+  <dataSources>
+    <DataSource id="CA_BCRIS_DSCT_INFO_QC" type="CALCULATION_VIEW">
+      <viewAttributes allViewAttributes="true"/>
+      <resourceUri>/IFRS_R1.HP.LAND_HP/calculationviews/CA_BCRIS_DSCT_INFO_QC</resourceUri>
+    </DataSource>
+    <DataSource id="IFRS_R1.HP.NDB_HP::HP_CUSTOMER" type="DATA_BASE_TABLE">
+      <viewAttributes allViewAttributes="true"/>
+      <columnObject schemaName="NDB_HP" columnObjectName="IFRS_R1.HP.NDB_HP::HP_CUSTOMER"/>
+    </DataSource>
+    <DataSource id="IFRS_R1.HP.NDB_HP::HP_MDM_CD_PRC" type="DATA_BASE_TABLE">
+      <viewAttributes allViewAttributes="true"/>
+      <columnObject schemaName="NDB_HP" columnObjectName="IFRS_R1.HP.NDB_HP::HP_MDM_CD_PRC"/>
+    </DataSource>
+    <DataSource id="CA_HP_MDM_BILL_CD_SQL" type="CALCULATION_VIEW">
+      <viewAttributes allViewAttributes="true"/>
+      <resourceUri>/IFRS_R1.HP.LAND_HP/calculationviews/CA_HP_MDM_BILL_CD_SQL</resourceUri>
+    </DataSource>
+    <DataSource id="IFRS_R1.HP.NDB_HP::HP_EVENT" type="DATA_BASE_TABLE">
+      <viewAttributes allViewAttributes="true"/>
+      <columnObject schemaName="NDB_HP" columnObjectName="IFRS_R1.HP.NDB_HP::HP_EVENT"/>
+    </DataSource>
+  </dataSources>
+  <calculationViews>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_BCRIS_DISC">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="CONTRACT_UNIQUE_IDENTIFIER"/>
+        <viewAttribute id="DISCOUNT_TN"/>
+        <viewAttribute id="REGION"/>
+        <viewAttribute id="DISCOUNT_QUANTITY"/>
+        <viewAttribute id="DISCOUNT_TYPE_CODE"/>
+        <viewAttribute id="DISCOUNT_AMOUNT"/>
+        <viewAttribute id="DISCOUNT_END_DATE"/>
+        <viewAttribute id="DISCOUNT_ID"/>
+        <viewAttribute id="DISCOUNT_START_DATE"/>
+        <viewAttribute id="RATE_BAND"/>
+        <viewAttribute id="MODIFICATION_EVENT_ID"/>
+        <viewAttribute id="FIXED_OR_VARIABLE_RATE_INDICATOR"/>
+        <viewAttribute id="DISCOUNT_ACTION"/>
+        <viewAttribute id="CYCL_ID"/>
+        <viewAttribute id="SEQ_ID"/>
+        <viewAttribute id="DSCT_QB_PRIMARY_KEY"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CC_SOURCE_SYSTEM_CODE" length="4" expressionLanguage="COLUMN_ENGINE">
+          <formula>'06'</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#CA_BCRIS_DSCT_INFO_QC">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTRACT_UNIQUE_IDENTIFIER" source="CONTRACT_UNIQUE_IDENTIFIER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DISCOUNT_TN" source="DISCOUNT_TN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REGION" source="REGION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DISCOUNT_QUANTITY" source="DISCOUNT_QUANTITY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DISCOUNT_TYPE_CODE" source="DISCOUNT_TYPE_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DISCOUNT_AMOUNT" source="DISCOUNT_AMOUNT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DISCOUNT_END_DATE" source="DISCOUNT_END_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DISCOUNT_ID" source="DISCOUNT_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DISCOUNT_START_DATE" source="DISCOUNT_START_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RATE_BAND" source="RATE_BAND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MODIFICATION_EVENT_ID" source="MODIFICATION_EVENT_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FIXED_OR_VARIABLE_RATE_INDICATOR" source="FIXED_OR_VARIABLE_RATE_INDICATOR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DISCOUNT_ACTION" source="DISCOUNT_ACTION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SEQ_ID" source="SEQ_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DSCT_QB_PRIMARY_KEY" source="DSCT_QB_PRIMARY_KEY"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_HP_CUST">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="PRIMARY_TELEPHONE_NUMBER"/>
+        <viewAttribute id="SUBSCRIBER_NUMBER"/>
+        <viewAttribute id="CONTRACT_INCEPTION_DT"/>
+        <viewAttribute id="TERM_M2M_INDICATOR"/>
+        <viewAttribute id="KUNNR_SID"/>
+        <viewAttribute id="CONTRACT_UNIQUE_IDENTIFIER"/>
+        <viewAttribute id="REF_EFFECTIVE_DATE"/>
+        <viewAttribute id="REF_EXPIRY_DATE"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#IFRS_R1.HP.NDB_HP::HP_CUSTOMER">
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRIMARY_TELEPHONE_NUMBER" source="PRIMARY_TELEPHONE_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBSCRIBER_NUMBER" source="SUBSCRIBER_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTRACT_INCEPTION_DT" source="CONTRACT_INCEPTION_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TERM_M2M_INDICATOR" source="TERM_M2M_INDICATOR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KUNNR_SID" source="KUNNR_SID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTRACT_UNIQUE_IDENTIFIER" source="CONTRACT_UNIQUE_IDENTIFIER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REF_EFFECTIVE_DATE" source="REF_EFFECTIVE_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REF_EXPIRY_DATE" source="REF_EXPIRY_DATE"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="JOIN_BCRIS_DISC_CUST" joinType="leftOuter">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="CONTRACT_UNIQUE_IDENTIFIER"/>
+        <viewAttribute id="DISCOUNT_TN"/>
+        <viewAttribute id="REGION"/>
+        <viewAttribute id="DISCOUNT_QUANTITY"/>
+        <viewAttribute id="DISCOUNT_TYPE_CODE"/>
+        <viewAttribute id="DISCOUNT_AMOUNT"/>
+        <viewAttribute id="DISCOUNT_END_DATE"/>
+        <viewAttribute id="DISCOUNT_ID"/>
+        <viewAttribute id="DISCOUNT_START_DATE"/>
+        <viewAttribute id="RATE_BAND"/>
+        <viewAttribute id="MODIFICATION_EVENT_ID"/>
+        <viewAttribute id="FIXED_OR_VARIABLE_RATE_INDICATOR"/>
+        <viewAttribute id="DISCOUNT_ACTION"/>
+        <viewAttribute id="CC_SOURCE_SYSTEM_CODE"/>
+        <viewAttribute id="TERM_M2M_INDICATOR"/>
+        <viewAttribute id="CONTRACT_INCEPTION_DT"/>
+        <viewAttribute id="SUBSCRIBER_NUMBER"/>
+        <viewAttribute id="PRIMARY_TELEPHONE_NUMBER"/>
+        <viewAttribute id="REF_EFFECTIVE_DATE"/>
+        <viewAttribute id="REF_EXPIRY_DATE"/>
+        <viewAttribute id="CONTRACT_UNIQUE_IDENTIFIER_RIGHT"/>
+        <viewAttribute id="KUNNR_SID"/>
+        <viewAttribute id="CYCL_ID"/>
+        <viewAttribute id="SEQ_ID"/>
+        <viewAttribute id="DSCT_QB_PRIMARY_KEY"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="DATE" id="CC_ITEM_INCEPTION_DATE" expressionLanguage="COLUMN_ENGINE">
+          <formula>if((isNull(&quot;DISCOUNT_START_DATE&quot;)OR &quot;DISCOUNT_START_DATE&quot;=date('00010101')) ,&quot;CONTRACT_INCEPTION_DT&quot;,&quot;DISCOUNT_START_DATE&quot;)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="DATE" id="CC_REF_EXPIRY_DATE" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isnull(&quot;REF_EXPIRY_DATE&quot;), date('99991231'), &quot;REF_EXPIRY_DATE&quot;)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="DATE" id="CC_REF_EFFECTIVE_DATE" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isnull(&quot;REF_EFFECTIVE_DATE&quot;), date('19000101'), &quot;REF_EFFECTIVE_DATE&quot;)</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#PROJ_BCRIS_DISC">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTRACT_UNIQUE_IDENTIFIER" source="CONTRACT_UNIQUE_IDENTIFIER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DISCOUNT_TN" source="DISCOUNT_TN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REGION" source="REGION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DISCOUNT_QUANTITY" source="DISCOUNT_QUANTITY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DISCOUNT_TYPE_CODE" source="DISCOUNT_TYPE_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DISCOUNT_AMOUNT" source="DISCOUNT_AMOUNT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DISCOUNT_END_DATE" source="DISCOUNT_END_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DISCOUNT_ID" source="DISCOUNT_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DISCOUNT_START_DATE" source="DISCOUNT_START_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RATE_BAND" source="RATE_BAND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MODIFICATION_EVENT_ID" source="MODIFICATION_EVENT_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FIXED_OR_VARIABLE_RATE_INDICATOR" source="FIXED_OR_VARIABLE_RATE_INDICATOR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DISCOUNT_ACTION" source="DISCOUNT_ACTION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_SOURCE_SYSTEM_CODE" source="CC_SOURCE_SYSTEM_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SEQ_ID" source="SEQ_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DSCT_QB_PRIMARY_KEY" source="DSCT_QB_PRIMARY_KEY"/>
+      </input>
+      <input node="#PROJ_HP_CUST">
+        <mapping xsi:type="Calculation:AttributeMapping" target="TERM_M2M_INDICATOR" source="TERM_M2M_INDICATOR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTRACT_INCEPTION_DT" source="CONTRACT_INCEPTION_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBSCRIBER_NUMBER" source="SUBSCRIBER_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRIMARY_TELEPHONE_NUMBER" source="PRIMARY_TELEPHONE_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REF_EFFECTIVE_DATE" source="REF_EFFECTIVE_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REF_EXPIRY_DATE" source="REF_EXPIRY_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTRACT_UNIQUE_IDENTIFIER_RIGHT" source="CONTRACT_UNIQUE_IDENTIFIER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KUNNR_SID" source="KUNNR_SID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTRACT_UNIQUE_IDENTIFIER" source="CONTRACT_UNIQUE_IDENTIFIER"/>
+      </input>
+      <joinAttribute name="CONTRACT_UNIQUE_IDENTIFIER"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_MDM_CD_PRC">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="CD_NM"/>
+        <viewAttribute id="PROV"/>
+        <viewAttribute id="RT_BND"/>
+        <viewAttribute id="REF_EFFC_DATE"/>
+        <viewAttribute id="REF_EXP_DATE"/>
+        <viewAttribute id="PRC"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CC_PROV" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>leftstr(&quot;PROV&quot;,1)</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#IFRS_R1.HP.NDB_HP::HP_MDM_CD_PRC">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CD_NM" source="CD_NM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROV" source="PROV"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RT_BND" source="RT_BND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REF_EFFC_DATE" source="REF_EFFC_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REF_EXP_DATE" source="REF_EXP_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRC" source="PRC"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_ORDER_DISC" filterExpressionLanguage="COLUMN_ENGINE">
+      <descriptions>
+        <comment text="Join errors will be raised as 20300701&#xD;&#xA;Kunnr SID Error will be raised as 20300702&#xD;&#xA;"/>
+      </descriptions>
+      <viewAttributes>
+        <viewAttribute id="DISCOUNT_END_DATE"/>
+        <viewAttribute id="DISCOUNT_START_DATE"/>
+        <viewAttribute id="CONTRACT_UNIQUE_IDENTIFIER"/>
+        <viewAttribute id="DISCOUNT_TN"/>
+        <viewAttribute id="DISCOUNT_ID"/>
+        <viewAttribute id="MODIFICATION_EVENT_ID"/>
+        <viewAttribute id="DISCOUNT_AMOUNT"/>
+        <viewAttribute id="DISCOUNT_TYPE_CODE"/>
+        <viewAttribute id="DISCOUNT_QUANTITY"/>
+        <viewAttribute id="REGION"/>
+        <viewAttribute id="RATE_BAND"/>
+        <viewAttribute id="FIXED_OR_VARIABLE_RATE_INDICATOR"/>
+        <viewAttribute id="DISCOUNT_ACTION"/>
+        <viewAttribute id="CC_SOURCE_SYSTEM_CODE"/>
+        <viewAttribute id="TERM_M2M_INDICATOR"/>
+        <viewAttribute id="CONTRACT_INCEPTION_DT"/>
+        <viewAttribute id="SUBSCRIBER_NUMBER"/>
+        <viewAttribute id="PRIMARY_TELEPHONE_NUMBER"/>
+        <viewAttribute id="CC_ITEM_INCEPTION_DATE"/>
+        <viewAttribute id="REF_EFFECTIVE_DATE"/>
+        <viewAttribute id="REF_EXPIRY_DATE"/>
+        <viewAttribute id="CONTRACT_UNIQUE_IDENTIFIER_RIGHT"/>
+        <viewAttribute id="CC_REF_EXPIRY_DATE"/>
+        <viewAttribute id="CC_REF_EFFECTIVE_DATE"/>
+        <viewAttribute id="KUNNR_SID"/>
+        <viewAttribute id="CYCL_ID"/>
+        <viewAttribute id="SEQ_ID"/>
+        <viewAttribute id="DSCT_QB_PRIMARY_KEY"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="IS_20300701" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isnull(&quot;CONTRACT_UNIQUE_IDENTIFIER_RIGHT&quot;), '1','0')</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="IS_20300702" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isnull(&quot;KUNNR_SID&quot;), '1','0')</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#JOIN_BCRIS_DISC_CUST">
+        <mapping xsi:type="Calculation:AttributeMapping" target="DISCOUNT_END_DATE" source="DISCOUNT_END_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DISCOUNT_START_DATE" source="DISCOUNT_START_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTRACT_UNIQUE_IDENTIFIER" source="CONTRACT_UNIQUE_IDENTIFIER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DISCOUNT_TN" source="DISCOUNT_TN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DISCOUNT_ID" source="DISCOUNT_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MODIFICATION_EVENT_ID" source="MODIFICATION_EVENT_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DISCOUNT_AMOUNT" source="DISCOUNT_AMOUNT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DISCOUNT_TYPE_CODE" source="DISCOUNT_TYPE_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DISCOUNT_QUANTITY" source="DISCOUNT_QUANTITY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REGION" source="REGION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RATE_BAND" source="RATE_BAND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FIXED_OR_VARIABLE_RATE_INDICATOR" source="FIXED_OR_VARIABLE_RATE_INDICATOR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DISCOUNT_ACTION" source="DISCOUNT_ACTION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_SOURCE_SYSTEM_CODE" source="CC_SOURCE_SYSTEM_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TERM_M2M_INDICATOR" source="TERM_M2M_INDICATOR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTRACT_INCEPTION_DT" source="CONTRACT_INCEPTION_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBSCRIBER_NUMBER" source="SUBSCRIBER_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRIMARY_TELEPHONE_NUMBER" source="PRIMARY_TELEPHONE_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_ITEM_INCEPTION_DATE" source="CC_ITEM_INCEPTION_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REF_EFFECTIVE_DATE" source="REF_EFFECTIVE_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REF_EXPIRY_DATE" source="REF_EXPIRY_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTRACT_UNIQUE_IDENTIFIER_RIGHT" source="CONTRACT_UNIQUE_IDENTIFIER_RIGHT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_REF_EXPIRY_DATE" source="CC_REF_EXPIRY_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_REF_EFFECTIVE_DATE" source="CC_REF_EFFECTIVE_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KUNNR_SID" source="KUNNR_SID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SEQ_ID" source="SEQ_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DSCT_QB_PRIMARY_KEY" source="DSCT_QB_PRIMARY_KEY"/>
+      </input>
+      <filter>(&quot;CC_ITEM_INCEPTION_DATE&quot;>=&quot;CC_REF_EFFECTIVE_DATE&quot; and &quot;CC_ITEM_INCEPTION_DATE&quot;&lt;= &quot;CC_REF_EXPIRY_DATE&quot;)</filter>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="JOIN_ORDER_MDM_CD_PRC" joinType="leftOuter">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="PRC"/>
+        <viewAttribute id="REF_EXP_DATE"/>
+        <viewAttribute id="REF_EFFC_DATE"/>
+        <viewAttribute id="DISCOUNT_END_DATE"/>
+        <viewAttribute id="DISCOUNT_START_DATE"/>
+        <viewAttribute id="CONTRACT_UNIQUE_IDENTIFIER"/>
+        <viewAttribute id="DISCOUNT_TN"/>
+        <viewAttribute id="DISCOUNT_ID"/>
+        <viewAttribute id="MODIFICATION_EVENT_ID"/>
+        <viewAttribute id="DISCOUNT_AMOUNT"/>
+        <viewAttribute id="DISCOUNT_TYPE_CODE"/>
+        <viewAttribute id="DISCOUNT_QUANTITY"/>
+        <viewAttribute id="REGION"/>
+        <viewAttribute id="RATE_BAND"/>
+        <viewAttribute id="FIXED_OR_VARIABLE_RATE_INDICATOR"/>
+        <viewAttribute id="DISCOUNT_ACTION"/>
+        <viewAttribute id="CC_SOURCE_SYSTEM_CODE"/>
+        <viewAttribute id="TERM_M2M_INDICATOR"/>
+        <viewAttribute id="CONTRACT_INCEPTION_DT"/>
+        <viewAttribute id="SUBSCRIBER_NUMBER"/>
+        <viewAttribute id="PRIMARY_TELEPHONE_NUMBER"/>
+        <viewAttribute id="CC_ITEM_INCEPTION_DATE"/>
+        <viewAttribute id="CD_NM_RIGHT"/>
+        <viewAttribute id="IS_20300701"/>
+        <viewAttribute id="KUNNR_SID"/>
+        <viewAttribute id="IS_20300702"/>
+        <viewAttribute id="CYCL_ID"/>
+        <viewAttribute id="SEQ_ID"/>
+        <viewAttribute id="DSCT_QB_PRIMARY_KEY"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="DATE" id="CC_REF_EFFC_DATE" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isnull(&quot;REF_EFFC_DATE&quot;), date('19000101'), &quot;REF_EFFC_DATE&quot;)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="DATE" id="CC_REF_EXP_DATE" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isnull(&quot;REF_EXP_DATE&quot;), date('99991231'), &quot;REF_EXP_DATE&quot;)</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#PROJ_ORDER_DISC">
+        <mapping xsi:type="Calculation:AttributeMapping" target="DISCOUNT_END_DATE" source="DISCOUNT_END_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DISCOUNT_START_DATE" source="DISCOUNT_START_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTRACT_UNIQUE_IDENTIFIER" source="CONTRACT_UNIQUE_IDENTIFIER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DISCOUNT_TN" source="DISCOUNT_TN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DISCOUNT_ID" source="DISCOUNT_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MODIFICATION_EVENT_ID" source="MODIFICATION_EVENT_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DISCOUNT_AMOUNT" source="DISCOUNT_AMOUNT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DISCOUNT_TYPE_CODE" source="DISCOUNT_TYPE_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DISCOUNT_QUANTITY" source="DISCOUNT_QUANTITY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REGION" source="REGION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RATE_BAND" source="RATE_BAND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FIXED_OR_VARIABLE_RATE_INDICATOR" source="FIXED_OR_VARIABLE_RATE_INDICATOR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DISCOUNT_ACTION" source="DISCOUNT_ACTION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_SOURCE_SYSTEM_CODE" source="CC_SOURCE_SYSTEM_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TERM_M2M_INDICATOR" source="TERM_M2M_INDICATOR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTRACT_INCEPTION_DT" source="CONTRACT_INCEPTION_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBSCRIBER_NUMBER" source="SUBSCRIBER_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRIMARY_TELEPHONE_NUMBER" source="PRIMARY_TELEPHONE_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_ITEM_INCEPTION_DATE" source="CC_ITEM_INCEPTION_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20300701" source="IS_20300701"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KUNNR_SID" source="KUNNR_SID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20300702" source="IS_20300702"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SEQ_ID" source="SEQ_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DSCT_QB_PRIMARY_KEY" source="DSCT_QB_PRIMARY_KEY"/>
+      </input>
+      <input node="#PROJ_MDM_CD_PRC">
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRC" source="PRC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REF_EXP_DATE" source="REF_EXP_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REF_EFFC_DATE" source="REF_EFFC_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CD_NM_RIGHT" source="CD_NM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REGION" source="CC_PROV"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DISCOUNT_ID" source="CD_NM"/>
+      </input>
+      <joinAttribute name="REGION"/>
+      <joinAttribute name="DISCOUNT_ID"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_ORDER_DISC_1" filterExpressionLanguage="COLUMN_ENGINE">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="CONTRACT_UNIQUE_IDENTIFIER"/>
+        <viewAttribute id="DISCOUNT_TN"/>
+        <viewAttribute id="DISCOUNT_ID"/>
+        <viewAttribute id="MODIFICATION_EVENT_ID"/>
+        <viewAttribute id="DISCOUNT_AMOUNT"/>
+        <viewAttribute id="DISCOUNT_TYPE_CODE"/>
+        <viewAttribute id="DISCOUNT_QUANTITY"/>
+        <viewAttribute id="REGION"/>
+        <viewAttribute id="RATE_BAND"/>
+        <viewAttribute id="FIXED_OR_VARIABLE_RATE_INDICATOR"/>
+        <viewAttribute id="DISCOUNT_ACTION"/>
+        <viewAttribute id="PRC"/>
+        <viewAttribute id="DISCOUNT_START_DATE"/>
+        <viewAttribute id="DISCOUNT_END_DATE"/>
+        <viewAttribute id="REF_EXP_DATE"/>
+        <viewAttribute id="REF_EFFC_DATE"/>
+        <viewAttribute id="CC_SOURCE_SYSTEM_CODE"/>
+        <viewAttribute id="TERM_M2M_INDICATOR"/>
+        <viewAttribute id="CONTRACT_INCEPTION_DT"/>
+        <viewAttribute id="SUBSCRIBER_NUMBER"/>
+        <viewAttribute id="PRIMARY_TELEPHONE_NUMBER"/>
+        <viewAttribute id="CC_ITEM_INCEPTION_DATE"/>
+        <viewAttribute id="CD_NM_RIGHT"/>
+        <viewAttribute id="CC_REF_EFFC_DATE"/>
+        <viewAttribute id="CC_REF_EXP_DATE"/>
+        <viewAttribute id="IS_20300701"/>
+        <viewAttribute id="KUNNR_SID"/>
+        <viewAttribute id="IS_20300702"/>
+        <viewAttribute id="CYCL_ID"/>
+        <viewAttribute id="SEQ_ID"/>
+        <viewAttribute id="DSCT_QB_PRIMARY_KEY"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#JOIN_ORDER_MDM_CD_PRC">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTRACT_UNIQUE_IDENTIFIER" source="CONTRACT_UNIQUE_IDENTIFIER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DISCOUNT_TN" source="DISCOUNT_TN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DISCOUNT_ID" source="DISCOUNT_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MODIFICATION_EVENT_ID" source="MODIFICATION_EVENT_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DISCOUNT_AMOUNT" source="DISCOUNT_AMOUNT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DISCOUNT_TYPE_CODE" source="DISCOUNT_TYPE_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DISCOUNT_QUANTITY" source="DISCOUNT_QUANTITY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REGION" source="REGION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RATE_BAND" source="RATE_BAND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FIXED_OR_VARIABLE_RATE_INDICATOR" source="FIXED_OR_VARIABLE_RATE_INDICATOR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DISCOUNT_ACTION" source="DISCOUNT_ACTION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRC" source="PRC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DISCOUNT_START_DATE" source="DISCOUNT_START_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DISCOUNT_END_DATE" source="DISCOUNT_END_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REF_EXP_DATE" source="REF_EXP_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REF_EFFC_DATE" source="REF_EFFC_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_SOURCE_SYSTEM_CODE" source="CC_SOURCE_SYSTEM_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TERM_M2M_INDICATOR" source="TERM_M2M_INDICATOR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTRACT_INCEPTION_DT" source="CONTRACT_INCEPTION_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBSCRIBER_NUMBER" source="SUBSCRIBER_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRIMARY_TELEPHONE_NUMBER" source="PRIMARY_TELEPHONE_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_ITEM_INCEPTION_DATE" source="CC_ITEM_INCEPTION_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CD_NM_RIGHT" source="CD_NM_RIGHT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_REF_EFFC_DATE" source="CC_REF_EFFC_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_REF_EXP_DATE" source="CC_REF_EXP_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20300701" source="IS_20300701"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KUNNR_SID" source="KUNNR_SID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20300702" source="IS_20300702"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SEQ_ID" source="SEQ_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DSCT_QB_PRIMARY_KEY" source="DSCT_QB_PRIMARY_KEY"/>
+      </input>
+      <filter>(&quot;CC_ITEM_INCEPTION_DATE&quot; >= &quot;CC_REF_EFFC_DATE&quot; and &quot;CC_ITEM_INCEPTION_DATE&quot;&lt;= &quot;CC_REF_EXP_DATE&quot;)</filter>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_MDM_BILL_CD">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="CD_NM"/>
+        <viewAttribute id="REF_EFFC_DT"/>
+        <viewAttribute id="REF_EXP_DT"/>
+        <viewAttribute id="OFFR_TY"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#CA_HP_MDM_BILL_CD_SQL">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CD_NM" source="CD_NM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REF_EFFC_DT" source="REF_EFFC_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REF_EXP_DT" source="REF_EXP_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OFFR_TY" source="OFFR_TY"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="JOIN_ORDER_MDM_BILL_CD" joinType="leftOuter">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="DISCOUNT_START_DATE"/>
+        <viewAttribute id="DISCOUNT_END_DATE"/>
+        <viewAttribute id="REF_EFFC_DT"/>
+        <viewAttribute id="REF_EXP_DT"/>
+        <viewAttribute id="CONTRACT_UNIQUE_IDENTIFIER"/>
+        <viewAttribute id="DISCOUNT_TN"/>
+        <viewAttribute id="DISCOUNT_ID"/>
+        <viewAttribute id="MODIFICATION_EVENT_ID"/>
+        <viewAttribute id="DISCOUNT_AMOUNT"/>
+        <viewAttribute id="DISCOUNT_TYPE_CODE"/>
+        <viewAttribute id="DISCOUNT_QUANTITY"/>
+        <viewAttribute id="REGION"/>
+        <viewAttribute id="RATE_BAND"/>
+        <viewAttribute id="FIXED_OR_VARIABLE_RATE_INDICATOR"/>
+        <viewAttribute id="DISCOUNT_ACTION"/>
+        <viewAttribute id="PRC"/>
+        <viewAttribute id="CC_SOURCE_SYSTEM_CODE"/>
+        <viewAttribute id="PRIMARY_TELEPHONE_NUMBER"/>
+        <viewAttribute id="SUBSCRIBER_NUMBER"/>
+        <viewAttribute id="CONTRACT_INCEPTION_DT"/>
+        <viewAttribute id="TERM_M2M_INDICATOR"/>
+        <viewAttribute id="CC_ITEM_INCEPTION_DATE"/>
+        <viewAttribute id="OFFR_TY"/>
+        <viewAttribute id="IS_20300701"/>
+        <viewAttribute id="CD_NM_RIGHT"/>
+        <viewAttribute id="KUNNR_SID"/>
+        <viewAttribute id="IS_20300702"/>
+        <viewAttribute id="CYCL_ID"/>
+        <viewAttribute id="SEQ_ID"/>
+        <viewAttribute id="DSCT_QB_PRIMARY_KEY"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="DATE" id="CC_REF_EXP_DT" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isnull(&quot;REF_EXP_DT&quot;), date('99991231'), &quot;REF_EXP_DT&quot;)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="DATE" id="CC_REF_EFFC_DT" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isnull(&quot;REF_EFFC_DT&quot;), date('19000101'), &quot;REF_EFFC_DT&quot;)</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#PROJ_ORDER_DISC_1">
+        <mapping xsi:type="Calculation:AttributeMapping" target="DISCOUNT_START_DATE" source="DISCOUNT_START_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DISCOUNT_END_DATE" source="DISCOUNT_END_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTRACT_UNIQUE_IDENTIFIER" source="CONTRACT_UNIQUE_IDENTIFIER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DISCOUNT_TN" source="DISCOUNT_TN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DISCOUNT_ID" source="DISCOUNT_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MODIFICATION_EVENT_ID" source="MODIFICATION_EVENT_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DISCOUNT_AMOUNT" source="DISCOUNT_AMOUNT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DISCOUNT_TYPE_CODE" source="DISCOUNT_TYPE_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DISCOUNT_QUANTITY" source="DISCOUNT_QUANTITY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REGION" source="REGION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RATE_BAND" source="RATE_BAND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FIXED_OR_VARIABLE_RATE_INDICATOR" source="FIXED_OR_VARIABLE_RATE_INDICATOR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DISCOUNT_ACTION" source="DISCOUNT_ACTION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRC" source="PRC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_SOURCE_SYSTEM_CODE" source="CC_SOURCE_SYSTEM_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRIMARY_TELEPHONE_NUMBER" source="PRIMARY_TELEPHONE_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBSCRIBER_NUMBER" source="SUBSCRIBER_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTRACT_INCEPTION_DT" source="CONTRACT_INCEPTION_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TERM_M2M_INDICATOR" source="TERM_M2M_INDICATOR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_ITEM_INCEPTION_DATE" source="CC_ITEM_INCEPTION_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20300701" source="IS_20300701"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KUNNR_SID" source="KUNNR_SID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20300702" source="IS_20300702"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SEQ_ID" source="SEQ_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DSCT_QB_PRIMARY_KEY" source="DSCT_QB_PRIMARY_KEY"/>
+      </input>
+      <input node="#PROJ_MDM_BILL_CD">
+        <mapping xsi:type="Calculation:AttributeMapping" target="REF_EFFC_DT" source="REF_EFFC_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REF_EXP_DT" source="REF_EXP_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OFFR_TY" source="OFFR_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CD_NM_RIGHT" source="CD_NM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DISCOUNT_ID" source="CD_NM"/>
+      </input>
+      <joinAttribute name="DISCOUNT_ID"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_ORDER_DISC_2" filterExpressionLanguage="COLUMN_ENGINE">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="DISCOUNT_START_DATE"/>
+        <viewAttribute id="DISCOUNT_END_DATE"/>
+        <viewAttribute id="REF_EFFC_DT"/>
+        <viewAttribute id="REF_EXP_DT"/>
+        <viewAttribute id="CONTRACT_UNIQUE_IDENTIFIER"/>
+        <viewAttribute id="DISCOUNT_TN"/>
+        <viewAttribute id="DISCOUNT_ID"/>
+        <viewAttribute id="MODIFICATION_EVENT_ID"/>
+        <viewAttribute id="DISCOUNT_AMOUNT"/>
+        <viewAttribute id="DISCOUNT_TYPE_CODE"/>
+        <viewAttribute id="DISCOUNT_QUANTITY"/>
+        <viewAttribute id="REGION"/>
+        <viewAttribute id="RATE_BAND"/>
+        <viewAttribute id="FIXED_OR_VARIABLE_RATE_INDICATOR"/>
+        <viewAttribute id="DISCOUNT_ACTION"/>
+        <viewAttribute id="PRC"/>
+        <viewAttribute id="CC_SOURCE_SYSTEM_CODE"/>
+        <viewAttribute id="PRIMARY_TELEPHONE_NUMBER"/>
+        <viewAttribute id="SUBSCRIBER_NUMBER"/>
+        <viewAttribute id="CONTRACT_INCEPTION_DT"/>
+        <viewAttribute id="TERM_M2M_INDICATOR"/>
+        <viewAttribute id="CC_ITEM_INCEPTION_DATE"/>
+        <viewAttribute id="OFFR_TY"/>
+        <viewAttribute id="IS_20300701"/>
+        <viewAttribute id="CD_NM_RIGHT"/>
+        <viewAttribute id="CC_REF_EXP_DT"/>
+        <viewAttribute id="CC_REF_EFFC_DT"/>
+        <viewAttribute id="KUNNR_SID"/>
+        <viewAttribute id="IS_20300702"/>
+        <viewAttribute id="CYCL_ID"/>
+        <viewAttribute id="SEQ_ID"/>
+        <viewAttribute id="DSCT_QB_PRIMARY_KEY"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#JOIN_ORDER_MDM_BILL_CD">
+        <mapping xsi:type="Calculation:AttributeMapping" target="DISCOUNT_START_DATE" source="DISCOUNT_START_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DISCOUNT_END_DATE" source="DISCOUNT_END_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REF_EFFC_DT" source="REF_EFFC_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REF_EXP_DT" source="REF_EXP_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTRACT_UNIQUE_IDENTIFIER" source="CONTRACT_UNIQUE_IDENTIFIER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DISCOUNT_TN" source="DISCOUNT_TN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DISCOUNT_ID" source="DISCOUNT_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MODIFICATION_EVENT_ID" source="MODIFICATION_EVENT_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DISCOUNT_AMOUNT" source="DISCOUNT_AMOUNT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DISCOUNT_TYPE_CODE" source="DISCOUNT_TYPE_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DISCOUNT_QUANTITY" source="DISCOUNT_QUANTITY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REGION" source="REGION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RATE_BAND" source="RATE_BAND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FIXED_OR_VARIABLE_RATE_INDICATOR" source="FIXED_OR_VARIABLE_RATE_INDICATOR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DISCOUNT_ACTION" source="DISCOUNT_ACTION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRC" source="PRC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_SOURCE_SYSTEM_CODE" source="CC_SOURCE_SYSTEM_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRIMARY_TELEPHONE_NUMBER" source="PRIMARY_TELEPHONE_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBSCRIBER_NUMBER" source="SUBSCRIBER_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTRACT_INCEPTION_DT" source="CONTRACT_INCEPTION_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TERM_M2M_INDICATOR" source="TERM_M2M_INDICATOR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_ITEM_INCEPTION_DATE" source="CC_ITEM_INCEPTION_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OFFR_TY" source="OFFR_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20300701" source="IS_20300701"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CD_NM_RIGHT" source="CD_NM_RIGHT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_REF_EXP_DT" source="CC_REF_EXP_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_REF_EFFC_DT" source="CC_REF_EFFC_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KUNNR_SID" source="KUNNR_SID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20300702" source="IS_20300702"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SEQ_ID" source="SEQ_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DSCT_QB_PRIMARY_KEY" source="DSCT_QB_PRIMARY_KEY"/>
+      </input>
+      <filter>(&quot;CC_ITEM_INCEPTION_DATE&quot; >= &quot;CC_REF_EFFC_DT&quot; and &quot;CC_ITEM_INCEPTION_DATE&quot; &lt;= &quot;CC_REF_EXP_DT&quot;  )</filter>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_EVENT">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="EVENT_EFFECTIVE_DATE"/>
+        <viewAttribute id="TEMPORARY_SEASONAL_SUSPENSION"/>
+        <viewAttribute id="EVENT_ID"/>
+        <viewAttribute id="CONTRACT_UNIQUE_IDENTIFIER"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#IFRS_R1.HP.NDB_HP::HP_EVENT">
+        <mapping xsi:type="Calculation:AttributeMapping" target="EVENT_EFFECTIVE_DATE" source="EVENT_EFFECTIVE_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TEMPORARY_SEASONAL_SUSPENSION" source="TEMPORARY_SEASONAL_SUSPENSION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EVENT_ID" source="EVENT_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTRACT_UNIQUE_IDENTIFIER" source="CONTRACT_UNIQUE_IDENTIFIER"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="JOIN_ORDER_HP_EVENT" joinType="leftOuter">
+      <descriptions>
+        <comment text="Join errors will be raised as 20300705"/>
+      </descriptions>
+      <viewAttributes>
+        <viewAttribute id="TEMPORARY_SEASONAL_SUSPENSION"/>
+        <viewAttribute id="DISCOUNT_START_DATE"/>
+        <viewAttribute id="DISCOUNT_END_DATE"/>
+        <viewAttribute id="REF_EFFC_DT"/>
+        <viewAttribute id="REF_EXP_DT"/>
+        <viewAttribute id="CONTRACT_UNIQUE_IDENTIFIER"/>
+        <viewAttribute id="DISCOUNT_TN"/>
+        <viewAttribute id="DISCOUNT_ID"/>
+        <viewAttribute id="MODIFICATION_EVENT_ID"/>
+        <viewAttribute id="DISCOUNT_AMOUNT"/>
+        <viewAttribute id="DISCOUNT_TYPE_CODE"/>
+        <viewAttribute id="DISCOUNT_QUANTITY"/>
+        <viewAttribute id="REGION"/>
+        <viewAttribute id="RATE_BAND"/>
+        <viewAttribute id="FIXED_OR_VARIABLE_RATE_INDICATOR"/>
+        <viewAttribute id="DISCOUNT_ACTION"/>
+        <viewAttribute id="PRC"/>
+        <viewAttribute id="CC_SOURCE_SYSTEM_CODE"/>
+        <viewAttribute id="PRIMARY_TELEPHONE_NUMBER"/>
+        <viewAttribute id="SUBSCRIBER_NUMBER"/>
+        <viewAttribute id="CONTRACT_INCEPTION_DT"/>
+        <viewAttribute id="TERM_M2M_INDICATOR"/>
+        <viewAttribute id="CC_ITEM_INCEPTION_DATE"/>
+        <viewAttribute id="OFFR_TY"/>
+        <viewAttribute id="IS_20300701"/>
+        <viewAttribute id="CONTRACT_UNIQUE_IDENTIFIER_RIGHT"/>
+        <viewAttribute id="KUNNR_SID"/>
+        <viewAttribute id="IS_20300702"/>
+        <viewAttribute id="CYCL_ID"/>
+        <viewAttribute id="SEQ_ID"/>
+        <viewAttribute id="EVENT_EFFECTIVE_DATE"/>
+        <viewAttribute id="DSCT_QB_PRIMARY_KEY"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="IS_20300705" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isnull(&quot;CONTRACT_UNIQUE_IDENTIFIER_RIGHT&quot;), '1','0')</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#PROJ_ORDER_DISC_2">
+        <mapping xsi:type="Calculation:AttributeMapping" target="DISCOUNT_START_DATE" source="DISCOUNT_START_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DISCOUNT_END_DATE" source="DISCOUNT_END_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REF_EFFC_DT" source="REF_EFFC_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REF_EXP_DT" source="REF_EXP_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTRACT_UNIQUE_IDENTIFIER" source="CONTRACT_UNIQUE_IDENTIFIER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DISCOUNT_TN" source="DISCOUNT_TN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DISCOUNT_ID" source="DISCOUNT_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MODIFICATION_EVENT_ID" source="MODIFICATION_EVENT_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DISCOUNT_AMOUNT" source="DISCOUNT_AMOUNT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DISCOUNT_TYPE_CODE" source="DISCOUNT_TYPE_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DISCOUNT_QUANTITY" source="DISCOUNT_QUANTITY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REGION" source="REGION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RATE_BAND" source="RATE_BAND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FIXED_OR_VARIABLE_RATE_INDICATOR" source="FIXED_OR_VARIABLE_RATE_INDICATOR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DISCOUNT_ACTION" source="DISCOUNT_ACTION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRC" source="PRC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_SOURCE_SYSTEM_CODE" source="CC_SOURCE_SYSTEM_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRIMARY_TELEPHONE_NUMBER" source="PRIMARY_TELEPHONE_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBSCRIBER_NUMBER" source="SUBSCRIBER_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTRACT_INCEPTION_DT" source="CONTRACT_INCEPTION_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TERM_M2M_INDICATOR" source="TERM_M2M_INDICATOR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_ITEM_INCEPTION_DATE" source="CC_ITEM_INCEPTION_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OFFR_TY" source="OFFR_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20300701" source="IS_20300701"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KUNNR_SID" source="KUNNR_SID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20300702" source="IS_20300702"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SEQ_ID" source="SEQ_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DSCT_QB_PRIMARY_KEY" source="DSCT_QB_PRIMARY_KEY"/>
+      </input>
+      <input node="#PROJ_EVENT">
+        <mapping xsi:type="Calculation:AttributeMapping" target="TEMPORARY_SEASONAL_SUSPENSION" source="TEMPORARY_SEASONAL_SUSPENSION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTRACT_UNIQUE_IDENTIFIER_RIGHT" source="CONTRACT_UNIQUE_IDENTIFIER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EVENT_EFFECTIVE_DATE" source="EVENT_EFFECTIVE_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTRACT_UNIQUE_IDENTIFIER" source="CONTRACT_UNIQUE_IDENTIFIER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MODIFICATION_EVENT_ID" source="EVENT_ID"/>
+      </input>
+      <joinAttribute name="CONTRACT_UNIQUE_IDENTIFIER"/>
+      <joinAttribute name="MODIFICATION_EVENT_ID"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_ORDER_DISC_QC">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="TEMPORARY_SEASONAL_SUSPENSION"/>
+        <viewAttribute id="DISCOUNT_START_DATE"/>
+        <viewAttribute id="DISCOUNT_END_DATE"/>
+        <viewAttribute id="REF_EFFC_DT"/>
+        <viewAttribute id="REF_EXP_DT"/>
+        <viewAttribute id="CONTRACT_UNIQUE_IDENTIFIER"/>
+        <viewAttribute id="DISCOUNT_TN"/>
+        <viewAttribute id="DISCOUNT_ID"/>
+        <viewAttribute id="MODIFICATION_EVENT_ID"/>
+        <viewAttribute id="DISCOUNT_AMOUNT"/>
+        <viewAttribute id="DISCOUNT_TYPE_CODE"/>
+        <viewAttribute id="DISCOUNT_QUANTITY"/>
+        <viewAttribute id="REGION"/>
+        <viewAttribute id="RATE_BAND"/>
+        <viewAttribute id="FIXED_OR_VARIABLE_RATE_INDICATOR"/>
+        <viewAttribute id="DISCOUNT_ACTION"/>
+        <viewAttribute id="PRC"/>
+        <viewAttribute id="PRIMARY_TELEPHONE_NUMBER"/>
+        <viewAttribute id="SUBSCRIBER_NUMBER"/>
+        <viewAttribute id="CONTRACT_INCEPTION_DT"/>
+        <viewAttribute id="TERM_M2M_INDICATOR"/>
+        <viewAttribute id="CC_ITEM_INCEPTION_DATE"/>
+        <viewAttribute id="OFFR_TY"/>
+        <viewAttribute id="CC_SOURCE_SYSTEM_CODE"/>
+        <viewAttribute id="IS_20300701"/>
+        <viewAttribute id="KUNNR_SID"/>
+        <viewAttribute id="IS_20300705"/>
+        <viewAttribute id="IS_20300702"/>
+        <viewAttribute id="CYCL_ID"/>
+        <viewAttribute id="SEQ_ID"/>
+        <viewAttribute id="EVENT_EFFECTIVE_DATE"/>
+        <viewAttribute id="DSCT_QB_PRIMARY_KEY"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CC_ITEM_TN" length="14" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isnull (&quot;DISCOUNT_TN&quot;) , (leftstr(&quot;CONTRACT_UNIQUE_IDENTIFIER&quot;,10)) ,&quot;DISCOUNT_TN&quot;) </formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CC_DISCOUNT_TYPE" length="3000" expressionLanguage="COLUMN_ENGINE">
+          <formula>&quot;OFFR_TY&quot;</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CC_DUO_TRIO_IND" length="4" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(&quot;OFFR_TY&quot; = 1,'UNO',&#xD;
+if(&quot;OFFR_TY&quot; = 2,'DUO',&#xD;
+if(&quot;OFFR_TY&quot; = 3,'TRIO',string(&quot;OFFR_TY&quot;))))</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#JOIN_ORDER_HP_EVENT">
+        <mapping xsi:type="Calculation:AttributeMapping" target="TEMPORARY_SEASONAL_SUSPENSION" source="TEMPORARY_SEASONAL_SUSPENSION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DISCOUNT_START_DATE" source="DISCOUNT_START_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DISCOUNT_END_DATE" source="DISCOUNT_END_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REF_EFFC_DT" source="REF_EFFC_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REF_EXP_DT" source="REF_EXP_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTRACT_UNIQUE_IDENTIFIER" source="CONTRACT_UNIQUE_IDENTIFIER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DISCOUNT_TN" source="DISCOUNT_TN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DISCOUNT_ID" source="DISCOUNT_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MODIFICATION_EVENT_ID" source="MODIFICATION_EVENT_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DISCOUNT_AMOUNT" source="DISCOUNT_AMOUNT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DISCOUNT_TYPE_CODE" source="DISCOUNT_TYPE_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DISCOUNT_QUANTITY" source="DISCOUNT_QUANTITY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REGION" source="REGION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RATE_BAND" source="RATE_BAND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FIXED_OR_VARIABLE_RATE_INDICATOR" source="FIXED_OR_VARIABLE_RATE_INDICATOR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DISCOUNT_ACTION" source="DISCOUNT_ACTION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRC" source="PRC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRIMARY_TELEPHONE_NUMBER" source="PRIMARY_TELEPHONE_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBSCRIBER_NUMBER" source="SUBSCRIBER_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTRACT_INCEPTION_DT" source="CONTRACT_INCEPTION_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TERM_M2M_INDICATOR" source="TERM_M2M_INDICATOR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_ITEM_INCEPTION_DATE" source="CC_ITEM_INCEPTION_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OFFR_TY" source="OFFR_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_SOURCE_SYSTEM_CODE" source="CC_SOURCE_SYSTEM_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20300701" source="IS_20300701"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KUNNR_SID" source="KUNNR_SID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20300705" source="IS_20300705"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20300702" source="IS_20300702"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SEQ_ID" source="SEQ_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EVENT_EFFECTIVE_DATE" source="EVENT_EFFECTIVE_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DSCT_QB_PRIMARY_KEY" source="DSCT_QB_PRIMARY_KEY"/>
+      </input>
+    </calculationView>
+  </calculationViews>
+  <logicalModel id="PROJ_ORDER_DISC_QC">
+    <descriptions/>
+    <attributes>
+      <attribute id="CC_ITEM_TN" order="1" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CC_ITEM_TN"/>
+        <keyMapping columnObjectName="PROJ_ORDER_DISC_QC" columnName="CC_ITEM_TN"/>
+      </attribute>
+      <attribute id="TEMPORARY_SEASONAL_SUSPENSION" order="2" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="TEMPORARY_SEASONAL_SUSPENSION"/>
+        <keyMapping columnObjectName="PROJ_ORDER_DISC_QC" columnName="TEMPORARY_SEASONAL_SUSPENSION"/>
+      </attribute>
+      <attribute id="CC_DISCOUNT_TYPE" order="3" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CC_DISCOUNT_TYPE"/>
+        <keyMapping columnObjectName="PROJ_ORDER_DISC_QC" columnName="CC_DISCOUNT_TYPE"/>
+      </attribute>
+      <attribute id="DISCOUNT_START_DATE" order="4" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="DISCOUNT_START_DATE"/>
+        <keyMapping columnObjectName="PROJ_ORDER_DISC_QC" columnName="DISCOUNT_START_DATE"/>
+      </attribute>
+      <attribute id="DISCOUNT_END_DATE" order="5" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="DISCOUNT_END_DATE"/>
+        <keyMapping columnObjectName="PROJ_ORDER_DISC_QC" columnName="DISCOUNT_END_DATE"/>
+      </attribute>
+      <attribute id="REF_EFFC_DT" order="6" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="REF_EFFC_DT"/>
+        <keyMapping columnObjectName="PROJ_ORDER_DISC_QC" columnName="REF_EFFC_DT"/>
+      </attribute>
+      <attribute id="REF_EXP_DT" order="7" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="REF_EXP_DT"/>
+        <keyMapping columnObjectName="PROJ_ORDER_DISC_QC" columnName="REF_EXP_DT"/>
+      </attribute>
+      <attribute id="CONTRACT_UNIQUE_IDENTIFIER" order="8" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CONTRACT_UNIQUE_IDENTIFIER"/>
+        <keyMapping columnObjectName="PROJ_ORDER_DISC_QC" columnName="CONTRACT_UNIQUE_IDENTIFIER"/>
+      </attribute>
+      <attribute id="DISCOUNT_TN" order="9" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="DISCOUNT_TN"/>
+        <keyMapping columnObjectName="PROJ_ORDER_DISC_QC" columnName="DISCOUNT_TN"/>
+      </attribute>
+      <attribute id="DISCOUNT_ID" order="10" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="DISCOUNT_ID"/>
+        <keyMapping columnObjectName="PROJ_ORDER_DISC_QC" columnName="DISCOUNT_ID"/>
+      </attribute>
+      <attribute id="MODIFICATION_EVENT_ID" order="11" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="MODIFICATION_EVENT_ID"/>
+        <keyMapping columnObjectName="PROJ_ORDER_DISC_QC" columnName="MODIFICATION_EVENT_ID"/>
+      </attribute>
+      <attribute id="DISCOUNT_TYPE_CODE" order="13" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="DISCOUNT_TYPE_CODE"/>
+        <keyMapping columnObjectName="PROJ_ORDER_DISC_QC" columnName="DISCOUNT_TYPE_CODE"/>
+      </attribute>
+      <attribute id="REGION" order="15" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="REGION"/>
+        <keyMapping columnObjectName="PROJ_ORDER_DISC_QC" columnName="REGION"/>
+      </attribute>
+      <attribute id="RATE_BAND" order="16" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="RATE_BAND"/>
+        <keyMapping columnObjectName="PROJ_ORDER_DISC_QC" columnName="RATE_BAND"/>
+      </attribute>
+      <attribute id="FIXED_OR_VARIABLE_RATE_INDICATOR" order="17" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="FIXED_OR_VARIABLE_RATE_INDICATOR"/>
+        <keyMapping columnObjectName="PROJ_ORDER_DISC_QC" columnName="FIXED_OR_VARIABLE_RATE_INDICATOR"/>
+      </attribute>
+      <attribute id="DISCOUNT_ACTION" order="18" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="DISCOUNT_ACTION"/>
+        <keyMapping columnObjectName="PROJ_ORDER_DISC_QC" columnName="DISCOUNT_ACTION"/>
+      </attribute>
+      <attribute id="PRIMARY_TELEPHONE_NUMBER" order="20" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="PRIMARY_TELEPHONE_NUMBER"/>
+        <keyMapping columnObjectName="PROJ_ORDER_DISC_QC" columnName="PRIMARY_TELEPHONE_NUMBER"/>
+      </attribute>
+      <attribute id="SUBSCRIBER_NUMBER" order="21" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SUBSCRIBER_NUMBER"/>
+        <keyMapping columnObjectName="PROJ_ORDER_DISC_QC" columnName="SUBSCRIBER_NUMBER"/>
+      </attribute>
+      <attribute id="CONTRACT_INCEPTION_DT" order="22" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CONTRACT_INCEPTION_DT"/>
+        <keyMapping columnObjectName="PROJ_ORDER_DISC_QC" columnName="CONTRACT_INCEPTION_DT"/>
+      </attribute>
+      <attribute id="TERM_M2M_INDICATOR" order="23" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="TERM_M2M_INDICATOR"/>
+        <keyMapping columnObjectName="PROJ_ORDER_DISC_QC" columnName="TERM_M2M_INDICATOR"/>
+      </attribute>
+      <attribute id="CC_ITEM_INCEPTION_DATE" order="24" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CC_ITEM_INCEPTION_DATE"/>
+        <keyMapping columnObjectName="PROJ_ORDER_DISC_QC" columnName="CC_ITEM_INCEPTION_DATE"/>
+      </attribute>
+      <attribute id="CC_SOURCE_SYSTEM_CODE" order="25" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CC_SOURCE_SYSTEM_CODE"/>
+        <keyMapping columnObjectName="PROJ_ORDER_DISC_QC" columnName="CC_SOURCE_SYSTEM_CODE"/>
+      </attribute>
+      <attribute id="IS_20300701" order="26" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="IS_20300701"/>
+        <keyMapping columnObjectName="PROJ_ORDER_DISC_QC" columnName="IS_20300701"/>
+      </attribute>
+      <attribute id="KUNNR_SID" order="27" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="KUNNR_SID"/>
+        <keyMapping columnObjectName="PROJ_ORDER_DISC_QC" columnName="KUNNR_SID"/>
+      </attribute>
+      <attribute id="DUO_TRIO_IND" order="28" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="DUO_TRIO_IND"/>
+        <keyMapping columnObjectName="PROJ_ORDER_DISC_QC" columnName="CC_DUO_TRIO_IND"/>
+      </attribute>
+      <attribute id="IS_20300705" order="29" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="IS_20300705"/>
+        <keyMapping columnObjectName="PROJ_ORDER_DISC_QC" columnName="IS_20300705"/>
+      </attribute>
+      <attribute id="IS_20300702" order="30" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="IS_20300702"/>
+        <keyMapping columnObjectName="PROJ_ORDER_DISC_QC" columnName="IS_20300702"/>
+      </attribute>
+      <attribute id="CYCL_ID" order="31" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CYCL_ID"/>
+        <keyMapping columnObjectName="PROJ_ORDER_DISC_QC" columnName="CYCL_ID"/>
+      </attribute>
+      <attribute id="SEQ_ID" order="32" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SEQ_ID"/>
+        <keyMapping columnObjectName="PROJ_ORDER_DISC_QC" columnName="SEQ_ID"/>
+      </attribute>
+      <attribute id="EVENT_EFFECTIVE_DATE" order="33" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="EVENT_EFFECTIVE_DATE"/>
+        <keyMapping columnObjectName="PROJ_ORDER_DISC_QC" columnName="EVENT_EFFECTIVE_DATE"/>
+      </attribute>
+      <attribute id="DSCT_QB_PRIMARY_KEY" order="34" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="DSCT_QB_PRIMARY_KEY"/>
+        <keyMapping columnObjectName="PROJ_ORDER_DISC_QC" columnName="DSCT_QB_PRIMARY_KEY"/>
+      </attribute>
+    </attributes>
+    <calculatedAttributes/>
+    <privateDataFoundation>
+      <tableProxies/>
+      <joins/>
+      <layout>
+        <shapes/>
+      </layout>
+    </privateDataFoundation>
+    <baseMeasures>
+      <measure id="DISCOUNT_AMOUNT" order="12" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="DISCOUNT_AMOUNT"/>
+        <measureMapping columnObjectName="PROJ_ORDER_DISC_QC" columnName="DISCOUNT_AMOUNT"/>
+      </measure>
+      <measure id="DISCOUNT_QUANTITY" order="14" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="DISCOUNT_QUANTITY"/>
+        <measureMapping columnObjectName="PROJ_ORDER_DISC_QC" columnName="DISCOUNT_QUANTITY"/>
+      </measure>
+      <measure id="PRC" order="19" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="PRC"/>
+        <measureMapping columnObjectName="PROJ_ORDER_DISC_QC" columnName="PRC"/>
+      </measure>
+    </baseMeasures>
+    <calculatedMeasures/>
+    <restrictedMeasures/>
+    <localDimensions/>
+  </logicalModel>
+  <layout>
+    <shapes>
+      <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+        <upperLeftCorner x="328" y="87"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_BCRIS_DISC" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="22" y="861"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_HP_CUST" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="176" y="861"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="JOIN_BCRIS_DISC_CUST" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="99" y="765"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_MDM_CD_PRC" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="253" y="687"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_ORDER_DISC" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="99" y="687"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+      <shape expanded="true" modelObjectName="JOIN_ORDER_MDM_CD_PRC" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="175" y="591"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_ORDER_DISC_1" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="175" y="513"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_MDM_BILL_CD" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="329" y="513"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="JOIN_ORDER_MDM_BILL_CD" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="251" y="417"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_ORDER_DISC_2" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="251" y="339"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_EVENT" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="405" y="339"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="JOIN_ORDER_HP_EVENT" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="328" y="243"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_ORDER_DISC_QC" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="328" y="165"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+    </shapes>
+  </layout>
+</Calculation:scenario>

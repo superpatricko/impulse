@@ -1,0 +1,346 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:AccessControl="http://www.sap.com/ndb/SQLCoreModelAccessControl.ecore" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" xmlns:Variable="http://www.sap.com/ndb/BiModelVariable.ecore" schemaVersion="2.3" id="CA_ARICS_VADJS_QC" applyPrivilegeType="NONE" checkAnalyticPrivileges="false" defaultClient="$$client$$" defaultLanguage="$$language$$" hierarchiesSQLEnabled="false" translationRelevant="true" visibility="internal" calculationScenarioType="TREE_BASED" dataCategory="DIMENSION" enforceSqlExecution="false" executionSemantic="UNDEFINED" outputViewType="Projection">
+  <origin/>
+  <descriptions defaultDescription="Landing View - Table ARICS_VADJS_QC">
+    <comment text="This Private view include data from ARICS_VADJS_QC table after filtering out records having NDB_TS  as null."/>
+  </descriptions>
+  <localVariables/>
+  <variableMappings>
+    <mapping xsi:type="Variable:ConstantVariableMapping" dataSource="#CA_EH_ERROR_TABLE" value="1004">
+      <targetVariable name="IP_JOB_ID" resourceUri="/IFRS_R1.LAND.EH/calculationviews/CA_EH_ERROR_TABLE"/>
+    </mapping>
+  </variableMappings>
+  <informationModelLayout relativeWidthScenario="43"/>
+  <dataSources>
+    <DataSource id="IFRS_R1.LAND::ARICS_VADJS_QC" type="DATA_BASE_TABLE">
+      <viewAttributes allViewAttributes="true"/>
+      <columnObject schemaName="LAND" columnObjectName="IFRS_R1.LAND::ARICS_VADJS_QC"/>
+    </DataSource>
+    <DataSource id="CA_EH_ERROR_TABLE" type="CALCULATION_VIEW">
+      <viewAttributes allViewAttributes="true"/>
+      <resourceUri>/IFRS_R1.LAND.EH/calculationviews/CA_EH_ERROR_TABLE</resourceUri>
+    </DataSource>
+  </dataSources>
+  <calculationViews>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_ARICS_VADJS_QC" filterExpressionLanguage="COLUMN_ENGINE">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="TCAN_CUST_ACCT_NO"/>
+        <viewAttribute id="ADJMT_DET_INDR"/>
+        <viewAttribute id="TOT_BASIC_AMT"/>
+        <viewAttribute id="ADJMT_TL_DET_INDR"/>
+        <viewAttribute id="REFR_JRNL_ACT_CD"/>
+        <viewAttribute id="NDB_TS"/>
+        <viewAttribute id="PRO_DT"/>
+        <viewAttribute id="BILL_NPA"/>
+        <viewAttribute id="BILL_NXX"/>
+        <viewAttribute id="BILL_LINE_NUM"/>
+        <viewAttribute id="BILL_SUFFIX_CD"/>
+        <viewAttribute id="BILL_CUST_CD"/>
+        <viewAttribute id="CUST_BILL_DT"/>
+        <viewAttribute id="ADJMT_ACTN_CD"/>
+        <viewAttribute id="ADJMT_TY_CD"/>
+        <viewAttribute id="SER_NUM"/>
+        <viewAttribute id="CYCL_ID"/>
+        <viewAttribute id="INSRT_TS"/>
+        <viewAttribute id="SEQ_ID"/>
+        <viewAttribute id="SRC_TS"/>
+        <viewAttribute id="PROCESS_ID"/>
+        <viewAttribute id="VADJSQC_PRIMARY_KEY"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CC_VERSION_CHECK" length="200" expressionLanguage="COLUMN_ENGINE">
+          <formula>'XYZ'</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CC_ADJMT_ACCT_CD_TY" length="3" expressionLanguage="COLUMN_ENGINE">
+          <formula>leftstr(&quot;ADJMT_ACTN_CD&quot;,1)+&quot;ADJMT_TY_CD&quot;</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#IFRS_R1.LAND::ARICS_VADJS_QC">
+        <mapping xsi:type="Calculation:AttributeMapping" target="TCAN_CUST_ACCT_NO" source="TCAN_CUST_ACCT_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ADJMT_DET_INDR" source="ADJMT_DET_INDR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TOT_BASIC_AMT" source="TOT_BASIC_AMT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ADJMT_TL_DET_INDR" source="ADJMT_TL_DET_INDR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFR_JRNL_ACT_CD" source="REFR_JRNL_ACT_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NDB_TS" source="NDB_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRO_DT" source="PROCESS_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_NPA" source="BILLING_NPA"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_NXX" source="BILLNG_NXX"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_LINE_NUM" source="BILLING_LINE_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_SUFFIX_CD" source="BILLING_SUFFIX_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_CUST_CD" source="BILLING_CUST_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUST_BILL_DT" source="CUST_BILL_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ADJMT_ACTN_CD" source="ADJMT_ACTN_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ADJMT_TY_CD" source="ADJMT_TYPE_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SER_NUM" source="SERIAL_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INSRT_TS" source="INSRT_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SEQ_ID" source="SEQ_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SRC_TS" source="SRC_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROCESS_ID" source="PROCESS_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VADJSQC_PRIMARY_KEY" source="VADJSQC_PRIMARY_KEY"/>
+      </input>
+      <filter>(isNull(&quot;NDB_TS&quot;) and &quot;CC_ADJMT_ACCT_CD_TY&quot; != 'Z04')</filter>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_ERROR_TABLE">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="PARENT_KEY"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#CA_EH_ERROR_TABLE">
+        <mapping xsi:type="Calculation:AttributeMapping" target="PARENT_KEY" source="PARENT_KEY"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="JOIN" joinOrder="OUTSIDE_IN" joinType="leftOuter">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="TCAN_CUST_ACCT_NO"/>
+        <viewAttribute id="ADJMT_DET_INDR"/>
+        <viewAttribute id="TOT_BASIC_AMT"/>
+        <viewAttribute id="ADJMT_TL_DET_INDR"/>
+        <viewAttribute id="REFR_JRNL_ACT_CD"/>
+        <viewAttribute id="PRO_DT"/>
+        <viewAttribute id="BILL_NPA"/>
+        <viewAttribute id="BILL_NXX"/>
+        <viewAttribute id="BILL_LINE_NUM"/>
+        <viewAttribute id="BILL_SUFFIX_CD"/>
+        <viewAttribute id="BILL_CUST_CD"/>
+        <viewAttribute id="CUST_BILL_DT"/>
+        <viewAttribute id="ADJMT_ACTN_CD"/>
+        <viewAttribute id="ADJMT_TY_CD"/>
+        <viewAttribute id="SER_NUM"/>
+        <viewAttribute id="CYCL_ID"/>
+        <viewAttribute id="PARENT_KEY_ERROR"/>
+        <viewAttribute id="INSRT_TS"/>
+        <viewAttribute id="SEQ_ID"/>
+        <viewAttribute id="SRC_TS"/>
+        <viewAttribute id="PROCESS_ID"/>
+        <viewAttribute id="CC_VERSION_CHECK"/>
+        <viewAttribute id="VADJSQC_PRIMARY_KEY"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#PROJ_ARICS_VADJS_QC">
+        <mapping xsi:type="Calculation:AttributeMapping" target="TCAN_CUST_ACCT_NO" source="TCAN_CUST_ACCT_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ADJMT_DET_INDR" source="ADJMT_DET_INDR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TOT_BASIC_AMT" source="TOT_BASIC_AMT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ADJMT_TL_DET_INDR" source="ADJMT_TL_DET_INDR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFR_JRNL_ACT_CD" source="REFR_JRNL_ACT_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRO_DT" source="PRO_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_NPA" source="BILL_NPA"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_NXX" source="BILL_NXX"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_LINE_NUM" source="BILL_LINE_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_SUFFIX_CD" source="BILL_SUFFIX_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_CUST_CD" source="BILL_CUST_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUST_BILL_DT" source="CUST_BILL_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ADJMT_ACTN_CD" source="ADJMT_ACTN_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ADJMT_TY_CD" source="ADJMT_TY_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SER_NUM" source="SER_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INSRT_TS" source="INSRT_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SEQ_ID" source="SEQ_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SRC_TS" source="SRC_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROCESS_ID" source="PROCESS_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_VERSION_CHECK" source="CC_VERSION_CHECK"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VADJSQC_PRIMARY_KEY" source="VADJSQC_PRIMARY_KEY"/>
+      </input>
+      <input node="#PROJ_ERROR_TABLE">
+        <mapping xsi:type="Calculation:AttributeMapping" target="PARENT_KEY_ERROR" source="PARENT_KEY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_VERSION_CHECK" source="PARENT_KEY"/>
+      </input>
+      <joinAttribute name="CC_VERSION_CHECK"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_ERROR_FILTER">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="CYCL_ID"/>
+        <viewAttribute id="SER_NUM"/>
+        <viewAttribute id="ADJMT_TY_CD"/>
+        <viewAttribute id="ADJMT_ACTN_CD"/>
+        <viewAttribute id="CUST_BILL_DT"/>
+        <viewAttribute id="BILL_CUST_CD"/>
+        <viewAttribute id="BILL_SUFFIX_CD"/>
+        <viewAttribute id="BILL_LINE_NUM"/>
+        <viewAttribute id="BILL_NXX"/>
+        <viewAttribute id="BILL_NPA"/>
+        <viewAttribute id="PRO_DT"/>
+        <viewAttribute id="REFR_JRNL_ACT_CD"/>
+        <viewAttribute id="ADJMT_TL_DET_INDR"/>
+        <viewAttribute id="TOT_BASIC_AMT"/>
+        <viewAttribute id="ADJMT_DET_INDR"/>
+        <viewAttribute id="TCAN_CUST_ACCT_NO"/>
+        <viewAttribute id="PARENT_KEY_ERROR">
+          <filter xsi:type="AccessControl:SingleValueFilter" operator="NL" including="true"/>
+        </viewAttribute>
+        <viewAttribute id="INSRT_TS"/>
+        <viewAttribute id="SEQ_ID"/>
+        <viewAttribute id="SRC_TS"/>
+        <viewAttribute id="PROCESS_ID"/>
+        <viewAttribute id="CC_VERSION_CHECK"/>
+        <viewAttribute id="VADJSQC_PRIMARY_KEY"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#JOIN">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SER_NUM" source="SER_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ADJMT_TY_CD" source="ADJMT_TY_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ADJMT_ACTN_CD" source="ADJMT_ACTN_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUST_BILL_DT" source="CUST_BILL_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_CUST_CD" source="BILL_CUST_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_SUFFIX_CD" source="BILL_SUFFIX_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_LINE_NUM" source="BILL_LINE_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_NXX" source="BILL_NXX"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_NPA" source="BILL_NPA"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRO_DT" source="PRO_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFR_JRNL_ACT_CD" source="REFR_JRNL_ACT_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ADJMT_TL_DET_INDR" source="ADJMT_TL_DET_INDR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TOT_BASIC_AMT" source="TOT_BASIC_AMT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ADJMT_DET_INDR" source="ADJMT_DET_INDR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TCAN_CUST_ACCT_NO" source="TCAN_CUST_ACCT_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PARENT_KEY_ERROR" source="PARENT_KEY_ERROR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INSRT_TS" source="INSRT_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SEQ_ID" source="SEQ_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SRC_TS" source="SRC_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROCESS_ID" source="PROCESS_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_VERSION_CHECK" source="CC_VERSION_CHECK"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VADJSQC_PRIMARY_KEY" source="VADJSQC_PRIMARY_KEY"/>
+      </input>
+    </calculationView>
+  </calculationViews>
+  <logicalModel id="PROJ_ERROR_FILTER">
+    <descriptions/>
+    <attributes>
+      <attribute id="CYCL_ID" order="1" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CYCL_ID"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="CYCL_ID"/>
+      </attribute>
+      <attribute id="SER_NUM" order="2" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SER_NUM"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="SER_NUM"/>
+      </attribute>
+      <attribute id="ADJMT_TY_CD" order="3" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ADJMT_TY_CD"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="ADJMT_TY_CD"/>
+      </attribute>
+      <attribute id="ADJMT_ACTN_CD" order="4" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ADJMT_ACTN_CD"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="ADJMT_ACTN_CD"/>
+      </attribute>
+      <attribute id="CUST_BILL_DT" order="5" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CUST_BILL_DT"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="CUST_BILL_DT"/>
+      </attribute>
+      <attribute id="BILL_CUST_CD" order="6" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="BILL_CUST_CD"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="BILL_CUST_CD"/>
+      </attribute>
+      <attribute id="BILL_SUFFIX_CD" order="7" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="BILL_SUFFIX_CD"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="BILL_SUFFIX_CD"/>
+      </attribute>
+      <attribute id="BILL_LINE_NUM" order="8" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="BILL_LINE_NUM"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="BILL_LINE_NUM"/>
+      </attribute>
+      <attribute id="BILL_NXX" order="9" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="BILL_NXX"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="BILL_NXX"/>
+      </attribute>
+      <attribute id="BILL_NPA" order="10" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="BILL_NPA"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="BILL_NPA"/>
+      </attribute>
+      <attribute id="PRO_DT" order="11" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="PRO_DT"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="PRO_DT"/>
+      </attribute>
+      <attribute id="REFR_JRNL_ACT_CD" order="12" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="REFR_JRNL_ACT_CD"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="REFR_JRNL_ACT_CD"/>
+      </attribute>
+      <attribute id="ADJMT_TL_DET_INDR" order="13" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ADJMT_TL_DET_INDR"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="ADJMT_TL_DET_INDR"/>
+      </attribute>
+      <attribute id="TOT_BASIC_AMT" order="14" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="TOT_BASIC_AMT"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="TOT_BASIC_AMT"/>
+      </attribute>
+      <attribute id="ADJMT_DET_INDR" order="15" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ADJMT_DET_INDR"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="ADJMT_DET_INDR"/>
+      </attribute>
+      <attribute id="TCAN_CUST_ACCT_NO" order="16" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="TCAN_CUST_ACCT_NO"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="TCAN_CUST_ACCT_NO"/>
+      </attribute>
+      <attribute id="INSRT_TS" order="17" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="INSRT_TS"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="INSRT_TS"/>
+      </attribute>
+      <attribute id="SEQ_ID" order="18" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SEQ_ID"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="SEQ_ID"/>
+      </attribute>
+      <attribute id="SRC_TS" order="19" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SRC_TS"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="SRC_TS"/>
+      </attribute>
+      <attribute id="PROCESS_ID" order="20" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="PROCESS_ID"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="PROCESS_ID"/>
+      </attribute>
+      <attribute id="CC_VERSION_CHECK" order="22" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CC_VERSION_CHECK"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="CC_VERSION_CHECK"/>
+      </attribute>
+      <attribute id="VADJSQC_PRIMARY_KEY" order="23" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="VADJSQC_PRIMARY_KEY"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="VADJSQC_PRIMARY_KEY"/>
+      </attribute>
+    </attributes>
+    <calculatedAttributes>
+      <calculatedAttribute id="CC_CUST_ACCT_ID" hidden="false" order="21" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CC_CUST_ACCT_ID"/>
+        <keyCalculation datatype="NVARCHAR" expressionLanguage="COLUMN_ENGINE" length="10">
+          <formula>&quot;BILL_NPA&quot;+&quot;BILL_NXX&quot;+&quot;BILL_LINE_NUM&quot;</formula>
+        </keyCalculation>
+      </calculatedAttribute>
+    </calculatedAttributes>
+    <privateDataFoundation>
+      <tableProxies/>
+      <joins/>
+      <layout>
+        <shapes/>
+      </layout>
+    </privateDataFoundation>
+    <baseMeasures/>
+    <calculatedMeasures/>
+    <restrictedMeasures/>
+    <localDimensions/>
+  </logicalModel>
+  <layout>
+    <shapes>
+      <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+        <upperLeftCorner x="99" y="87"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_ARICS_VADJS_QC" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="22" y="339"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_ERROR_TABLE" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="176" y="339"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="JOIN" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="99" y="243"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_ERROR_FILTER" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="99" y="165"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+    </shapes>
+  </layout>
+</Calculation:scenario>

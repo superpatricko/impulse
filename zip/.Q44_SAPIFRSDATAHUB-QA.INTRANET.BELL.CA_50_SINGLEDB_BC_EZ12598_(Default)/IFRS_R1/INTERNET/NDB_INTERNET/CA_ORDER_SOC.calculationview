@@ -1,0 +1,552 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:AccessControl="http://www.sap.com/ndb/SQLCoreModelAccessControl.ecore" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" schemaVersion="2.3" id="CA_ORDER_SOC" applyPrivilegeType="NONE" checkAnalyticPrivileges="false" defaultClient="$$client$$" defaultLanguage="$$language$$" hierarchiesSQLEnabled="false" translationRelevant="true" visibility="internal" calculationScenarioType="TREE_BASED" dataCategory="DIMENSION" enforceSqlExecution="false" executionSemantic="UNDEFINED" outputViewType="Projection">
+  <descriptions defaultDescription="CA_ORDER_SOC"/>
+  <localVariables/>
+  <variableMappings/>
+  <informationModelLayout relativeWidthScenario="51"/>
+  <dataSources>
+    <DataSource id="IFRS_R1.INTERNET.NDB_INTERNET::INT_ORDER" type="DATA_BASE_TABLE">
+      <viewAttributes allViewAttributes="true"/>
+      <columnObject schemaName="NDB_INTERNET" columnObjectName="IFRS_R1.INTERNET.NDB_INTERNET::INT_ORDER"/>
+    </DataSource>
+    <DataSource id="IFRS_R1.INTERNET.NDB_INTERNET::INT_OFFR_REL" type="DATA_BASE_TABLE">
+      <viewAttributes allViewAttributes="true"/>
+      <columnObject schemaName="NDB_INTERNET" columnObjectName="IFRS_R1.INTERNET.NDB_INTERNET::INT_OFFR_REL"/>
+    </DataSource>
+    <DataSource id="IFRS_R1.INTERNET.NDB_INTERNET::INT_OFFR_HIST" type="DATA_BASE_TABLE">
+      <viewAttributes allViewAttributes="true"/>
+      <columnObject schemaName="NDB_INTERNET" columnObjectName="IFRS_R1.INTERNET.NDB_INTERNET::INT_OFFR_HIST"/>
+    </DataSource>
+  </dataSources>
+  <calculationViews>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_ORDER">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="EXPIRY_DATE">
+          <filter xsi:type="AccessControl:SingleValueFilter" including="true" value="9999-12-31"/>
+        </viewAttribute>
+        <viewAttribute id="BO_CODE"/>
+        <viewAttribute id="ALTN_CONTR_NUM"/>
+        <viewAttribute id="PRM_CONTR_CUST"/>
+        <viewAttribute id="AO_CODE"/>
+        <viewAttribute id="OTC_AO_CODE"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#IFRS_R1.INTERNET.NDB_INTERNET::INT_ORDER">
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXPIRY_DATE" source="EXPIRY_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BO_CODE" source="BO_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ALTN_CONTR_NUM" source="ALTN_CONTR_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRM_CONTR_CUST" source="PRM_CONTR_CUST"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AO_CODE" source="AO_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OTC_AO_CODE" source="OTC_AO_CODE"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_OFFR_REL">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="OFFR_CD"/>
+        <viewAttribute id="REL_CODE"/>
+        <viewAttribute id="REL_TY"/>
+        <viewAttribute id="REFERENCE_EXPIRY_DT"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#IFRS_R1.INTERNET.NDB_INTERNET::INT_OFFR_REL">
+        <mapping xsi:type="Calculation:AttributeMapping" target="OFFR_CD" source="OFFR_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REL_CODE" source="REL_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REL_TY" source="REL_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_EXPIRY_DT" source="REFERENCE_EXPIRY_DT"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_OFFR_REL_P" filterExpressionLanguage="COLUMN_ENGINE">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="OFFR_CD"/>
+        <viewAttribute id="REL_CODE"/>
+        <viewAttribute id="REL_TY"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#PROJ_OFFR_REL">
+        <mapping xsi:type="Calculation:AttributeMapping" target="OFFR_CD" source="OFFR_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REL_CODE" source="REL_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REL_TY" source="REL_TY"/>
+      </input>
+      <filter>(&quot;REL_TY&quot; ='P')</filter>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="JOIN_BO" joinType="leftOuter">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="BO_CODE"/>
+        <viewAttribute id="OFFR_CD"/>
+        <viewAttribute id="REL_CODE"/>
+        <viewAttribute id="REL_TY"/>
+        <viewAttribute id="ALTN_CONTR_NUM"/>
+        <viewAttribute id="PRM_CONTR_CUST"/>
+        <viewAttribute id="AO_CODE"/>
+        <viewAttribute id="OTC_AO_CODE"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#PROJ_ORDER">
+        <mapping xsi:type="Calculation:AttributeMapping" target="BO_CODE" source="BO_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ALTN_CONTR_NUM" source="ALTN_CONTR_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRM_CONTR_CUST" source="PRM_CONTR_CUST"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AO_CODE" source="AO_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OTC_AO_CODE" source="OTC_AO_CODE"/>
+      </input>
+      <input node="#PROJ_OFFR_REL_P">
+        <mapping xsi:type="Calculation:AttributeMapping" target="OFFR_CD" source="OFFR_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REL_CODE" source="REL_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REL_TY" source="REL_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BO_CODE" source="OFFR_CD"/>
+      </input>
+      <joinAttribute name="BO_CODE"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_BO_ERROR">
+      <descriptions>
+        <comment text="Null BO_SOC error will be raised as IS_20201801"/>
+      </descriptions>
+      <viewAttributes>
+        <viewAttribute id="OFFR_CD"/>
+        <viewAttribute id="BO_SOC"/>
+        <viewAttribute id="BO_CODE"/>
+        <viewAttribute id="REL_TY"/>
+        <viewAttribute id="ALTN_CONTR_NUM"/>
+        <viewAttribute id="PRM_CONTR_CUST"/>
+        <viewAttribute id="AO_CODE"/>
+        <viewAttribute id="OTC_AO_CODE"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="IS_20201801" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(not (isnull(&quot;BO_CODE&quot;)) and isnull(&quot;BO_SOC&quot;),'1','0')</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#JOIN_BO">
+        <mapping xsi:type="Calculation:AttributeMapping" target="OFFR_CD" source="OFFR_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BO_SOC" source="REL_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BO_CODE" source="BO_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REL_TY" source="REL_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ALTN_CONTR_NUM" source="ALTN_CONTR_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRM_CONTR_CUST" source="PRM_CONTR_CUST"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AO_CODE" source="AO_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OTC_AO_CODE" source="OTC_AO_CODE"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_OFFR_HIST">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="SUBSCRIBER_NO"/>
+        <viewAttribute id="BAN"/>
+        <viewAttribute id="OFFER_CODE"/>
+        <viewAttribute id="REFERENCE_EXPIRY_DT"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CC_BAN" length="10" expressionLanguage="COLUMN_ENGINE">
+          <formula>&quot;BAN&quot;</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#IFRS_R1.INTERNET.NDB_INTERNET::INT_OFFR_HIST">
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBSCRIBER_NO" source="SUBSCRIBER_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BAN" source="BAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OFFER_CODE" source="OFFER_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_EXPIRY_DT" source="REFERENCE_EXPIRY_DT"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_OFFR_REL_NOT_P_H" filterExpressionLanguage="COLUMN_ENGINE">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="REL_TY"/>
+        <viewAttribute id="REL_CODE"/>
+        <viewAttribute id="OFFR_CD"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#PROJ_OFFR_REL">
+        <mapping xsi:type="Calculation:AttributeMapping" target="REL_TY" source="REL_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REL_CODE" source="REL_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OFFR_CD" source="OFFR_CD"/>
+      </input>
+      <filter>((&quot;REL_TY&quot; !='P') and (&quot;REL_TY&quot; !='H'))</filter>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="JOIN_REL_HIST" joinType="inner">
+      <descriptions>
+        <comment text="Inner Join is to fetch REL_TY, REL_CODE from INT_OFFR_REL and BAN,SUBSCRIBER_NO from INT_OFFR_HIST for matching OFFER_CODE"/>
+      </descriptions>
+      <viewAttributes>
+        <viewAttribute id="SUBSCRIBER_NO"/>
+        <viewAttribute id="BAN"/>
+        <viewAttribute id="OFFER_CODE"/>
+        <viewAttribute id="REL_TY"/>
+        <viewAttribute id="REL_CODE"/>
+        <viewAttribute id="CC_BAN"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#PROJ_OFFR_HIST">
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBSCRIBER_NO" source="SUBSCRIBER_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BAN" source="BAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OFFER_CODE" source="OFFER_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_BAN" source="CC_BAN"/>
+      </input>
+      <input node="#PROJ_OFFR_REL_NOT_P_H">
+        <mapping xsi:type="Calculation:AttributeMapping" target="REL_TY" source="REL_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REL_CODE" source="REL_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OFFER_CODE" source="OFFR_CD"/>
+      </input>
+      <joinAttribute name="OFFER_CODE"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="JOIN_AO" cardinality="C1_1" joinType="leftOuter">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="ALTN_CONTR_NUM"/>
+        <viewAttribute id="PRM_CONTR_CUST"/>
+        <viewAttribute id="OFFR_CD"/>
+        <viewAttribute id="BO_SOC"/>
+        <viewAttribute id="REL_TY"/>
+        <viewAttribute id="BO_CODE"/>
+        <viewAttribute id="AO_CODE"/>
+        <viewAttribute id="OTC_AO_CODE"/>
+        <viewAttribute id="IS_20201801"/>
+        <viewAttribute id="BAN"/>
+        <viewAttribute id="CC_BAN"/>
+        <viewAttribute id="AO_SOC"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#PROJ_BO_ERROR">
+        <mapping xsi:type="Calculation:AttributeMapping" target="ALTN_CONTR_NUM" source="ALTN_CONTR_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRM_CONTR_CUST" source="PRM_CONTR_CUST"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OFFR_CD" source="OFFR_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BO_SOC" source="BO_SOC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REL_TY" source="REL_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BO_CODE" source="BO_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AO_CODE" source="AO_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OTC_AO_CODE" source="OTC_AO_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20201801" source="IS_20201801"/>
+      </input>
+      <input node="#JOIN_REL_HIST">
+        <mapping xsi:type="Calculation:AttributeMapping" target="BAN" source="BAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_BAN" source="CC_BAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AO_SOC" source="REL_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRM_CONTR_CUST" source="SUBSCRIBER_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AO_CODE" source="OFFER_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ALTN_CONTR_NUM" source="CC_BAN"/>
+      </input>
+      <joinAttribute name="PRM_CONTR_CUST"/>
+      <joinAttribute name="AO_CODE"/>
+      <joinAttribute name="ALTN_CONTR_NUM"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_AO_ERROR">
+      <descriptions>
+        <comment text="Null AO_SOC error will be raised as IS_20201802"/>
+      </descriptions>
+      <viewAttributes>
+        <viewAttribute id="ALTN_CONTR_NUM"/>
+        <viewAttribute id="PRM_CONTR_CUST"/>
+        <viewAttribute id="OFFR_CD"/>
+        <viewAttribute id="BO_SOC"/>
+        <viewAttribute id="REL_TY"/>
+        <viewAttribute id="BO_CODE"/>
+        <viewAttribute id="AO_CODE"/>
+        <viewAttribute id="OTC_AO_CODE"/>
+        <viewAttribute id="IS_20201801"/>
+        <viewAttribute id="AO_SOC"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="IS_20201802" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(not (isnull(&quot;AO_CODE&quot;)) and isnull(&quot;AO_SOC&quot;),'1','0')</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#JOIN_AO">
+        <mapping xsi:type="Calculation:AttributeMapping" target="ALTN_CONTR_NUM" source="ALTN_CONTR_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRM_CONTR_CUST" source="PRM_CONTR_CUST"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OFFR_CD" source="OFFR_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BO_SOC" source="BO_SOC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REL_TY" source="REL_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BO_CODE" source="BO_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AO_CODE" source="AO_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OTC_AO_CODE" source="OTC_AO_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20201801" source="IS_20201801"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AO_SOC" source="AO_SOC"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="JOIN_OTC_AO" joinType="leftOuter">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="ALTN_CONTR_NUM"/>
+        <viewAttribute id="PRM_CONTR_CUST"/>
+        <viewAttribute id="IS_20201802"/>
+        <viewAttribute id="OFFR_CD"/>
+        <viewAttribute id="BO_SOC"/>
+        <viewAttribute id="REL_TY"/>
+        <viewAttribute id="BO_CODE"/>
+        <viewAttribute id="AO_CODE"/>
+        <viewAttribute id="OTC_AO_CODE"/>
+        <viewAttribute id="IS_20201801"/>
+        <viewAttribute id="AO_SOC"/>
+        <viewAttribute id="OTC_AO_SOC"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#PROJ_AO_ERROR">
+        <mapping xsi:type="Calculation:AttributeMapping" target="ALTN_CONTR_NUM" source="ALTN_CONTR_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRM_CONTR_CUST" source="PRM_CONTR_CUST"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20201802" source="IS_20201802"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OFFR_CD" source="OFFR_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BO_SOC" source="BO_SOC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REL_TY" source="REL_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BO_CODE" source="BO_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AO_CODE" source="AO_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OTC_AO_CODE" source="OTC_AO_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20201801" source="IS_20201801"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AO_SOC" source="AO_SOC"/>
+      </input>
+      <input node="#JOIN_REL_HIST">
+        <mapping xsi:type="Calculation:AttributeMapping" target="OTC_AO_SOC" source="REL_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ALTN_CONTR_NUM" source="CC_BAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OTC_AO_CODE" source="OFFER_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRM_CONTR_CUST" source="SUBSCRIBER_NO"/>
+      </input>
+      <joinAttribute name="ALTN_CONTR_NUM"/>
+      <joinAttribute name="OTC_AO_CODE"/>
+      <joinAttribute name="PRM_CONTR_CUST"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_OTC_AO_ERROR">
+      <descriptions>
+        <comment text="Null OTC_AO_SOC error will be raised as IS_20201803"/>
+      </descriptions>
+      <viewAttributes>
+        <viewAttribute id="ALTN_CONTR_NUM"/>
+        <viewAttribute id="PRM_CONTR_CUST"/>
+        <viewAttribute id="IS_20201802"/>
+        <viewAttribute id="OFFR_CD"/>
+        <viewAttribute id="BO_SOC"/>
+        <viewAttribute id="REL_TY"/>
+        <viewAttribute id="BO_CODE"/>
+        <viewAttribute id="AO_CODE"/>
+        <viewAttribute id="OTC_AO_CODE"/>
+        <viewAttribute id="IS_20201801"/>
+        <viewAttribute id="AO_SOC"/>
+        <viewAttribute id="OTC_AO_SOC"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="IS_20201803" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(not (isNull(&quot;OTC_AO_CODE&quot;)) and isNull(&quot;OTC_AO_SOC&quot;),'1','0')</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="SOC" length="9" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(not isnull(&quot;BO_SOC&quot;),&quot;BO_SOC&quot;,if(not isnull(&quot;AO_SOC&quot;),&quot;AO_SOC&quot;,if(not isnull(&quot;OTC_AO_SOC&quot;),&quot;OTC_AO_SOC&quot;,'')))</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#JOIN_OTC_AO">
+        <mapping xsi:type="Calculation:AttributeMapping" target="ALTN_CONTR_NUM" source="ALTN_CONTR_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRM_CONTR_CUST" source="PRM_CONTR_CUST"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20201802" source="IS_20201802"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OFFR_CD" source="OFFR_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BO_SOC" source="BO_SOC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REL_TY" source="REL_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BO_CODE" source="BO_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AO_CODE" source="AO_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OTC_AO_CODE" source="OTC_AO_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20201801" source="IS_20201801"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AO_SOC" source="AO_SOC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OTC_AO_SOC" source="OTC_AO_SOC"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_ERROR">
+      <descriptions>
+        <comment text="Null AO_CODE ,BO_CODE and OTC_AO_CODE error will be raised as IS_20201804"/>
+      </descriptions>
+      <viewAttributes>
+        <viewAttribute id="ALTN_CONTR_NUM"/>
+        <viewAttribute id="PRM_CONTR_CUST"/>
+        <viewAttribute id="BO_CODE"/>
+        <viewAttribute id="AO_CODE"/>
+        <viewAttribute id="OTC_AO_CODE"/>
+        <viewAttribute id="IS_20201801"/>
+        <viewAttribute id="IS_20201802"/>
+        <viewAttribute id="IS_20201803"/>
+        <viewAttribute id="SOC"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="IS_20201804" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isNull(&quot;OTC_AO_CODE&quot;) and isNull(&quot;AO_CODE&quot;) and isnull(&quot;BO_CODE&quot;),'1','0')</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#PROJ_OTC_AO_ERROR">
+        <mapping xsi:type="Calculation:AttributeMapping" target="ALTN_CONTR_NUM" source="ALTN_CONTR_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRM_CONTR_CUST" source="PRM_CONTR_CUST"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BO_CODE" source="BO_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AO_CODE" source="AO_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OTC_AO_CODE" source="OTC_AO_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20201801" source="IS_20201801"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20201802" source="IS_20201802"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20201803" source="IS_20201803"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SOC" source="SOC"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="ERROR_SEMANTICS">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="ALTN_CONTR_NUM"/>
+        <viewAttribute id="PRM_CONTR_CUST"/>
+        <viewAttribute id="BO_CODE"/>
+        <viewAttribute id="AO_CODE"/>
+        <viewAttribute id="OTC_AO_CODE"/>
+        <viewAttribute id="SOC"/>
+        <viewAttribute id="IS_20201801"/>
+        <viewAttribute id="IS_20201802"/>
+        <viewAttribute id="IS_20201803"/>
+        <viewAttribute id="IS_20201804"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="ERROR_STATUS" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>if((&quot;IS_20201801&quot;='1') or &#xD;
+(&quot;IS_20201802&quot;='1') or &#xD;
+(&quot;IS_20201803&quot;='1') or &#xD;
+(&quot;IS_20201804&quot;='1'),'1','0')</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="ERROR_CODE" length="500" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(&quot;IS_20201801&quot;='1', '20201801||','') + &#xD;
+if(&quot;IS_20201802&quot;='1', '20201802||','') + &#xD;
+if(&quot;IS_20201803&quot;='1', '20201803||','') +&#xD;
+if(&quot;IS_20201804&quot;='1', '20201804||','')</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#PROJ_ERROR">
+        <mapping xsi:type="Calculation:AttributeMapping" target="ALTN_CONTR_NUM" source="ALTN_CONTR_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRM_CONTR_CUST" source="PRM_CONTR_CUST"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BO_CODE" source="BO_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AO_CODE" source="AO_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OTC_AO_CODE" source="OTC_AO_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SOC" source="SOC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20201801" source="IS_20201801"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20201802" source="IS_20201802"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20201803" source="IS_20201803"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20201804" source="IS_20201804"/>
+      </input>
+    </calculationView>
+  </calculationViews>
+  <logicalModel id="ERROR_SEMANTICS">
+    <descriptions/>
+    <attributes>
+      <attribute id="ALTN_CONTR_NUM" order="1" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ALTN_CONTR_NUM"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="ALTN_CONTR_NUM"/>
+      </attribute>
+      <attribute id="PRM_CONTR_CUST" order="2" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="PRM_CONTR_CUST"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="PRM_CONTR_CUST"/>
+      </attribute>
+      <attribute id="BO_CODE" order="3" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="BO_CODE"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="BO_CODE"/>
+      </attribute>
+      <attribute id="AO_CODE" order="4" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="AO_CODE"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="AO_CODE"/>
+      </attribute>
+      <attribute id="OTC_AO_CODE" order="5" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="OTC_AO_CODE"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="OTC_AO_CODE"/>
+      </attribute>
+      <attribute id="SOC" order="6" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SOC"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="SOC"/>
+      </attribute>
+      <attribute id="ERROR_STATUS" order="7" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ERROR_STATUS"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="ERROR_STATUS"/>
+      </attribute>
+      <attribute id="ERROR_CODE" order="8" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ERROR_CODE"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="ERROR_CODE"/>
+      </attribute>
+      <attribute id="IS_20201801" order="9" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="IS_20201801"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="IS_20201801"/>
+      </attribute>
+      <attribute id="IS_20201802" order="10" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="IS_20201802"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="IS_20201802"/>
+      </attribute>
+      <attribute id="IS_20201803" order="11" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="IS_20201803"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="IS_20201803"/>
+      </attribute>
+      <attribute id="IS_20201804" order="12" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="IS_20201804"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="IS_20201804"/>
+      </attribute>
+    </attributes>
+    <calculatedAttributes/>
+    <privateDataFoundation>
+      <tableProxies/>
+      <joins/>
+      <layout>
+        <shapes/>
+      </layout>
+    </privateDataFoundation>
+    <baseMeasures/>
+    <calculatedMeasures/>
+    <restrictedMeasures/>
+    <localDimensions/>
+  </logicalModel>
+  <layout>
+    <shapes>
+      <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+        <upperLeftCorner x="182" y="87"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_ORDER" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="28" y="861"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_OFFR_REL" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="336" y="939"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_OFFR_REL_P" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="182" y="861"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="JOIN_BO" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="28" y="765"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_BO_ERROR" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="28" y="669"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_OFFR_HIST" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="182" y="765"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_OFFR_REL_NOT_P_H" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="336" y="765"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="JOIN_REL_HIST" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="182" y="669"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="JOIN_AO" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="95" y="573"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_AO_ERROR" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="95" y="495"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="JOIN_OTC_AO" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="182" y="399"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_OTC_AO_ERROR" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="182" y="321"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_ERROR" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="182" y="243"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+      <shape expanded="true" modelObjectName="ERROR_SEMANTICS" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="182" y="165"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+    </shapes>
+  </layout>
+</Calculation:scenario>

@@ -1,0 +1,279 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:AccessControl="http://www.sap.com/ndb/SQLCoreModelAccessControl.ecore" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" xmlns:Variable="http://www.sap.com/ndb/BiModelVariable.ecore" schemaVersion="2.3" id="CA_INT_MOD_EVNT" applyPrivilegeType="NONE" checkAnalyticPrivileges="false" defaultClient="$$client$$" defaultLanguage="$$language$$" hierarchiesSQLEnabled="false" translationRelevant="true" visibility="internal" calculationScenarioType="TREE_BASED" dataCategory="DIMENSION" enforceSqlExecution="false" executionSemantic="UNDEFINED" outputViewType="Projection">
+  <origin/>
+  <descriptions defaultDescription="Landing View - Table INT_MOD_EVNT"/>
+  <localVariables>
+    <variable id="IP_EFF_DT" parameter="true">
+      <descriptions defaultDescription="IP_EFF_DT"/>
+      <variableProperties datatype="DATE" defaultValue="99991231" mandatory="false">
+        <valueDomain type="Date"/>
+        <selection multiLine="false" type="SingleValue"/>
+      </variableProperties>
+    </variable>
+  </localVariables>
+  <variableMappings>
+    <mapping xsi:type="Variable:ConstantVariableMapping" dataSource="#CA_EH_ERROR_TABLE" value="1182">
+      <targetVariable name="IP_JOB_ID" resourceUri="/IFRS_R1.LAND.EH/calculationviews/CA_EH_ERROR_TABLE"/>
+    </mapping>
+  </variableMappings>
+  <informationModelLayout relativeWidthScenario="39"/>
+  <dataSources>
+    <DataSource id="IFRS_R1.LAND::INT_MOD_EVNT" type="DATA_BASE_TABLE">
+      <viewAttributes allViewAttributes="true"/>
+      <columnObject schemaName="LAND" columnObjectName="IFRS_R1.LAND::INT_MOD_EVNT"/>
+    </DataSource>
+    <DataSource id="CA_EH_ERROR_TABLE" type="CALCULATION_VIEW">
+      <viewAttributes allViewAttributes="true"/>
+      <resourceUri>/IFRS_R1.LAND.EH/calculationviews/CA_EH_ERROR_TABLE</resourceUri>
+    </DataSource>
+  </dataSources>
+  <calculationViews>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_INT_MOD_EVNT" filterExpressionLanguage="COLUMN_ENGINE">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="TRX_SEQ_NO"/>
+        <viewAttribute id="ACTV_CD"/>
+        <viewAttribute id="BAN"/>
+        <viewAttribute id="SUB_NO"/>
+        <viewAttribute id="PRODUCT_TYPE"/>
+        <viewAttribute id="EFF_DT"/>
+        <viewAttribute id="EXPY_DT"/>
+        <viewAttribute id="ODS_SYST_CD"/>
+        <viewAttribute id="ACTV_RSN_CD"/>
+        <viewAttribute id="ISSUE_DATE"/>
+        <viewAttribute id="EVNT_FEE"/>
+        <viewAttribute id="PENALTIES"/>
+        <viewAttribute id="TEMP_SEAS_SUSPNSN"/>
+        <viewAttribute id="NDB_TS"/>
+        <viewAttribute id="EFFECTIVE_DATE"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="DATE" id="CC_EXPY_DT" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(&quot;EXPY_DT&quot;=date('29991231'),date('99991231'),&quot;EXPY_DT&quot;)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CC_VERSION_CHECK" length="200" expressionLanguage="COLUMN_ENGINE">
+          <formula>string(&quot;TRX_SEQ_NO&quot;)+'|'+&quot;ACTV_CD&quot;+'|'+&quot;BAN&quot;+'|'+&quot;SUB_NO&quot;+'|'+&quot;PRODUCT_TYPE&quot;</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#IFRS_R1.LAND::INT_MOD_EVNT">
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRX_SEQ_NO" source="TRX_SEQ_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACTV_CD" source="ACTV_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BAN" source="BAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUB_NO" source="SUB_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT_TYPE" source="PRODUCT_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFF_DT" source="EFF_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXPY_DT" source="EXPY_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ODS_SYST_CD" source="ODS_SYST_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACTV_RSN_CD" source="ACTV_RSN_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ISSUE_DATE" source="ISSUE_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EVNT_FEE" source="EVNT_FEE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PENALTIES" source="PENALTIES"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TEMP_SEAS_SUSPNSN" source="TEMP_SEAS_SUSPNSN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NDB_TS" source="NDB_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFFECTIVE_DATE" source="EFFECTIVE_DATE"/>
+      </input>
+      <filter>(isNull(&quot;NDB_TS&quot;))  and (&quot;EFF_DT&quot;&lt;='$$IP_EFF_DT$$')</filter>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_ETL_ERROR">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="PARENT_KEY"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#CA_EH_ERROR_TABLE">
+        <mapping xsi:type="Calculation:AttributeMapping" target="PARENT_KEY" source="PARENT_KEY"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="JOIN_EH" joinType="leftOuter">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="TRX_SEQ_NO"/>
+        <viewAttribute id="ACTV_CD"/>
+        <viewAttribute id="BAN"/>
+        <viewAttribute id="SUB_NO"/>
+        <viewAttribute id="PRODUCT_TYPE"/>
+        <viewAttribute id="EFF_DT"/>
+        <viewAttribute id="ODS_SYST_CD"/>
+        <viewAttribute id="ACTV_RSN_CD"/>
+        <viewAttribute id="ISSUE_DATE"/>
+        <viewAttribute id="EVNT_FEE"/>
+        <viewAttribute id="PENALTIES"/>
+        <viewAttribute id="TEMP_SEAS_SUSPNSN"/>
+        <viewAttribute id="NDB_TS"/>
+        <viewAttribute id="EFFECTIVE_DATE"/>
+        <viewAttribute id="CC_EXPY_DT"/>
+        <viewAttribute id="PARENT_KEY_ERROR"/>
+        <viewAttribute id="CC_VERSION_CHECK"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#PROJ_INT_MOD_EVNT">
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRX_SEQ_NO" source="TRX_SEQ_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACTV_CD" source="ACTV_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BAN" source="BAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUB_NO" source="SUB_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT_TYPE" source="PRODUCT_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFF_DT" source="EFF_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ODS_SYST_CD" source="ODS_SYST_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACTV_RSN_CD" source="ACTV_RSN_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ISSUE_DATE" source="ISSUE_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EVNT_FEE" source="EVNT_FEE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PENALTIES" source="PENALTIES"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TEMP_SEAS_SUSPNSN" source="TEMP_SEAS_SUSPNSN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NDB_TS" source="NDB_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFFECTIVE_DATE" source="EFFECTIVE_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_EXPY_DT" source="CC_EXPY_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_VERSION_CHECK" source="CC_VERSION_CHECK"/>
+      </input>
+      <input node="#PROJ_ETL_ERROR">
+        <mapping xsi:type="Calculation:AttributeMapping" target="PARENT_KEY_ERROR" source="PARENT_KEY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_VERSION_CHECK" source="PARENT_KEY"/>
+      </input>
+      <joinAttribute name="CC_VERSION_CHECK"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_ERROR_FILTER">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="TRX_SEQ_NO"/>
+        <viewAttribute id="ACTV_CD"/>
+        <viewAttribute id="BAN"/>
+        <viewAttribute id="SUB_NO"/>
+        <viewAttribute id="PRODUCT_TYPE"/>
+        <viewAttribute id="EFF_DT"/>
+        <viewAttribute id="ODS_SYST_CD"/>
+        <viewAttribute id="ACTV_RSN_CD"/>
+        <viewAttribute id="ISSUE_DATE"/>
+        <viewAttribute id="EVNT_FEE"/>
+        <viewAttribute id="PENALTIES"/>
+        <viewAttribute id="TEMP_SEAS_SUSPNSN"/>
+        <viewAttribute id="NDB_TS"/>
+        <viewAttribute id="EFFECTIVE_DATE"/>
+        <viewAttribute id="EXPY_DT"/>
+        <viewAttribute id="PARENT_KEY_ERROR">
+          <filter xsi:type="AccessControl:SingleValueFilter" operator="NL" including="true"/>
+        </viewAttribute>
+        <viewAttribute id="CC_VERSION_CHECK"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#JOIN_EH">
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRX_SEQ_NO" source="TRX_SEQ_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACTV_CD" source="ACTV_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BAN" source="BAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUB_NO" source="SUB_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT_TYPE" source="PRODUCT_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFF_DT" source="EFF_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ODS_SYST_CD" source="ODS_SYST_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACTV_RSN_CD" source="ACTV_RSN_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ISSUE_DATE" source="ISSUE_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EVNT_FEE" source="EVNT_FEE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PENALTIES" source="PENALTIES"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TEMP_SEAS_SUSPNSN" source="TEMP_SEAS_SUSPNSN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NDB_TS" source="NDB_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFFECTIVE_DATE" source="EFFECTIVE_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXPY_DT" source="CC_EXPY_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PARENT_KEY_ERROR" source="PARENT_KEY_ERROR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_VERSION_CHECK" source="CC_VERSION_CHECK"/>
+      </input>
+    </calculationView>
+  </calculationViews>
+  <logicalModel id="PROJ_ERROR_FILTER">
+    <descriptions/>
+    <attributes>
+      <attribute id="TRX_SEQ_NO" order="1" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="TRX_SEQ_NO"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="TRX_SEQ_NO"/>
+      </attribute>
+      <attribute id="ACTV_CD" order="2" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ACTV_CD"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="ACTV_CD"/>
+      </attribute>
+      <attribute id="BAN" order="3" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="BAN"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="BAN"/>
+      </attribute>
+      <attribute id="SUB_NO" order="4" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SUB_NO"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="SUB_NO"/>
+      </attribute>
+      <attribute id="PRODUCT_TYPE" order="5" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="PRODUCT_TYPE"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="PRODUCT_TYPE"/>
+      </attribute>
+      <attribute id="EFF_DT" order="6" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="EFF_DT"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="EFF_DT"/>
+      </attribute>
+      <attribute id="ODS_SYST_CD" order="7" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ODS_SYST_CD"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="ODS_SYST_CD"/>
+      </attribute>
+      <attribute id="ACTV_RSN_CD" order="8" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ACTV_RSN_CD"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="ACTV_RSN_CD"/>
+      </attribute>
+      <attribute id="ISSUE_DATE" order="9" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ISSUE_DATE"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="ISSUE_DATE"/>
+      </attribute>
+      <attribute id="EVNT_FEE" order="10" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="EVNT_FEE"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="EVNT_FEE"/>
+      </attribute>
+      <attribute id="PENALTIES" order="11" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="PENALTIES"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="PENALTIES"/>
+      </attribute>
+      <attribute id="TEMP_SEAS_SUSPNSN" order="12" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="TEMP_SEAS_SUSPNSN"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="TEMP_SEAS_SUSPNSN"/>
+      </attribute>
+      <attribute id="EFFECTIVE_DATE" order="13" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="EFFECTIVE_DATE"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="EFFECTIVE_DATE"/>
+      </attribute>
+      <attribute id="EXPY_DT" order="14" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="EXPY_DT"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="EXPY_DT"/>
+      </attribute>
+      <attribute id="CC_VERSION_CHECK" hidden="false" order="15" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CC_VERSION_CHECK"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="CC_VERSION_CHECK"/>
+      </attribute>
+    </attributes>
+    <calculatedAttributes/>
+    <privateDataFoundation>
+      <tableProxies/>
+      <joins/>
+      <layout>
+        <shapes/>
+      </layout>
+    </privateDataFoundation>
+    <baseMeasures/>
+    <calculatedMeasures/>
+    <restrictedMeasures/>
+    <localDimensions/>
+  </logicalModel>
+  <layout>
+    <shapes>
+      <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+        <upperLeftCorner x="99" y="87"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_INT_MOD_EVNT" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="22" y="339"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_ETL_ERROR" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="176" y="339"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="JOIN_EH" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="99" y="243"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_ERROR_FILTER" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="99" y="165"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+    </shapes>
+  </layout>
+</Calculation:scenario>

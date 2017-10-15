@@ -1,0 +1,300 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" schemaVersion="2.3" id="CA_PRODUCT_MOBL_POST_BILL" applyPrivilegeType="NONE" checkAnalyticPrivileges="false" defaultClient="$$client$$" defaultLanguage="$$language$$" hierarchiesSQLEnabled="false" translationRelevant="true" visibility="reportingEnabled" calculationScenarioType="TREE_BASED" dataCategory="CUBE" enforceSqlExecution="true" executionSemantic="UNDEFINED" outputViewType="Aggregation">
+  <origin/>
+  <descriptions defaultDescription="CA_PRODUCT_MOBL_POST_BILL"/>
+  <localVariables/>
+  <variableMappings/>
+  <informationModelLayout relativeWidthScenario="40"/>
+  <dataSources>
+    <DataSource id="IFRS_R1.MOBILITY.NDB_MOBILITY::MOBL_POST_BILL" type="DATA_BASE_TABLE">
+      <viewAttributes allViewAttributes="true"/>
+      <columnObject schemaName="NDB_MOBILITY" columnObjectName="IFRS_R1.MOBILITY.NDB_MOBILITY::MOBL_POST_BILL"/>
+    </DataSource>
+    <DataSource id="IFRS_R1.MOBILITY.NDB_MOBILITY::MOBL_POST_SOC_HIST" type="DATA_BASE_TABLE">
+      <viewAttributes allViewAttributes="true"/>
+      <columnObject schemaName="NDB_MOBILITY" columnObjectName="IFRS_R1.MOBILITY.NDB_MOBILITY::MOBL_POST_SOC_HIST"/>
+    </DataSource>
+  </dataSources>
+  <calculationViews>
+    <calculationView xsi:type="Calculation:ProjectionView" id="POST_BILL" filterExpressionLanguage="COLUMN_ENGINE">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="ITEM_SUB_ID"/>
+        <viewAttribute id="DSCT_CD"/>
+        <viewAttribute id="FTR_REV_CD"/>
+        <viewAttribute id="ITEM_ID"/>
+        <viewAttribute id="JOURN_DT"/>
+        <viewAttribute id="VIRTUAL_INV_FLAG"/>
+        <viewAttribute id="PMP_TS"/>
+        <viewAttribute id="TRANS_TY"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#IFRS_R1.MOBILITY.NDB_MOBILITY::MOBL_POST_BILL">
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_SUB_ID" source="ITEM_SUB_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DSCT_CD" source="DSCT_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FTR_REV_CD" source="FTR_REV_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_ID" source="ITEM_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="JOURN_DT" source="JOURN_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VIRTUAL_INV_FLAG" source="VIRTUAL_INV_FLAG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PMP_TS" source="PMP_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRANS_TY" source="TRANS_TY"/>
+      </input>
+      <filter>((&quot;VIRTUAL_INV_FLAG&quot; != 'X') OR isNull(&quot;VIRTUAL_INV_FLAG&quot;)) AND (isNull(&quot;PMP_TS&quot;))</filter>
+    </calculationView>
+    <calculationView xsi:type="Calculation:AggregationView" id="POST_SOC_HIST">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="SOC"/>
+        <viewAttribute aggregationType="max" id="SOC_DESC"/>
+        <viewAttribute aggregationType="max" id="EFFECTIVE_DATE"/>
+        <viewAttribute aggregationType="max" id="SERVICE_TYPE"/>
+        <viewAttribute id="EXPY_DT"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#IFRS_R1.MOBILITY.NDB_MOBILITY::MOBL_POST_SOC_HIST">
+        <mapping xsi:type="Calculation:AttributeMapping" target="SOC" source="SOC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SOC_DESC" source="SOC_DESC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFFECTIVE_DATE" source="EFFECTIVE_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SERVICE_TYPE" source="SERVICE_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXPY_DT" source="EXPY_DT"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="JOIN_BILL_SOC_HIST" joinOrder="OUTSIDE_IN" joinType="leftOuter">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="ITEM_SUB_ID"/>
+        <viewAttribute id="DSCT_CD"/>
+        <viewAttribute id="FTR_REV_CD"/>
+        <viewAttribute id="ITEM_ID"/>
+        <viewAttribute id="JOURN_DT"/>
+        <viewAttribute id="SOC"/>
+        <viewAttribute id="TRANS_TY"/>
+        <viewAttribute id="EFFECTIVE_DATE"/>
+        <viewAttribute id="SOC_DESC"/>
+        <viewAttribute id="SERVICE_TYPE"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CHARGE_TYPE" length="9" expressionLanguage="SQL">
+          <formula>CASE WHEN &quot;TRANS_TY&quot; = 'CHG' THEN &#xD;
+           CASE WHEN &quot;ITEM_SUB_ID&quot; IN ('ACT', 'CCC35') THEN 'ACT'&#xD;
+                       WHEN &quot;ITEM_SUB_ID&quot; IN ('BTCVCL' ,  'CNLCRG', 'CGAN', 'IETFC', 'IMOVES',  'CNLCRG', &#xD;
+                       'CGAN' , 'LTCC', 'PNETRM') THEN 'ECF'&#xD;
+                       WHEN &quot;ITEM_SUB_ID&quot; IN ('IHUGC',  'IHUG') THEN 'HUG_FEE'&#xD;
+                       WHEN &quot;FTR_REV_CD&quot; IN ('E', 'H', 'L', 'M', 'U', 'O') THEN 'OTC'&#xD;
+                       WHEN (&quot;FTR_REV_CD&quot; = 'R' OR &quot;FTR_REV_CD&quot; IS NULL) AND &quot;SERVICE_TYPE&quot; IN ('M', 'P') THEN 'BASE_SRVC'&#xD;
+                       WHEN (&quot;FTR_REV_CD&quot; = 'R' OR &quot;FTR_REV_CD&quot; IS NULL) AND &quot;SERVICE_TYPE&quot; &lt;>'M' AND &quot;SERVICE_TYPE&quot; &lt;>'P' THEN 'OPT'&#xD;
+                       ELSE 'OTHER' &#xD;
+          END&#xD;
+          ELSE &#xD;
+         &#xD;
+         CASE WHEN ((&quot;TRANS_TY&quot; ='ADJ' OR  &quot;TRANS_TY&quot; = 'ADJR') AND &quot;DSCT_CD&quot; IS NOT NULL ) THEN 'OTHERDISC'&#xD;
+                     WHEN ((&quot;TRANS_TY&quot; = 'ADJ' OR  &quot;TRANS_TY&quot; =  'ADJR') AND &quot;ITEM_SUB_ID&quot; IN ('ACT', 'CCC35')) THEN 'ACT'&#xD;
+                    WHEN ((&quot;TRANS_TY&quot; = 'ADJ' OR &quot;TRANS_TY&quot; = 'ADJR') AND &quot;FTR_REV_CD&quot; = 'O') THEN 'OTC'&#xD;
+                    ELSE 'OTHER'         &#xD;
+          END&#xD;
+         &#xD;
+&#xD;
+         &#xD;
+END&#xD;
+</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="LOB" length="3" expressionLanguage="COLUMN_ENGINE">
+          <formula>'MOB'</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CODE_TYPE" length="5" expressionLanguage="COLUMN_ENGINE">
+          <formula>if((isnull(&quot;SOC&quot;)),'FTR','SOC')</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CODE" length="18" expressionLanguage="SQL">
+          <formula>CASE WHEN (&quot;DSCT_CD&quot; IS NULL OR (LENGTH(TRIM(&quot;DSCT_CD&quot;)) =0)) THEN &#xD;
+     CASE WHEN &#xD;
+     (LENGTH(TRIM(&quot;ITEM_ID&quot;))=0 OR &quot;ITEM_ID&quot; IS NULL) THEN NULL &#xD;
+     ELSE &quot;ITEM_ID&quot; END&#xD;
+ELSE &quot;DSCT_CD&quot; END</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CODE_DESCRIPTION" length="250" expressionLanguage="SQL">
+          <formula>CASE &#xD;
+WHEN (&quot;JOURN_DT&quot;>=&quot;EFFECTIVE_DATE&quot; ) THEN &quot;SOC_DESC&quot; ELSE NULL END</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="SOURCE_SYSTEM" length="20" expressionLanguage="COLUMN_ENGINE">
+          <formula>'NM1BML'</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="DATE" id="VALID_FROM" expressionLanguage="COLUMN_ENGINE">
+          <formula>&quot;JOURN_DT&quot;</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="NON_DISTINCT_FLAG" length="16" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(&quot;ITEM_SUB_ID&quot;='ACT' or &quot;ITEM_SUB_ID&quot;='CCC35','ACT',&#xD;
+if(&quot;ITEM_SUB_ID&quot;='IHUGC'or  &quot;ITEM_SUB_ID&quot;= 'IHUG','HUG_FEE' ,''))&#xD;
+</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CODE_ORDERING" length="18" expressionLanguage="COLUMN_ENGINE">
+          <formula>&quot;CODE&quot; +'-'+ &quot;FEATURE_CODE&quot;</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="SOURCE_SYSTEM_ORDERING" length="18" expressionLanguage="COLUMN_ENGINE">
+          <formula>'NM1'</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CODE_BILLING" length="37" expressionLanguage="COLUMN_ENGINE">
+          <formula>&quot;CODE&quot; +'-'+ &quot;FEATURE_CODE&quot;</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="SOURCE_SYSTEM_BILLING" length="18" expressionLanguage="COLUMN_ENGINE">
+          <formula>'NM1'</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="FEATURE_CODE" length="18" expressionLanguage="COLUMN_ENGINE">
+          <formula>&quot;ITEM_SUB_ID&quot;</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="TABLE_FLAG" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>'B'</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#POST_BILL">
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_SUB_ID" source="ITEM_SUB_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DSCT_CD" source="DSCT_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FTR_REV_CD" source="FTR_REV_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_ID" source="ITEM_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="JOURN_DT" source="JOURN_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRANS_TY" source="TRANS_TY"/>
+      </input>
+      <input node="#POST_SOC_HIST">
+        <mapping xsi:type="Calculation:AttributeMapping" target="SOC" source="SOC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFFECTIVE_DATE" source="EFFECTIVE_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SOC_DESC" source="SOC_DESC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SERVICE_TYPE" source="SERVICE_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_ID" source="SOC"/>
+      </input>
+      <joinAttribute name="ITEM_ID"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="FILTER_NON_EFFECTIVE">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="LOB"/>
+        <viewAttribute id="CODE"/>
+        <viewAttribute id="CODE_DESCRIPTION"/>
+        <viewAttribute id="SOURCE_SYSTEM"/>
+        <viewAttribute id="VALID_FROM"/>
+        <viewAttribute id="NON_DISTINCT_FLAG"/>
+        <viewAttribute id="CODE_ORDERING"/>
+        <viewAttribute id="SOURCE_SYSTEM_ORDERING"/>
+        <viewAttribute id="CODE_BILLING"/>
+        <viewAttribute id="SOURCE_SYSTEM_BILLING"/>
+        <viewAttribute id="FEATURE_CODE"/>
+        <viewAttribute id="TABLE_FLAG"/>
+        <viewAttribute id="CODE_TYPE"/>
+        <viewAttribute id="CHARGE_TYPE"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#JOIN_BILL_SOC_HIST">
+        <mapping xsi:type="Calculation:AttributeMapping" target="LOB" source="LOB"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CODE" source="CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CODE_DESCRIPTION" source="CODE_DESCRIPTION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SOURCE_SYSTEM" source="SOURCE_SYSTEM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VALID_FROM" source="VALID_FROM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NON_DISTINCT_FLAG" source="NON_DISTINCT_FLAG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CODE_ORDERING" source="CODE_ORDERING"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SOURCE_SYSTEM_ORDERING" source="SOURCE_SYSTEM_ORDERING"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CODE_BILLING" source="CODE_BILLING"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SOURCE_SYSTEM_BILLING" source="SOURCE_SYSTEM_BILLING"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FEATURE_CODE" source="FEATURE_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TABLE_FLAG" source="TABLE_FLAG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CODE_TYPE" source="CODE_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CHARGE_TYPE" source="CHARGE_TYPE"/>
+      </input>
+    </calculationView>
+  </calculationViews>
+  <logicalModel id="FILTER_NON_EFFECTIVE">
+    <descriptions/>
+    <attributes>
+      <attribute id="CHARGE_TYPE" order="1" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CHARGE_TYPE"/>
+        <keyMapping columnObjectName="FILTER_NON_EFFECTIVE" columnName="CHARGE_TYPE"/>
+      </attribute>
+      <attribute id="LOB" order="2" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="LOB"/>
+        <keyMapping columnObjectName="FILTER_NON_EFFECTIVE" columnName="LOB"/>
+      </attribute>
+      <attribute id="CODE_TYPE" order="3" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CODE_TYPE"/>
+        <keyMapping columnObjectName="FILTER_NON_EFFECTIVE" columnName="CODE_TYPE"/>
+      </attribute>
+      <attribute id="CODE" key="true" order="4" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CODE"/>
+        <keyMapping columnObjectName="FILTER_NON_EFFECTIVE" columnName="CODE"/>
+      </attribute>
+      <attribute id="CODE_DESCRIPTION" order="5" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CODE_DESCRIPTION"/>
+        <keyMapping columnObjectName="FILTER_NON_EFFECTIVE" columnName="CODE_DESCRIPTION"/>
+      </attribute>
+      <attribute id="SOURCE_SYSTEM" key="true" order="6" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SOURCE_SYSTEM"/>
+        <keyMapping columnObjectName="FILTER_NON_EFFECTIVE" columnName="SOURCE_SYSTEM"/>
+      </attribute>
+      <attribute id="NON_DISTINCT_FLAG" order="8" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="NON_DISTINCT_FLAG"/>
+        <keyMapping columnObjectName="FILTER_NON_EFFECTIVE" columnName="NON_DISTINCT_FLAG"/>
+      </attribute>
+      <attribute id="CODE_ORDERING" order="9" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CODE_ORDERING"/>
+        <keyMapping columnObjectName="FILTER_NON_EFFECTIVE" columnName="CODE_ORDERING"/>
+      </attribute>
+      <attribute id="SOURCE_SYSTEM_ORDERING" order="10" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SOURCE_SYSTEM_ORDERING"/>
+        <keyMapping columnObjectName="FILTER_NON_EFFECTIVE" columnName="SOURCE_SYSTEM_ORDERING"/>
+      </attribute>
+      <attribute id="CODE_BILLING" order="11" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CODE_BILLING"/>
+        <keyMapping columnObjectName="FILTER_NON_EFFECTIVE" columnName="CODE_BILLING"/>
+      </attribute>
+      <attribute id="SOURCE_SYSTEM_BILLING" order="12" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SOURCE_SYSTEM_BILLING"/>
+        <keyMapping columnObjectName="FILTER_NON_EFFECTIVE" columnName="SOURCE_SYSTEM_BILLING"/>
+      </attribute>
+      <attribute id="FEATURE_CODE" key="true" order="13" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="FEATURE_CODE"/>
+        <keyMapping columnObjectName="FILTER_NON_EFFECTIVE" columnName="FEATURE_CODE"/>
+      </attribute>
+      <attribute id="TABLE_FLAG" order="14" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="TABLE_FLAG"/>
+        <keyMapping columnObjectName="FILTER_NON_EFFECTIVE" columnName="TABLE_FLAG"/>
+      </attribute>
+    </attributes>
+    <calculatedAttributes/>
+    <privateDataFoundation>
+      <tableProxies/>
+      <joins/>
+      <layout>
+        <shapes/>
+      </layout>
+    </privateDataFoundation>
+    <baseMeasures>
+      <measure id="VALID_FROM" order="7" aggregationType="min" measureType="simple">
+        <descriptions defaultDescription="VALID_FROM"/>
+        <measureMapping columnObjectName="FILTER_NON_EFFECTIVE" columnName="VALID_FROM"/>
+      </measure>
+    </baseMeasures>
+    <calculatedMeasures/>
+    <restrictedMeasures/>
+    <localDimensions/>
+  </logicalModel>
+  <layout>
+    <shapes>
+      <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+        <upperLeftCorner x="99" y="87"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+      <shape expanded="true" modelObjectName="POST_BILL" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="22" y="339"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="POST_SOC_HIST" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="176" y="339"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="JOIN_BILL_SOC_HIST" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="99" y="243"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="FILTER_NON_EFFECTIVE" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="99" y="165"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+    </shapes>
+  </layout>
+</Calculation:scenario>

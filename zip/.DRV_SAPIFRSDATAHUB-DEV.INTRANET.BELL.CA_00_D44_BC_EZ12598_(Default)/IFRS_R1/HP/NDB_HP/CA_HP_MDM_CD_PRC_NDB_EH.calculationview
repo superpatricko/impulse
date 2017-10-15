@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:AccessControl="http://www.sap.com/ndb/SQLCoreModelAccessControl.ecore" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" schemaVersion="2.3" id="CA_HP_MDM_CD_PRC_NDB_EH" applyPrivilegeType="NONE" checkAnalyticPrivileges="false" defaultClient="$$client$$" defaultLanguage="$$language$$" hierarchiesSQLEnabled="false" translationRelevant="true" visibility="internal" calculationScenarioType="TREE_BASED" dataCategory="DIMENSION" enforceSqlExecution="false" executionSemantic="UNDEFINED" outputViewType="Projection">
+  <descriptions defaultDescription="CA_HP_MDM_CD_PRC_NDB_EH"/>
+  <metadata changedAt="2017-08-07 16:02:33.549"/>
+  <localVariables/>
+  <variableMappings/>
+  <informationModelLayout relativeWidthScenario="49"/>
+  <dataSources>
+    <DataSource id="IFRS_R1.HP.NDB_HP::HP_MDM_CD_PRC" type="DATA_BASE_TABLE">
+      <viewAttributes allViewAttributes="true"/>
+      <columnObject schemaName="NDB_HP" columnObjectName="IFRS_R1.HP.NDB_HP::HP_MDM_CD_PRC"/>
+    </DataSource>
+    <DataSource id="IFRS_R1.HP.NDB_HP::HP_MDM_CD_PRC_EH" type="DATA_BASE_TABLE">
+      <viewAttributes allViewAttributes="true"/>
+      <columnObject schemaName="NDB_HP" columnObjectName="IFRS_R1.HP.NDB_HP::HP_MDM_CD_PRC_EH"/>
+    </DataSource>
+  </dataSources>
+  <calculationViews>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_NDB">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="CD_NM"/>
+        <viewAttribute id="PROV"/>
+        <viewAttribute id="RT_BND"/>
+        <viewAttribute id="REF_EFFC_DATE"/>
+        <viewAttribute id="REF_EXP_DATE">
+          <filter xsi:type="AccessControl:SingleValueFilter" including="true" value="9999-12-31"/>
+        </viewAttribute>
+        <viewAttribute id="CD_ENG_DESC"/>
+        <viewAttribute id="CD_FR_DESC"/>
+        <viewAttribute id="CD_TY"/>
+        <viewAttribute id="PRC"/>
+        <viewAttribute id="INSERT_TS"/>
+        <viewAttribute id="MODIFIED_TS"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#IFRS_R1.HP.NDB_HP::HP_MDM_CD_PRC">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CD_NM" source="CD_NM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROV" source="PROV"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RT_BND" source="RT_BND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REF_EFFC_DATE" source="REF_EFFC_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REF_EXP_DATE" source="REF_EXP_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CD_ENG_DESC" source="CD_ENG_DESC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CD_FR_DESC" source="CD_FR_DESC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CD_TY" source="CD_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRC" source="PRC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INSERT_TS" source="INSERT_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MODIFIED_TS" source="MODIFIED_TS"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_EH">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="CD_NM"/>
+        <viewAttribute id="PROV"/>
+        <viewAttribute id="DELETED">
+          <filter xsi:type="AccessControl:SingleValueFilter" operator="NL" including="true"/>
+        </viewAttribute>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#IFRS_R1.HP.NDB_HP::HP_MDM_CD_PRC_EH">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CD_NM" source="CD_NM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROV" source="PROV"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DELETED" source="DELETED"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="JOIN_NDB_EH" joinType="leftOuter">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="CD_NM"/>
+        <viewAttribute id="PROV"/>
+        <viewAttribute id="RT_BND"/>
+        <viewAttribute id="REF_EFFC_DATE"/>
+        <viewAttribute id="REF_EXP_DATE"/>
+        <viewAttribute id="CD_ENG_DESC"/>
+        <viewAttribute id="CD_FR_DESC"/>
+        <viewAttribute id="CD_TY"/>
+        <viewAttribute id="PRC"/>
+        <viewAttribute id="CD_NM_RIGHT"/>
+        <viewAttribute id="INSERT_TS"/>
+        <viewAttribute id="MODIFIED_TS"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CC_VERSION_CHECK" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isNull(&quot;CD_NM_RIGHT&quot;),'0','1')</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#PROJ_NDB">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CD_NM" source="CD_NM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROV" source="PROV"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RT_BND" source="RT_BND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REF_EFFC_DATE" source="REF_EFFC_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REF_EXP_DATE" source="REF_EXP_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CD_ENG_DESC" source="CD_ENG_DESC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CD_FR_DESC" source="CD_FR_DESC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CD_TY" source="CD_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRC" source="PRC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INSERT_TS" source="INSERT_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MODIFIED_TS" source="MODIFIED_TS"/>
+      </input>
+      <input node="#PROJ_EH">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CD_NM_RIGHT" source="CD_NM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CD_NM" source="CD_NM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROV" source="PROV"/>
+      </input>
+      <joinAttribute name="CD_NM"/>
+      <joinAttribute name="PROV"/>
+    </calculationView>
+  </calculationViews>
+  <logicalModel id="JOIN_NDB_EH">
+    <descriptions/>
+    <attributes>
+      <attribute id="CD_NM" order="1" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CD_NM"/>
+        <keyMapping columnObjectName="JOIN_NDB_EH" columnName="CD_NM"/>
+      </attribute>
+      <attribute id="PROV" order="2" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="PROV"/>
+        <keyMapping columnObjectName="JOIN_NDB_EH" columnName="PROV"/>
+      </attribute>
+      <attribute id="RT_BND" order="3" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="RT_BND"/>
+        <keyMapping columnObjectName="JOIN_NDB_EH" columnName="RT_BND"/>
+      </attribute>
+      <attribute id="REF_EFFC_DATE" order="4" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="REF_EFFC_DATE"/>
+        <keyMapping columnObjectName="JOIN_NDB_EH" columnName="REF_EFFC_DATE"/>
+      </attribute>
+      <attribute id="REF_EXP_DATE" order="5" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="REF_EXP_DATE"/>
+        <keyMapping columnObjectName="JOIN_NDB_EH" columnName="REF_EXP_DATE"/>
+      </attribute>
+      <attribute id="CD_ENG_DESC" order="6" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CD_ENG_DESC"/>
+        <keyMapping columnObjectName="JOIN_NDB_EH" columnName="CD_ENG_DESC"/>
+      </attribute>
+      <attribute id="CD_FR_DESC" order="7" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CD_FR_DESC"/>
+        <keyMapping columnObjectName="JOIN_NDB_EH" columnName="CD_FR_DESC"/>
+      </attribute>
+      <attribute id="CD_TY" order="8" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CD_TY"/>
+        <keyMapping columnObjectName="JOIN_NDB_EH" columnName="CD_TY"/>
+      </attribute>
+      <attribute id="PRC" order="9" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="PRC"/>
+        <keyMapping columnObjectName="JOIN_NDB_EH" columnName="PRC"/>
+      </attribute>
+      <attribute id="CD_NM_RIGHT" order="10" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CD_NM_RIGHT"/>
+        <keyMapping columnObjectName="JOIN_NDB_EH" columnName="CD_NM_RIGHT"/>
+      </attribute>
+      <attribute id="CC_VERSION_CHECK" order="11" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CC_VERSION_CHECK"/>
+        <keyMapping columnObjectName="JOIN_NDB_EH" columnName="CC_VERSION_CHECK"/>
+      </attribute>
+      <attribute id="INSERT_TS" order="12" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="INSERT_TS"/>
+        <keyMapping columnObjectName="JOIN_NDB_EH" columnName="INSERT_TS"/>
+      </attribute>
+      <attribute id="MODIFIED_TS" order="13" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="MODIFIED_TS"/>
+        <keyMapping columnObjectName="JOIN_NDB_EH" columnName="MODIFIED_TS"/>
+      </attribute>
+    </attributes>
+    <calculatedAttributes/>
+    <privateDataFoundation>
+      <tableProxies/>
+      <joins/>
+      <layout>
+        <shapes/>
+      </layout>
+    </privateDataFoundation>
+    <baseMeasures/>
+    <calculatedMeasures/>
+    <restrictedMeasures/>
+    <localDimensions/>
+  </logicalModel>
+  <layout>
+    <shapes>
+      <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+        <upperLeftCorner x="319" y="87"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_NDB" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="22" y="261"/>
+        <rectangleSize height="64" width="349"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_EH" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="385" y="261"/>
+        <rectangleSize height="64" width="395"/>
+      </shape>
+      <shape expanded="true" modelObjectName="JOIN_NDB_EH" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="319" y="165"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+    </shapes>
+  </layout>
+</Calculation:scenario>

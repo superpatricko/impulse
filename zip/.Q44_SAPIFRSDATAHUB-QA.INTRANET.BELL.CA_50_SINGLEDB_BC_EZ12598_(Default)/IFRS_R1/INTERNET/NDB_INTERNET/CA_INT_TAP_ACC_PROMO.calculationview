@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" schemaVersion="2.3" id="CA_INT_TAP_ACC_PROMO" applyPrivilegeType="NONE" checkAnalyticPrivileges="false" defaultClient="$$client$$" defaultLanguage="$$language$$" hierarchiesSQLEnabled="false" translationRelevant="true" visibility="internal" calculationScenarioType="TREE_BASED" dataCategory="DIMENSION" enforceSqlExecution="false" executionSemantic="UNDEFINED" outputViewType="Projection">
+  <descriptions defaultDescription="CA_INT_TAP_ACC_PROMO"/>
+  <localVariables/>
+  <variableMappings/>
+  <informationModelLayout relativeWidthScenario="45"/>
+  <dataSources>
+    <DataSource id="CA_INT_TAP_ACCOUNT_HIST_NDB_EH" type="CALCULATION_VIEW">
+      <viewAttributes allViewAttributes="true"/>
+      <resourceUri>/IFRS_R1.INTERNET.NDB_INTERNET/calculationviews/CA_INT_TAP_ACCOUNT_HIST_NDB_EH</resourceUri>
+    </DataSource>
+    <DataSource id="CA_INT_TAP_PROMO_SUB_HIST_NDB_EH" type="CALCULATION_VIEW">
+      <viewAttributes allViewAttributes="true"/>
+      <resourceUri>/IFRS_R1.INTERNET.NDB_INTERNET/calculationviews/CA_INT_TAP_PROMO_SUB_HIST_NDB_EH</resourceUri>
+    </DataSource>
+  </dataSources>
+  <calculationViews>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_TAP_ACC">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="ACCOUNT_NUMBER"/>
+        <viewAttribute id="CUSTOMER_ACCOUNT_ID"/>
+        <viewAttribute id="CC_VERSION_CHECK"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="IS_20201101" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(&quot;CC_VERSION_CHECK&quot;='1','1','0')</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#CA_INT_TAP_ACCOUNT_HIST_NDB_EH">
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACCOUNT_NUMBER" source="ACCOUNT_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_ACCOUNT_ID" source="CUSTOMER_ACCOUNT_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_VERSION_CHECK" source="CC_VERSION_CHECK"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_TAP_PROMO">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="ACCOUNT_NUMBER"/>
+        <viewAttribute id="START_DATE"/>
+        <viewAttribute id="END_DATE"/>
+        <viewAttribute id="PROMOTION_CODE"/>
+        <viewAttribute id="APPLY_DATE"/>
+        <viewAttribute id="TERMINATION_DATE"/>
+        <viewAttribute id="PROD_PROMO_STS_CD"/>
+        <viewAttribute id="REFERENCE_EFFECTIVE_DT"/>
+        <viewAttribute id="REFERENCE_EXPIRY_DT"/>
+        <viewAttribute id="CC_VERSION_CHECK"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#CA_INT_TAP_PROMO_SUB_HIST_NDB_EH">
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACCOUNT_NUMBER" source="ACCOUNT_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="START_DATE" source="START_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="END_DATE" source="END_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROMOTION_CODE" source="PROMOTION_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="APPLY_DATE" source="APPLY_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TERMINATION_DATE" source="TERMINATION_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROD_PROMO_STS_CD" source="PROD_PROMO_STS_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_EFFECTIVE_DT" source="REFERENCE_EFFECTIVE_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_EXPIRY_DT" source="REFERENCE_EXPIRY_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_VERSION_CHECK" source="CC_VERSION_CHECK"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="JOIN_ACC_PROMO" joinOrder="OUTSIDE_IN" joinType="leftOuter">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="ACCOUNT_NUMBER"/>
+        <viewAttribute id="ACCOUNT_NUMBER_RIGHT"/>
+        <viewAttribute id="PROMO_START_DATE"/>
+        <viewAttribute id="PROMO_END_DATE"/>
+        <viewAttribute id="PROMOTION_CODE"/>
+        <viewAttribute id="APPLY_DATE"/>
+        <viewAttribute id="TERMINATION_DATE"/>
+        <viewAttribute id="PROD_PROMO_STS_CD"/>
+        <viewAttribute id="PROMO_EFF_DT"/>
+        <viewAttribute id="PROMO_EXPT_DT"/>
+        <viewAttribute id="CUSTOMER_ACCOUNT_ID"/>
+        <viewAttribute id="IS_20201101"/>
+        <viewAttribute id="CC_VERSION_CHECK"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="IS_20201102" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isnull(&quot;CC_VERSION_CHECK&quot;),'0',if(&quot;CC_VERSION_CHECK&quot;='1','1','0'))</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#PROJ_TAP_ACC">
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACCOUNT_NUMBER" source="ACCOUNT_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_ACCOUNT_ID" source="CUSTOMER_ACCOUNT_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20201101" source="IS_20201101"/>
+      </input>
+      <input node="#PROJ_TAP_PROMO">
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACCOUNT_NUMBER_RIGHT" source="ACCOUNT_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROMO_START_DATE" source="START_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROMO_END_DATE" source="END_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROMOTION_CODE" source="PROMOTION_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="APPLY_DATE" source="APPLY_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TERMINATION_DATE" source="TERMINATION_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROD_PROMO_STS_CD" source="PROD_PROMO_STS_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROMO_EFF_DT" source="REFERENCE_EFFECTIVE_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROMO_EXPT_DT" source="REFERENCE_EXPIRY_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_VERSION_CHECK" source="CC_VERSION_CHECK"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACCOUNT_NUMBER" source="ACCOUNT_NUMBER"/>
+      </input>
+      <joinAttribute name="ACCOUNT_NUMBER"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_PROMO">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="ACCOUNT_NUMBER"/>
+        <viewAttribute id="PROMO_START_DATE"/>
+        <viewAttribute id="PROMO_END_DATE"/>
+        <viewAttribute id="PROMOTION_CODE"/>
+        <viewAttribute id="APPLY_DATE"/>
+        <viewAttribute id="TERMINATION_DATE"/>
+        <viewAttribute id="PROD_PROMO_STS_CD"/>
+        <viewAttribute id="PROMO_EFF_DT"/>
+        <viewAttribute id="PROMO_EXPT_DT"/>
+        <viewAttribute id="CUSTOMER_ACCOUNT_ID"/>
+        <viewAttribute id="IS_20201101"/>
+        <viewAttribute id="IS_20201102"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CC_BAN" length="9" expressionLanguage="COLUMN_ENGINE">
+          <formula>&quot;CUSTOMER_ACCOUNT_ID&quot;</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CC_PROD_PROMO_STS_CD" length="16" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isNull(&quot;PROD_PROMO_STS_CD&quot;),'RELEASED B',&quot;PROD_PROMO_STS_CD&quot;)</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#JOIN_ACC_PROMO">
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACCOUNT_NUMBER" source="ACCOUNT_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROMO_START_DATE" source="PROMO_START_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROMO_END_DATE" source="PROMO_END_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROMOTION_CODE" source="PROMOTION_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="APPLY_DATE" source="APPLY_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TERMINATION_DATE" source="TERMINATION_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROD_PROMO_STS_CD" source="PROD_PROMO_STS_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROMO_EFF_DT" source="PROMO_EFF_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROMO_EXPT_DT" source="PROMO_EXPT_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_ACCOUNT_ID" source="CUSTOMER_ACCOUNT_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20201101" source="IS_20201101"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20201102" source="IS_20201102"/>
+      </input>
+    </calculationView>
+  </calculationViews>
+  <logicalModel id="PROJ_PROMO">
+    <descriptions/>
+    <attributes>
+      <attribute id="ACCOUNT_NUMBER" order="1" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ACCOUNT_NUMBER"/>
+        <keyMapping columnObjectName="PROJ_PROMO" columnName="ACCOUNT_NUMBER"/>
+      </attribute>
+      <attribute id="PROMO_START_DATE" order="2" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="PROMO_START_DATE"/>
+        <keyMapping columnObjectName="PROJ_PROMO" columnName="PROMO_START_DATE"/>
+      </attribute>
+      <attribute id="PROMO_END_DATE" order="3" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="PROMO_END_DATE"/>
+        <keyMapping columnObjectName="PROJ_PROMO" columnName="PROMO_END_DATE"/>
+      </attribute>
+      <attribute id="PROMOTION_CODE" order="4" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="PROMOTION_CODE"/>
+        <keyMapping columnObjectName="PROJ_PROMO" columnName="PROMOTION_CODE"/>
+      </attribute>
+      <attribute id="APPLY_DATE" order="5" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="APPLY_DATE"/>
+        <keyMapping columnObjectName="PROJ_PROMO" columnName="APPLY_DATE"/>
+      </attribute>
+      <attribute id="TERMINATION_DATE" order="6" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="TERMINATION_DATE"/>
+        <keyMapping columnObjectName="PROJ_PROMO" columnName="TERMINATION_DATE"/>
+      </attribute>
+      <attribute id="PROMO_EFF_DT" order="7" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="PROMO_EFF_DT"/>
+        <keyMapping columnObjectName="PROJ_PROMO" columnName="PROMO_EFF_DT"/>
+      </attribute>
+      <attribute id="PROMO_EXPT_DT" order="8" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="PROMO_EXPT_DT"/>
+        <keyMapping columnObjectName="PROJ_PROMO" columnName="PROMO_EXPT_DT"/>
+      </attribute>
+      <attribute id="BAN" order="9" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="BAN"/>
+        <keyMapping columnObjectName="PROJ_PROMO" columnName="CC_BAN"/>
+      </attribute>
+      <attribute id="PROD_PROMO_STS_CD" order="10" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="PROD_PROMO_STS_CD"/>
+        <keyMapping columnObjectName="PROJ_PROMO" columnName="CC_PROD_PROMO_STS_CD"/>
+      </attribute>
+      <attribute id="IS_20201101" order="11" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="IS_20201101"/>
+        <keyMapping columnObjectName="PROJ_PROMO" columnName="IS_20201101"/>
+      </attribute>
+      <attribute id="IS_20201102" order="12" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="IS_20201102"/>
+        <keyMapping columnObjectName="PROJ_PROMO" columnName="IS_20201102"/>
+      </attribute>
+    </attributes>
+    <calculatedAttributes/>
+    <privateDataFoundation>
+      <tableProxies/>
+      <joins/>
+      <layout>
+        <shapes/>
+      </layout>
+    </privateDataFoundation>
+    <baseMeasures/>
+    <calculatedMeasures/>
+    <restrictedMeasures/>
+    <localDimensions/>
+  </logicalModel>
+  <layout>
+    <shapes>
+      <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+        <upperLeftCorner x="259" y="87"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_TAP_ACC" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="22" y="339"/>
+        <rectangleSize height="64" width="299"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_TAP_PROMO" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="335" y="339"/>
+        <rectangleSize height="64" width="305"/>
+      </shape>
+      <shape expanded="true" modelObjectName="JOIN_ACC_PROMO" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="259" y="243"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_PROMO" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="259" y="165"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+    </shapes>
+  </layout>
+</Calculation:scenario>

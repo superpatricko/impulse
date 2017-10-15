@@ -1,0 +1,1255 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" xmlns:Variable="http://www.sap.com/ndb/BiModelVariable.ecore" schemaVersion="2.3" id="CA_OB_ZLOGIC" applyPrivilegeType="ANALYTIC_PRIVILEGE" checkAnalyticPrivileges="true" defaultClient="$$client$$" defaultLanguage="$$language$$" hierarchiesSQLEnabled="false" translationRelevant="true" visibility="internal" calculationScenarioType="TREE_BASED" dataCategory="DIMENSION" enforceSqlExecution="false" executionSemantic="UNDEFINED" outputViewType="Aggregation">
+  <descriptions defaultDescription="CA_OB_ZLOGIC"/>
+  <localVariables>
+    <variable id="IP_BILL_DATE" parameter="true">
+      <descriptions defaultDescription="IP_BILL_DATE"/>
+      <variableProperties datatype="DATE" mandatory="false">
+        <valueDomain type="empty"/>
+        <selection multiLine="false" type="SingleValue"/>
+      </variableProperties>
+    </variable>
+  </localVariables>
+  <variableMappings>
+    <mapping xsi:type="Variable:VariableMapping" dataSource="#CA_OB_POSTBILLING">
+      <targetVariable name="IP_BILL_DATE" resourceUri="/IFRS_R1.COMMON_COMP.RAI_COMMON.PRIVATE/calculationviews/CA_OB_POSTBILLING"/>
+      <localVariable>#IP_BILL_DATE</localVariable>
+    </mapping>
+  </variableMappings>
+  <informationModelLayout relativeWidthScenario="39"/>
+  <dataSources>
+    <DataSource id="CA_OB_POSTBILLING" type="CALCULATION_VIEW">
+      <viewAttributes allViewAttributes="true"/>
+      <resourceUri>/IFRS_R1.COMMON_COMP.RAI_COMMON.PRIVATE/calculationviews/CA_OB_POSTBILLING</resourceUri>
+    </DataSource>
+    <DataSource id="ZACCT" type="DATA_BASE_TABLE">
+      <viewAttributes allViewAttributes="true"/>
+      <columnObject schemaName="SDA" columnObjectName="ZACCT"/>
+    </DataSource>
+    <DataSource id="ZCONSOREF" type="DATA_BASE_TABLE">
+      <viewAttributes allViewAttributes="true"/>
+      <columnObject schemaName="SDA" columnObjectName="ZCONSOREF"/>
+    </DataSource>
+    <DataSource id="ZCONSO_SUBMKT" type="DATA_BASE_TABLE">
+      <viewAttributes allViewAttributes="true"/>
+      <columnObject schemaName="SDA" columnObjectName="ZCONSO_SUBMKT"/>
+    </DataSource>
+    <DataSource id="ZCONSODEF" type="DATA_BASE_TABLE">
+      <viewAttributes allViewAttributes="true"/>
+      <columnObject schemaName="SDA" columnObjectName="ZCONSODEF"/>
+    </DataSource>
+  </dataSources>
+  <calculationViews>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_OB_POST_BILLING" filterExpressionLanguage="COLUMN_ENGINE">
+      <descriptions>
+        <comment text="Value Error will be raised as IS_30500403.&#xD;&#xA;Value Error will be raised as IS_30500404.&#xD;&#xA;Value Error will be raised as IS_30500405.&#xD;&#xA;Value Error will be raised as IS_30500406.&#xD;&#xA;Value Error will be raised as IS_30500407.&#xD;&#xA;Value Error will be raised as IS_30500408.&#xD;&#xA;Value Error will be raised as IS_30500409.&#xD;&#xA;Value Error will be raised as IS_30500410."/>
+      </descriptions>
+      <viewAttributes>
+        <viewAttribute id="JOURNALIZATION_DATE"/>
+        <viewAttribute id="BUNDLE_DISCOUNT_IND"/>
+        <viewAttribute id="GL_ACCOUNT_NUMBER"/>
+        <viewAttribute id="INSERT_TS"/>
+        <viewAttribute id="PROVINCE_CODE"/>
+        <viewAttribute id="DISCOUNT_CODE"/>
+        <viewAttribute id="BATCH_ID"/>
+        <viewAttribute id="ADJ_REASON_CODE"/>
+        <viewAttribute id="SOC"/>
+        <viewAttribute id="POST_BILLING_ID"/>
+        <viewAttribute id="REFERENCE_EFFECTIVE_DT"/>
+        <viewAttribute id="BAN"/>
+        <viewAttribute id="FEATURE_CODE"/>
+        <viewAttribute id="BALANCE_IMPACT_CODE"/>
+        <viewAttribute id="ACTV_DATE"/>
+        <viewAttribute id="RAI_TS"/>
+        <viewAttribute id="OBLE"/>
+        <viewAttribute id="SUBDID"/>
+        <viewAttribute id="CYCL_ID"/>
+        <viewAttribute id="CONVERSION_IND"/>
+        <viewAttribute id="LOB"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="DATE" id="ZZ_BLDAT" expressionLanguage="COLUMN_ENGINE">
+          <formula>&quot;JOURNALIZATION_DATE&quot;</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="DATE" id="ZZ_BUDAT" expressionLanguage="COLUMN_ENGINE">
+          <formula>&quot;JOURNALIZATION_DATE&quot;</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="ZZ_BUKRS" length="4" expressionLanguage="COLUMN_ENGINE">
+          <formula>IF(&quot;BUNDLE_DISCOUNT_IND&quot; = 'Y','','X')</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="ZZ_BKTXT_INVC" length="25" expressionLanguage="COLUMN_ENGINE">
+          <formula>'CONSO'+'  '+STRING(FORMAT(&quot;INSERT_TS&quot;,'YYYYMMDD'))+' '+&quot;CYCL_ID&quot;</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="ZZ_BKTXT_ORDR" length="25" expressionLanguage="COLUMN_ENGINE">
+          <formula>'CONSO'+'  '+STRING(FORMAT(&quot;INSERT_TS&quot;,'YYYYMMDD'))+' '</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="ZZ_LEGACY" length="20" expressionLanguage="COLUMN_ENGINE">
+          <formula>&quot;GL_ACCOUNT_NUMBER&quot;+' '+&quot;OBLE&quot;+' '+&quot;SUBDID&quot;+' '+&quot;PROVINCE_CODE&quot;</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="ZZ_VBUND" length="6" expressionLanguage="COLUMN_ENGINE">
+          <formula>NULL</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="ZZ_XBLNR" length="16" expressionLanguage="COLUMN_ENGINE">
+          <formula>NULL</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CC_TXJCD" length="15" expressionLanguage="COLUMN_ENGINE">
+          <formula>NULL</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="ZZ_MWSKZ" length="2" expressionLanguage="COLUMN_ENGINE">
+          <formula>NULL</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="ZZ_ADJ_RSN_CD" length="9" expressionLanguage="COLUMN_ENGINE">
+          <formula>&quot;ADJ_REASON_CODE&quot;</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="ZZ_ALLOCATE" length="6" expressionLanguage="COLUMN_ENGINE">
+          <formula>NULL</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="ZZ_BILLER" length="4" expressionLanguage="COLUMN_ENGINE">
+          <formula>'12'</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="ZZ_BRANDACT" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>NULL</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="ZZ_CATRANSFER" length="10" expressionLanguage="COLUMN_ENGINE">
+          <formula>NULL</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="ZZ_BU_VIEW" length="12" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(&quot;LOB&quot;='MOB','Mobility',if(&quot;LOB&quot;='XVU','Bell TV',if(in(&quot;LOB&quot;,'HPN','BELL'),'HP',if(&quot;LOB&quot;='SYM','Internet',''))))</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="ZZ_CONVERSION" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>&quot;CONVERSION_IND&quot;</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="DECIMAL" id="ZZ_MINPRICE" length="23" scale="2" expressionLanguage="COLUMN_ENGINE">
+          <formula>NULL</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="ZZ_MOD_TYPE" length="10" expressionLanguage="COLUMN_ENGINE">
+          <formula>NULL</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="ZZ_PAOBJNR" length="10" expressionLanguage="COLUMN_ENGINE">
+          <formula>NULL</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="ZZ_PRE_POST" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>NULL</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="ZZ_UPFFLG" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>NULL</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="IS_30500403" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isNull(&quot;JOURNALIZATION_DATE&quot;),'1','0')</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="IS_30500404" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isNull(&quot;BUNDLE_DISCOUNT_IND&quot;),'1','0')</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="IS_30500405" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isNull(&quot;INSERT_TS&quot;),'1','0')</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="IS_30500406" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isNull(&quot;OBLE&quot;),'1','0')</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="IS_30500407" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isNull(&quot;SUBDID&quot;),'1','0')</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="IS_30500408" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isNull(&quot;PROVINCE_CODE&quot;),'1','0')</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="IS_30500409" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isNull(&quot;GL_ACCOUNT_NUMBER&quot;),'1','0')</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="IS_30500410" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isNull(&quot;CYCL_ID&quot;),'1','0')</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#CA_OB_POSTBILLING">
+        <mapping xsi:type="Calculation:AttributeMapping" target="JOURNALIZATION_DATE" source="JOURNALIZATION_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUNDLE_DISCOUNT_IND" source="BUNDLE_DISCOUNT_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GL_ACCOUNT_NUMBER" source="GL_ACCOUNT_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INSERT_TS" source="INSERT_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROVINCE_CODE" source="PROVINCE_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DISCOUNT_CODE" source="DISCOUNT_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BATCH_ID" source="BATCH_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ADJ_REASON_CODE" source="ADJ_REASON_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SOC" source="SOC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="POST_BILLING_ID" source="POST_BILLING_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_EFFECTIVE_DT" source="REFERENCE_EFFECTIVE_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BAN" source="BAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FEATURE_CODE" source="FEATURE_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BALANCE_IMPACT_CODE" source="BALANCE_IMPACT_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACTV_DATE" source="ACTV_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RAI_TS" source="RAI_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OBLE" source="OBLE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBDID" source="SUBDID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONVERSION_IND" source="CONVERSION_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LOB" source="LOB"/>
+      </input>
+      <filter>(isNull(&quot;RAI_TS&quot;))</filter>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_SDA_ZACCT">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="OLDACCT"/>
+        <viewAttribute id="NEWACCT"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#ZACCT">
+        <mapping xsi:type="Calculation:AttributeMapping" target="OLDACCT" source="OLDACCT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NEWACCT" source="NEWACCT"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="JOIN_OB_POST_BILLING_ZACCT" cardinality="C1_N" joinOrder="OUTSIDE_IN" joinType="leftOuter">
+      <descriptions>
+        <comment text="Join Errors will be raised as 30500401"/>
+      </descriptions>
+      <viewAttributes>
+        <viewAttribute id="JOURNALIZATION_DATE"/>
+        <viewAttribute id="BUNDLE_DISCOUNT_IND"/>
+        <viewAttribute id="GL_ACCOUNT_NUMBER"/>
+        <viewAttribute id="INSERT_TS"/>
+        <viewAttribute id="PROVINCE_CODE"/>
+        <viewAttribute id="DISCOUNT_CODE"/>
+        <viewAttribute id="BATCH_ID"/>
+        <viewAttribute id="ADJ_REASON_CODE"/>
+        <viewAttribute id="SOC"/>
+        <viewAttribute id="ZZ_BLDAT"/>
+        <viewAttribute id="ZZ_BUDAT"/>
+        <viewAttribute id="ZZ_BUKRS"/>
+        <viewAttribute id="ZZ_BKTXT_INVC"/>
+        <viewAttribute id="ZZ_BKTXT_ORDR"/>
+        <viewAttribute id="ZZ_LEGACY"/>
+        <viewAttribute id="ZZ_VBUND"/>
+        <viewAttribute id="ZZ_XBLNR"/>
+        <viewAttribute id="CC_TXJCD"/>
+        <viewAttribute id="ZZ_MWSKZ"/>
+        <viewAttribute id="ZZ_ADJ_RSN_CD"/>
+        <viewAttribute id="ZZ_ALLOCATE"/>
+        <viewAttribute id="ZZ_BILLER"/>
+        <viewAttribute id="ZZ_BRANDACT"/>
+        <viewAttribute id="ZZ_CATRANSFER"/>
+        <viewAttribute id="ZZ_BU_VIEW"/>
+        <viewAttribute id="ZZ_CONVERSION"/>
+        <viewAttribute id="ZZ_MINPRICE"/>
+        <viewAttribute id="ZZ_MOD_TYPE"/>
+        <viewAttribute id="ZZ_PAOBJNR"/>
+        <viewAttribute id="ZZ_PRE_POST"/>
+        <viewAttribute id="ZZ_UPFFLG"/>
+        <viewAttribute id="NEWACCT"/>
+        <viewAttribute id="POST_BILLING_ID"/>
+        <viewAttribute id="REFERENCE_EFFECTIVE_DT"/>
+        <viewAttribute id="BAN"/>
+        <viewAttribute id="FEATURE_CODE"/>
+        <viewAttribute id="OLDACCT_RIGHT"/>
+        <viewAttribute id="BALANCE_IMPACT_CODE"/>
+        <viewAttribute id="ACTV_DATE"/>
+        <viewAttribute id="RAI_TS"/>
+        <viewAttribute id="OBLE"/>
+        <viewAttribute id="SUBDID"/>
+        <viewAttribute id="IS_30500407"/>
+        <viewAttribute id="IS_30500403"/>
+        <viewAttribute id="IS_30500404"/>
+        <viewAttribute id="IS_30500405"/>
+        <viewAttribute id="IS_30500406"/>
+        <viewAttribute id="IS_30500408"/>
+        <viewAttribute id="IS_30500409"/>
+        <viewAttribute id="IS_30500410"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="ZZ_ICHKONT" length="10" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(&quot;BUNDLE_DISCOUNT_IND&quot;='Y',&quot;NEWACCT&quot;,'')</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CC_GL_ERROR" length="50" expressionLanguage="COLUMN_ENGINE">
+          <formula>IF(&quot;CC_PL_ACCOUNT&quot;=' 'or isNull(&quot;CC_PL_ACCOUNT&quot;) or  (leftstr(&quot;CC_PL_ACCOUNT&quot;,1)) !='4','GL ERROR','')</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CC_PL_ACCOUNT" length="10" expressionLanguage="COLUMN_ENGINE">
+          <formula>ltrim(if(&quot;BUNDLE_DISCOUNT_IND&quot;='Y','1999900',&quot;NEWACCT&quot;),'0')</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="IS_30500401" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isNull(&quot;OLDACCT_RIGHT&quot;),'1','0')</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#PROJ_OB_POST_BILLING">
+        <mapping xsi:type="Calculation:AttributeMapping" target="JOURNALIZATION_DATE" source="JOURNALIZATION_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUNDLE_DISCOUNT_IND" source="BUNDLE_DISCOUNT_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GL_ACCOUNT_NUMBER" source="GL_ACCOUNT_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INSERT_TS" source="INSERT_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROVINCE_CODE" source="PROVINCE_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DISCOUNT_CODE" source="DISCOUNT_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BATCH_ID" source="BATCH_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ADJ_REASON_CODE" source="ADJ_REASON_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SOC" source="SOC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZZ_BLDAT" source="ZZ_BLDAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZZ_BUDAT" source="ZZ_BUDAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZZ_BUKRS" source="ZZ_BUKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZZ_BKTXT_INVC" source="ZZ_BKTXT_INVC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZZ_BKTXT_ORDR" source="ZZ_BKTXT_ORDR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZZ_LEGACY" source="ZZ_LEGACY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZZ_VBUND" source="ZZ_VBUND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZZ_XBLNR" source="ZZ_XBLNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_TXJCD" source="CC_TXJCD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZZ_MWSKZ" source="ZZ_MWSKZ"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZZ_ADJ_RSN_CD" source="ZZ_ADJ_RSN_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZZ_ALLOCATE" source="ZZ_ALLOCATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZZ_BILLER" source="ZZ_BILLER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZZ_BRANDACT" source="ZZ_BRANDACT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZZ_CATRANSFER" source="ZZ_CATRANSFER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZZ_BU_VIEW" source="ZZ_BU_VIEW"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZZ_CONVERSION" source="ZZ_CONVERSION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZZ_MINPRICE" source="ZZ_MINPRICE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZZ_MOD_TYPE" source="ZZ_MOD_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZZ_PAOBJNR" source="ZZ_PAOBJNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZZ_PRE_POST" source="ZZ_PRE_POST"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZZ_UPFFLG" source="ZZ_UPFFLG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="POST_BILLING_ID" source="POST_BILLING_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_EFFECTIVE_DT" source="REFERENCE_EFFECTIVE_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BAN" source="BAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FEATURE_CODE" source="FEATURE_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BALANCE_IMPACT_CODE" source="BALANCE_IMPACT_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACTV_DATE" source="ACTV_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RAI_TS" source="RAI_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OBLE" source="OBLE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBDID" source="SUBDID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30500407" source="IS_30500407"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30500403" source="IS_30500403"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30500404" source="IS_30500404"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30500405" source="IS_30500405"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30500406" source="IS_30500406"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30500408" source="IS_30500408"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30500409" source="IS_30500409"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30500410" source="IS_30500410"/>
+      </input>
+      <input node="#PROJ_SDA_ZACCT">
+        <mapping xsi:type="Calculation:AttributeMapping" target="NEWACCT" source="NEWACCT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OLDACCT_RIGHT" source="OLDACCT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GL_ACCOUNT_NUMBER" source="OLDACCT"/>
+      </input>
+      <joinAttribute name="GL_ACCOUNT_NUMBER"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_SDA_ZCONSOREF">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="OBLE"/>
+        <viewAttribute id="SUBDID"/>
+        <viewAttribute id="PROVZ"/>
+        <viewAttribute id="BUKRS"/>
+        <viewAttribute id="KOSTL"/>
+        <viewAttribute id="AUFNR"/>
+        <viewAttribute id="HKONT"/>
+        <viewAttribute id="PROF_SEG"/>
+        <viewAttribute id="ZREVCODE"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#ZCONSOREF">
+        <mapping xsi:type="Calculation:AttributeMapping" target="OBLE" source="OBLE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBDID" source="SUBDID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROVZ" source="PROVZ"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KOSTL" source="KOSTL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AUFNR" source="AUFNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="HKONT" source="HKONT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROF_SEG" source="PROF_SEG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZREVCODE" source="ZREVCODE"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="JOIN_BILLING_ZCONSOREF" cardinality="CN_1" joinOrder="OUTSIDE_IN" joinType="leftOuter">
+      <descriptions>
+        <comment text="Join Errors will be raised as 30500402"/>
+      </descriptions>
+      <viewAttributes>
+        <viewAttribute id="JOURNALIZATION_DATE"/>
+        <viewAttribute id="BUNDLE_DISCOUNT_IND"/>
+        <viewAttribute id="GL_ACCOUNT_NUMBER"/>
+        <viewAttribute id="INSERT_TS"/>
+        <viewAttribute id="PROVINCE_CODE"/>
+        <viewAttribute id="DISCOUNT_CODE"/>
+        <viewAttribute id="BATCH_ID"/>
+        <viewAttribute id="ADJ_REASON_CODE"/>
+        <viewAttribute id="SOC"/>
+        <viewAttribute id="ZZ_BLDAT"/>
+        <viewAttribute id="ZZ_BUDAT"/>
+        <viewAttribute id="ZZ_BUKRS"/>
+        <viewAttribute id="ZZ_BKTXT_INVC"/>
+        <viewAttribute id="ZZ_BKTXT_ORDR"/>
+        <viewAttribute id="ZZ_LEGACY"/>
+        <viewAttribute id="ZZ_VBUND"/>
+        <viewAttribute id="ZZ_XBLNR"/>
+        <viewAttribute id="CC_TXJCD"/>
+        <viewAttribute id="ZZ_MWSKZ"/>
+        <viewAttribute id="ZZ_ADJ_RSN_CD"/>
+        <viewAttribute id="ZZ_ALLOCATE"/>
+        <viewAttribute id="ZZ_BILLER"/>
+        <viewAttribute id="ZZ_BRANDACT"/>
+        <viewAttribute id="ZZ_CATRANSFER"/>
+        <viewAttribute id="ZZ_BU_VIEW"/>
+        <viewAttribute id="ZZ_CONVERSION"/>
+        <viewAttribute id="ZZ_MINPRICE"/>
+        <viewAttribute id="ZZ_MOD_TYPE"/>
+        <viewAttribute id="ZZ_PAOBJNR"/>
+        <viewAttribute id="ZZ_PRE_POST"/>
+        <viewAttribute id="ZZ_UPFFLG"/>
+        <viewAttribute id="NEWACCT"/>
+        <viewAttribute id="ZZ_ICHKONT"/>
+        <viewAttribute id="CC_GL_ERROR"/>
+        <viewAttribute id="CC_PL_ACCOUNT"/>
+        <viewAttribute id="KOSTL"/>
+        <viewAttribute id="POST_BILLING_ID"/>
+        <viewAttribute id="REFERENCE_EFFECTIVE_DT"/>
+        <viewAttribute id="BAN"/>
+        <viewAttribute id="FEATURE_CODE"/>
+        <viewAttribute id="AUFNR"/>
+        <viewAttribute id="IS_30500401"/>
+        <viewAttribute id="OBLE_RIGHT"/>
+        <viewAttribute id="BALANCE_IMPACT_CODE"/>
+        <viewAttribute id="ACTV_DATE"/>
+        <viewAttribute id="OBLE"/>
+        <viewAttribute id="SUBDID"/>
+        <viewAttribute id="PROF_SEG"/>
+        <viewAttribute id="ZREVCODE"/>
+        <viewAttribute id="IS_30500407"/>
+        <viewAttribute id="IS_30500403"/>
+        <viewAttribute id="IS_30500404"/>
+        <viewAttribute id="IS_30500405"/>
+        <viewAttribute id="IS_30500406"/>
+        <viewAttribute id="IS_30500408"/>
+        <viewAttribute id="IS_30500409"/>
+        <viewAttribute id="IS_30500410"/>
+        <viewAttribute id="BUKRS"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="ZZ_XREF1" length="12" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(in(&quot;BALANCE_IMPACT_CODE&quot;,'I','B'),lpad(&quot;BALANCE_IMPACT_CODE&quot;,12,''),if(not in(&quot;BALANCE_IMPACT_CODE&quot;,'I','B'),lpad('B',12,''),if(isNull(&quot;BALANCE_IMPACT_CODE&quot;),lpad('B',12,''),lpad('B',12,''))))</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CC_ACTV_DATE" length="8" expressionLanguage="COLUMN_ENGINE">
+          <formula>string(format(&quot;ACTV_DATE&quot;,'YYYYMMDD'))&#xD;
+</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="ZZ_XREF2" length="12" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isNull(&quot;ACTV_DATE&quot;),leftstr(&quot;CC_ZZ_BUDAT&quot;,4)+'.'+&#xD;
+midstr(&quot;CC_ZZ_BUDAT&quot;,5,2)+'.'+rightstr(&quot;CC_ZZ_BUDAT&quot;,2),leftstr(&quot;CC_ACTV_DATE&quot;,4)+'.'&#xD;
++midstr(&quot;CC_ACTV_DATE&quot;,5,2)+'.'+rightstr(&quot;CC_ACTV_DATE&quot;,2))</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CC_ZZ_BUDAT" length="8" expressionLanguage="COLUMN_ENGINE">
+          <formula>string(format(&quot;ZZ_BUDAT&quot;,'YYYYMMDD'))</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="ZZ_ZUONR" length="18" expressionLanguage="COLUMN_ENGINE">
+          <formula>'RRCONS'</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="IS_30500402" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isNull(&quot;OBLE_RIGHT&quot;),'1','0')</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#JOIN_OB_POST_BILLING_ZACCT">
+        <mapping xsi:type="Calculation:AttributeMapping" target="JOURNALIZATION_DATE" source="JOURNALIZATION_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUNDLE_DISCOUNT_IND" source="BUNDLE_DISCOUNT_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GL_ACCOUNT_NUMBER" source="GL_ACCOUNT_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INSERT_TS" source="INSERT_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROVINCE_CODE" source="PROVINCE_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DISCOUNT_CODE" source="DISCOUNT_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BATCH_ID" source="BATCH_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ADJ_REASON_CODE" source="ADJ_REASON_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SOC" source="SOC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZZ_BLDAT" source="ZZ_BLDAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZZ_BUDAT" source="ZZ_BUDAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZZ_BUKRS" source="ZZ_BUKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZZ_BKTXT_INVC" source="ZZ_BKTXT_INVC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZZ_BKTXT_ORDR" source="ZZ_BKTXT_ORDR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZZ_LEGACY" source="ZZ_LEGACY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZZ_VBUND" source="ZZ_VBUND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZZ_XBLNR" source="ZZ_XBLNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_TXJCD" source="CC_TXJCD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZZ_MWSKZ" source="ZZ_MWSKZ"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZZ_ADJ_RSN_CD" source="ZZ_ADJ_RSN_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZZ_ALLOCATE" source="ZZ_ALLOCATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZZ_BILLER" source="ZZ_BILLER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZZ_BRANDACT" source="ZZ_BRANDACT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZZ_CATRANSFER" source="ZZ_CATRANSFER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZZ_BU_VIEW" source="ZZ_BU_VIEW"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZZ_CONVERSION" source="ZZ_CONVERSION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZZ_MINPRICE" source="ZZ_MINPRICE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZZ_MOD_TYPE" source="ZZ_MOD_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZZ_PAOBJNR" source="ZZ_PAOBJNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZZ_PRE_POST" source="ZZ_PRE_POST"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZZ_UPFFLG" source="ZZ_UPFFLG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NEWACCT" source="NEWACCT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZZ_ICHKONT" source="ZZ_ICHKONT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_GL_ERROR" source="CC_GL_ERROR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_PL_ACCOUNT" source="CC_PL_ACCOUNT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="POST_BILLING_ID" source="POST_BILLING_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_EFFECTIVE_DT" source="REFERENCE_EFFECTIVE_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BAN" source="BAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FEATURE_CODE" source="FEATURE_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30500401" source="IS_30500401"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BALANCE_IMPACT_CODE" source="BALANCE_IMPACT_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACTV_DATE" source="ACTV_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OBLE" source="OBLE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBDID" source="SUBDID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30500407" source="IS_30500407"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30500403" source="IS_30500403"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30500404" source="IS_30500404"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30500405" source="IS_30500405"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30500406" source="IS_30500406"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30500408" source="IS_30500408"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30500409" source="IS_30500409"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30500410" source="IS_30500410"/>
+      </input>
+      <input node="#PROJ_SDA_ZCONSOREF">
+        <mapping xsi:type="Calculation:AttributeMapping" target="KOSTL" source="KOSTL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AUFNR" source="AUFNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OBLE_RIGHT" source="OBLE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROF_SEG" source="PROF_SEG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZREVCODE" source="ZREVCODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROVINCE_CODE" source="PROVZ"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OBLE" source="OBLE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBDID" source="SUBDID"/>
+      </input>
+      <joinAttribute name="PROVINCE_CODE"/>
+      <joinAttribute name="OBLE"/>
+      <joinAttribute name="SUBDID"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_SDA_ZCONSO_SUBMKT">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="SUBMKT"/>
+        <viewAttribute id="ZPROVX"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#ZCONSO_SUBMKT">
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBMKT" source="SUBMKT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZPROVX" source="ZPROVX"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="JOIN_BILLING_SDA" joinOrder="OUTSIDE_IN" joinType="leftOuter">
+      <descriptions>
+        <comment text="Value Error will be raised as IS_30500411.&#xD;&#xA;Value Error will be raised as IS_30500412.&#xD;&#xA;Value Error will be raised as IS_30500413.&#xD;&#xA;Value Error will be raised as IS_30500414.&#xD;&#xA;Value Error will be raised as IS_30500415.&#xD;&#xA;Join Error will be raised as IS_30500416."/>
+      </descriptions>
+      <viewAttributes>
+        <viewAttribute id="JOURNALIZATION_DATE"/>
+        <viewAttribute id="BUNDLE_DISCOUNT_IND"/>
+        <viewAttribute id="GL_ACCOUNT_NUMBER"/>
+        <viewAttribute id="INSERT_TS"/>
+        <viewAttribute id="PROVINCE_CODE"/>
+        <viewAttribute id="DISCOUNT_CODE"/>
+        <viewAttribute id="BATCH_ID"/>
+        <viewAttribute id="ADJ_REASON_CODE"/>
+        <viewAttribute id="SOC"/>
+        <viewAttribute id="ZZ_BLDAT"/>
+        <viewAttribute id="ZZ_BUDAT"/>
+        <viewAttribute id="ZZ_BUKRS"/>
+        <viewAttribute id="ZZ_BKTXT_INVC"/>
+        <viewAttribute id="ZZ_BKTXT_ORDR"/>
+        <viewAttribute id="ZZ_LEGACY"/>
+        <viewAttribute id="ZZ_VBUND"/>
+        <viewAttribute id="ZZ_XBLNR"/>
+        <viewAttribute id="CC_TXJCD"/>
+        <viewAttribute id="ZZ_MWSKZ"/>
+        <viewAttribute id="ZZ_ADJ_RSN_CD"/>
+        <viewAttribute id="ZZ_ALLOCATE"/>
+        <viewAttribute id="ZZ_BILLER"/>
+        <viewAttribute id="ZZ_BRANDACT"/>
+        <viewAttribute id="ZZ_CATRANSFER"/>
+        <viewAttribute id="ZZ_BU_VIEW"/>
+        <viewAttribute id="ZZ_CONVERSION"/>
+        <viewAttribute id="ZZ_MINPRICE"/>
+        <viewAttribute id="ZZ_MOD_TYPE"/>
+        <viewAttribute id="ZZ_PAOBJNR"/>
+        <viewAttribute id="ZZ_PRE_POST"/>
+        <viewAttribute id="ZZ_UPFFLG"/>
+        <viewAttribute id="NEWACCT"/>
+        <viewAttribute id="ZZ_ICHKONT"/>
+        <viewAttribute id="CC_GL_ERROR"/>
+        <viewAttribute id="CC_PL_ACCOUNT"/>
+        <viewAttribute id="KOSTL"/>
+        <viewAttribute id="POST_BILLING_ID"/>
+        <viewAttribute id="REFERENCE_EFFECTIVE_DT"/>
+        <viewAttribute id="BAN"/>
+        <viewAttribute id="FEATURE_CODE"/>
+        <viewAttribute id="AUFNR"/>
+        <viewAttribute id="IS_30500401"/>
+        <viewAttribute id="OBLE_RIGHT"/>
+        <viewAttribute id="BALANCE_IMPACT_CODE"/>
+        <viewAttribute id="ACTV_DATE"/>
+        <viewAttribute id="OBLE"/>
+        <viewAttribute id="SUBDID"/>
+        <viewAttribute id="PROF_SEG"/>
+        <viewAttribute id="ZREVCODE"/>
+        <viewAttribute id="IS_30500407"/>
+        <viewAttribute id="IS_30500403"/>
+        <viewAttribute id="IS_30500404"/>
+        <viewAttribute id="IS_30500405"/>
+        <viewAttribute id="IS_30500406"/>
+        <viewAttribute id="IS_30500408"/>
+        <viewAttribute id="IS_30500409"/>
+        <viewAttribute id="IS_30500410"/>
+        <viewAttribute id="ZZ_XREF1"/>
+        <viewAttribute id="CC_ACTV_DATE"/>
+        <viewAttribute id="ZZ_XREF2"/>
+        <viewAttribute id="CC_ZZ_BUDAT"/>
+        <viewAttribute id="ZZ_ZUONR"/>
+        <viewAttribute id="IS_30500402"/>
+        <viewAttribute id="ZPROVX"/>
+        <viewAttribute id="BUKRS"/>
+        <viewAttribute id="SUBMKT_RIGHT"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="ZZ_SGTXT" length="50" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(int(leftstr(string(&quot;CC_PL_ACCOUNT&quot;),1))=4,if(int(leftstr(string(&quot;ZZ_LEGACY&quot;),1))=5,if(string(&quot;BUKRS&quot;)='1000',leftstr(string(&quot;ZZ_LEGACY&quot;),7)+' '+string(&quot;ZPROVX&quot;)+' '+string(&quot;OBLE&quot;)+' '+string(&quot;SUBDID&quot;)+' '+string(&quot;PROVINCE_CODE&quot;)&#xD;
+,if(string(&quot;BUKRS&quot;)='10',&#xD;
+'          '+string(&quot;OBLE&quot;)+' '+string(&quot;SUBDID&quot;)+' '+string(&quot;PROVINCE_CODE&quot;)+'          '+string(&quot;PROF_SEG&quot;),&#xD;
+if(string(&quot;BUKRS&quot;)='6000',&#xD;
+'          '+string(&quot;OBLE&quot;)+' '+string(&quot;SUBDID&quot;)+' '+string(&quot;PROVINCE_CODE&quot;),'')))&#xD;
+,''),'')</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="IS_30500411" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isNull(&quot;CC_PL_ACCOUNT&quot;),'1','0')</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="IS_30500412" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isNull(&quot;ZZ_LEGACY&quot;),'1','0')</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="IS_30500413" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isNull(&quot;BUKRS&quot;),'1','0')</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="IS_30500414" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isNull(&quot;ZPROVX&quot;),'1','0')</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="IS_30500415" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isNull(&quot;PROF_SEG&quot;),'1','0')</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="IS_30500416" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isNull(&quot;SUBMKT_RIGHT&quot;),'1','0')</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#JOIN_BILLING_ZCONSOREF">
+        <mapping xsi:type="Calculation:AttributeMapping" target="JOURNALIZATION_DATE" source="JOURNALIZATION_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUNDLE_DISCOUNT_IND" source="BUNDLE_DISCOUNT_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GL_ACCOUNT_NUMBER" source="GL_ACCOUNT_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INSERT_TS" source="INSERT_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROVINCE_CODE" source="PROVINCE_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DISCOUNT_CODE" source="DISCOUNT_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BATCH_ID" source="BATCH_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ADJ_REASON_CODE" source="ADJ_REASON_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SOC" source="SOC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZZ_BLDAT" source="ZZ_BLDAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZZ_BUDAT" source="ZZ_BUDAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZZ_BUKRS" source="ZZ_BUKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZZ_BKTXT_INVC" source="ZZ_BKTXT_INVC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZZ_BKTXT_ORDR" source="ZZ_BKTXT_ORDR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZZ_LEGACY" source="ZZ_LEGACY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZZ_VBUND" source="ZZ_VBUND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZZ_XBLNR" source="ZZ_XBLNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_TXJCD" source="CC_TXJCD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZZ_MWSKZ" source="ZZ_MWSKZ"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZZ_ADJ_RSN_CD" source="ZZ_ADJ_RSN_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZZ_ALLOCATE" source="ZZ_ALLOCATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZZ_BILLER" source="ZZ_BILLER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZZ_BRANDACT" source="ZZ_BRANDACT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZZ_CATRANSFER" source="ZZ_CATRANSFER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZZ_BU_VIEW" source="ZZ_BU_VIEW"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZZ_CONVERSION" source="ZZ_CONVERSION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZZ_MINPRICE" source="ZZ_MINPRICE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZZ_MOD_TYPE" source="ZZ_MOD_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZZ_PAOBJNR" source="ZZ_PAOBJNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZZ_PRE_POST" source="ZZ_PRE_POST"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZZ_UPFFLG" source="ZZ_UPFFLG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NEWACCT" source="NEWACCT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZZ_ICHKONT" source="ZZ_ICHKONT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_GL_ERROR" source="CC_GL_ERROR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_PL_ACCOUNT" source="CC_PL_ACCOUNT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KOSTL" source="KOSTL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="POST_BILLING_ID" source="POST_BILLING_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_EFFECTIVE_DT" source="REFERENCE_EFFECTIVE_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BAN" source="BAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FEATURE_CODE" source="FEATURE_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AUFNR" source="AUFNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30500401" source="IS_30500401"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OBLE_RIGHT" source="OBLE_RIGHT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BALANCE_IMPACT_CODE" source="BALANCE_IMPACT_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACTV_DATE" source="ACTV_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OBLE" source="OBLE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBDID" source="SUBDID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROF_SEG" source="PROF_SEG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZREVCODE" source="ZREVCODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30500407" source="IS_30500407"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30500403" source="IS_30500403"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30500404" source="IS_30500404"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30500405" source="IS_30500405"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30500406" source="IS_30500406"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30500408" source="IS_30500408"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30500409" source="IS_30500409"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30500410" source="IS_30500410"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZZ_XREF1" source="ZZ_XREF1"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_ACTV_DATE" source="CC_ACTV_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZZ_XREF2" source="ZZ_XREF2"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_ZZ_BUDAT" source="CC_ZZ_BUDAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZZ_ZUONR" source="ZZ_ZUONR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30500402" source="IS_30500402"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
+      </input>
+      <input node="#PROJ_SDA_ZCONSO_SUBMKT">
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZPROVX" source="ZPROVX"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBMKT_RIGHT" source="SUBMKT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROVINCE_CODE" source="SUBMKT"/>
+      </input>
+      <joinAttribute name="PROVINCE_CODE"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_SDA_ZCONSODEF">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="BUKRS"/>
+        <viewAttribute id="SUBMKT"/>
+        <viewAttribute id="HKONT"/>
+        <viewAttribute id="KOSTL_DEFAULT"/>
+        <viewAttribute id="AUFNR_DEFAULT"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="VARCHAR" id="CC_HKONT" length="10" expressionLanguage="COLUMN_ENGINE">
+          <formula>ltrim(&quot;HKONT&quot;,'0')</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#ZCONSODEF">
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBMKT" source="SUBMKT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="HKONT" source="HKONT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KOSTL_DEFAULT" source="KOSTL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AUFNR_DEFAULT" source="AUFNR"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="JOIN_BILLING_ZCONSODEF" joinOrder="OUTSIDE_IN" joinType="leftOuter">
+      <descriptions>
+        <comment text="Join Error will be raised as IS_30500417."/>
+      </descriptions>
+      <viewAttributes>
+        <viewAttribute id="JOURNALIZATION_DATE"/>
+        <viewAttribute id="BUNDLE_DISCOUNT_IND"/>
+        <viewAttribute id="GL_ACCOUNT_NUMBER"/>
+        <viewAttribute id="INSERT_TS"/>
+        <viewAttribute id="PROVINCE_CODE"/>
+        <viewAttribute id="DISCOUNT_CODE"/>
+        <viewAttribute id="BATCH_ID"/>
+        <viewAttribute id="ADJ_REASON_CODE"/>
+        <viewAttribute id="SOC"/>
+        <viewAttribute id="ZZ_BLDAT"/>
+        <viewAttribute id="ZZ_BUDAT"/>
+        <viewAttribute id="ZZ_BUKRS"/>
+        <viewAttribute id="ZZ_BKTXT_INVC"/>
+        <viewAttribute id="ZZ_BKTXT_ORDR"/>
+        <viewAttribute id="ZZ_LEGACY"/>
+        <viewAttribute id="ZZ_VBUND"/>
+        <viewAttribute id="ZZ_XBLNR"/>
+        <viewAttribute id="CC_TXJCD"/>
+        <viewAttribute id="ZZ_MWSKZ"/>
+        <viewAttribute id="ZZ_ADJ_RSN_CD"/>
+        <viewAttribute id="ZZ_ALLOCATE"/>
+        <viewAttribute id="ZZ_BILLER"/>
+        <viewAttribute id="ZZ_BRANDACT"/>
+        <viewAttribute id="ZZ_CATRANSFER"/>
+        <viewAttribute id="ZZ_BU_VIEW"/>
+        <viewAttribute id="ZZ_CONVERSION"/>
+        <viewAttribute id="ZZ_MINPRICE"/>
+        <viewAttribute id="ZZ_MOD_TYPE"/>
+        <viewAttribute id="ZZ_PAOBJNR"/>
+        <viewAttribute id="ZZ_PRE_POST"/>
+        <viewAttribute id="ZZ_UPFFLG"/>
+        <viewAttribute id="NEWACCT"/>
+        <viewAttribute id="ZZ_ICHKONT"/>
+        <viewAttribute id="CC_GL_ERROR"/>
+        <viewAttribute id="CC_PL_ACCOUNT"/>
+        <viewAttribute id="KOSTL"/>
+        <viewAttribute id="POST_BILLING_ID"/>
+        <viewAttribute id="REFERENCE_EFFECTIVE_DT"/>
+        <viewAttribute id="BAN"/>
+        <viewAttribute id="FEATURE_CODE"/>
+        <viewAttribute id="AUFNR"/>
+        <viewAttribute id="IS_30500401"/>
+        <viewAttribute id="BALANCE_IMPACT_CODE"/>
+        <viewAttribute id="ACTV_DATE"/>
+        <viewAttribute id="OBLE"/>
+        <viewAttribute id="SUBDID"/>
+        <viewAttribute id="PROF_SEG"/>
+        <viewAttribute id="ZREVCODE"/>
+        <viewAttribute id="IS_30500407"/>
+        <viewAttribute id="IS_30500403"/>
+        <viewAttribute id="IS_30500404"/>
+        <viewAttribute id="IS_30500405"/>
+        <viewAttribute id="IS_30500406"/>
+        <viewAttribute id="IS_30500408"/>
+        <viewAttribute id="IS_30500409"/>
+        <viewAttribute id="IS_30500410"/>
+        <viewAttribute id="ZZ_XREF1"/>
+        <viewAttribute id="CC_ACTV_DATE"/>
+        <viewAttribute id="ZZ_XREF2"/>
+        <viewAttribute id="CC_ZZ_BUDAT"/>
+        <viewAttribute id="ZZ_ZUONR"/>
+        <viewAttribute id="IS_30500402"/>
+        <viewAttribute id="ZPROVX"/>
+        <viewAttribute id="ZZ_SGTXT"/>
+        <viewAttribute id="BUKRS"/>
+        <viewAttribute id="KOSTL_DEFAULT"/>
+        <viewAttribute id="AUFNR_DEFAULT"/>
+        <viewAttribute id="IS_30500411"/>
+        <viewAttribute id="IS_30500412"/>
+        <viewAttribute id="IS_30500413"/>
+        <viewAttribute id="IS_30500414"/>
+        <viewAttribute id="IS_30500415"/>
+        <viewAttribute id="SUBMKT_RIGHT"/>
+        <viewAttribute id="IS_30500416"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="ZZ_KOSTL" length="10" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(in(int(leftstr(&quot;CC_PL_ACCOUNT&quot;,1)),4,5,6,7),&quot;KOSTL&quot;,&quot;KOSTL_DEFAULT&quot;)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="ZZ_AUFNR" length="12" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(in(int(leftstr(&quot;CC_PL_ACCOUNT&quot;,1)),4,5,6,7),&quot;AUFNR&quot;,&quot;AUFNR_DEFAULT&quot;)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="IS_30500417" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isNull(&quot;SUBMKT_RIGHT&quot;),'1','0')</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#JOIN_BILLING_SDA">
+        <mapping xsi:type="Calculation:AttributeMapping" target="JOURNALIZATION_DATE" source="JOURNALIZATION_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUNDLE_DISCOUNT_IND" source="BUNDLE_DISCOUNT_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GL_ACCOUNT_NUMBER" source="GL_ACCOUNT_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INSERT_TS" source="INSERT_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROVINCE_CODE" source="PROVINCE_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DISCOUNT_CODE" source="DISCOUNT_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BATCH_ID" source="BATCH_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ADJ_REASON_CODE" source="ADJ_REASON_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SOC" source="SOC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZZ_BLDAT" source="ZZ_BLDAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZZ_BUDAT" source="ZZ_BUDAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZZ_BUKRS" source="ZZ_BUKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZZ_BKTXT_INVC" source="ZZ_BKTXT_INVC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZZ_BKTXT_ORDR" source="ZZ_BKTXT_ORDR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZZ_LEGACY" source="ZZ_LEGACY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZZ_VBUND" source="ZZ_VBUND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZZ_XBLNR" source="ZZ_XBLNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_TXJCD" source="CC_TXJCD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZZ_MWSKZ" source="ZZ_MWSKZ"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZZ_ADJ_RSN_CD" source="ZZ_ADJ_RSN_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZZ_ALLOCATE" source="ZZ_ALLOCATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZZ_BILLER" source="ZZ_BILLER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZZ_BRANDACT" source="ZZ_BRANDACT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZZ_CATRANSFER" source="ZZ_CATRANSFER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZZ_BU_VIEW" source="ZZ_BU_VIEW"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZZ_CONVERSION" source="ZZ_CONVERSION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZZ_MINPRICE" source="ZZ_MINPRICE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZZ_MOD_TYPE" source="ZZ_MOD_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZZ_PAOBJNR" source="ZZ_PAOBJNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZZ_PRE_POST" source="ZZ_PRE_POST"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZZ_UPFFLG" source="ZZ_UPFFLG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NEWACCT" source="NEWACCT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZZ_ICHKONT" source="ZZ_ICHKONT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_GL_ERROR" source="CC_GL_ERROR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_PL_ACCOUNT" source="CC_PL_ACCOUNT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KOSTL" source="KOSTL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="POST_BILLING_ID" source="POST_BILLING_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_EFFECTIVE_DT" source="REFERENCE_EFFECTIVE_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BAN" source="BAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FEATURE_CODE" source="FEATURE_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AUFNR" source="AUFNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30500401" source="IS_30500401"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BALANCE_IMPACT_CODE" source="BALANCE_IMPACT_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACTV_DATE" source="ACTV_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OBLE" source="OBLE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBDID" source="SUBDID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROF_SEG" source="PROF_SEG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZREVCODE" source="ZREVCODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30500407" source="IS_30500407"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30500403" source="IS_30500403"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30500404" source="IS_30500404"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30500405" source="IS_30500405"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30500406" source="IS_30500406"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30500408" source="IS_30500408"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30500409" source="IS_30500409"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30500410" source="IS_30500410"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZZ_XREF1" source="ZZ_XREF1"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_ACTV_DATE" source="CC_ACTV_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZZ_XREF2" source="ZZ_XREF2"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_ZZ_BUDAT" source="CC_ZZ_BUDAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZZ_ZUONR" source="ZZ_ZUONR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30500402" source="IS_30500402"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZPROVX" source="ZPROVX"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZZ_SGTXT" source="ZZ_SGTXT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30500411" source="IS_30500411"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30500412" source="IS_30500412"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30500413" source="IS_30500413"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30500414" source="IS_30500414"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30500415" source="IS_30500415"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30500416" source="IS_30500416"/>
+      </input>
+      <input node="#PROJ_SDA_ZCONSODEF">
+        <mapping xsi:type="Calculation:AttributeMapping" target="KOSTL_DEFAULT" source="KOSTL_DEFAULT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AUFNR_DEFAULT" source="AUFNR_DEFAULT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBMKT_RIGHT" source="SUBMKT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROVINCE_CODE" source="SUBMKT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_PL_ACCOUNT" source="CC_HKONT"/>
+      </input>
+      <joinAttribute name="PROVINCE_CODE"/>
+      <joinAttribute name="CC_PL_ACCOUNT"/>
+    </calculationView>
+  </calculationViews>
+  <logicalModel id="JOIN_BILLING_ZCONSODEF">
+    <descriptions/>
+    <attributes>
+      <attribute id="JOURNALIZATION_DATE" order="1" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="JOURNALIZATION_DATE"/>
+        <keyMapping columnObjectName="JOIN_BILLING_ZCONSODEF" columnName="JOURNALIZATION_DATE"/>
+      </attribute>
+      <attribute id="BUNDLE_DISCOUNT_IND" order="2" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="BUNDLE_DISCOUNT_IND"/>
+        <keyMapping columnObjectName="JOIN_BILLING_ZCONSODEF" columnName="BUNDLE_DISCOUNT_IND"/>
+      </attribute>
+      <attribute id="GL_ACCOUNT_NUMBER" order="3" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="GL_ACCOUNT_NUMBER"/>
+        <keyMapping columnObjectName="JOIN_BILLING_ZCONSODEF" columnName="GL_ACCOUNT_NUMBER"/>
+      </attribute>
+      <attribute id="INSERT_TS" order="4" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="INSERT_TS"/>
+        <keyMapping columnObjectName="JOIN_BILLING_ZCONSODEF" columnName="INSERT_TS"/>
+      </attribute>
+      <attribute id="PROVINCE_CODE" order="5" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="PROVINCE_CODE"/>
+        <keyMapping columnObjectName="JOIN_BILLING_ZCONSODEF" columnName="PROVINCE_CODE"/>
+      </attribute>
+      <attribute id="DISCOUNT_CODE" order="6" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="DISCOUNT_CODE"/>
+        <keyMapping columnObjectName="JOIN_BILLING_ZCONSODEF" columnName="DISCOUNT_CODE"/>
+      </attribute>
+      <attribute id="BATCH_ID" order="7" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="BATCH_ID"/>
+        <keyMapping columnObjectName="JOIN_BILLING_ZCONSODEF" columnName="BATCH_ID"/>
+      </attribute>
+      <attribute id="ADJ_REASON_CODE" order="8" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ADJ_REASON_CODE"/>
+        <keyMapping columnObjectName="JOIN_BILLING_ZCONSODEF" columnName="ADJ_REASON_CODE"/>
+      </attribute>
+      <attribute id="SOC" order="9" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SOC"/>
+        <keyMapping columnObjectName="JOIN_BILLING_ZCONSODEF" columnName="SOC"/>
+      </attribute>
+      <attribute id="ZZ_BLDAT" order="10" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ZZ_BLDAT"/>
+        <keyMapping columnObjectName="JOIN_BILLING_ZCONSODEF" columnName="ZZ_BLDAT"/>
+      </attribute>
+      <attribute id="ZZ_BUDAT" order="11" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ZZ_BUDAT"/>
+        <keyMapping columnObjectName="JOIN_BILLING_ZCONSODEF" columnName="ZZ_BUDAT"/>
+      </attribute>
+      <attribute id="ZZ_BUKRS" order="12" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ZZ_BUKRS"/>
+        <keyMapping columnObjectName="JOIN_BILLING_ZCONSODEF" columnName="ZZ_BUKRS"/>
+      </attribute>
+      <attribute id="ZZ_BKTXT_INVC" order="13" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ZZ_BKTXT_INVC"/>
+        <keyMapping columnObjectName="JOIN_BILLING_ZCONSODEF" columnName="ZZ_BKTXT_INVC"/>
+      </attribute>
+      <attribute id="ZZ_BKTXT_ORDR" order="14" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ZZ_BKTXT_ORDR"/>
+        <keyMapping columnObjectName="JOIN_BILLING_ZCONSODEF" columnName="ZZ_BKTXT_ORDR"/>
+      </attribute>
+      <attribute id="ZZ_LEGACY" order="15" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ZZ_LEGACY"/>
+        <keyMapping columnObjectName="JOIN_BILLING_ZCONSODEF" columnName="ZZ_LEGACY"/>
+      </attribute>
+      <attribute id="ZZ_VBUND" order="16" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ZZ_VBUND"/>
+        <keyMapping columnObjectName="JOIN_BILLING_ZCONSODEF" columnName="ZZ_VBUND"/>
+      </attribute>
+      <attribute id="ZZ_XBLNR" order="17" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ZZ_XBLNR"/>
+        <keyMapping columnObjectName="JOIN_BILLING_ZCONSODEF" columnName="ZZ_XBLNR"/>
+      </attribute>
+      <attribute id="CC_TXJCD" order="18" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CC_TXJCD"/>
+        <keyMapping columnObjectName="JOIN_BILLING_ZCONSODEF" columnName="CC_TXJCD"/>
+      </attribute>
+      <attribute id="ZZ_MWSKZ" order="19" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ZZ_MWSKZ"/>
+        <keyMapping columnObjectName="JOIN_BILLING_ZCONSODEF" columnName="ZZ_MWSKZ"/>
+      </attribute>
+      <attribute id="ZZ_ADJ_RSN_CD" order="20" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ZZ_ADJ_RSN_CD"/>
+        <keyMapping columnObjectName="JOIN_BILLING_ZCONSODEF" columnName="ZZ_ADJ_RSN_CD"/>
+      </attribute>
+      <attribute id="ZZ_ALLOCATE" order="21" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ZZ_ALLOCATE"/>
+        <keyMapping columnObjectName="JOIN_BILLING_ZCONSODEF" columnName="ZZ_ALLOCATE"/>
+      </attribute>
+      <attribute id="ZZ_BILLER" order="22" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ZZ_BILLER"/>
+        <keyMapping columnObjectName="JOIN_BILLING_ZCONSODEF" columnName="ZZ_BILLER"/>
+      </attribute>
+      <attribute id="ZZ_BRANDACT" order="23" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ZZ_BRANDACT"/>
+        <keyMapping columnObjectName="JOIN_BILLING_ZCONSODEF" columnName="ZZ_BRANDACT"/>
+      </attribute>
+      <attribute id="ZZ_CATRANSFER" order="24" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ZZ_CATRANSFER"/>
+        <keyMapping columnObjectName="JOIN_BILLING_ZCONSODEF" columnName="ZZ_CATRANSFER"/>
+      </attribute>
+      <attribute id="ZZ_BU_VIEW" order="25" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ZZ_BU_VIEW"/>
+        <keyMapping columnObjectName="JOIN_BILLING_ZCONSODEF" columnName="ZZ_BU_VIEW"/>
+      </attribute>
+      <attribute id="ZZ_CONVERSION" order="26" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ZZ_CONVERSION"/>
+        <keyMapping columnObjectName="JOIN_BILLING_ZCONSODEF" columnName="ZZ_CONVERSION"/>
+      </attribute>
+      <attribute id="ZZ_MINPRICE" order="27" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ZZ_MINPRICE"/>
+        <keyMapping columnObjectName="JOIN_BILLING_ZCONSODEF" columnName="ZZ_MINPRICE"/>
+      </attribute>
+      <attribute id="ZZ_MOD_TYPE" order="28" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ZZ_MOD_TYPE"/>
+        <keyMapping columnObjectName="JOIN_BILLING_ZCONSODEF" columnName="ZZ_MOD_TYPE"/>
+      </attribute>
+      <attribute id="ZZ_PAOBJNR" order="29" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ZZ_PAOBJNR"/>
+        <keyMapping columnObjectName="JOIN_BILLING_ZCONSODEF" columnName="ZZ_PAOBJNR"/>
+      </attribute>
+      <attribute id="ZZ_PRE_POST" order="30" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ZZ_PRE_POST"/>
+        <keyMapping columnObjectName="JOIN_BILLING_ZCONSODEF" columnName="ZZ_PRE_POST"/>
+      </attribute>
+      <attribute id="ZZ_UPFFLG" order="31" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ZZ_UPFFLG"/>
+        <keyMapping columnObjectName="JOIN_BILLING_ZCONSODEF" columnName="ZZ_UPFFLG"/>
+      </attribute>
+      <attribute id="NEWACCT" order="32" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="NEWACCT"/>
+        <keyMapping columnObjectName="JOIN_BILLING_ZCONSODEF" columnName="NEWACCT"/>
+      </attribute>
+      <attribute id="ZZ_ICHKONT" order="33" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ZZ_ICHKONT"/>
+        <keyMapping columnObjectName="JOIN_BILLING_ZCONSODEF" columnName="ZZ_ICHKONT"/>
+      </attribute>
+      <attribute id="CC_GL_ERROR" order="34" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CC_GL_ERROR"/>
+        <keyMapping columnObjectName="JOIN_BILLING_ZCONSODEF" columnName="CC_GL_ERROR"/>
+      </attribute>
+      <attribute id="CC_PL_ACCOUNT" order="35" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CC_PL_ACCOUNT"/>
+        <keyMapping columnObjectName="JOIN_BILLING_ZCONSODEF" columnName="CC_PL_ACCOUNT"/>
+      </attribute>
+      <attribute id="KOSTL" order="36" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="KOSTL"/>
+        <keyMapping columnObjectName="JOIN_BILLING_ZCONSODEF" columnName="KOSTL"/>
+      </attribute>
+      <attribute id="POST_BILLING_ID" order="37" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="POST_BILLING_ID"/>
+        <keyMapping columnObjectName="JOIN_BILLING_ZCONSODEF" columnName="POST_BILLING_ID"/>
+      </attribute>
+      <attribute id="REFERENCE_EFFECTIVE_DT" order="38" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="REFERENCE_EFFECTIVE_DT"/>
+        <keyMapping columnObjectName="JOIN_BILLING_ZCONSODEF" columnName="REFERENCE_EFFECTIVE_DT"/>
+      </attribute>
+      <attribute id="BAN" order="39" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="BAN"/>
+        <keyMapping columnObjectName="JOIN_BILLING_ZCONSODEF" columnName="BAN"/>
+      </attribute>
+      <attribute id="FEATURE_CODE" order="40" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="FEATURE_CODE"/>
+        <keyMapping columnObjectName="JOIN_BILLING_ZCONSODEF" columnName="FEATURE_CODE"/>
+      </attribute>
+      <attribute id="AUFNR" order="41" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="AUFNR"/>
+        <keyMapping columnObjectName="JOIN_BILLING_ZCONSODEF" columnName="AUFNR"/>
+      </attribute>
+      <attribute id="IS_30500401" order="42" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="IS_30500401"/>
+        <keyMapping columnObjectName="JOIN_BILLING_ZCONSODEF" columnName="IS_30500401"/>
+      </attribute>
+      <attribute id="BALANCE_IMPACT_CODE" order="43" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="BALANCE_IMPACT_CODE"/>
+        <keyMapping columnObjectName="JOIN_BILLING_ZCONSODEF" columnName="BALANCE_IMPACT_CODE"/>
+      </attribute>
+      <attribute id="ACTV_DATE" order="44" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ACTV_DATE"/>
+        <keyMapping columnObjectName="JOIN_BILLING_ZCONSODEF" columnName="ACTV_DATE"/>
+      </attribute>
+      <attribute id="OBLE" order="45" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="OBLE"/>
+        <keyMapping columnObjectName="JOIN_BILLING_ZCONSODEF" columnName="OBLE"/>
+      </attribute>
+      <attribute id="SUBDID" order="46" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SUBDID"/>
+        <keyMapping columnObjectName="JOIN_BILLING_ZCONSODEF" columnName="SUBDID"/>
+      </attribute>
+      <attribute id="PROF_SEG" order="47" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="PROF_SEG"/>
+        <keyMapping columnObjectName="JOIN_BILLING_ZCONSODEF" columnName="PROF_SEG"/>
+      </attribute>
+      <attribute id="ZREVCODE" order="48" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ZREVCODE"/>
+        <keyMapping columnObjectName="JOIN_BILLING_ZCONSODEF" columnName="ZREVCODE"/>
+      </attribute>
+      <attribute id="IS_30500407" order="49" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="IS_30500407"/>
+        <keyMapping columnObjectName="JOIN_BILLING_ZCONSODEF" columnName="IS_30500407"/>
+      </attribute>
+      <attribute id="IS_30500403" order="50" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="IS_30500403"/>
+        <keyMapping columnObjectName="JOIN_BILLING_ZCONSODEF" columnName="IS_30500403"/>
+      </attribute>
+      <attribute id="IS_30500404" order="51" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="IS_30500404"/>
+        <keyMapping columnObjectName="JOIN_BILLING_ZCONSODEF" columnName="IS_30500404"/>
+      </attribute>
+      <attribute id="IS_30500405" order="52" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="IS_30500405"/>
+        <keyMapping columnObjectName="JOIN_BILLING_ZCONSODEF" columnName="IS_30500405"/>
+      </attribute>
+      <attribute id="IS_30500406" order="53" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="IS_30500406"/>
+        <keyMapping columnObjectName="JOIN_BILLING_ZCONSODEF" columnName="IS_30500406"/>
+      </attribute>
+      <attribute id="IS_30500408" order="54" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="IS_30500408"/>
+        <keyMapping columnObjectName="JOIN_BILLING_ZCONSODEF" columnName="IS_30500408"/>
+      </attribute>
+      <attribute id="IS_30500409" order="55" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="IS_30500409"/>
+        <keyMapping columnObjectName="JOIN_BILLING_ZCONSODEF" columnName="IS_30500409"/>
+      </attribute>
+      <attribute id="IS_30500410" order="56" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="IS_30500410"/>
+        <keyMapping columnObjectName="JOIN_BILLING_ZCONSODEF" columnName="IS_30500410"/>
+      </attribute>
+      <attribute id="ZZ_XREF1" order="57" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ZZ_XREF1"/>
+        <keyMapping columnObjectName="JOIN_BILLING_ZCONSODEF" columnName="ZZ_XREF1"/>
+      </attribute>
+      <attribute id="CC_ACTV_DATE" order="58" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CC_ACTV_DATE"/>
+        <keyMapping columnObjectName="JOIN_BILLING_ZCONSODEF" columnName="CC_ACTV_DATE"/>
+      </attribute>
+      <attribute id="ZZ_XREF2" order="59" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ZZ_XREF2"/>
+        <keyMapping columnObjectName="JOIN_BILLING_ZCONSODEF" columnName="ZZ_XREF2"/>
+      </attribute>
+      <attribute id="CC_ZZ_BUDAT" order="60" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CC_ZZ_BUDAT"/>
+        <keyMapping columnObjectName="JOIN_BILLING_ZCONSODEF" columnName="CC_ZZ_BUDAT"/>
+      </attribute>
+      <attribute id="ZZ_ZUONR" order="61" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ZZ_ZUONR"/>
+        <keyMapping columnObjectName="JOIN_BILLING_ZCONSODEF" columnName="ZZ_ZUONR"/>
+      </attribute>
+      <attribute id="IS_30500402" order="62" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="IS_30500402"/>
+        <keyMapping columnObjectName="JOIN_BILLING_ZCONSODEF" columnName="IS_30500402"/>
+      </attribute>
+      <attribute id="ZPROVX" order="63" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ZPROVX"/>
+        <keyMapping columnObjectName="JOIN_BILLING_ZCONSODEF" columnName="ZPROVX"/>
+      </attribute>
+      <attribute id="ZZ_SGTXT" order="64" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ZZ_SGTXT"/>
+        <keyMapping columnObjectName="JOIN_BILLING_ZCONSODEF" columnName="ZZ_SGTXT"/>
+      </attribute>
+      <attribute id="BUKRS" order="65" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="BUKRS"/>
+        <keyMapping columnObjectName="JOIN_BILLING_ZCONSODEF" columnName="BUKRS"/>
+      </attribute>
+      <attribute id="KOSTL_DEFAULT" order="66" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="KOSTL_DEFAULT"/>
+        <keyMapping columnObjectName="JOIN_BILLING_ZCONSODEF" columnName="KOSTL_DEFAULT"/>
+      </attribute>
+      <attribute id="AUFNR_DEFAULT" order="67" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="AUFNR_DEFAULT"/>
+        <keyMapping columnObjectName="JOIN_BILLING_ZCONSODEF" columnName="AUFNR_DEFAULT"/>
+      </attribute>
+      <attribute id="ZZ_KOSTL" order="68" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ZZ_KOSTL"/>
+        <keyMapping columnObjectName="JOIN_BILLING_ZCONSODEF" columnName="ZZ_KOSTL"/>
+      </attribute>
+      <attribute id="ZZ_AUFNR" order="69" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ZZ_AUFNR"/>
+        <keyMapping columnObjectName="JOIN_BILLING_ZCONSODEF" columnName="ZZ_AUFNR"/>
+      </attribute>
+      <attribute id="IS_30500411" order="70" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="IS_30500411"/>
+        <keyMapping columnObjectName="JOIN_BILLING_ZCONSODEF" columnName="IS_30500411"/>
+      </attribute>
+      <attribute id="IS_30500412" order="71" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="IS_30500412"/>
+        <keyMapping columnObjectName="JOIN_BILLING_ZCONSODEF" columnName="IS_30500412"/>
+      </attribute>
+      <attribute id="IS_30500413" order="72" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="IS_30500413"/>
+        <keyMapping columnObjectName="JOIN_BILLING_ZCONSODEF" columnName="IS_30500413"/>
+      </attribute>
+      <attribute id="IS_30500414" order="73" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="IS_30500414"/>
+        <keyMapping columnObjectName="JOIN_BILLING_ZCONSODEF" columnName="IS_30500414"/>
+      </attribute>
+      <attribute id="IS_30500415" order="74" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="IS_30500415"/>
+        <keyMapping columnObjectName="JOIN_BILLING_ZCONSODEF" columnName="IS_30500415"/>
+      </attribute>
+      <attribute id="IS_30500416" order="75" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="IS_30500416"/>
+        <keyMapping columnObjectName="JOIN_BILLING_ZCONSODEF" columnName="IS_30500416"/>
+      </attribute>
+      <attribute id="IS_30500417" order="76" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="IS_30500417"/>
+        <keyMapping columnObjectName="JOIN_BILLING_ZCONSODEF" columnName="IS_30500417"/>
+      </attribute>
+    </attributes>
+    <calculatedAttributes/>
+    <privateDataFoundation>
+      <tableProxies/>
+      <joins/>
+      <layout>
+        <shapes/>
+      </layout>
+    </privateDataFoundation>
+    <baseMeasures/>
+    <calculatedMeasures/>
+    <restrictedMeasures/>
+    <localDimensions/>
+  </logicalModel>
+  <layout>
+    <shapes>
+      <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+        <upperLeftCorner x="174" y="87"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_OB_POST_BILLING" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="22" y="549"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_SDA_ZACCT" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="176" y="549"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="JOIN_OB_POST_BILLING_ZACCT" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="99" y="453"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_SDA_ZCONSOREF" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="253" y="453"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="JOIN_BILLING_ZCONSOREF" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="175" y="357"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_SDA_ZCONSO_SUBMKT" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="329" y="357"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="JOIN_BILLING_SDA" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="251" y="261"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_SDA_ZCONSODEF" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="97" y="261"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="JOIN_BILLING_ZCONSODEF" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="174" y="165"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+    </shapes>
+  </layout>
+</Calculation:scenario>

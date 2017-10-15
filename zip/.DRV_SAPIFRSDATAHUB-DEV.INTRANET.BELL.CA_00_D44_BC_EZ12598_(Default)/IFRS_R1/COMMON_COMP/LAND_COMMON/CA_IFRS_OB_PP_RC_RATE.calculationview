@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:AccessControl="http://www.sap.com/ndb/SQLCoreModelAccessControl.ecore" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" xmlns:Variable="http://www.sap.com/ndb/BiModelVariable.ecore" schemaVersion="2.3" id="CA_IFRS_OB_PP_RC_RATE" applyPrivilegeType="NONE" checkAnalyticPrivileges="false" defaultClient="$$client$$" defaultLanguage="$$language$$" hierarchiesSQLEnabled="false" translationRelevant="true" visibility="internal" calculationScenarioType="TREE_BASED" dataCategory="DIMENSION" enforceSqlExecution="false" executionSemantic="UNDEFINED" outputViewType="Projection">
+  <descriptions defaultDescription="Landing View - Table IFRS_OB_PP_RC_RATE">
+    <comment text="Private view on OB_PP_RC_RATE landing with required columns to populate data into OB_PP_RC_RT reference table"/>
+  </descriptions>
+  <localVariables>
+    <variable id="IP_EFF_DT" parameter="true">
+      <descriptions defaultDescription="IP_EFF_DT"/>
+      <variableProperties datatype="DATE" defaultValue="99991231" mandatory="false">
+        <valueDomain type="Date"/>
+        <selection multiLine="false" type="SingleValue"/>
+      </variableProperties>
+    </variable>
+  </localVariables>
+  <variableMappings>
+    <mapping xsi:type="Variable:ConstantVariableMapping" dataSource="#CA_EH_ERROR_TABLE" value="1103">
+      <targetVariable name="IP_JOB_ID" resourceUri="/IFRS_R1.LAND.EH/calculationviews/CA_EH_ERROR_TABLE"/>
+    </mapping>
+  </variableMappings>
+  <informationModelLayout relativeWidthScenario="55"/>
+  <dataSources>
+    <DataSource id="IFRS_R1.LAND::IFRS_OB_PP_RC_RATE" type="DATA_BASE_TABLE">
+      <viewAttributes allViewAttributes="true"/>
+      <columnObject schemaName="LAND" columnObjectName="IFRS_R1.LAND::IFRS_OB_PP_RC_RATE"/>
+    </DataSource>
+    <DataSource id="CA_EH_ERROR_TABLE" type="CALCULATION_VIEW">
+      <viewAttributes allViewAttributes="true"/>
+      <resourceUri>/IFRS_R1.LAND.EH/calculationviews/CA_EH_ERROR_TABLE</resourceUri>
+    </DataSource>
+  </dataSources>
+  <calculationViews>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_IFRS_OB_PP_RC_RATE" filterExpressionLanguage="COLUMN_ENGINE">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="SOC"/>
+        <viewAttribute id="EFFECTIVE_DATE"/>
+        <viewAttribute id="FEATURE_CODE"/>
+        <viewAttribute id="RATE"/>
+        <viewAttribute id="SUSPENSION_AMOUNT"/>
+        <viewAttribute id="EXPIRATION_DATE"/>
+        <viewAttribute id="NDB_TS"/>
+        <viewAttribute id="TIER_LEVEL_CODE"/>
+        <viewAttribute id="EFF_DT"/>
+        <viewAttribute id="EXPY_DT"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="DATE" id="CC_EXPY_DT" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(&quot;EXPY_DT&quot;=date('29991231'),date('99991231'),&quot;EXPY_DT&quot;)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CC_VERSION_CHECK" length="200" expressionLanguage="COLUMN_ENGINE">
+          <formula>&quot;SOC&quot;+'|'+string(&quot;EFFECTIVE_DATE&quot;)+'|'+&quot;FEATURE_CODE&quot;+'|'+&quot;TIER_LEVEL_CODE&quot;</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#IFRS_R1.LAND::IFRS_OB_PP_RC_RATE">
+        <mapping xsi:type="Calculation:AttributeMapping" target="SOC" source="SOC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFFECTIVE_DATE" source="EFFECTIVE_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FEATURE_CODE" source="FEATURE_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RATE" source="RATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUSPENSION_AMOUNT" source="SUSPENSION_AMOUNT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXPIRATION_DATE" source="EXPIRATION_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NDB_TS" source="NDB_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TIER_LEVEL_CODE" source="TIER_LEVEL_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFF_DT" source="EFF_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXPY_DT" source="EXPY_DT"/>
+      </input>
+      <filter>(isNull(&quot;NDB_TS&quot;) and  (&quot;EFF_DT&quot;&lt;='$$IP_EFF_DT$$'))</filter>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_ERROR_TABLE">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="PARENT_KEY"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#CA_EH_ERROR_TABLE">
+        <mapping xsi:type="Calculation:AttributeMapping" target="PARENT_KEY" source="PARENT_KEY"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="JOIN_RC_RATE" cardinality="C1_1" joinOrder="OUTSIDE_IN" joinType="leftOuter">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="SOC"/>
+        <viewAttribute id="EFFECTIVE_DATE"/>
+        <viewAttribute id="FEATURE_CODE"/>
+        <viewAttribute id="RATE"/>
+        <viewAttribute id="SUSPENSION_AMOUNT"/>
+        <viewAttribute id="EXPIRATION_DATE"/>
+        <viewAttribute id="TIER_LEVEL_CODE"/>
+        <viewAttribute id="EFF_DT"/>
+        <viewAttribute id="EXPY_DT"/>
+        <viewAttribute id="CC_VERSION_CHECK"/>
+        <viewAttribute id="PARENT_KEY_ERROR"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#PROJ_IFRS_OB_PP_RC_RATE">
+        <mapping xsi:type="Calculation:AttributeMapping" target="SOC" source="SOC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFFECTIVE_DATE" source="EFFECTIVE_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FEATURE_CODE" source="FEATURE_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RATE" source="RATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUSPENSION_AMOUNT" source="SUSPENSION_AMOUNT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXPIRATION_DATE" source="EXPIRATION_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TIER_LEVEL_CODE" source="TIER_LEVEL_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFF_DT" source="EFF_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXPY_DT" source="CC_EXPY_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_VERSION_CHECK" source="CC_VERSION_CHECK"/>
+      </input>
+      <input node="#PROJ_ERROR_TABLE">
+        <mapping xsi:type="Calculation:AttributeMapping" target="PARENT_KEY_ERROR" source="PARENT_KEY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_VERSION_CHECK" source="PARENT_KEY"/>
+      </input>
+      <joinAttribute name="CC_VERSION_CHECK"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_FILTER">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="EXPY_DT"/>
+        <viewAttribute id="EFF_DT"/>
+        <viewAttribute id="TIER_LEVEL_CODE"/>
+        <viewAttribute id="EXPIRATION_DATE"/>
+        <viewAttribute id="SUSPENSION_AMOUNT"/>
+        <viewAttribute id="RATE"/>
+        <viewAttribute id="FEATURE_CODE"/>
+        <viewAttribute id="EFFECTIVE_DATE"/>
+        <viewAttribute id="SOC"/>
+        <viewAttribute id="CC_VERSION_CHECK"/>
+        <viewAttribute id="PARENT_KEY_ERROR">
+          <filter xsi:type="AccessControl:SingleValueFilter" operator="NL" including="true"/>
+        </viewAttribute>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#JOIN_RC_RATE">
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXPY_DT" source="EXPY_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFF_DT" source="EFF_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TIER_LEVEL_CODE" source="TIER_LEVEL_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXPIRATION_DATE" source="EXPIRATION_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUSPENSION_AMOUNT" source="SUSPENSION_AMOUNT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RATE" source="RATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FEATURE_CODE" source="FEATURE_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFFECTIVE_DATE" source="EFFECTIVE_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SOC" source="SOC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_VERSION_CHECK" source="CC_VERSION_CHECK"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PARENT_KEY_ERROR" source="PARENT_KEY_ERROR"/>
+      </input>
+    </calculationView>
+  </calculationViews>
+  <logicalModel id="PROJ_FILTER">
+    <descriptions/>
+    <attributes>
+      <attribute id="EXPY_DT" order="1" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="EXPY_DT"/>
+        <keyMapping columnObjectName="PROJ_FILTER" columnName="EXPY_DT"/>
+      </attribute>
+      <attribute id="EFF_DT" order="2" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="EFF_DT"/>
+        <keyMapping columnObjectName="PROJ_FILTER" columnName="EFF_DT"/>
+      </attribute>
+      <attribute id="TIER_LEVEL_CODE" order="3" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="TIER_LEVEL_CODE"/>
+        <keyMapping columnObjectName="PROJ_FILTER" columnName="TIER_LEVEL_CODE"/>
+      </attribute>
+      <attribute id="EXPIRATION_DATE" order="4" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="EXPIRATION_DATE"/>
+        <keyMapping columnObjectName="PROJ_FILTER" columnName="EXPIRATION_DATE"/>
+      </attribute>
+      <attribute id="SUSPENSION_AMOUNT" order="5" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SUSPENSION_AMOUNT"/>
+        <keyMapping columnObjectName="PROJ_FILTER" columnName="SUSPENSION_AMOUNT"/>
+      </attribute>
+      <attribute id="RATE" order="6" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="RATE"/>
+        <keyMapping columnObjectName="PROJ_FILTER" columnName="RATE"/>
+      </attribute>
+      <attribute id="FEATURE_CODE" order="7" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="FEATURE_CODE"/>
+        <keyMapping columnObjectName="PROJ_FILTER" columnName="FEATURE_CODE"/>
+      </attribute>
+      <attribute id="EFFECTIVE_DATE" order="8" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="EFFECTIVE_DATE"/>
+        <keyMapping columnObjectName="PROJ_FILTER" columnName="EFFECTIVE_DATE"/>
+      </attribute>
+      <attribute id="SOC" order="9" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SOC"/>
+        <keyMapping columnObjectName="PROJ_FILTER" columnName="SOC"/>
+      </attribute>
+      <attribute id="CC_VERSION_CHECK" order="10" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CC_VERSION_CHECK"/>
+        <keyMapping columnObjectName="PROJ_FILTER" columnName="CC_VERSION_CHECK"/>
+      </attribute>
+    </attributes>
+    <calculatedAttributes/>
+    <privateDataFoundation>
+      <tableProxies/>
+      <joins/>
+      <layout>
+        <shapes/>
+      </layout>
+    </privateDataFoundation>
+    <baseMeasures/>
+    <calculatedMeasures/>
+    <restrictedMeasures/>
+    <localDimensions/>
+  </logicalModel>
+  <layout>
+    <shapes>
+      <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+        <upperLeftCorner x="91" y="87"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_IFRS_OB_PP_RC_RATE" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="22" y="339"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_ERROR_TABLE" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="176" y="339"/>
+        <rectangleSize height="64" width="155"/>
+      </shape>
+      <shape expanded="true" modelObjectName="JOIN_RC_RATE" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="91" y="243"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_FILTER" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="91" y="165"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+    </shapes>
+  </layout>
+</Calculation:scenario>

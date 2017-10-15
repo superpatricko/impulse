@@ -1,0 +1,1652 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" xmlns:Variable="http://www.sap.com/ndb/BiModelVariable.ecore" schemaVersion="2.3" id="CA_HP_ORDR_BASE_FILTER" applyPrivilegeType="NONE" checkAnalyticPrivileges="false" defaultClient="$$client$$" defaultLanguage="$$language$$" hierarchiesSQLEnabled="false" historyEnabled="false" translationRelevant="true" visibility="internal" calculationScenarioType="TREE_BASED" dataCategory="DIMENSION" enforceSqlExecution="false" executionSemantic="UNDEFINED" outputViewType="Projection">
+  <descriptions defaultDescription="CA_HP_ORDR_BASE_FILTER"/>
+  <localVariables>
+    <variable id="IP_BILL_DATE" parameter="true">
+      <descriptions defaultDescription="IP_BILL_DATE"/>
+      <variableProperties datatype="DATE" defaultExpressionLanguage="COLUMN_ENGINE" mandatory="false">
+        <valueDomain type="Date"/>
+        <selection multiLine="false" type="SingleValue"/>
+        <defaultExpression>now()</defaultExpression>
+      </variableProperties>
+    </variable>
+  </localVariables>
+  <variableMappings>
+    <mapping xsi:type="Variable:VariableMapping" dataSource="#CA_HP_ORDR">
+      <targetVariable name="IP_BILL_DATE" resourceUri="/IFRS_R1.HP.RAI_HP.PRIVATE/calculationviews/CA_HP_ORDR"/>
+      <localVariable>#IP_BILL_DATE</localVariable>
+    </mapping>
+  </variableMappings>
+  <informationModelLayout relativeWidthScenario="67"/>
+  <dataSources>
+    <DataSource id="CA_HP_ORDR" type="CALCULATION_VIEW">
+      <viewAttributes allViewAttributes="true"/>
+      <resourceUri>/IFRS_R1.HP.RAI_HP.PRIVATE/calculationviews/CA_HP_ORDR</resourceUri>
+    </DataSource>
+    <DataSource id="CA_HP_ORDR_BILL" type="CALCULATION_VIEW">
+      <viewAttributes allViewAttributes="true"/>
+      <resourceUri>/IFRS_R1.HP.RAI_HP.PRIVATE/calculationviews/CA_HP_ORDR_BILL</resourceUri>
+    </DataSource>
+    <DataSource id="CA_HP_ORDR_MODIFICATION" type="CALCULATION_VIEW">
+      <viewAttributes allViewAttributes="true"/>
+      <resourceUri>/IFRS_R1.HP.RAI_HP/calculationviews/CA_HP_ORDR_MODIFICATION</resourceUri>
+    </DataSource>
+  </dataSources>
+  <calculationViews>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_ORDER" filterExpressionLanguage="COLUMN_ENGINE">
+      <descriptions>
+        <comment text="Value error on RAC_CODE will be raised as 30200101.&#xD;&#xA;Value error on SOURCE_SYSTEM_CODE will be raised a 30200102.&#xD;&#xA;Value error on INSERT_TS will be raised as 30200103."/>
+      </descriptions>
+      <viewAttributes>
+        <viewAttribute id="PRIMARY_TELEPHONE_NUMBER"/>
+        <viewAttribute id="WORKING_TELEPHONE_NUMBER"/>
+        <viewAttribute id="CONTRACT_UNIQUE_IDENTIFIER"/>
+        <viewAttribute id="ITEM_CODE"/>
+        <viewAttribute id="POB_END_DATE"/>
+        <viewAttribute id="SYSTEM_REGION"/>
+        <viewAttribute id="SUBSCRIBER_NUMBER"/>
+        <viewAttribute id="TERM_M2M"/>
+        <viewAttribute id="ITEM_TYPE"/>
+        <viewAttribute id="ITEM_QUANTITY"/>
+        <viewAttribute id="ITEM_RATE"/>
+        <viewAttribute id="ITEM_GROUP_CODE"/>
+        <viewAttribute id="ITEM_INCEPTION_DT"/>
+        <viewAttribute id="ITEM_END_DT"/>
+        <viewAttribute id="M2M_SERVICE_INDICATOR"/>
+        <viewAttribute id="RAC_CODE"/>
+        <viewAttribute id="TOLL_FREE_NUMBER"/>
+        <viewAttribute id="TOLL_FREE_CONV_NUMBER"/>
+        <viewAttribute id="DISCOUNT_TYPE"/>
+        <viewAttribute id="SOURCE_SYSTEM_CODE"/>
+        <viewAttribute id="MOD_EVENT_ID"/>
+        <viewAttribute id="CONVERSION_IND"/>
+        <viewAttribute id="REFERENCE_ID"/>
+        <viewAttribute id="PROCESS_ID"/>
+        <viewAttribute id="INSERT_TS"/>
+        <viewAttribute id="ITEM_ACTION"/>
+        <viewAttribute id="TIME_IND"/>
+        <viewAttribute id="RAI_ITEM_ID"/>
+        <viewAttribute id="FIXED_OR_VARIABLE_RATE_INDICATOR"/>
+        <viewAttribute id="RATE_BAND"/>
+        <viewAttribute id="KUNNR_SID"/>
+        <viewAttribute id="SRCDOC_ID"/>
+        <viewAttribute id="HEADER_ID"/>
+        <viewAttribute id="TEMPORARY_SEASONAL_SUSPENSION"/>
+        <viewAttribute id="POB_EFFC_DATE"/>
+        <viewAttribute id="MOD_IND"/>
+        <viewAttribute id="BILL_DATE"/>
+        <viewAttribute id="MODIFIED_TS"/>
+        <viewAttribute id="RAI_TS"/>
+        <viewAttribute id="CONTRACT_INCEPTION_DT"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CC_KEY" length="35" expressionLanguage="COLUMN_ENGINE">
+          <formula>leftstr(&quot;PRIMARY_TELEPHONE_NUMBER&quot;,10) + &#xD;
+leftstr(&quot;WORKING_TELEPHONE_NUMBER&quot;,10) + &#xD;
+trim(&quot;ITEM_CODE&quot;)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="IS_30200101" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>if((isNull(&quot;RAC_CODE&quot;) or &quot;RAC_CODE&quot;=''),'1','0')</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="IS_30200102" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>if((isNull(&quot;SOURCE_SYSTEM_CODE&quot;) or &quot;SOURCE_SYSTEM_CODE&quot;!='06'),'1','0')</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="IS_30200103" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isNull(&quot;INSERT_TS&quot;),'1','0')</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#CA_HP_ORDR">
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRIMARY_TELEPHONE_NUMBER" source="PRIMARY_TELEPHONE_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WORKING_TELEPHONE_NUMBER" source="WORKING_TELEPHONE_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTRACT_UNIQUE_IDENTIFIER" source="CONTRACT_UNIQUE_IDENTIFIER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_CODE" source="ITEM_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="POB_END_DATE" source="POB_END_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SYSTEM_REGION" source="SYSTEM_REGION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBSCRIBER_NUMBER" source="SUBSCRIBER_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TERM_M2M" source="TERM_M2M"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_TYPE" source="ITEM_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_QUANTITY" source="ITEM_QUANTITY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_RATE" source="ITEM_RATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_GROUP_CODE" source="ITEM_GROUP_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_INCEPTION_DT" source="ITEM_INCEPTION_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_END_DT" source="ITEM_END_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="M2M_SERVICE_INDICATOR" source="M2M_SERVICE_INDICATOR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RAC_CODE" source="RAC_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TOLL_FREE_NUMBER" source="TOLL_FREE_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TOLL_FREE_CONV_NUMBER" source="TOLL_FREE_CONV_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DISCOUNT_TYPE" source="DISCOUNT_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SOURCE_SYSTEM_CODE" source="SOURCE_SYSTEM_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MOD_EVENT_ID" source="MOD_EVENT_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONVERSION_IND" source="CONVERSION_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_ID" source="REFERENCE_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROCESS_ID" source="PROCESS_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INSERT_TS" source="INSERT_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_ACTION" source="ITEM_ACTION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TIME_IND" source="TIME_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RAI_ITEM_ID" source="RAI_ITEM_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FIXED_OR_VARIABLE_RATE_INDICATOR" source="FIXED_OR_VARIABLE_RATE_INDICATOR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RATE_BAND" source="RATE_BAND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KUNNR_SID" source="KUNNR_SID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SRCDOC_ID" source="SRCDOC_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="HEADER_ID" source="HEADER_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TEMPORARY_SEASONAL_SUSPENSION" source="TEMPORARY_SEASONAL_SUSPENSION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="POB_EFFC_DATE" source="POB_EFFC_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MOD_IND" source="MOD_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_DATE" source="BILL_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MODIFIED_TS" source="MODIFIED_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RAI_TS" source="RAI_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTRACT_INCEPTION_DT" source="CONTRACT_INCEPTION_DT"/>
+      </input>
+      <filter>isNull(&quot;MOD_IND&quot;)</filter>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_BILLING" filterExpressionLanguage="COLUMN_ENGINE">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="PRIMARY_TELEPHONE_NUMBER"/>
+        <viewAttribute id="WORKING_TELEPHONE_NUMBER"/>
+        <viewAttribute id="ITEM_CODE"/>
+        <viewAttribute id="BATCH_ID"/>
+        <viewAttribute id="PRODUCT_START_DATE"/>
+        <viewAttribute id="PRODUCT_END_DATE"/>
+        <viewAttribute id="ITEM_CHARGE"/>
+        <viewAttribute id="RAI_TS"/>
+        <viewAttribute id="ITEM_TYPE"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CC_KEY" length="35" expressionLanguage="COLUMN_ENGINE">
+          <formula>leftstr(&quot;PRIMARY_TELEPHONE_NUMBER&quot;,10) + &#xD;
+leftstr(&quot;WORKING_TELEPHONE_NUMBER&quot;,10) + &#xD;
+trim(&quot;ITEM_CODE&quot;)</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#CA_HP_ORDR_BILL">
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRIMARY_TELEPHONE_NUMBER" source="PRIMARY_TELEPHONE_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WORKING_TELEPHONE_NUMBER" source="WORKING_TELEPHONE_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_CODE" source="ITEM_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BATCH_ID" source="BATCH_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT_START_DATE" source="PRODUCT_START_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT_END_DATE" source="PRODUCT_END_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_CHARGE" source="ITEM_CHARGE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RAI_TS" source="RAI_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_TYPE" source="ITEM_TYPE"/>
+      </input>
+      <filter>isNull(&quot;RAI_TS&quot;) and (&quot;ITEM_TYPE&quot; = 'S')</filter>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="JOIN_ORDER_BILLING" cardinality="C1_N" joinOrder="OUTSIDE_IN" joinType="leftOuter">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="PRIMARY_TELEPHONE_NUMBER"/>
+        <viewAttribute id="WORKING_TELEPHONE_NUMBER"/>
+        <viewAttribute id="ITEM_CODE"/>
+        <viewAttribute id="CONTRACT_UNIQUE_IDENTIFIER"/>
+        <viewAttribute id="POB_END_DATE"/>
+        <viewAttribute id="SYSTEM_REGION"/>
+        <viewAttribute id="SUBSCRIBER_NUMBER"/>
+        <viewAttribute id="TERM_M2M"/>
+        <viewAttribute id="ITEM_TYPE"/>
+        <viewAttribute id="ITEM_QUANTITY"/>
+        <viewAttribute id="ITEM_RATE"/>
+        <viewAttribute id="ITEM_GROUP_CODE"/>
+        <viewAttribute id="ITEM_INCEPTION_DT"/>
+        <viewAttribute id="ITEM_END_DT"/>
+        <viewAttribute id="M2M_SERVICE_INDICATOR"/>
+        <viewAttribute id="RAC_CODE"/>
+        <viewAttribute id="TOLL_FREE_NUMBER"/>
+        <viewAttribute id="TOLL_FREE_CONV_NUMBER"/>
+        <viewAttribute id="DISCOUNT_TYPE"/>
+        <viewAttribute id="SOURCE_SYSTEM_CODE"/>
+        <viewAttribute id="MOD_EVENT_ID"/>
+        <viewAttribute id="CONVERSION_IND"/>
+        <viewAttribute id="REFERENCE_ID"/>
+        <viewAttribute id="PROCESS_ID"/>
+        <viewAttribute id="INSERT_TS"/>
+        <viewAttribute id="ITEM_ACTION"/>
+        <viewAttribute id="TIME_IND"/>
+        <viewAttribute id="RAI_ITEM_ID"/>
+        <viewAttribute id="FIXED_OR_VARIABLE_RATE_INDICATOR"/>
+        <viewAttribute id="RATE_BAND"/>
+        <viewAttribute id="KUNNR_SID"/>
+        <viewAttribute id="SRCDOC_ID"/>
+        <viewAttribute id="HEADER_ID"/>
+        <viewAttribute id="TEMPORARY_SEASONAL_SUSPENSION"/>
+        <viewAttribute id="POB_EFFC_DATE"/>
+        <viewAttribute id="MOD_IND"/>
+        <viewAttribute id="PRODUCT_START_DATE"/>
+        <viewAttribute id="PRODUCT_END_DATE"/>
+        <viewAttribute id="BILL_DATE"/>
+        <viewAttribute id="ITEM_CHARGE"/>
+        <viewAttribute id="MODIFIED_TS"/>
+        <viewAttribute id="RAI_TS"/>
+        <viewAttribute id="IS_30200101"/>
+        <viewAttribute id="IS_30200102"/>
+        <viewAttribute id="IS_30200103"/>
+        <viewAttribute id="CONTRACT_INCEPTION_DT"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CC_ADVANCE_BILL" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(( (not isNull(&quot;BILL_DATE&quot;)) and (&quot;TIME_IND&quot; !='T00') and (not isNull(&quot;PRODUCT_END_DATE&quot;)) and (&quot;BILL_DATE&quot;=&quot;PRODUCT_START_DATE&quot;)),'Y','N')</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#PROJ_ORDER">
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRIMARY_TELEPHONE_NUMBER" source="PRIMARY_TELEPHONE_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WORKING_TELEPHONE_NUMBER" source="WORKING_TELEPHONE_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_CODE" source="ITEM_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTRACT_UNIQUE_IDENTIFIER" source="CONTRACT_UNIQUE_IDENTIFIER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="POB_END_DATE" source="POB_END_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SYSTEM_REGION" source="SYSTEM_REGION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBSCRIBER_NUMBER" source="SUBSCRIBER_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TERM_M2M" source="TERM_M2M"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_TYPE" source="ITEM_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_QUANTITY" source="ITEM_QUANTITY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_RATE" source="ITEM_RATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_GROUP_CODE" source="ITEM_GROUP_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_INCEPTION_DT" source="ITEM_INCEPTION_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_END_DT" source="ITEM_END_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="M2M_SERVICE_INDICATOR" source="M2M_SERVICE_INDICATOR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RAC_CODE" source="RAC_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TOLL_FREE_NUMBER" source="TOLL_FREE_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TOLL_FREE_CONV_NUMBER" source="TOLL_FREE_CONV_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DISCOUNT_TYPE" source="DISCOUNT_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SOURCE_SYSTEM_CODE" source="SOURCE_SYSTEM_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MOD_EVENT_ID" source="MOD_EVENT_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONVERSION_IND" source="CONVERSION_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_ID" source="REFERENCE_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROCESS_ID" source="PROCESS_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INSERT_TS" source="INSERT_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_ACTION" source="ITEM_ACTION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TIME_IND" source="TIME_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RAI_ITEM_ID" source="RAI_ITEM_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FIXED_OR_VARIABLE_RATE_INDICATOR" source="FIXED_OR_VARIABLE_RATE_INDICATOR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RATE_BAND" source="RATE_BAND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KUNNR_SID" source="KUNNR_SID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SRCDOC_ID" source="SRCDOC_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="HEADER_ID" source="HEADER_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TEMPORARY_SEASONAL_SUSPENSION" source="TEMPORARY_SEASONAL_SUSPENSION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="POB_EFFC_DATE" source="POB_EFFC_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MOD_IND" source="MOD_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_DATE" source="BILL_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MODIFIED_TS" source="MODIFIED_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RAI_TS" source="RAI_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30200101" source="IS_30200101"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30200102" source="IS_30200102"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30200103" source="IS_30200103"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTRACT_INCEPTION_DT" source="CONTRACT_INCEPTION_DT"/>
+      </input>
+      <input node="#PROJ_BILLING">
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT_START_DATE" source="PRODUCT_START_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT_END_DATE" source="PRODUCT_END_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_CHARGE" source="ITEM_CHARGE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRIMARY_TELEPHONE_NUMBER" source="PRIMARY_TELEPHONE_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WORKING_TELEPHONE_NUMBER" source="WORKING_TELEPHONE_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_CODE" source="ITEM_CODE"/>
+      </input>
+      <joinAttribute name="PRIMARY_TELEPHONE_NUMBER"/>
+      <joinAttribute name="WORKING_TELEPHONE_NUMBER"/>
+      <joinAttribute name="ITEM_CODE"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_EXISTING" filterExpressionLanguage="COLUMN_ENGINE">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="CONTRACT_UNIQUE_IDENTIFIER"/>
+        <viewAttribute id="POB_END_DATE"/>
+        <viewAttribute id="PRIMARY_TELEPHONE_NUMBER"/>
+        <viewAttribute id="SYSTEM_REGION"/>
+        <viewAttribute id="SUBSCRIBER_NUMBER"/>
+        <viewAttribute id="TERM_M2M"/>
+        <viewAttribute id="WORKING_TELEPHONE_NUMBER"/>
+        <viewAttribute id="ITEM_CODE"/>
+        <viewAttribute id="ITEM_TYPE"/>
+        <viewAttribute id="ITEM_QUANTITY"/>
+        <viewAttribute id="ITEM_RATE"/>
+        <viewAttribute id="ITEM_GROUP_CODE"/>
+        <viewAttribute id="ITEM_INCEPTION_DT"/>
+        <viewAttribute id="ITEM_END_DT"/>
+        <viewAttribute id="M2M_SERVICE_INDICATOR"/>
+        <viewAttribute id="RAC_CODE"/>
+        <viewAttribute id="TOLL_FREE_NUMBER"/>
+        <viewAttribute id="TOLL_FREE_CONV_NUMBER"/>
+        <viewAttribute id="DISCOUNT_TYPE"/>
+        <viewAttribute id="SOURCE_SYSTEM_CODE"/>
+        <viewAttribute id="MOD_EVENT_ID"/>
+        <viewAttribute id="CONVERSION_IND"/>
+        <viewAttribute id="REFERENCE_ID"/>
+        <viewAttribute id="PROCESS_ID"/>
+        <viewAttribute id="INSERT_TS"/>
+        <viewAttribute id="ITEM_ACTION"/>
+        <viewAttribute id="TIME_IND"/>
+        <viewAttribute id="RAI_ITEM_ID"/>
+        <viewAttribute id="FIXED_OR_VARIABLE_RATE_INDICATOR"/>
+        <viewAttribute id="RATE_BAND"/>
+        <viewAttribute id="KUNNR_SID"/>
+        <viewAttribute id="SRCDOC_ID"/>
+        <viewAttribute id="HEADER_ID"/>
+        <viewAttribute id="TEMPORARY_SEASONAL_SUSPENSION"/>
+        <viewAttribute id="POB_EFFC_DATE"/>
+        <viewAttribute id="MOD_IND"/>
+        <viewAttribute id="PRODUCT_START_DATE"/>
+        <viewAttribute id="PRODUCT_END_DATE"/>
+        <viewAttribute id="BILL_DATE"/>
+        <viewAttribute id="CC_ADVANCE_BILL"/>
+        <viewAttribute id="ITEM_CHARGE"/>
+        <viewAttribute id="MODIFIED_TS"/>
+        <viewAttribute id="RAI_TS"/>
+        <viewAttribute id="IS_30200101"/>
+        <viewAttribute id="IS_30200102"/>
+        <viewAttribute id="IS_30200103"/>
+        <viewAttribute id="CONTRACT_INCEPTION_DT"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="DATE" id="CC_BILL_DAY" expressionLanguage="COLUMN_ENGINE">
+          <formula>addmonths(&quot;BILL_DATE&quot;,1)</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#JOIN_ORDER_BILLING">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTRACT_UNIQUE_IDENTIFIER" source="CONTRACT_UNIQUE_IDENTIFIER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="POB_END_DATE" source="POB_END_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRIMARY_TELEPHONE_NUMBER" source="PRIMARY_TELEPHONE_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SYSTEM_REGION" source="SYSTEM_REGION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBSCRIBER_NUMBER" source="SUBSCRIBER_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TERM_M2M" source="TERM_M2M"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WORKING_TELEPHONE_NUMBER" source="WORKING_TELEPHONE_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_CODE" source="ITEM_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_TYPE" source="ITEM_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_QUANTITY" source="ITEM_QUANTITY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_RATE" source="ITEM_RATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_GROUP_CODE" source="ITEM_GROUP_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_INCEPTION_DT" source="ITEM_INCEPTION_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_END_DT" source="ITEM_END_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="M2M_SERVICE_INDICATOR" source="M2M_SERVICE_INDICATOR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RAC_CODE" source="RAC_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TOLL_FREE_NUMBER" source="TOLL_FREE_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TOLL_FREE_CONV_NUMBER" source="TOLL_FREE_CONV_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DISCOUNT_TYPE" source="DISCOUNT_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SOURCE_SYSTEM_CODE" source="SOURCE_SYSTEM_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MOD_EVENT_ID" source="MOD_EVENT_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONVERSION_IND" source="CONVERSION_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_ID" source="REFERENCE_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROCESS_ID" source="PROCESS_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INSERT_TS" source="INSERT_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_ACTION" source="ITEM_ACTION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TIME_IND" source="TIME_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RAI_ITEM_ID" source="RAI_ITEM_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FIXED_OR_VARIABLE_RATE_INDICATOR" source="FIXED_OR_VARIABLE_RATE_INDICATOR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RATE_BAND" source="RATE_BAND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KUNNR_SID" source="KUNNR_SID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SRCDOC_ID" source="SRCDOC_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="HEADER_ID" source="HEADER_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TEMPORARY_SEASONAL_SUSPENSION" source="TEMPORARY_SEASONAL_SUSPENSION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="POB_EFFC_DATE" source="POB_EFFC_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MOD_IND" source="MOD_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT_START_DATE" source="PRODUCT_START_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT_END_DATE" source="PRODUCT_END_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_DATE" source="BILL_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_ADVANCE_BILL" source="CC_ADVANCE_BILL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_CHARGE" source="ITEM_CHARGE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MODIFIED_TS" source="MODIFIED_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RAI_TS" source="RAI_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30200101" source="IS_30200101"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30200102" source="IS_30200102"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30200103" source="IS_30200103"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTRACT_INCEPTION_DT" source="CONTRACT_INCEPTION_DT"/>
+      </input>
+      <filter>(not isNull(&quot;BILL_DATE&quot;))and&#xD;
+(&quot;TIME_IND&quot; !='T00') and&#xD;
+(&quot;BILL_DATE&quot; &lt;'$$IP_BILL_DATE$$') and&#xD;
+(&quot;POB_END_DATE&quot;>'$$IP_BILL_DATE$$')</filter>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_NEW" filterExpressionLanguage="COLUMN_ENGINE">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="CONTRACT_UNIQUE_IDENTIFIER"/>
+        <viewAttribute id="POB_END_DATE"/>
+        <viewAttribute id="PRIMARY_TELEPHONE_NUMBER"/>
+        <viewAttribute id="SYSTEM_REGION"/>
+        <viewAttribute id="SUBSCRIBER_NUMBER"/>
+        <viewAttribute id="TERM_M2M"/>
+        <viewAttribute id="WORKING_TELEPHONE_NUMBER"/>
+        <viewAttribute id="ITEM_CODE"/>
+        <viewAttribute id="ITEM_TYPE"/>
+        <viewAttribute id="ITEM_QUANTITY"/>
+        <viewAttribute id="ITEM_RATE"/>
+        <viewAttribute id="ITEM_GROUP_CODE"/>
+        <viewAttribute id="ITEM_INCEPTION_DT"/>
+        <viewAttribute id="ITEM_END_DT"/>
+        <viewAttribute id="M2M_SERVICE_INDICATOR"/>
+        <viewAttribute id="RAC_CODE"/>
+        <viewAttribute id="TOLL_FREE_NUMBER"/>
+        <viewAttribute id="TOLL_FREE_CONV_NUMBER"/>
+        <viewAttribute id="DISCOUNT_TYPE"/>
+        <viewAttribute id="SOURCE_SYSTEM_CODE"/>
+        <viewAttribute id="MOD_EVENT_ID"/>
+        <viewAttribute id="CONVERSION_IND"/>
+        <viewAttribute id="REFERENCE_ID"/>
+        <viewAttribute id="PROCESS_ID"/>
+        <viewAttribute id="INSERT_TS"/>
+        <viewAttribute id="ITEM_ACTION"/>
+        <viewAttribute id="TIME_IND"/>
+        <viewAttribute id="RAI_ITEM_ID"/>
+        <viewAttribute id="FIXED_OR_VARIABLE_RATE_INDICATOR"/>
+        <viewAttribute id="RATE_BAND"/>
+        <viewAttribute id="KUNNR_SID"/>
+        <viewAttribute id="SRCDOC_ID"/>
+        <viewAttribute id="HEADER_ID"/>
+        <viewAttribute id="TEMPORARY_SEASONAL_SUSPENSION"/>
+        <viewAttribute id="POB_EFFC_DATE"/>
+        <viewAttribute id="MOD_IND"/>
+        <viewAttribute id="PRODUCT_START_DATE"/>
+        <viewAttribute id="PRODUCT_END_DATE"/>
+        <viewAttribute id="BILL_DATE"/>
+        <viewAttribute id="ITEM_CHARGE"/>
+        <viewAttribute id="MODIFIED_TS"/>
+        <viewAttribute id="RAI_TS"/>
+        <viewAttribute id="IS_30200101"/>
+        <viewAttribute id="IS_30200102"/>
+        <viewAttribute id="IS_30200103"/>
+        <viewAttribute id="CONTRACT_INCEPTION_DT"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="DATE" id="CC_BILL_DAY" expressionLanguage="COLUMN_ENGINE">
+          <formula>if( (&#xD;
+(not isNull(&quot;PRODUCT_END_DATE&quot;)) and &quot;PRODUCT_START_DATE&quot;=&quot;POB_EFFC_DATE&quot;) , adddays(&quot;PRODUCT_END_DATE&quot;,1), date(null) )</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#JOIN_ORDER_BILLING">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTRACT_UNIQUE_IDENTIFIER" source="CONTRACT_UNIQUE_IDENTIFIER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="POB_END_DATE" source="POB_END_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRIMARY_TELEPHONE_NUMBER" source="PRIMARY_TELEPHONE_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SYSTEM_REGION" source="SYSTEM_REGION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBSCRIBER_NUMBER" source="SUBSCRIBER_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TERM_M2M" source="TERM_M2M"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WORKING_TELEPHONE_NUMBER" source="WORKING_TELEPHONE_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_CODE" source="ITEM_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_TYPE" source="ITEM_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_QUANTITY" source="ITEM_QUANTITY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_RATE" source="ITEM_RATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_GROUP_CODE" source="ITEM_GROUP_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_INCEPTION_DT" source="ITEM_INCEPTION_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_END_DT" source="ITEM_END_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="M2M_SERVICE_INDICATOR" source="M2M_SERVICE_INDICATOR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RAC_CODE" source="RAC_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TOLL_FREE_NUMBER" source="TOLL_FREE_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TOLL_FREE_CONV_NUMBER" source="TOLL_FREE_CONV_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DISCOUNT_TYPE" source="DISCOUNT_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SOURCE_SYSTEM_CODE" source="SOURCE_SYSTEM_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MOD_EVENT_ID" source="MOD_EVENT_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONVERSION_IND" source="CONVERSION_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_ID" source="REFERENCE_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROCESS_ID" source="PROCESS_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INSERT_TS" source="INSERT_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_ACTION" source="ITEM_ACTION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TIME_IND" source="TIME_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RAI_ITEM_ID" source="RAI_ITEM_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FIXED_OR_VARIABLE_RATE_INDICATOR" source="FIXED_OR_VARIABLE_RATE_INDICATOR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RATE_BAND" source="RATE_BAND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KUNNR_SID" source="KUNNR_SID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SRCDOC_ID" source="SRCDOC_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="HEADER_ID" source="HEADER_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TEMPORARY_SEASONAL_SUSPENSION" source="TEMPORARY_SEASONAL_SUSPENSION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="POB_EFFC_DATE" source="POB_EFFC_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MOD_IND" source="MOD_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT_START_DATE" source="PRODUCT_START_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT_END_DATE" source="PRODUCT_END_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_DATE" source="BILL_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_CHARGE" source="ITEM_CHARGE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MODIFIED_TS" source="MODIFIED_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RAI_TS" source="RAI_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30200101" source="IS_30200101"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30200102" source="IS_30200102"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30200103" source="IS_30200103"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTRACT_INCEPTION_DT" source="CONTRACT_INCEPTION_DT"/>
+      </input>
+      <filter>( isNull( &quot;RAI_TS&quot; ) )  and ((&quot;CONTRACT_INCEPTION_DT&quot;=&quot;ITEM_INCEPTION_DT&quot;) or (not isNull(&quot;CONVERSION_IND&quot;))) and (&quot;ITEM_INCEPTION_DT&quot;&lt;='$$IP_BILL_DATE$$') and (&quot;POB_END_DATE&quot;>'$$IP_BILL_DATE$$')</filter>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_PRORATED" filterExpressionLanguage="COLUMN_ENGINE">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="CONTRACT_UNIQUE_IDENTIFIER"/>
+        <viewAttribute id="POB_END_DATE"/>
+        <viewAttribute id="PRIMARY_TELEPHONE_NUMBER"/>
+        <viewAttribute id="SYSTEM_REGION"/>
+        <viewAttribute id="SUBSCRIBER_NUMBER"/>
+        <viewAttribute id="TERM_M2M"/>
+        <viewAttribute id="WORKING_TELEPHONE_NUMBER"/>
+        <viewAttribute id="ITEM_CODE"/>
+        <viewAttribute id="ITEM_TYPE"/>
+        <viewAttribute id="ITEM_QUANTITY"/>
+        <viewAttribute id="ITEM_RATE"/>
+        <viewAttribute id="ITEM_GROUP_CODE"/>
+        <viewAttribute id="ITEM_INCEPTION_DT"/>
+        <viewAttribute id="ITEM_END_DT"/>
+        <viewAttribute id="M2M_SERVICE_INDICATOR"/>
+        <viewAttribute id="RAC_CODE"/>
+        <viewAttribute id="TOLL_FREE_NUMBER"/>
+        <viewAttribute id="TOLL_FREE_CONV_NUMBER"/>
+        <viewAttribute id="DISCOUNT_TYPE"/>
+        <viewAttribute id="SOURCE_SYSTEM_CODE"/>
+        <viewAttribute id="MOD_EVENT_ID"/>
+        <viewAttribute id="CONVERSION_IND"/>
+        <viewAttribute id="REFERENCE_ID"/>
+        <viewAttribute id="PROCESS_ID"/>
+        <viewAttribute id="INSERT_TS"/>
+        <viewAttribute id="ITEM_ACTION"/>
+        <viewAttribute id="TIME_IND"/>
+        <viewAttribute id="RAI_ITEM_ID"/>
+        <viewAttribute id="FIXED_OR_VARIABLE_RATE_INDICATOR"/>
+        <viewAttribute id="RATE_BAND"/>
+        <viewAttribute id="KUNNR_SID"/>
+        <viewAttribute id="SRCDOC_ID"/>
+        <viewAttribute id="HEADER_ID"/>
+        <viewAttribute id="TEMPORARY_SEASONAL_SUSPENSION"/>
+        <viewAttribute id="POB_EFFC_DATE"/>
+        <viewAttribute id="MOD_IND"/>
+        <viewAttribute id="PRODUCT_START_DATE"/>
+        <viewAttribute id="PRODUCT_END_DATE"/>
+        <viewAttribute id="BILL_DATE"/>
+        <viewAttribute id="ITEM_CHARGE"/>
+        <viewAttribute id="MODIFIED_TS"/>
+        <viewAttribute id="RAI_TS"/>
+        <viewAttribute id="IS_30200101"/>
+        <viewAttribute id="IS_30200102"/>
+        <viewAttribute id="IS_30200103"/>
+        <viewAttribute id="CONTRACT_INCEPTION_DT"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="DATE" id="CC_BILL_DAY" expressionLanguage="COLUMN_ENGINE">
+          <formula>adddays(&quot;PRODUCT_END_DATE&quot;,1)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CC_OLD_UPDATE" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>'X'</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#JOIN_ORDER_BILLING">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTRACT_UNIQUE_IDENTIFIER" source="CONTRACT_UNIQUE_IDENTIFIER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="POB_END_DATE" source="POB_END_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRIMARY_TELEPHONE_NUMBER" source="PRIMARY_TELEPHONE_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SYSTEM_REGION" source="SYSTEM_REGION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBSCRIBER_NUMBER" source="SUBSCRIBER_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TERM_M2M" source="TERM_M2M"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WORKING_TELEPHONE_NUMBER" source="WORKING_TELEPHONE_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_CODE" source="ITEM_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_TYPE" source="ITEM_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_QUANTITY" source="ITEM_QUANTITY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_RATE" source="ITEM_RATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_GROUP_CODE" source="ITEM_GROUP_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_INCEPTION_DT" source="ITEM_INCEPTION_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_END_DT" source="ITEM_END_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="M2M_SERVICE_INDICATOR" source="M2M_SERVICE_INDICATOR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RAC_CODE" source="RAC_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TOLL_FREE_NUMBER" source="TOLL_FREE_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TOLL_FREE_CONV_NUMBER" source="TOLL_FREE_CONV_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DISCOUNT_TYPE" source="DISCOUNT_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SOURCE_SYSTEM_CODE" source="SOURCE_SYSTEM_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MOD_EVENT_ID" source="MOD_EVENT_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONVERSION_IND" source="CONVERSION_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_ID" source="REFERENCE_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROCESS_ID" source="PROCESS_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INSERT_TS" source="INSERT_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_ACTION" source="ITEM_ACTION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TIME_IND" source="TIME_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RAI_ITEM_ID" source="RAI_ITEM_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FIXED_OR_VARIABLE_RATE_INDICATOR" source="FIXED_OR_VARIABLE_RATE_INDICATOR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RATE_BAND" source="RATE_BAND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KUNNR_SID" source="KUNNR_SID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SRCDOC_ID" source="SRCDOC_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="HEADER_ID" source="HEADER_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TEMPORARY_SEASONAL_SUSPENSION" source="TEMPORARY_SEASONAL_SUSPENSION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="POB_EFFC_DATE" source="POB_EFFC_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MOD_IND" source="MOD_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT_START_DATE" source="PRODUCT_START_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT_END_DATE" source="PRODUCT_END_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_DATE" source="BILL_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_CHARGE" source="ITEM_CHARGE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MODIFIED_TS" source="MODIFIED_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RAI_TS" source="RAI_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30200101" source="IS_30200101"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30200102" source="IS_30200102"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30200103" source="IS_30200103"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTRACT_INCEPTION_DT" source="CONTRACT_INCEPTION_DT"/>
+      </input>
+      <filter>(not isNull(&quot;PRODUCT_END_DATE&quot;)) and (not isNull(&quot;RAI_TS&quot;)) and (isNull(&quot;BILL_DATE&quot;))</filter>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_ADVANCE_BILLED" filterExpressionLanguage="COLUMN_ENGINE">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="PRIMARY_TELEPHONE_NUMBER"/>
+        <viewAttribute id="WORKING_TELEPHONE_NUMBER"/>
+        <viewAttribute id="ITEM_CODE"/>
+        <viewAttribute id="CONTRACT_UNIQUE_IDENTIFIER"/>
+        <viewAttribute id="POB_END_DATE"/>
+        <viewAttribute id="SYSTEM_REGION"/>
+        <viewAttribute id="SUBSCRIBER_NUMBER"/>
+        <viewAttribute id="TERM_M2M"/>
+        <viewAttribute id="ITEM_TYPE"/>
+        <viewAttribute id="ITEM_QUANTITY"/>
+        <viewAttribute id="ITEM_RATE"/>
+        <viewAttribute id="ITEM_GROUP_CODE"/>
+        <viewAttribute id="ITEM_INCEPTION_DT"/>
+        <viewAttribute id="ITEM_END_DT"/>
+        <viewAttribute id="M2M_SERVICE_INDICATOR"/>
+        <viewAttribute id="RAC_CODE"/>
+        <viewAttribute id="TOLL_FREE_NUMBER"/>
+        <viewAttribute id="TOLL_FREE_CONV_NUMBER"/>
+        <viewAttribute id="DISCOUNT_TYPE"/>
+        <viewAttribute id="SOURCE_SYSTEM_CODE"/>
+        <viewAttribute id="MOD_EVENT_ID"/>
+        <viewAttribute id="CONVERSION_IND"/>
+        <viewAttribute id="REFERENCE_ID"/>
+        <viewAttribute id="PROCESS_ID"/>
+        <viewAttribute id="INSERT_TS"/>
+        <viewAttribute id="ITEM_ACTION"/>
+        <viewAttribute id="TIME_IND"/>
+        <viewAttribute id="RAI_ITEM_ID"/>
+        <viewAttribute id="FIXED_OR_VARIABLE_RATE_INDICATOR"/>
+        <viewAttribute id="RATE_BAND"/>
+        <viewAttribute id="KUNNR_SID"/>
+        <viewAttribute id="SRCDOC_ID"/>
+        <viewAttribute id="HEADER_ID"/>
+        <viewAttribute id="TEMPORARY_SEASONAL_SUSPENSION"/>
+        <viewAttribute id="POB_EFFC_DATE"/>
+        <viewAttribute id="MOD_IND"/>
+        <viewAttribute id="PRODUCT_START_DATE"/>
+        <viewAttribute id="PRODUCT_END_DATE"/>
+        <viewAttribute id="BILL_DATE"/>
+        <viewAttribute id="ITEM_CHARGE"/>
+        <viewAttribute id="MODIFIED_TS"/>
+        <viewAttribute id="RAI_TS"/>
+        <viewAttribute id="IS_30200101"/>
+        <viewAttribute id="IS_30200102"/>
+        <viewAttribute id="IS_30200103"/>
+        <viewAttribute id="CONTRACT_INCEPTION_DT"/>
+        <viewAttribute id="CC_ADVANCE_BILL"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="DATE" id="CC_BILL_DAY" expressionLanguage="COLUMN_ENGINE">
+          <formula>adddays(&quot;PRODUCT_END_DATE&quot;,1)</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#JOIN_ORDER_BILLING">
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRIMARY_TELEPHONE_NUMBER" source="PRIMARY_TELEPHONE_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WORKING_TELEPHONE_NUMBER" source="WORKING_TELEPHONE_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_CODE" source="ITEM_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTRACT_UNIQUE_IDENTIFIER" source="CONTRACT_UNIQUE_IDENTIFIER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="POB_END_DATE" source="POB_END_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SYSTEM_REGION" source="SYSTEM_REGION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBSCRIBER_NUMBER" source="SUBSCRIBER_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TERM_M2M" source="TERM_M2M"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_TYPE" source="ITEM_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_QUANTITY" source="ITEM_QUANTITY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_RATE" source="ITEM_RATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_GROUP_CODE" source="ITEM_GROUP_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_INCEPTION_DT" source="ITEM_INCEPTION_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_END_DT" source="ITEM_END_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="M2M_SERVICE_INDICATOR" source="M2M_SERVICE_INDICATOR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RAC_CODE" source="RAC_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TOLL_FREE_NUMBER" source="TOLL_FREE_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TOLL_FREE_CONV_NUMBER" source="TOLL_FREE_CONV_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DISCOUNT_TYPE" source="DISCOUNT_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SOURCE_SYSTEM_CODE" source="SOURCE_SYSTEM_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MOD_EVENT_ID" source="MOD_EVENT_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONVERSION_IND" source="CONVERSION_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_ID" source="REFERENCE_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROCESS_ID" source="PROCESS_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INSERT_TS" source="INSERT_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_ACTION" source="ITEM_ACTION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TIME_IND" source="TIME_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RAI_ITEM_ID" source="RAI_ITEM_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FIXED_OR_VARIABLE_RATE_INDICATOR" source="FIXED_OR_VARIABLE_RATE_INDICATOR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RATE_BAND" source="RATE_BAND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KUNNR_SID" source="KUNNR_SID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SRCDOC_ID" source="SRCDOC_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="HEADER_ID" source="HEADER_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TEMPORARY_SEASONAL_SUSPENSION" source="TEMPORARY_SEASONAL_SUSPENSION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="POB_EFFC_DATE" source="POB_EFFC_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MOD_IND" source="MOD_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT_START_DATE" source="PRODUCT_START_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT_END_DATE" source="PRODUCT_END_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_DATE" source="BILL_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_CHARGE" source="ITEM_CHARGE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MODIFIED_TS" source="MODIFIED_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RAI_TS" source="RAI_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30200101" source="IS_30200101"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30200102" source="IS_30200102"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30200103" source="IS_30200103"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTRACT_INCEPTION_DT" source="CONTRACT_INCEPTION_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_ADVANCE_BILL" source="CC_ADVANCE_BILL"/>
+      </input>
+      <filter>(not isNull(&quot;BILL_DATE&quot;)) and (&quot;TIME_IND&quot; !='T00') and (not isNull(&quot;PRODUCT_END_DATE&quot;)) and (&quot;BILL_DATE&quot;=&quot;PRODUCT_START_DATE&quot;)</filter>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_UPDATE_FROM_BILLING" filterExpressionLanguage="COLUMN_ENGINE">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="PRIMARY_TELEPHONE_NUMBER"/>
+        <viewAttribute id="WORKING_TELEPHONE_NUMBER"/>
+        <viewAttribute id="ITEM_CODE"/>
+        <viewAttribute id="CONTRACT_UNIQUE_IDENTIFIER"/>
+        <viewAttribute id="POB_END_DATE"/>
+        <viewAttribute id="SYSTEM_REGION"/>
+        <viewAttribute id="SUBSCRIBER_NUMBER"/>
+        <viewAttribute id="TERM_M2M"/>
+        <viewAttribute id="ITEM_TYPE"/>
+        <viewAttribute id="ITEM_QUANTITY"/>
+        <viewAttribute id="ITEM_RATE"/>
+        <viewAttribute id="ITEM_GROUP_CODE"/>
+        <viewAttribute id="ITEM_INCEPTION_DT"/>
+        <viewAttribute id="ITEM_END_DT"/>
+        <viewAttribute id="M2M_SERVICE_INDICATOR"/>
+        <viewAttribute id="RAC_CODE"/>
+        <viewAttribute id="TOLL_FREE_NUMBER"/>
+        <viewAttribute id="TOLL_FREE_CONV_NUMBER"/>
+        <viewAttribute id="DISCOUNT_TYPE"/>
+        <viewAttribute id="SOURCE_SYSTEM_CODE"/>
+        <viewAttribute id="MOD_EVENT_ID"/>
+        <viewAttribute id="CONVERSION_IND"/>
+        <viewAttribute id="REFERENCE_ID"/>
+        <viewAttribute id="PROCESS_ID"/>
+        <viewAttribute id="INSERT_TS"/>
+        <viewAttribute id="ITEM_ACTION"/>
+        <viewAttribute id="TIME_IND"/>
+        <viewAttribute id="RAI_ITEM_ID"/>
+        <viewAttribute id="FIXED_OR_VARIABLE_RATE_INDICATOR"/>
+        <viewAttribute id="RATE_BAND"/>
+        <viewAttribute id="KUNNR_SID"/>
+        <viewAttribute id="SRCDOC_ID"/>
+        <viewAttribute id="HEADER_ID"/>
+        <viewAttribute id="TEMPORARY_SEASONAL_SUSPENSION"/>
+        <viewAttribute id="POB_EFFC_DATE"/>
+        <viewAttribute id="MOD_IND"/>
+        <viewAttribute id="PRODUCT_START_DATE"/>
+        <viewAttribute id="PRODUCT_END_DATE"/>
+        <viewAttribute id="BILL_DATE"/>
+        <viewAttribute id="ITEM_CHARGE"/>
+        <viewAttribute id="MODIFIED_TS"/>
+        <viewAttribute id="RAI_TS"/>
+        <viewAttribute id="IS_30200101"/>
+        <viewAttribute id="IS_30200102"/>
+        <viewAttribute id="IS_30200103"/>
+        <viewAttribute id="CONTRACT_INCEPTION_DT"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="DATE" id="CC_BILL_DAY" expressionLanguage="COLUMN_ENGINE">
+          <formula>adddays(&quot;PRODUCT_END_DATE&quot;,1)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CC_OLD_UPDATE" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>'X'</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#JOIN_ORDER_BILLING">
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRIMARY_TELEPHONE_NUMBER" source="PRIMARY_TELEPHONE_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WORKING_TELEPHONE_NUMBER" source="WORKING_TELEPHONE_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_CODE" source="ITEM_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTRACT_UNIQUE_IDENTIFIER" source="CONTRACT_UNIQUE_IDENTIFIER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="POB_END_DATE" source="POB_END_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SYSTEM_REGION" source="SYSTEM_REGION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBSCRIBER_NUMBER" source="SUBSCRIBER_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TERM_M2M" source="TERM_M2M"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_TYPE" source="ITEM_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_QUANTITY" source="ITEM_QUANTITY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_RATE" source="ITEM_RATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_GROUP_CODE" source="ITEM_GROUP_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_INCEPTION_DT" source="ITEM_INCEPTION_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_END_DT" source="ITEM_END_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="M2M_SERVICE_INDICATOR" source="M2M_SERVICE_INDICATOR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RAC_CODE" source="RAC_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TOLL_FREE_NUMBER" source="TOLL_FREE_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TOLL_FREE_CONV_NUMBER" source="TOLL_FREE_CONV_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DISCOUNT_TYPE" source="DISCOUNT_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SOURCE_SYSTEM_CODE" source="SOURCE_SYSTEM_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MOD_EVENT_ID" source="MOD_EVENT_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONVERSION_IND" source="CONVERSION_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_ID" source="REFERENCE_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROCESS_ID" source="PROCESS_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INSERT_TS" source="INSERT_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_ACTION" source="ITEM_ACTION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TIME_IND" source="TIME_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RAI_ITEM_ID" source="RAI_ITEM_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FIXED_OR_VARIABLE_RATE_INDICATOR" source="FIXED_OR_VARIABLE_RATE_INDICATOR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RATE_BAND" source="RATE_BAND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KUNNR_SID" source="KUNNR_SID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SRCDOC_ID" source="SRCDOC_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="HEADER_ID" source="HEADER_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TEMPORARY_SEASONAL_SUSPENSION" source="TEMPORARY_SEASONAL_SUSPENSION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="POB_EFFC_DATE" source="POB_EFFC_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MOD_IND" source="MOD_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT_START_DATE" source="PRODUCT_START_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT_END_DATE" source="PRODUCT_END_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_DATE" source="BILL_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_CHARGE" source="ITEM_CHARGE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MODIFIED_TS" source="MODIFIED_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RAI_TS" source="RAI_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30200101" source="IS_30200101"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30200102" source="IS_30200102"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30200103" source="IS_30200103"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTRACT_INCEPTION_DT" source="CONTRACT_INCEPTION_DT"/>
+      </input>
+      <filter>(not isNull(&quot;PRODUCT_END_DATE&quot;)) and &#xD;
+(not isNull(&quot;RAI_TS&quot;)) and&#xD;
+(&quot;PRODUCT_START_DATE&quot;!=&quot;BILL_DATE&quot; ) and&#xD;
+adddays(&quot;PRODUCT_END_DATE&quot;,1)!=&quot;BILL_DATE&quot; and&#xD;
+(&quot;TIME_IND&quot; !='T00') and&#xD;
+(&quot;POB_END_DATE&quot;>'$$IP_BILL_DATE$$')</filter>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_MODIFICATION">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="CONTRACT_UNIQUE_IDENTIFIER"/>
+        <viewAttribute id="POB_END_DATE"/>
+        <viewAttribute id="POB_EFFC_DATE"/>
+        <viewAttribute id="PRIMARY_TELEPHONE_NUMBER"/>
+        <viewAttribute id="SYSTEM_REGION"/>
+        <viewAttribute id="SUBSCRIBER_NUMBER"/>
+        <viewAttribute id="TERM_M2M"/>
+        <viewAttribute id="WORKING_TELEPHONE_NUMBER"/>
+        <viewAttribute id="ITEM_CODE"/>
+        <viewAttribute id="ITEM_TYPE"/>
+        <viewAttribute id="ITEM_QUANTITY"/>
+        <viewAttribute id="FIXED_OR_VARIABLE_RATE_INDICATOR"/>
+        <viewAttribute id="RATE_BAND"/>
+        <viewAttribute id="ITEM_RATE"/>
+        <viewAttribute id="ITEM_GROUP_CODE"/>
+        <viewAttribute id="ITEM_INCEPTION_DT"/>
+        <viewAttribute id="ITEM_END_DT"/>
+        <viewAttribute id="M2M_SERVICE_INDICATOR"/>
+        <viewAttribute id="RAC_CODE"/>
+        <viewAttribute id="TOLL_FREE_NUMBER"/>
+        <viewAttribute id="TEMPORARY_SEASONAL_SUSPENSION"/>
+        <viewAttribute id="TOLL_FREE_CONV_NUMBER"/>
+        <viewAttribute id="DISCOUNT_TYPE"/>
+        <viewAttribute id="SOURCE_SYSTEM_CODE"/>
+        <viewAttribute id="ITEM_ACTION"/>
+        <viewAttribute id="MOD_EVENT_ID"/>
+        <viewAttribute id="CONVERSION_IND"/>
+        <viewAttribute id="KUNNR_SID"/>
+        <viewAttribute id="BILL_DATE"/>
+        <viewAttribute id="SRCDOC_ID"/>
+        <viewAttribute id="HEADER_ID"/>
+        <viewAttribute id="TIME_IND"/>
+        <viewAttribute id="RAI_ITEM_ID"/>
+        <viewAttribute id="PROCESS_ID"/>
+        <viewAttribute id="INSERT_TS"/>
+        <viewAttribute id="MODIFIED_TS"/>
+        <viewAttribute id="BATCH_ID"/>
+        <viewAttribute id="MOD_IND"/>
+        <viewAttribute id="DUO_TRIO_IND"/>
+        <viewAttribute id="RUN_ID"/>
+        <viewAttribute id="CC_MODIFIED"/>
+        <viewAttribute id="CC_MOD_IND"/>
+        <viewAttribute id="REFERENCE_ID"/>
+        <viewAttribute id="RAI_TS"/>
+        <viewAttribute id="CC_SUSPENSION_CHECK"/>
+        <viewAttribute id="REFERENCE_ID_SUSPEND"/>
+        <viewAttribute id="IS_30200201"/>
+        <viewAttribute id="IS_30200202"/>
+        <viewAttribute id="IS_30200203"/>
+        <viewAttribute id="IS_30200204"/>
+        <viewAttribute id="CONTRACT_INCEPTION_DT"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#CA_HP_ORDR_MODIFICATION">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTRACT_UNIQUE_IDENTIFIER" source="CONTRACT_UNIQUE_IDENTIFIER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="POB_END_DATE" source="POB_END_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="POB_EFFC_DATE" source="POB_EFFC_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRIMARY_TELEPHONE_NUMBER" source="PRIMARY_TELEPHONE_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SYSTEM_REGION" source="SYSTEM_REGION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBSCRIBER_NUMBER" source="SUBSCRIBER_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TERM_M2M" source="TERM_M2M"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WORKING_TELEPHONE_NUMBER" source="WORKING_TELEPHONE_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_CODE" source="ITEM_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_TYPE" source="ITEM_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_QUANTITY" source="ITEM_QUANTITY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FIXED_OR_VARIABLE_RATE_INDICATOR" source="FIXED_OR_VARIABLE_RATE_INDICATOR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RATE_BAND" source="RATE_BAND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_RATE" source="ITEM_RATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_GROUP_CODE" source="ITEM_GROUP_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_INCEPTION_DT" source="ITEM_INCEPTION_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_END_DT" source="ITEM_END_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="M2M_SERVICE_INDICATOR" source="M2M_SERVICE_INDICATOR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RAC_CODE" source="RAC_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TOLL_FREE_NUMBER" source="TOLL_FREE_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TEMPORARY_SEASONAL_SUSPENSION" source="TEMPORARY_SEASONAL_SUSPENSION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TOLL_FREE_CONV_NUMBER" source="TOLL_FREE_CONV_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DISCOUNT_TYPE" source="DISCOUNT_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SOURCE_SYSTEM_CODE" source="SOURCE_SYSTEM_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_ACTION" source="ITEM_ACTION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MOD_EVENT_ID" source="MOD_EVENT_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONVERSION_IND" source="CONVERSION_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KUNNR_SID" source="KUNNR_SID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_DATE" source="BILL_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SRCDOC_ID" source="SRCDOC_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="HEADER_ID" source="HEADER_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TIME_IND" source="TIME_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RAI_ITEM_ID" source="RAI_ITEM_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROCESS_ID" source="PROCESS_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INSERT_TS" source="INSERT_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MODIFIED_TS" source="MODIFIED_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BATCH_ID" source="BATCH_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MOD_IND" source="MOD_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DUO_TRIO_IND" source="DUO_TRIO_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RUN_ID" source="RUN_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_MODIFIED" source="CC_MODIFIED"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_MOD_IND" source="CC_MOD_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_ID" source="REFERENCE_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RAI_TS" source="RAI_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_SUSPENSION_CHECK" source="CC_SUSPENSION_CHECK"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_ID_SUSPEND" source="REFERENCE_ID_SUSPEND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30200201" source="IS_30200201"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30200202" source="IS_30200202"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30200203" source="IS_30200203"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30200204" source="IS_30200204"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTRACT_INCEPTION_DT" source="CONTRACT_INCEPTION_DT"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:UnionView" id="UNION">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="CONTRACT_UNIQUE_IDENTIFIER"/>
+        <viewAttribute id="PRIMARY_TELEPHONE_NUMBER"/>
+        <viewAttribute id="SYSTEM_REGION"/>
+        <viewAttribute id="SUBSCRIBER_NUMBER"/>
+        <viewAttribute id="TERM_M2M"/>
+        <viewAttribute id="WORKING_TELEPHONE_NUMBER"/>
+        <viewAttribute id="ITEM_CODE"/>
+        <viewAttribute datatype="NVARCHAR" id="ITEM_TYPE" length="1" scale="0"/>
+        <viewAttribute datatype="DECIMAL" id="ITEM_QUANTITY" length="17" scale="3"/>
+        <viewAttribute id="ITEM_RATE"/>
+        <viewAttribute id="ITEM_GROUP_CODE"/>
+        <viewAttribute id="ITEM_INCEPTION_DT"/>
+        <viewAttribute id="ITEM_END_DT"/>
+        <viewAttribute id="M2M_SERVICE_INDICATOR"/>
+        <viewAttribute id="RAC_CODE"/>
+        <viewAttribute id="TOLL_FREE_NUMBER"/>
+        <viewAttribute id="TOLL_FREE_CONV_NUMBER"/>
+        <viewAttribute id="DISCOUNT_TYPE"/>
+        <viewAttribute id="SOURCE_SYSTEM_CODE"/>
+        <viewAttribute id="MOD_EVENT_ID"/>
+        <viewAttribute id="CONVERSION_IND"/>
+        <viewAttribute datatype="NVARCHAR" id="REFERENCE_ID" length="30" scale="0"/>
+        <viewAttribute id="PROCESS_ID"/>
+        <viewAttribute id="INSERT_TS"/>
+        <viewAttribute id="ITEM_ACTION"/>
+        <viewAttribute id="RAI_ITEM_ID"/>
+        <viewAttribute id="FIXED_OR_VARIABLE_RATE_INDICATOR"/>
+        <viewAttribute id="RATE_BAND"/>
+        <viewAttribute id="KUNNR_SID"/>
+        <viewAttribute id="SRCDOC_ID"/>
+        <viewAttribute id="HEADER_ID"/>
+        <viewAttribute id="TEMPORARY_SEASONAL_SUSPENSION"/>
+        <viewAttribute id="POB_EFFC_DATE"/>
+        <viewAttribute id="MOD_IND"/>
+        <viewAttribute id="PRODUCT_START_DATE"/>
+        <viewAttribute id="PRODUCT_END_DATE"/>
+        <viewAttribute id="POB_END_DATE"/>
+        <viewAttribute id="TIME_IND"/>
+        <viewAttribute datatype="DECIMAL" id="ITEM_CHARGE" length="17" scale="2"/>
+        <viewAttribute datatype="DATE" id="CC_BILL_DAY" length="0" scale="0"/>
+        <viewAttribute id="BILL_DATE"/>
+        <viewAttribute id="CC_OLD_UPDATE"/>
+        <viewAttribute datatype="NVARCHAR" id="CC_ADVANCE_BILL" length="1" scale="0"/>
+        <viewAttribute id="MODIFIED_TS"/>
+        <viewAttribute id="RAI_TS"/>
+        <viewAttribute id="CC_MOD_IND"/>
+        <viewAttribute id="CC_MODIFIED"/>
+        <viewAttribute datatype="VARCHAR" id="CC_SUSPENSION_CHECK" length="1" scale="0"/>
+        <viewAttribute id="REFERENCE_ID_SUSPEND"/>
+        <viewAttribute datatype="NVARCHAR" id="IS_30200101" length="1" scale="0"/>
+        <viewAttribute datatype="NVARCHAR" id="IS_30200102" length="1" scale="0"/>
+        <viewAttribute datatype="NVARCHAR" id="IS_30200103" length="1" scale="0"/>
+        <viewAttribute datatype="NVARCHAR" id="IS_30200201" length="1" scale="0"/>
+        <viewAttribute datatype="NVARCHAR" id="IS_30200202" length="1" scale="0"/>
+        <viewAttribute datatype="NVARCHAR" id="IS_30200203" length="1" scale="0"/>
+        <viewAttribute datatype="NVARCHAR" id="IS_30200204" length="1" scale="0"/>
+        <viewAttribute id="CONTRACT_INCEPTION_DT"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input emptyUnionBehavior="NO_ROW" node="#PROJ_NEW">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTRACT_UNIQUE_IDENTIFIER" source="CONTRACT_UNIQUE_IDENTIFIER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRIMARY_TELEPHONE_NUMBER" source="PRIMARY_TELEPHONE_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SYSTEM_REGION" source="SYSTEM_REGION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBSCRIBER_NUMBER" source="SUBSCRIBER_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TERM_M2M" source="TERM_M2M"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WORKING_TELEPHONE_NUMBER" source="WORKING_TELEPHONE_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_CODE" source="ITEM_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_TYPE" source="ITEM_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_QUANTITY" source="ITEM_QUANTITY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_RATE" source="ITEM_RATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_GROUP_CODE" source="ITEM_GROUP_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_INCEPTION_DT" source="ITEM_INCEPTION_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_END_DT" source="ITEM_END_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="M2M_SERVICE_INDICATOR" source="M2M_SERVICE_INDICATOR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RAC_CODE" source="RAC_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TOLL_FREE_NUMBER" source="TOLL_FREE_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TOLL_FREE_CONV_NUMBER" source="TOLL_FREE_CONV_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DISCOUNT_TYPE" source="DISCOUNT_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SOURCE_SYSTEM_CODE" source="SOURCE_SYSTEM_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MOD_EVENT_ID" source="MOD_EVENT_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONVERSION_IND" source="CONVERSION_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_ID" source="REFERENCE_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROCESS_ID" source="PROCESS_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INSERT_TS" source="INSERT_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_ACTION" source="ITEM_ACTION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RAI_ITEM_ID" source="RAI_ITEM_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FIXED_OR_VARIABLE_RATE_INDICATOR" source="FIXED_OR_VARIABLE_RATE_INDICATOR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RATE_BAND" source="RATE_BAND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KUNNR_SID" source="KUNNR_SID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SRCDOC_ID" source="SRCDOC_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="HEADER_ID" source="HEADER_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TEMPORARY_SEASONAL_SUSPENSION" source="TEMPORARY_SEASONAL_SUSPENSION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="POB_EFFC_DATE" source="POB_EFFC_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MOD_IND" source="MOD_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT_START_DATE" source="PRODUCT_START_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT_END_DATE" source="PRODUCT_END_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="POB_END_DATE" source="POB_END_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TIME_IND" source="TIME_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_CHARGE" source="ITEM_CHARGE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_BILL_DAY" source="CC_BILL_DAY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_DATE" source="BILL_DATE"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="CC_OLD_UPDATE" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="CC_ADVANCE_BILL" null="false" value="N"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MODIFIED_TS" source="MODIFIED_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RAI_TS" source="RAI_TS"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="CC_MOD_IND" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="CC_MODIFIED" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="CC_SUSPENSION_CHECK" null="false" value="N"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="REFERENCE_ID_SUSPEND" null="true" value=""/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30200101" source="IS_30200101"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30200102" source="IS_30200102"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30200103" source="IS_30200103"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="IS_30200201" null="false" value="0"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="IS_30200202" null="false" value="0"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="IS_30200203" null="false" value="0"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="IS_30200204" null="false" value="0"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTRACT_INCEPTION_DT" source="CONTRACT_INCEPTION_DT"/>
+      </input>
+      <input emptyUnionBehavior="NO_ROW" node="#PROJ_EXISTING">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTRACT_UNIQUE_IDENTIFIER" source="CONTRACT_UNIQUE_IDENTIFIER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRIMARY_TELEPHONE_NUMBER" source="PRIMARY_TELEPHONE_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SYSTEM_REGION" source="SYSTEM_REGION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBSCRIBER_NUMBER" source="SUBSCRIBER_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TERM_M2M" source="TERM_M2M"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WORKING_TELEPHONE_NUMBER" source="WORKING_TELEPHONE_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_CODE" source="ITEM_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_TYPE" source="ITEM_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_QUANTITY" source="ITEM_QUANTITY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_RATE" source="ITEM_RATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_GROUP_CODE" source="ITEM_GROUP_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_INCEPTION_DT" source="ITEM_INCEPTION_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_END_DT" source="ITEM_END_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="M2M_SERVICE_INDICATOR" source="M2M_SERVICE_INDICATOR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RAC_CODE" source="RAC_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TOLL_FREE_NUMBER" source="TOLL_FREE_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TOLL_FREE_CONV_NUMBER" source="TOLL_FREE_CONV_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DISCOUNT_TYPE" source="DISCOUNT_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SOURCE_SYSTEM_CODE" source="SOURCE_SYSTEM_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MOD_EVENT_ID" source="MOD_EVENT_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONVERSION_IND" source="CONVERSION_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_ID" source="REFERENCE_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROCESS_ID" source="PROCESS_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INSERT_TS" source="INSERT_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_ACTION" source="ITEM_ACTION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RAI_ITEM_ID" source="RAI_ITEM_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FIXED_OR_VARIABLE_RATE_INDICATOR" source="FIXED_OR_VARIABLE_RATE_INDICATOR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RATE_BAND" source="RATE_BAND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KUNNR_SID" source="KUNNR_SID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SRCDOC_ID" source="SRCDOC_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="HEADER_ID" source="HEADER_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TEMPORARY_SEASONAL_SUSPENSION" source="TEMPORARY_SEASONAL_SUSPENSION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="POB_EFFC_DATE" source="POB_EFFC_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MOD_IND" source="MOD_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT_START_DATE" source="PRODUCT_START_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT_END_DATE" source="PRODUCT_END_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="POB_END_DATE" source="POB_END_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TIME_IND" source="TIME_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_CHARGE" source="ITEM_CHARGE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_BILL_DAY" source="CC_BILL_DAY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_DATE" source="BILL_DATE"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="CC_OLD_UPDATE" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="CC_ADVANCE_BILL" null="false" value="N"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MODIFIED_TS" source="MODIFIED_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RAI_TS" source="RAI_TS"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="CC_MOD_IND" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="CC_MODIFIED" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="CC_SUSPENSION_CHECK" null="false" value="N"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="REFERENCE_ID_SUSPEND" null="true" value=""/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30200101" source="IS_30200101"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30200102" source="IS_30200102"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30200103" source="IS_30200103"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="IS_30200201" null="false" value="0"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="IS_30200202" null="false" value="0"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="IS_30200203" null="false" value="0"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="IS_30200204" null="false" value="0"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTRACT_INCEPTION_DT" source="CONTRACT_INCEPTION_DT"/>
+      </input>
+      <input emptyUnionBehavior="NO_ROW" node="#PROJ_PRORATED">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTRACT_UNIQUE_IDENTIFIER" source="CONTRACT_UNIQUE_IDENTIFIER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRIMARY_TELEPHONE_NUMBER" source="PRIMARY_TELEPHONE_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SYSTEM_REGION" source="SYSTEM_REGION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBSCRIBER_NUMBER" source="SUBSCRIBER_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TERM_M2M" source="TERM_M2M"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WORKING_TELEPHONE_NUMBER" source="WORKING_TELEPHONE_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_CODE" source="ITEM_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_TYPE" source="ITEM_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_QUANTITY" source="ITEM_QUANTITY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_RATE" source="ITEM_RATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_GROUP_CODE" source="ITEM_GROUP_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_INCEPTION_DT" source="ITEM_INCEPTION_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_END_DT" source="ITEM_END_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="M2M_SERVICE_INDICATOR" source="M2M_SERVICE_INDICATOR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RAC_CODE" source="RAC_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TOLL_FREE_NUMBER" source="TOLL_FREE_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TOLL_FREE_CONV_NUMBER" source="TOLL_FREE_CONV_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DISCOUNT_TYPE" source="DISCOUNT_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SOURCE_SYSTEM_CODE" source="SOURCE_SYSTEM_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MOD_EVENT_ID" source="MOD_EVENT_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONVERSION_IND" source="CONVERSION_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_ID" source="REFERENCE_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROCESS_ID" source="PROCESS_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INSERT_TS" source="INSERT_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_ACTION" source="ITEM_ACTION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RAI_ITEM_ID" source="RAI_ITEM_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FIXED_OR_VARIABLE_RATE_INDICATOR" source="FIXED_OR_VARIABLE_RATE_INDICATOR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RATE_BAND" source="RATE_BAND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KUNNR_SID" source="KUNNR_SID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SRCDOC_ID" source="SRCDOC_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="HEADER_ID" source="HEADER_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TEMPORARY_SEASONAL_SUSPENSION" source="TEMPORARY_SEASONAL_SUSPENSION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="POB_EFFC_DATE" source="POB_EFFC_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MOD_IND" source="MOD_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT_START_DATE" source="PRODUCT_START_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT_END_DATE" source="PRODUCT_END_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="POB_END_DATE" source="POB_END_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TIME_IND" source="TIME_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_CHARGE" source="ITEM_CHARGE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_BILL_DAY" source="CC_BILL_DAY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_DATE" source="BILL_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_OLD_UPDATE" source="CC_OLD_UPDATE"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="CC_ADVANCE_BILL" null="false" value="N"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MODIFIED_TS" source="MODIFIED_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RAI_TS" source="RAI_TS"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="CC_MOD_IND" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="CC_MODIFIED" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="CC_SUSPENSION_CHECK" null="false" value="N"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="REFERENCE_ID_SUSPEND" null="true" value=""/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30200101" source="IS_30200101"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30200102" source="IS_30200102"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30200103" source="IS_30200103"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="IS_30200201" null="false" value="0"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="IS_30200202" null="false" value="0"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="IS_30200203" null="false" value="0"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="IS_30200204" null="false" value="0"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTRACT_INCEPTION_DT" source="CONTRACT_INCEPTION_DT"/>
+      </input>
+      <input emptyUnionBehavior="NO_ROW" node="#PROJ_ADVANCE_BILLED">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTRACT_UNIQUE_IDENTIFIER" source="CONTRACT_UNIQUE_IDENTIFIER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRIMARY_TELEPHONE_NUMBER" source="PRIMARY_TELEPHONE_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SYSTEM_REGION" source="SYSTEM_REGION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBSCRIBER_NUMBER" source="SUBSCRIBER_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TERM_M2M" source="TERM_M2M"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WORKING_TELEPHONE_NUMBER" source="WORKING_TELEPHONE_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_CODE" source="ITEM_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_TYPE" source="ITEM_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_QUANTITY" source="ITEM_QUANTITY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_RATE" source="ITEM_RATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_GROUP_CODE" source="ITEM_GROUP_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_INCEPTION_DT" source="ITEM_INCEPTION_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_END_DT" source="ITEM_END_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="M2M_SERVICE_INDICATOR" source="M2M_SERVICE_INDICATOR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RAC_CODE" source="RAC_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TOLL_FREE_NUMBER" source="TOLL_FREE_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TOLL_FREE_CONV_NUMBER" source="TOLL_FREE_CONV_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DISCOUNT_TYPE" source="DISCOUNT_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SOURCE_SYSTEM_CODE" source="SOURCE_SYSTEM_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MOD_EVENT_ID" source="MOD_EVENT_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONVERSION_IND" source="CONVERSION_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_ID" source="REFERENCE_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROCESS_ID" source="PROCESS_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INSERT_TS" source="INSERT_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_ACTION" source="ITEM_ACTION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RAI_ITEM_ID" source="RAI_ITEM_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FIXED_OR_VARIABLE_RATE_INDICATOR" source="FIXED_OR_VARIABLE_RATE_INDICATOR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RATE_BAND" source="RATE_BAND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KUNNR_SID" source="KUNNR_SID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SRCDOC_ID" source="SRCDOC_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="HEADER_ID" source="HEADER_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TEMPORARY_SEASONAL_SUSPENSION" source="TEMPORARY_SEASONAL_SUSPENSION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="POB_EFFC_DATE" source="POB_EFFC_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MOD_IND" source="MOD_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT_START_DATE" source="PRODUCT_START_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT_END_DATE" source="PRODUCT_END_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="POB_END_DATE" source="POB_END_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TIME_IND" source="TIME_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_CHARGE" source="ITEM_CHARGE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_BILL_DAY" source="CC_BILL_DAY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_DATE" source="BILL_DATE"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="CC_OLD_UPDATE" null="true" value=""/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_ADVANCE_BILL" source="CC_ADVANCE_BILL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MODIFIED_TS" source="MODIFIED_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RAI_TS" source="RAI_TS"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="CC_MOD_IND" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="CC_MODIFIED" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="CC_SUSPENSION_CHECK" null="false" value="N"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="REFERENCE_ID_SUSPEND" null="true" value=""/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30200101" source="IS_30200101"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30200102" source="IS_30200102"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30200103" source="IS_30200103"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="IS_30200201" null="false" value="0"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="IS_30200202" null="false" value="0"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="IS_30200203" null="false" value="0"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="IS_30200204" null="false" value="0"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTRACT_INCEPTION_DT" source="CONTRACT_INCEPTION_DT"/>
+      </input>
+      <input emptyUnionBehavior="NO_ROW" node="#PROJ_UPDATE_FROM_BILLING">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTRACT_UNIQUE_IDENTIFIER" source="CONTRACT_UNIQUE_IDENTIFIER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRIMARY_TELEPHONE_NUMBER" source="PRIMARY_TELEPHONE_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SYSTEM_REGION" source="SYSTEM_REGION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBSCRIBER_NUMBER" source="SUBSCRIBER_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TERM_M2M" source="TERM_M2M"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WORKING_TELEPHONE_NUMBER" source="WORKING_TELEPHONE_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_CODE" source="ITEM_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_TYPE" source="ITEM_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_QUANTITY" source="ITEM_QUANTITY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_RATE" source="ITEM_RATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_GROUP_CODE" source="ITEM_GROUP_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_INCEPTION_DT" source="ITEM_INCEPTION_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_END_DT" source="ITEM_END_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="M2M_SERVICE_INDICATOR" source="M2M_SERVICE_INDICATOR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RAC_CODE" source="RAC_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TOLL_FREE_NUMBER" source="TOLL_FREE_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TOLL_FREE_CONV_NUMBER" source="TOLL_FREE_CONV_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DISCOUNT_TYPE" source="DISCOUNT_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SOURCE_SYSTEM_CODE" source="SOURCE_SYSTEM_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MOD_EVENT_ID" source="MOD_EVENT_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONVERSION_IND" source="CONVERSION_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_ID" source="REFERENCE_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROCESS_ID" source="PROCESS_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INSERT_TS" source="INSERT_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_ACTION" source="ITEM_ACTION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RAI_ITEM_ID" source="RAI_ITEM_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FIXED_OR_VARIABLE_RATE_INDICATOR" source="FIXED_OR_VARIABLE_RATE_INDICATOR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RATE_BAND" source="RATE_BAND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KUNNR_SID" source="KUNNR_SID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SRCDOC_ID" source="SRCDOC_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="HEADER_ID" source="HEADER_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TEMPORARY_SEASONAL_SUSPENSION" source="TEMPORARY_SEASONAL_SUSPENSION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="POB_EFFC_DATE" source="POB_EFFC_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MOD_IND" source="MOD_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT_START_DATE" source="PRODUCT_START_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT_END_DATE" source="PRODUCT_END_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="POB_END_DATE" source="POB_END_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TIME_IND" source="TIME_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_CHARGE" source="ITEM_CHARGE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_BILL_DAY" source="CC_BILL_DAY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_DATE" source="BILL_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_OLD_UPDATE" source="CC_OLD_UPDATE"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="CC_ADVANCE_BILL" null="false" value="N"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MODIFIED_TS" source="MODIFIED_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RAI_TS" source="RAI_TS"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="CC_MOD_IND" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="CC_MODIFIED" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="CC_SUSPENSION_CHECK" null="false" value="N"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="REFERENCE_ID_SUSPEND" null="true" value=""/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30200101" source="IS_30200101"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30200102" source="IS_30200102"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30200103" source="IS_30200103"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="IS_30200201" null="false" value="0"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="IS_30200202" null="false" value="0"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="IS_30200203" null="false" value="0"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="IS_30200204" null="false" value="0"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTRACT_INCEPTION_DT" source="CONTRACT_INCEPTION_DT"/>
+      </input>
+      <input emptyUnionBehavior="NO_ROW" node="#PROJ_MODIFICATION">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTRACT_UNIQUE_IDENTIFIER" source="CONTRACT_UNIQUE_IDENTIFIER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRIMARY_TELEPHONE_NUMBER" source="PRIMARY_TELEPHONE_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SYSTEM_REGION" source="SYSTEM_REGION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBSCRIBER_NUMBER" source="SUBSCRIBER_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TERM_M2M" source="TERM_M2M"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WORKING_TELEPHONE_NUMBER" source="WORKING_TELEPHONE_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_CODE" source="ITEM_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_TYPE" source="ITEM_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_QUANTITY" source="ITEM_QUANTITY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_RATE" source="ITEM_RATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_GROUP_CODE" source="ITEM_GROUP_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_INCEPTION_DT" source="ITEM_INCEPTION_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_END_DT" source="ITEM_END_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="M2M_SERVICE_INDICATOR" source="M2M_SERVICE_INDICATOR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RAC_CODE" source="RAC_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TOLL_FREE_NUMBER" source="TOLL_FREE_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TOLL_FREE_CONV_NUMBER" source="TOLL_FREE_CONV_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DISCOUNT_TYPE" source="DISCOUNT_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SOURCE_SYSTEM_CODE" source="SOURCE_SYSTEM_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MOD_EVENT_ID" source="MOD_EVENT_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONVERSION_IND" source="CONVERSION_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_ID" source="REFERENCE_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROCESS_ID" source="PROCESS_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INSERT_TS" source="INSERT_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_ACTION" source="ITEM_ACTION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RAI_ITEM_ID" source="RAI_ITEM_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FIXED_OR_VARIABLE_RATE_INDICATOR" source="FIXED_OR_VARIABLE_RATE_INDICATOR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RATE_BAND" source="RATE_BAND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KUNNR_SID" source="KUNNR_SID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SRCDOC_ID" source="SRCDOC_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="HEADER_ID" source="HEADER_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TEMPORARY_SEASONAL_SUSPENSION" source="TEMPORARY_SEASONAL_SUSPENSION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="POB_EFFC_DATE" source="POB_EFFC_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MOD_IND" source="MOD_IND"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="PRODUCT_START_DATE" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="PRODUCT_END_DATE" null="true" value=""/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="POB_END_DATE" source="POB_END_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TIME_IND" source="TIME_IND"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="ITEM_CHARGE" null="true" value=""/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_BILL_DAY" source="BILL_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_DATE" source="BILL_DATE"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="CC_OLD_UPDATE" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="CC_ADVANCE_BILL" null="false" value="N"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MODIFIED_TS" source="MODIFIED_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RAI_TS" source="RAI_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_MOD_IND" source="CC_MOD_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_MODIFIED" source="CC_MODIFIED"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_SUSPENSION_CHECK" source="CC_SUSPENSION_CHECK"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_ID_SUSPEND" source="REFERENCE_ID_SUSPEND"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="IS_30200101" null="false" value="0"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="IS_30200102" null="false" value="0"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="IS_30200103" null="false" value="0"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30200201" source="IS_30200201"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30200202" source="IS_30200202"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30200203" source="IS_30200203"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30200204" source="IS_30200204"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTRACT_INCEPTION_DT" source="CONTRACT_INCEPTION_DT"/>
+      </input>
+    </calculationView>
+  </calculationViews>
+  <logicalModel id="UNION">
+    <descriptions/>
+    <attributes>
+      <attribute id="PRIMARY_TELEPHONE_NUMBER" order="1" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="PRIMARY_TELEPHONE_NUMBER"/>
+        <keyMapping columnObjectName="UNION" columnName="PRIMARY_TELEPHONE_NUMBER"/>
+      </attribute>
+      <attribute id="SYSTEM_REGION" order="2" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SYSTEM_REGION"/>
+        <keyMapping columnObjectName="UNION" columnName="SYSTEM_REGION"/>
+      </attribute>
+      <attribute id="SUBSCRIBER_NUMBER" order="3" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SUBSCRIBER_NUMBER"/>
+        <keyMapping columnObjectName="UNION" columnName="SUBSCRIBER_NUMBER"/>
+      </attribute>
+      <attribute id="TERM_M2M" order="4" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="TERM_M2M"/>
+        <keyMapping columnObjectName="UNION" columnName="TERM_M2M"/>
+      </attribute>
+      <attribute id="WORKING_TELEPHONE_NUMBER" order="5" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="WORKING_TELEPHONE_NUMBER"/>
+        <keyMapping columnObjectName="UNION" columnName="WORKING_TELEPHONE_NUMBER"/>
+      </attribute>
+      <attribute id="ITEM_CODE" order="6" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ITEM_CODE"/>
+        <keyMapping columnObjectName="UNION" columnName="ITEM_CODE"/>
+      </attribute>
+      <attribute id="ITEM_TYPE" order="7" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ITEM_TYPE"/>
+        <keyMapping columnObjectName="UNION" columnName="ITEM_TYPE"/>
+      </attribute>
+      <attribute id="ITEM_QUANTITY" order="8" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ITEM_QUANTITY"/>
+        <keyMapping columnObjectName="UNION" columnName="ITEM_QUANTITY"/>
+      </attribute>
+      <attribute id="ITEM_RATE" order="9" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ITEM_RATE"/>
+        <keyMapping columnObjectName="UNION" columnName="ITEM_RATE"/>
+      </attribute>
+      <attribute id="ITEM_GROUP_CODE" order="10" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ITEM_GROUP_CODE"/>
+        <keyMapping columnObjectName="UNION" columnName="ITEM_GROUP_CODE"/>
+      </attribute>
+      <attribute id="ITEM_INCEPTION_DT" order="11" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ITEM_INCEPTION_DT"/>
+        <keyMapping columnObjectName="UNION" columnName="ITEM_INCEPTION_DT"/>
+      </attribute>
+      <attribute id="ITEM_END_DT" order="12" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ITEM_END_DT"/>
+        <keyMapping columnObjectName="UNION" columnName="ITEM_END_DT"/>
+      </attribute>
+      <attribute id="M2M_SERVICE_INDICATOR" order="13" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="M2M_SERVICE_INDICATOR"/>
+        <keyMapping columnObjectName="UNION" columnName="M2M_SERVICE_INDICATOR"/>
+      </attribute>
+      <attribute id="RAC_CODE" order="14" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="RAC_CODE"/>
+        <keyMapping columnObjectName="UNION" columnName="RAC_CODE"/>
+      </attribute>
+      <attribute id="TOLL_FREE_NUMBER" order="15" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="TOLL_FREE_NUMBER"/>
+        <keyMapping columnObjectName="UNION" columnName="TOLL_FREE_NUMBER"/>
+      </attribute>
+      <attribute id="TOLL_FREE_CONV_NUMBER" order="16" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="TOLL_FREE_CONV_NUMBER"/>
+        <keyMapping columnObjectName="UNION" columnName="TOLL_FREE_CONV_NUMBER"/>
+      </attribute>
+      <attribute id="DISCOUNT_TYPE" order="17" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="DISCOUNT_TYPE"/>
+        <keyMapping columnObjectName="UNION" columnName="DISCOUNT_TYPE"/>
+      </attribute>
+      <attribute id="SOURCE_SYSTEM_CODE" order="18" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SOURCE_SYSTEM_CODE"/>
+        <keyMapping columnObjectName="UNION" columnName="SOURCE_SYSTEM_CODE"/>
+      </attribute>
+      <attribute id="MOD_EVENT_ID" order="19" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="MOD_EVENT_ID"/>
+        <keyMapping columnObjectName="UNION" columnName="MOD_EVENT_ID"/>
+      </attribute>
+      <attribute id="CONVERSION_IND" order="20" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CONVERSION_IND"/>
+        <keyMapping columnObjectName="UNION" columnName="CONVERSION_IND"/>
+      </attribute>
+      <attribute id="REFERENCE_ID" order="21" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="REFERENCE_ID"/>
+        <keyMapping columnObjectName="UNION" columnName="REFERENCE_ID"/>
+      </attribute>
+      <attribute id="PROCESS_ID" order="22" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="PROCESS_ID"/>
+        <keyMapping columnObjectName="UNION" columnName="PROCESS_ID"/>
+      </attribute>
+      <attribute id="INSERT_TS" order="23" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="INSERT_TS"/>
+        <keyMapping columnObjectName="UNION" columnName="INSERT_TS"/>
+      </attribute>
+      <attribute id="ITEM_ACTION" order="24" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ITEM_ACTION"/>
+        <keyMapping columnObjectName="UNION" columnName="ITEM_ACTION"/>
+      </attribute>
+      <attribute id="RAI_ITEM_ID" order="25" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="RAI_ITEM_ID"/>
+        <keyMapping columnObjectName="UNION" columnName="RAI_ITEM_ID"/>
+      </attribute>
+      <attribute id="FIXED_OR_VARIABLE_RATE_INDICATOR" order="26" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="FIXED_OR_VARIABLE_RATE_INDICATOR"/>
+        <keyMapping columnObjectName="UNION" columnName="FIXED_OR_VARIABLE_RATE_INDICATOR"/>
+      </attribute>
+      <attribute id="RATE_BAND" order="27" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="RATE_BAND"/>
+        <keyMapping columnObjectName="UNION" columnName="RATE_BAND"/>
+      </attribute>
+      <attribute id="KUNNR_SID" order="28" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="KUNNR_SID"/>
+        <keyMapping columnObjectName="UNION" columnName="KUNNR_SID"/>
+      </attribute>
+      <attribute id="SRCDOC_ID" order="29" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SRCDOC_ID"/>
+        <keyMapping columnObjectName="UNION" columnName="SRCDOC_ID"/>
+      </attribute>
+      <attribute id="HEADER_ID" order="30" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="HEADER_ID"/>
+        <keyMapping columnObjectName="UNION" columnName="HEADER_ID"/>
+      </attribute>
+      <attribute id="TEMPORARY_SEASONAL_SUSPENSION" order="31" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="TEMPORARY_SEASONAL_SUSPENSION"/>
+        <keyMapping columnObjectName="UNION" columnName="TEMPORARY_SEASONAL_SUSPENSION"/>
+      </attribute>
+      <attribute id="POB_EFFC_DATE" order="32" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="POB_EFFC_DATE"/>
+        <keyMapping columnObjectName="UNION" columnName="POB_EFFC_DATE"/>
+      </attribute>
+      <attribute id="MOD_IND" order="33" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="MOD_IND"/>
+        <keyMapping columnObjectName="UNION" columnName="MOD_IND"/>
+      </attribute>
+      <attribute id="PRODUCT_START_DATE" order="34" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="PRODUCT_START_DATE"/>
+        <keyMapping columnObjectName="UNION" columnName="PRODUCT_START_DATE"/>
+      </attribute>
+      <attribute id="PRODUCT_END_DATE" order="35" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="PRODUCT_END_DATE"/>
+        <keyMapping columnObjectName="UNION" columnName="PRODUCT_END_DATE"/>
+      </attribute>
+      <attribute id="CONTRACT_UNIQUE_IDENTIFIER" order="36" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CONTRACT_UNIQUE_IDENTIFIER"/>
+        <keyMapping columnObjectName="UNION" columnName="CONTRACT_UNIQUE_IDENTIFIER"/>
+      </attribute>
+      <attribute id="POB_END_DATE" order="37" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="POB_END_DATE"/>
+        <keyMapping columnObjectName="UNION" columnName="POB_END_DATE"/>
+      </attribute>
+      <attribute id="TIME_IND" order="38" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="TIME_IND"/>
+        <keyMapping columnObjectName="UNION" columnName="TIME_IND"/>
+      </attribute>
+      <attribute id="ITEM_CHARGE" order="39" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ITEM_CHARGE"/>
+        <keyMapping columnObjectName="UNION" columnName="ITEM_CHARGE"/>
+      </attribute>
+      <attribute id="CC_BILL_DAY" order="40" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CC_BILL_DAY"/>
+        <keyMapping columnObjectName="UNION" columnName="CC_BILL_DAY"/>
+      </attribute>
+      <attribute id="BILL_DATE" order="41" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="BILL_DATE"/>
+        <keyMapping columnObjectName="UNION" columnName="BILL_DATE"/>
+      </attribute>
+      <attribute id="CC_OLD_UPDATE" order="42" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CC_OLD_UPDATE"/>
+        <keyMapping columnObjectName="UNION" columnName="CC_OLD_UPDATE"/>
+      </attribute>
+      <attribute id="CC_ADVANCE_BILL" order="43" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CC_ADVANCE_BILL"/>
+        <keyMapping columnObjectName="UNION" columnName="CC_ADVANCE_BILL"/>
+      </attribute>
+      <attribute id="MODIFIED_TS" order="44" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="MODIFIED_TS"/>
+        <keyMapping columnObjectName="UNION" columnName="MODIFIED_TS"/>
+      </attribute>
+      <attribute id="RAI_TS" order="45" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="RAI_TS"/>
+        <keyMapping columnObjectName="UNION" columnName="RAI_TS"/>
+      </attribute>
+      <attribute id="CC_MODIFIED" order="46" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CC_MODIFIED"/>
+        <keyMapping columnObjectName="UNION" columnName="CC_MODIFIED"/>
+      </attribute>
+      <attribute id="CC_MOD_IND" order="47" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CC_MOD_IND"/>
+        <keyMapping columnObjectName="UNION" columnName="CC_MOD_IND"/>
+      </attribute>
+      <attribute id="CC_SUSPENSION_CHECK" order="48" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CC_SUSPENSION_CHECK"/>
+        <keyMapping columnObjectName="UNION" columnName="CC_SUSPENSION_CHECK"/>
+      </attribute>
+      <attribute id="REFERENCE_ID_SUSPEND" order="49" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="REFERENCE_ID_SUSPEND"/>
+        <keyMapping columnObjectName="UNION" columnName="REFERENCE_ID_SUSPEND"/>
+      </attribute>
+      <attribute id="IS_30200101" hidden="false" order="50" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="IS_30200101"/>
+        <keyMapping columnObjectName="UNION" columnName="IS_30200101"/>
+      </attribute>
+      <attribute id="IS_30200102" hidden="false" order="51" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="IS_30200102"/>
+        <keyMapping columnObjectName="UNION" columnName="IS_30200102"/>
+      </attribute>
+      <attribute id="IS_30200103" hidden="false" order="52" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="IS_30200103"/>
+        <keyMapping columnObjectName="UNION" columnName="IS_30200103"/>
+      </attribute>
+      <attribute id="IS_30200201" hidden="false" order="53" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="IS_30200201"/>
+        <keyMapping columnObjectName="UNION" columnName="IS_30200201"/>
+      </attribute>
+      <attribute id="IS_30200202" hidden="false" order="54" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="IS_30200202"/>
+        <keyMapping columnObjectName="UNION" columnName="IS_30200202"/>
+      </attribute>
+      <attribute id="IS_30200203" hidden="false" order="55" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="IS_30200203"/>
+        <keyMapping columnObjectName="UNION" columnName="IS_30200203"/>
+      </attribute>
+      <attribute id="IS_30200204" hidden="false" order="56" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="IS_30200204"/>
+        <keyMapping columnObjectName="UNION" columnName="IS_30200204"/>
+      </attribute>
+      <attribute id="CONTRACT_INCEPTION_DT" order="57" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CONTARCT_INCEPTION_DT"/>
+        <keyMapping columnObjectName="UNION" columnName="CONTRACT_INCEPTION_DT"/>
+      </attribute>
+    </attributes>
+    <calculatedAttributes/>
+    <privateDataFoundation>
+      <tableProxies/>
+      <joins/>
+      <layout>
+        <shapes/>
+      </layout>
+    </privateDataFoundation>
+    <baseMeasures/>
+    <calculatedMeasures/>
+    <restrictedMeasures/>
+    <localDimensions/>
+  </logicalModel>
+  <layout>
+    <shapes>
+      <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+        <upperLeftCorner x="407" y="87"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_ORDER" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="253" y="527"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_BILLING" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="407" y="527"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="JOIN_ORDER_BILLING" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="330" y="431"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_EXISTING" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="176" y="353"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_NEW" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="22" y="353"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_PRORATED" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="330" y="353"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_ADVANCE_BILLED" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="484" y="353"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_UPDATE_FROM_BILLING" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="638" y="353"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_MODIFICATION" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="792" y="353"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="UNION" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="407" y="165"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+    </shapes>
+  </layout>
+</Calculation:scenario>

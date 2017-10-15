@@ -1,0 +1,320 @@
+PROCEDURE "NDB_INTERNET"."IFRS_R1.INTERNET.NDB_INTERNET::SP_MDM_CUST_OFFR" 
+(IN IP_CYCL_ID NVARCHAR(3),
+OUT OP_STATUS NVARCHAR(100)) 
+	LANGUAGE SQLSCRIPT
+	SQL SECURITY INVOKER
+	AS 
+
+BEGIN
+--------------------------------------------------------------------------------------------------
+-- Procedure Title : SP_MDM_CUST_OFFR
+-- Created By      : BC_EZ08930 (RAKESH)       
+-- Create Date     : 03-18-2017
+-- Description     : Data Inserted using Calculation View - CA_MDM_CUST_OFFR
+--                   to NDB Table - MDM_CUST_OFFR Using this stored procedure.
+--                   Internet MDM CUSTOMER OFFER includes data from table MDM_CUST_OFFR.			
+-- Project         : Bell Canada
+-- Release         : R1 / IFRS
+--------------------------------------------------------------------------------------------------
+--   M O D I F I C A T I O N   H I S T O R Y
+--------------------------------------------------------------------------------------------------
+-- Date        | User ID          | Modification History/Release
+--------------------------------------------------------------------------------------------------
+--             |                  | 
+--------------------------------------------------------------------------------------------------
+-- Description Of the changes 
+--------------------------------------------------------------------------------------------------
+-- Modification Number          : <Assign Some Number>
+-- Description of Changes Made> : <Description of Changes>    
+--------------------------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------------------------
+-- Local Variables Declaration
+--------------------------------------------------------------------------------------------------
+
+DECLARE LC_ERROR_TEXT 		NVARCHAR(70) DEFAULT 'OUT STATUS IS 1 : INSERT/UPDATE FOR ONE OR MORE RECORD FAILED';
+DECLARE LC_SUCCESS_TEXT 	NVARCHAR(70) DEFAULT 'OUT STATUS IS 0 : INSERT/UPDATE EXECUTION SUCCESSFUL';
+DECLARE LV_ERROR_FLAG 		NVARCHAR(1) := 'N';
+DECLARE LV_CUR_UTC 			TIMESTAMP := CURRENT_TIMESTAMP;
+DECLARE ERROR_TAB 			TABLE (ERROR_CODE NVARCHAR(100));
+DECLARE i					INTEGER;
+DECLARE RECORD_COUNT		INTEGER;
+DECLARE CURRENT_ERROR		NVARCHAR(100);
+
+--------------------------------------------------------------------------------------------------
+-- Cursors Declaration
+-------------------------------------------------------------------------------------------------- 
+
+   DECLARE CURSOR MDM_CUST_OFFR FOR
+			SELECT
+				 "ACCS_CHRG",
+				 "ACCS_PROMO",
+				 "ACCS_SERV_CD",
+				 "BSE_OFFR_CD",
+				 "MODEM_CD",
+				 "MODEM_CHRG_ID",
+				 "PRC_STRC_CD",
+				 "PROD_CD",
+				 "PROMO_OFFR_CD",
+				 "VAS_CHRG_ID",
+				 "VAS_PROMO",
+				 "VAS_SERV_CD",
+				 "NDB_TS",
+				 "CYCL_ID",
+				 "SEQ_ID",
+				 "FLAG_EXISTING_RECORD",
+				 "EFFECTIVE_DATE_PREV_DAY",
+				 "REFERENCE_EFFECTIVE_DT",
+				 "REFERENCE_EXPIRY_DT" 
+			FROM "_SYS_BIC"."IFRS_R1.INTERNET.NDB_INTERNET/CA_MDM_CUST_OFFR"
+                 (PLACEHOLDER."$$IP_CYCL_ID$$" => :IP_CYCL_ID)
+        ORDER BY "CYCL_ID", "SEQ_ID";
+                 
+--------------------------------------------------------------------------------------------------
+-- Local Temporary Tables Declaration
+-------------------------------------------------------------------------------------------------- 
+
+
+CREATE LOCAL TEMPORARY TABLE #UPDATE_MDM_CUST_OFFR ("PROD_CD" NVARCHAR(16),"ACCS_SERV_CD" NVARCHAR(50),"PROMO_OFFR_CD" NVARCHAR(50));
+CREATE LOCAL TEMPORARY TABLE #UPDATE_EH_DELETION   ("PROD_CD" NVARCHAR(16),"ACCS_SERV_CD" NVARCHAR(50),"PROMO_OFFR_CD" NVARCHAR(50));
+        	  
+--------------------------------------------------------------------------------------------------
+-- Cursors Loop
+--------------------------------------------------------------------------------------------------  
+
+FOR CUST_OFFR AS MDM_CUST_OFFR DO
+
+--  Define Exit Handler
+	DECLARE EXIT HANDLER FOR SQLEXCEPTION 
+	BEGIN AUTONOMOUS TRANSACTION 
+	
+--    Define Exit Handler
+	  DECLARE EXIT HANDLER FOR SQLEXCEPTION 
+	  BEGIN AUTONOMOUS TRANSACTION 	
+	   
+	-- Do Nothing. Exception Handled to ensure SP does not get terminated 
+	
+ 	  END;
+ 	  
+			     -- Insert record into error table
+			   	    INSERT INTO "NDB_INTERNET"."IFRS_R1.INTERNET.NDB_INTERNET::MDM_CUST_OFFR_EH"
+			   	    		   ("ACCS_CHRG",
+								"ACCS_PROMO",
+								"ACCS_SERV_CD",
+								"BSE_OFFR_CD",
+								"MODEM_CD",
+								"MODEM_CHRG_ID",
+								"PRC_STRC_CD",
+								"PROD_CD",
+								"PROMO_OFFR_CD",
+								"VAS_CHRG_ID",
+								"VAS_PROMO",
+								"VAS_SERV_CD",
+								"REFERENCE_EFFECTIVE_DT",
+								"REFERENCE_EXPIRY_DT",
+								"ERROR_CODE",
+								"TECHNICAL_MESSAGE",
+								"ERROR_CREATE_TS")
+			   	         VALUES (CUST_OFFR."ACCS_CHRG",
+								 CUST_OFFR."ACCS_PROMO",
+								 CUST_OFFR."ACCS_SERV_CD",
+								 CUST_OFFR."BSE_OFFR_CD",
+								 CUST_OFFR."MODEM_CD",
+								 CUST_OFFR."MODEM_CHRG_ID",
+								 CUST_OFFR."PRC_STRC_CD",
+								 CUST_OFFR."PROD_CD",
+								 CUST_OFFR."PROMO_OFFR_CD",
+								 CUST_OFFR."VAS_CHRG_ID",
+								 CUST_OFFR."VAS_PROMO",
+								 CUST_OFFR."VAS_SERV_CD",
+								 CUST_OFFR."REFERENCE_EFFECTIVE_DT",
+								 CUST_OFFR."REFERENCE_EXPIRY_DT",
+								 ::SQL_ERROR_CODE,
+						         ::SQL_ERROR_MESSAGE,
+						         LV_CUR_UTC);    			                  
+                 
+
+	  			LV_ERROR_FLAG := 'Y';
+  		  
+  	END;	  
+    
+    
+--   If Record exists in the Target NDB Table
+     IF CUST_OFFR.FLAG_EXISTING_RECORD = 'U' THEN
+     
+     	BEGIN AUTONOMOUS TRANSACTION 
+
+ --     Update the target NDB table                 
+
+			UPDATE "NDB_INTERNET"."IFRS_R1.INTERNET.NDB_INTERNET::MDM_CUST_OFFR" NDB
+	 		    SET NDB."REFERENCE_EXPIRY_DT"       = CUST_OFFR.EFFECTIVE_DATE_PREV_DAY,
+		 		    NDB."MODIFIED_TS"               = LV_CUR_UTC
+		      WHERE CUST_OFFR."PROD_CD"             = NDB."PROD_CD"
+				AND CUST_OFFR."ACCS_SERV_CD"        = NDB."ACCS_SERV_CD"
+				AND CUST_OFFR."PROMO_OFFR_CD"       = NDB."PROMO_OFFR_CD"
+				AND CUST_OFFR."REFERENCE_EXPIRY_DT" ='99991231' ;
+
+				
+--    Insert the Incoming new record			
+ 		
+ 		INSERT INTO "NDB_INTERNET"."IFRS_R1.INTERNET.NDB_INTERNET::MDM_CUST_OFFR"
+   	    		   ("ACCS_CHRG",
+					"ACCS_PROMO",
+					"ACCS_SERV_CD",
+					"BSE_OFFR_CD",
+					"MODEM_CD",
+					"MODEM_CHRG_ID",
+					"PRC_STRC_CD",
+					"PROD_CD",
+					"PROMO_OFFR_CD",
+					"VAS_CHRG_ID",
+					"VAS_PROMO",
+					"VAS_SERV_CD",
+					"REFERENCE_EFFECTIVE_DT",
+					"REFERENCE_EXPIRY_DT",
+					"INSRT_TS",
+					"MODIFIED_TS")
+			
+ 		     VALUES (CUST_OFFR."ACCS_CHRG",
+					 CUST_OFFR."ACCS_PROMO",
+					 CUST_OFFR."ACCS_SERV_CD",
+					 CUST_OFFR."BSE_OFFR_CD",
+					 CUST_OFFR."MODEM_CD",
+					 CUST_OFFR."MODEM_CHRG_ID",
+					 CUST_OFFR."PRC_STRC_CD",
+					 CUST_OFFR."PROD_CD",
+					 CUST_OFFR."PROMO_OFFR_CD",
+					 CUST_OFFR."VAS_CHRG_ID",
+					 CUST_OFFR."VAS_PROMO",
+					 CUST_OFFR."VAS_SERV_CD",
+					 CUST_OFFR."REFERENCE_EFFECTIVE_DT",
+					 CUST_OFFR."REFERENCE_EXPIRY_DT",
+					 LV_CUR_UTC,
+					 LV_CUR_UTC);
+		END;		 
+					 
+						 
+--         Insert PK of successfully processed Records into Local Temp Tables 
+--         for Updating NDB_TS in corresponding Landing Tables records	
+
+		   INSERT INTO #UPDATE_MDM_CUST_OFFR
+					   ("PROD_CD", 
+					    "ACCS_SERV_CD", 
+					   	"PROMO_OFFR_CD") 
+			    VALUES (CUST_OFFR."PROD_CD", 
+				 		CUST_OFFR."ACCS_SERV_CD", 
+					   	CUST_OFFR."PROMO_OFFR_CD");
+
+					   					   	    		
+		   INSERT INTO #UPDATE_EH_DELETION
+					   ("PROD_CD", 
+					    "ACCS_SERV_CD", 
+					   	"PROMO_OFFR_CD")
+			    VALUES  (CUST_OFFR."PROD_CD", 
+				 		 CUST_OFFR."ACCS_SERV_CD", 
+					   	 CUST_OFFR."PROMO_OFFR_CD");
+					   	
+   ELSEIF CUST_OFFR.FLAG_EXISTING_RECORD = 'I' THEN
+    
+--    Insert Records into the target NDB table			   	
+		   INSERT INTO  "NDB_INTERNET"."IFRS_R1.INTERNET.NDB_INTERNET::MDM_CUST_OFFR"
+	   	    		   ("ACCS_CHRG",
+						"ACCS_PROMO",
+						"ACCS_SERV_CD",
+						"BSE_OFFR_CD",
+						"MODEM_CD",
+						"MODEM_CHRG_ID",
+						"PRC_STRC_CD",
+						"PROD_CD",
+						"PROMO_OFFR_CD",
+						"VAS_CHRG_ID",
+						"VAS_PROMO",
+						"VAS_SERV_CD",
+						"REFERENCE_EFFECTIVE_DT",
+						"REFERENCE_EXPIRY_DT",
+						"INSRT_TS")
+				
+	            VALUES  (CUST_OFFR."ACCS_CHRG",
+						 CUST_OFFR."ACCS_PROMO",
+						 CUST_OFFR."ACCS_SERV_CD",
+						 CUST_OFFR."BSE_OFFR_CD",
+						 CUST_OFFR."MODEM_CD",
+						 CUST_OFFR."MODEM_CHRG_ID",
+						 CUST_OFFR."PRC_STRC_CD",
+						 CUST_OFFR."PROD_CD",
+						 CUST_OFFR."PROMO_OFFR_CD",
+						 CUST_OFFR."VAS_CHRG_ID",
+						 CUST_OFFR."VAS_PROMO",
+						 CUST_OFFR."VAS_SERV_CD",
+						 CUST_OFFR."REFERENCE_EFFECTIVE_DT",
+						 CUST_OFFR."REFERENCE_EXPIRY_DT",
+						 LV_CUR_UTC);
+
+--         Insert PK of successfully processed Records into Local Temp Tables 
+--         for Updating NDB_TS in corresponding Landing Tables records   							 
+					   	
+					   	
+		   INSERT INTO #UPDATE_MDM_CUST_OFFR
+					   ("PROD_CD", 
+					    "ACCS_SERV_CD", 
+					   	"PROMO_OFFR_CD") 
+			    VALUES (CUST_OFFR."PROD_CD", 
+				 		CUST_OFFR."ACCS_SERV_CD", 
+					   	CUST_OFFR."PROMO_OFFR_CD");
+
+					   					   	    		
+		   INSERT INTO #UPDATE_EH_DELETION
+					   ("PROD_CD", 
+					    "ACCS_SERV_CD", 
+					   	"PROMO_OFFR_CD") 
+			    VALUES (CUST_OFFR."PROD_CD", 
+				 		CUST_OFFR."ACCS_SERV_CD", 
+					   	CUST_OFFR."PROMO_OFFR_CD");				   	
+					   	
+   END IF;  
+
+END FOR;					   			    
+
+--------------------------------------------------------------------------------------------------
+-- Update Landing Tables
+-------------------------------------------------------------------------------------------------- 
+
+-- Update Landing Table IFRS_R1.LAND::MDM_CUST_OFFR
+UPDATE "LAND"."IFRS_R1.LAND::MDM_CUST_OFFR" A
+  FROM "LAND"."IFRS_R1.LAND::MDM_CUST_OFFR" A 
+ INNER JOIN #UPDATE_MDM_CUST_OFFR B 
+    ON A."PROD_CD"         = B."PROD_CD"
+   AND A."ACCS_SERV_CD"    = B."ACCS_SERV_CD"
+   AND A."PROMO_OFFR_CD"   = B."PROMO_OFFR_CD"
+   SET NDB_TS              = LV_CUR_UTC
+ WHERE A.NDB_TS IS NULL;
+
+--------------------------------------------------------------------------------------------------
+-- Update Error Table
+--------------------------------------------------------------------------------------------------
+
+UPDATE "NDB_INTERNET"."IFRS_R1.INTERNET.NDB_INTERNET::MDM_CUST_OFFR_EH" A
+  FROM "NDB_INTERNET"."IFRS_R1.INTERNET.NDB_INTERNET::MDM_CUST_OFFR_EH" A 
+ INNER JOIN #UPDATE_EH_DELETION B
+    ON A."PROD_CD"            = B."PROD_CD"
+   AND A."ACCS_SERV_CD"       = B."ACCS_SERV_CD"
+   AND A."PROMO_OFFR_CD"      = B."PROMO_OFFR_CD"
+   SET (DELETE_DATE, DELETED) = (CURRENT_DATE, 1);
+
+--------------------------------------------------------------------------------------------------
+-- Set Overall Status
+-------------------------------------------------------------------------------------------------- 
+
+--  STATUS 0: Send the success message to scheduling tool to confirm this procedure has been
+--  executed successfully
+    IF(LV_ERROR_FLAG = 'Y') THEN		
+
+     OP_STATUS := LC_ERROR_TEXT;
+			
+    ELSE
+
+  	 OP_STATUS := LC_SUCCESS_TEXT; 	
+				
+	END IF;
+		
+END;

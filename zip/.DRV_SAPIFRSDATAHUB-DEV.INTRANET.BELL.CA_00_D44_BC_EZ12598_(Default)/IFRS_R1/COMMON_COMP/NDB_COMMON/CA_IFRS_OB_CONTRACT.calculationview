@@ -1,0 +1,1009 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:AccessControl="http://www.sap.com/ndb/SQLCoreModelAccessControl.ecore" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" xmlns:Variable="http://www.sap.com/ndb/BiModelVariable.ecore" schemaVersion="2.3" id="CA_IFRS_OB_CONTRACT" applyPrivilegeType="NONE" checkAnalyticPrivileges="false" defaultClient="$$client$$" defaultLanguage="$$language$$" hierarchiesSQLEnabled="false" historyEnabled="false" translationRelevant="true" visibility="internal" calculationScenarioType="TREE_BASED" dataCategory="DIMENSION" enforceSqlExecution="false" executionSemantic="UNDEFINED" outputViewType="Projection">
+  <descriptions defaultDescription="CA_IFRS_OB_CONTRACT"/>
+  <localVariables>
+    <variable id="IP_EFF_DT" parameter="true">
+      <descriptions defaultDescription="IP_EFF_DT"/>
+      <variableProperties datatype="DATE" defaultValue="99991231" mandatory="false">
+        <valueDomain type="Date"/>
+        <selection multiLine="false" type="SingleValue"/>
+      </variableProperties>
+    </variable>
+  </localVariables>
+  <variableMappings>
+    <mapping xsi:type="Variable:VariableMapping" dataSource="#CA_IFRS_OB_CONTRACT">
+      <targetVariable name="IP_EFF_DT" resourceUri="/IFRS_R1.COMMON_COMP.LAND_COMMON/calculationviews/CA_IFRS_OB_CONTRACT"/>
+      <localVariable>#IP_EFF_DT</localVariable>
+    </mapping>
+  </variableMappings>
+  <informationModelLayout relativeWidthScenario="46"/>
+  <dataSources>
+    <DataSource id="CA_IFRS_OB_CONTRACT" type="CALCULATION_VIEW">
+      <viewAttributes allViewAttributes="true"/>
+      <resourceUri>/IFRS_R1.COMMON_COMP.LAND_COMMON/calculationviews/CA_IFRS_OB_CONTRACT</resourceUri>
+    </DataSource>
+    <DataSource id="IFRS_R1.COMMON_COMP.NDB_COMMON::OB_CUSTOMER" type="DATA_BASE_TABLE">
+      <viewAttributes allViewAttributes="true"/>
+      <columnObject schemaName="NDB_COMMON" columnObjectName="IFRS_R1.COMMON_COMP.NDB_COMMON::OB_CUSTOMER"/>
+    </DataSource>
+    <DataSource id="CA_IFRS_OB_MARKET_NDB_EH" type="CALCULATION_VIEW">
+      <viewAttributes allViewAttributes="true"/>
+      <resourceUri>/IFRS_R1.COMMON_COMP.NDB_COMMON/calculationviews/CA_IFRS_OB_MARKET_NDB_EH</resourceUri>
+    </DataSource>
+    <DataSource id="IFRS_R1.COMMON_COMP.NDB_COMMON::OB_CUSTOMER_EH" type="DATA_BASE_TABLE">
+      <viewAttributes allViewAttributes="true"/>
+      <columnObject schemaName="NDB_COMMON" columnObjectName="IFRS_R1.COMMON_COMP.NDB_COMMON::OB_CUSTOMER_EH"/>
+    </DataSource>
+  </dataSources>
+  <calculationViews>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_CA_CONTRACT">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="CUSTOMER_ID"/>
+        <viewAttribute id="BILL_CYCLE"/>
+        <viewAttribute id="BAN_STATUS"/>
+        <viewAttribute id="STATUS_LAST_DATE"/>
+        <viewAttribute id="START_SERVICE_DATE"/>
+        <viewAttribute id="ACCOUNT_TYPE"/>
+        <viewAttribute id="ACCOUNT_SUB_TYPE"/>
+        <viewAttribute id="ADR_PROVINCE"/>
+        <viewAttribute id="DEFAULT_SUB_MARKET"/>
+        <viewAttribute id="FIRST_NAME"/>
+        <viewAttribute id="LAST_BUSINESS_NAME"/>
+        <viewAttribute id="ADR_POSTAL"/>
+        <viewAttribute id="EXPY_DT"/>
+        <viewAttribute id="STATUS_ACTV_CODE"/>
+        <viewAttribute id="STATUS_ACTV_RSN_CODE"/>
+        <viewAttribute id="TAX_PROVINCE"/>
+        <viewAttribute id="EFF_DT"/>
+        <viewAttribute id="HIERARCHY_ID"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#CA_IFRS_OB_CONTRACT">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_ID" source="CUSTOMER_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_CYCLE" source="BILL_CYCLE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BAN_STATUS" source="BAN_STATUS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="STATUS_LAST_DATE" source="STATUS_LAST_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="START_SERVICE_DATE" source="START_SERVICE_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACCOUNT_TYPE" source="ACCOUNT_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACCOUNT_SUB_TYPE" source="ACCOUNT_SUB_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ADR_PROVINCE" source="ADR_PROVINCE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DEFAULT_SUB_MARKET" source="DEFAULT_SUB_MARKET"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FIRST_NAME" source="FIRST_NAME"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LAST_BUSINESS_NAME" source="LAST_BUSINESS_NAME"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ADR_POSTAL" source="ADR_POSTAL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXPY_DT" source="EXPY_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="STATUS_ACTV_CODE" source="STATUS_ACTV_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="STATUS_ACTV_RSN_CODE" source="STATUS_ACTV_RSN_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TAX_PROVINCE" source="TAX_PROVINCE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFF_DT" source="EFF_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="HIERARCHY_ID" source="HIERARCHY_ID"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_OB_CUSTOMER">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="CUSTOMER_ID_RIGHT"/>
+        <viewAttribute id="SUBSCRIBER_NO"/>
+        <viewAttribute id="BUSINESS_ID"/>
+        <viewAttribute id="EFFECTIVE_DATE"/>
+        <viewAttribute id="INIT_ACTIVATION_DATE"/>
+        <viewAttribute id="PRODUCT_TYPE"/>
+        <viewAttribute id="SUB_STATUS_RSN_CODE"/>
+        <viewAttribute id="PRV_BAN"/>
+        <viewAttribute id="SUB_STATUS_DATE"/>
+        <viewAttribute id="SUB_STATUS"/>
+        <viewAttribute id="SUB_STATUS_LAST_ACT"/>
+        <viewAttribute id="SUB_STS_ISSUE_DATE"/>
+        <viewAttribute id="NEXT_BAN"/>
+        <viewAttribute id="KUNNR_SID"/>
+        <viewAttribute id="BAN_STATUS_RIGHT"/>
+        <viewAttribute id="REFERENCE_EXPIRY_DT">
+          <filter xsi:type="AccessControl:SingleValueFilter" including="true" value="9999-12-31"/>
+        </viewAttribute>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#IFRS_R1.COMMON_COMP.NDB_COMMON::OB_CUSTOMER">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_ID_RIGHT" source="CUSTOMER_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBSCRIBER_NO" source="SUBSCRIBER_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUSINESS_ID" source="BUSINESS_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFFECTIVE_DATE" source="EFFECTIVE_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INIT_ACTIVATION_DATE" source="INIT_ACTIVATION_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT_TYPE" source="PRODUCT_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUB_STATUS_RSN_CODE" source="SUB_STATUS_RSN_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRV_BAN" source="PRV_BAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUB_STATUS_DATE" source="SUB_STATUS_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUB_STATUS" source="SUB_STATUS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUB_STATUS_LAST_ACT" source="SUB_STATUS_LAST_ACT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUB_STS_ISSUE_DATE" source="SUB_STS_ISSUE_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NEXT_BAN" source="NEXT_BAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KUNNR_SID" source="KUNNR_SID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BAN_STATUS_RIGHT" source="BAN_STATUS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_EXPIRY_DT" source="REFERENCE_EXPIRY_DT"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_MARKET">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="RELATED_MARKET"/>
+        <viewAttribute id="REFERENCE_EFFECTIVE_DT"/>
+        <viewAttribute id="REFERENCE_EXPIRY_DT"/>
+        <viewAttribute id="MARKET_CODE"/>
+        <viewAttribute id="CC_VERSION_CHECK"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#CA_IFRS_OB_MARKET_NDB_EH">
+        <mapping xsi:type="Calculation:AttributeMapping" target="RELATED_MARKET" source="RELATED_MARKET"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_EFFECTIVE_DT" source="REFERENCE_EFFECTIVE_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_EXPIRY_DT" source="REFERENCE_EXPIRY_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MARKET_CODE" source="MARKET_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_VERSION_CHECK" source="CC_VERSION_CHECK"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="JOIN_CONTRACT_MARKET" cardinality="C1_1" joinOrder="OUTSIDE_IN" joinType="leftOuter">
+      <descriptions>
+        <comment text="If CC_VERSION_CHECK=1 then raise error IS_20600102 will be raised"/>
+      </descriptions>
+      <viewAttributes>
+        <viewAttribute id="CUSTOMER_ID"/>
+        <viewAttribute id="BILL_CYCLE"/>
+        <viewAttribute id="BAN_STATUS"/>
+        <viewAttribute id="STATUS_LAST_DATE"/>
+        <viewAttribute id="START_SERVICE_DATE"/>
+        <viewAttribute id="ACCOUNT_TYPE"/>
+        <viewAttribute id="ACCOUNT_SUB_TYPE"/>
+        <viewAttribute id="ADR_PROVINCE"/>
+        <viewAttribute id="DEFAULT_SUB_MARKET"/>
+        <viewAttribute id="FIRST_NAME"/>
+        <viewAttribute id="LAST_BUSINESS_NAME"/>
+        <viewAttribute id="ADR_POSTAL"/>
+        <viewAttribute id="EXPY_DT"/>
+        <viewAttribute id="STATUS_ACTV_CODE"/>
+        <viewAttribute id="STATUS_ACTV_RSN_CODE"/>
+        <viewAttribute id="TAX_PROVINCE"/>
+        <viewAttribute id="EFF_DT"/>
+        <viewAttribute id="HIERARCHY_ID"/>
+        <viewAttribute id="RELATED_MARKET"/>
+        <viewAttribute id="REFERENCE_EFFECTIVE_DT"/>
+        <viewAttribute id="REFERENCE_EXPIRY_DT"/>
+        <viewAttribute id="CC_VERSION_CHECK"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="DATE" id="CC_REFERENCE_EXPIRY_DT" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isNull(&quot;REFERENCE_EXPIRY_DT&quot;),date('99991231'),&quot;REFERENCE_EXPIRY_DT&quot;)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="DATE" id="CC_REFERENCE_EFFECTIVE_DT" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isNull(&quot;REFERENCE_EFFECTIVE_DT&quot;),date('19000101'),&quot;REFERENCE_EFFECTIVE_DT&quot;)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="IS_20600102" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isnull(&quot;CC_VERSION_CHECK&quot;),'0',if(&quot;CC_VERSION_CHECK&quot;='1','1','0'))&#xD;
+&#xD;
+</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#PROJ_CA_CONTRACT">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_ID" source="CUSTOMER_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_CYCLE" source="BILL_CYCLE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BAN_STATUS" source="BAN_STATUS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="STATUS_LAST_DATE" source="STATUS_LAST_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="START_SERVICE_DATE" source="START_SERVICE_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACCOUNT_TYPE" source="ACCOUNT_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACCOUNT_SUB_TYPE" source="ACCOUNT_SUB_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ADR_PROVINCE" source="ADR_PROVINCE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DEFAULT_SUB_MARKET" source="DEFAULT_SUB_MARKET"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FIRST_NAME" source="FIRST_NAME"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LAST_BUSINESS_NAME" source="LAST_BUSINESS_NAME"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ADR_POSTAL" source="ADR_POSTAL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXPY_DT" source="EXPY_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="STATUS_ACTV_CODE" source="STATUS_ACTV_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="STATUS_ACTV_RSN_CODE" source="STATUS_ACTV_RSN_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TAX_PROVINCE" source="TAX_PROVINCE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFF_DT" source="EFF_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="HIERARCHY_ID" source="HIERARCHY_ID"/>
+      </input>
+      <input node="#PROJ_MARKET">
+        <mapping xsi:type="Calculation:AttributeMapping" target="RELATED_MARKET" source="RELATED_MARKET"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_EFFECTIVE_DT" source="REFERENCE_EFFECTIVE_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_EXPIRY_DT" source="REFERENCE_EXPIRY_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_VERSION_CHECK" source="CC_VERSION_CHECK"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DEFAULT_SUB_MARKET" source="MARKET_CODE"/>
+      </input>
+      <joinAttribute name="DEFAULT_SUB_MARKET"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_ACTV" filterExpressionLanguage="COLUMN_ENGINE">
+      <descriptions>
+        <comment text="The join with OB_MARKET Table is optional to get the value of RELATED_MARKET, so no Error is raised for this Join"/>
+      </descriptions>
+      <viewAttributes>
+        <viewAttribute id="CUSTOMER_ID"/>
+        <viewAttribute id="BILL_CYCLE"/>
+        <viewAttribute id="BAN_STATUS"/>
+        <viewAttribute id="STATUS_LAST_DATE"/>
+        <viewAttribute id="START_SERVICE_DATE"/>
+        <viewAttribute id="ACCOUNT_TYPE"/>
+        <viewAttribute id="ACCOUNT_SUB_TYPE"/>
+        <viewAttribute id="ADR_PROVINCE"/>
+        <viewAttribute id="DEFAULT_SUB_MARKET"/>
+        <viewAttribute id="FIRST_NAME"/>
+        <viewAttribute id="LAST_BUSINESS_NAME"/>
+        <viewAttribute id="ADR_POSTAL"/>
+        <viewAttribute id="EXPY_DT"/>
+        <viewAttribute id="STATUS_ACTV_CODE"/>
+        <viewAttribute id="STATUS_ACTV_RSN_CODE"/>
+        <viewAttribute id="TAX_PROVINCE"/>
+        <viewAttribute id="EFF_DT"/>
+        <viewAttribute id="HIERARCHY_ID"/>
+        <viewAttribute id="RELATED_MARKET"/>
+        <viewAttribute id="CC_REFERENCE_EXPIRY_DT"/>
+        <viewAttribute id="CC_REFERENCE_EFFECTIVE_DT"/>
+        <viewAttribute id="IS_20600102"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#JOIN_CONTRACT_MARKET">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_ID" source="CUSTOMER_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_CYCLE" source="BILL_CYCLE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BAN_STATUS" source="BAN_STATUS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="STATUS_LAST_DATE" source="STATUS_LAST_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="START_SERVICE_DATE" source="START_SERVICE_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACCOUNT_TYPE" source="ACCOUNT_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACCOUNT_SUB_TYPE" source="ACCOUNT_SUB_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ADR_PROVINCE" source="ADR_PROVINCE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DEFAULT_SUB_MARKET" source="DEFAULT_SUB_MARKET"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FIRST_NAME" source="FIRST_NAME"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LAST_BUSINESS_NAME" source="LAST_BUSINESS_NAME"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ADR_POSTAL" source="ADR_POSTAL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXPY_DT" source="EXPY_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="STATUS_ACTV_CODE" source="STATUS_ACTV_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="STATUS_ACTV_RSN_CODE" source="STATUS_ACTV_RSN_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TAX_PROVINCE" source="TAX_PROVINCE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFF_DT" source="EFF_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="HIERARCHY_ID" source="HIERARCHY_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RELATED_MARKET" source="RELATED_MARKET"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_REFERENCE_EXPIRY_DT" source="CC_REFERENCE_EXPIRY_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_REFERENCE_EFFECTIVE_DT" source="CC_REFERENCE_EFFECTIVE_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20600102" source="IS_20600102"/>
+      </input>
+      <filter>(&quot;EFF_DT&quot; >= &quot;CC_REFERENCE_EFFECTIVE_DT&quot;) and &#xD;
+(&quot;EXPY_DT&quot; &lt;= &quot;CC_REFERENCE_EXPIRY_DT&quot;)</filter>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_CUST_EH">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="CUSTOMER_ID_EH"/>
+        <viewAttribute id="DELETED">
+          <filter xsi:type="AccessControl:SingleValueFilter" operator="NL" including="true"/>
+        </viewAttribute>
+        <viewAttribute id="REFERENCE_EFFECTIVE_DT"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="DATE" id="CC_REFERENCE_EFFECTIVE_DT_EH" expressionLanguage="COLUMN_ENGINE">
+          <formula>date(&quot;REFERENCE_EFFECTIVE_DT&quot;)</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#IFRS_R1.COMMON_COMP.NDB_COMMON::OB_CUSTOMER_EH">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_ID_EH" source="CUSTOMER_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DELETED" source="DELETED"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_EFFECTIVE_DT" source="REFERENCE_EFFECTIVE_DT"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="JOIN_INCOMING_EH" joinOrder="OUTSIDE_IN" joinType="leftOuter">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="CUSTOMER_ID_EH"/>
+        <viewAttribute id="REFERENCE_EFFECTIVE_DT_EH"/>
+        <viewAttribute id="CUSTOMER_ID_LAND"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#PROJ_CUST_EH">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_ID_EH" source="CUSTOMER_ID_EH"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_EFFECTIVE_DT_EH" source="CC_REFERENCE_EFFECTIVE_DT_EH"/>
+      </input>
+      <input node="#PROJ_ACTV">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_ID_LAND" source="CUSTOMER_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_ID_EH" source="CUSTOMER_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_EFFECTIVE_DT_EH" source="EFF_DT"/>
+      </input>
+      <joinAttribute name="CUSTOMER_ID_EH"/>
+      <joinAttribute name="REFERENCE_EFFECTIVE_DT_EH"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_ACTV_INCOMING">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="REFERENCE_EFFECTIVE_DT_EH"/>
+        <viewAttribute id="CUSTOMER_ID_EH"/>
+        <viewAttribute id="CUSTOMER_ID_LAND">
+          <filter xsi:type="AccessControl:SingleValueFilter" operator="NL" including="true"/>
+        </viewAttribute>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#JOIN_INCOMING_EH">
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_EFFECTIVE_DT_EH" source="REFERENCE_EFFECTIVE_DT_EH"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_ID_EH" source="CUSTOMER_ID_EH"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_ID_LAND" source="CUSTOMER_ID_LAND"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:AggregationView" id="AGGR_EH">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="CUSTOMER_ID_EH"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#PROJ_ACTV_INCOMING">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_ID_EH" source="CUSTOMER_ID_EH"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="JOIN_EH_CHK" joinOrder="OUTSIDE_IN" joinType="leftOuter">
+      <descriptions>
+        <comment text="Version error will be raised as IS_20600103 if previous version of that set of PK's exist in the OB_CUSTOMER_EH table"/>
+      </descriptions>
+      <viewAttributes>
+        <viewAttribute id="CUSTOMER_ID"/>
+        <viewAttribute id="BILL_CYCLE"/>
+        <viewAttribute id="BAN_STATUS"/>
+        <viewAttribute id="STATUS_LAST_DATE"/>
+        <viewAttribute id="START_SERVICE_DATE"/>
+        <viewAttribute id="ACCOUNT_TYPE"/>
+        <viewAttribute id="ACCOUNT_SUB_TYPE"/>
+        <viewAttribute id="ADR_PROVINCE"/>
+        <viewAttribute id="DEFAULT_SUB_MARKET"/>
+        <viewAttribute id="FIRST_NAME"/>
+        <viewAttribute id="LAST_BUSINESS_NAME"/>
+        <viewAttribute id="ADR_POSTAL"/>
+        <viewAttribute id="EXPY_DT"/>
+        <viewAttribute id="STATUS_ACTV_CODE"/>
+        <viewAttribute id="STATUS_ACTV_RSN_CODE"/>
+        <viewAttribute id="TAX_PROVINCE"/>
+        <viewAttribute id="EFF_DT"/>
+        <viewAttribute id="HIERARCHY_ID"/>
+        <viewAttribute id="RELATED_MARKET"/>
+        <viewAttribute id="IS_20600102"/>
+        <viewAttribute id="CUSTOMER_ID_EH"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="IS_20600103" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isNull(&quot;CUSTOMER_ID_EH&quot;),'0','1')</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#PROJ_ACTV">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_ID" source="CUSTOMER_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_CYCLE" source="BILL_CYCLE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BAN_STATUS" source="BAN_STATUS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="STATUS_LAST_DATE" source="STATUS_LAST_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="START_SERVICE_DATE" source="START_SERVICE_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACCOUNT_TYPE" source="ACCOUNT_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACCOUNT_SUB_TYPE" source="ACCOUNT_SUB_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ADR_PROVINCE" source="ADR_PROVINCE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DEFAULT_SUB_MARKET" source="DEFAULT_SUB_MARKET"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FIRST_NAME" source="FIRST_NAME"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LAST_BUSINESS_NAME" source="LAST_BUSINESS_NAME"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ADR_POSTAL" source="ADR_POSTAL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXPY_DT" source="EXPY_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="STATUS_ACTV_CODE" source="STATUS_ACTV_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="STATUS_ACTV_RSN_CODE" source="STATUS_ACTV_RSN_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TAX_PROVINCE" source="TAX_PROVINCE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFF_DT" source="EFF_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="HIERARCHY_ID" source="HIERARCHY_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RELATED_MARKET" source="RELATED_MARKET"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20600102" source="IS_20600102"/>
+      </input>
+      <input node="#AGGR_EH">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_ID_EH" source="CUSTOMER_ID_EH"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_ID" source="CUSTOMER_ID_EH"/>
+      </input>
+      <joinAttribute name="CUSTOMER_ID"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="JOIN_CUST" cardinality="C1_1" joinOrder="OUTSIDE_IN" joinType="leftOuter">
+      <descriptions>
+        <comment text="Join Errors will be raised as 20600101 i.e if BAN exists in CA_IFRS_OB_CONTRACT but that BAN is not present in NDB_OB_CUSTOMER then IS_20600101 will be raised."/>
+      </descriptions>
+      <viewAttributes>
+        <viewAttribute id="CUSTOMER_ID_RIGHT"/>
+        <viewAttribute id="SUBSCRIBER_NO"/>
+        <viewAttribute id="BUSINESS_ID"/>
+        <viewAttribute id="EFFECTIVE_DATE"/>
+        <viewAttribute id="INIT_ACTIVATION_DATE"/>
+        <viewAttribute id="PRODUCT_TYPE"/>
+        <viewAttribute id="SUB_STATUS_RSN_CODE"/>
+        <viewAttribute id="PRV_BAN"/>
+        <viewAttribute id="SUB_STATUS_DATE"/>
+        <viewAttribute id="SUB_STATUS"/>
+        <viewAttribute id="SUB_STATUS_LAST_ACT"/>
+        <viewAttribute id="SUB_STS_ISSUE_DATE"/>
+        <viewAttribute id="NEXT_BAN"/>
+        <viewAttribute id="KUNNR_SID"/>
+        <viewAttribute id="BAN_STATUS_RIGHT"/>
+        <viewAttribute id="CUSTOMER_ID"/>
+        <viewAttribute id="BILL_CYCLE"/>
+        <viewAttribute id="BAN_STATUS"/>
+        <viewAttribute id="STATUS_LAST_DATE"/>
+        <viewAttribute id="START_SERVICE_DATE"/>
+        <viewAttribute id="ACCOUNT_TYPE"/>
+        <viewAttribute id="ACCOUNT_SUB_TYPE"/>
+        <viewAttribute id="ADR_PROVINCE"/>
+        <viewAttribute id="DEFAULT_SUB_MARKET"/>
+        <viewAttribute id="FIRST_NAME"/>
+        <viewAttribute id="LAST_BUSINESS_NAME"/>
+        <viewAttribute id="ADR_POSTAL"/>
+        <viewAttribute id="EXPY_DT"/>
+        <viewAttribute id="STATUS_ACTV_CODE"/>
+        <viewAttribute id="STATUS_ACTV_RSN_CODE"/>
+        <viewAttribute id="TAX_PROVINCE"/>
+        <viewAttribute id="EFF_DT"/>
+        <viewAttribute id="HIERARCHY_ID"/>
+        <viewAttribute id="RELATED_MARKET"/>
+        <viewAttribute id="IS_20600103"/>
+        <viewAttribute id="IS_20600102"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="IS_20600101" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isnull(&quot;CUSTOMER_ID_RIGHT&quot;),'1','0')</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#JOIN_EH_CHK">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_ID" source="CUSTOMER_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_CYCLE" source="BILL_CYCLE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BAN_STATUS" source="BAN_STATUS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="STATUS_LAST_DATE" source="STATUS_LAST_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="START_SERVICE_DATE" source="START_SERVICE_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACCOUNT_TYPE" source="ACCOUNT_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACCOUNT_SUB_TYPE" source="ACCOUNT_SUB_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ADR_PROVINCE" source="ADR_PROVINCE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DEFAULT_SUB_MARKET" source="DEFAULT_SUB_MARKET"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FIRST_NAME" source="FIRST_NAME"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LAST_BUSINESS_NAME" source="LAST_BUSINESS_NAME"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ADR_POSTAL" source="ADR_POSTAL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXPY_DT" source="EXPY_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="STATUS_ACTV_CODE" source="STATUS_ACTV_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="STATUS_ACTV_RSN_CODE" source="STATUS_ACTV_RSN_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TAX_PROVINCE" source="TAX_PROVINCE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFF_DT" source="EFF_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="HIERARCHY_ID" source="HIERARCHY_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RELATED_MARKET" source="RELATED_MARKET"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20600103" source="IS_20600103"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20600102" source="IS_20600102"/>
+      </input>
+      <input node="#PROJ_OB_CUSTOMER">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_ID_RIGHT" source="CUSTOMER_ID_RIGHT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBSCRIBER_NO" source="SUBSCRIBER_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUSINESS_ID" source="BUSINESS_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFFECTIVE_DATE" source="EFFECTIVE_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INIT_ACTIVATION_DATE" source="INIT_ACTIVATION_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT_TYPE" source="PRODUCT_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUB_STATUS_RSN_CODE" source="SUB_STATUS_RSN_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRV_BAN" source="PRV_BAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUB_STATUS_DATE" source="SUB_STATUS_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUB_STATUS" source="SUB_STATUS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUB_STATUS_LAST_ACT" source="SUB_STATUS_LAST_ACT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUB_STS_ISSUE_DATE" source="SUB_STS_ISSUE_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NEXT_BAN" source="NEXT_BAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KUNNR_SID" source="KUNNR_SID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BAN_STATUS_RIGHT" source="BAN_STATUS_RIGHT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_ID" source="CUSTOMER_ID_RIGHT"/>
+      </input>
+      <joinAttribute name="CUSTOMER_ID"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:RankView" id="RANK_CONTRACT">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="CUSTOMER_ID_RIGHT"/>
+        <viewAttribute id="SUBSCRIBER_NO"/>
+        <viewAttribute id="BUSINESS_ID"/>
+        <viewAttribute id="EFFECTIVE_DATE"/>
+        <viewAttribute id="INIT_ACTIVATION_DATE"/>
+        <viewAttribute id="PRODUCT_TYPE"/>
+        <viewAttribute id="SUB_STATUS_RSN_CODE"/>
+        <viewAttribute id="PRV_BAN"/>
+        <viewAttribute id="SUB_STATUS_DATE"/>
+        <viewAttribute id="SUB_STATUS"/>
+        <viewAttribute id="SUB_STATUS_LAST_ACT"/>
+        <viewAttribute id="SUB_STS_ISSUE_DATE"/>
+        <viewAttribute id="NEXT_BAN"/>
+        <viewAttribute id="KUNNR_SID"/>
+        <viewAttribute id="BAN_STATUS_RIGHT"/>
+        <viewAttribute id="CUSTOMER_ID"/>
+        <viewAttribute id="BILL_CYCLE"/>
+        <viewAttribute id="BAN_STATUS"/>
+        <viewAttribute id="STATUS_LAST_DATE"/>
+        <viewAttribute id="START_SERVICE_DATE"/>
+        <viewAttribute id="ACCOUNT_TYPE"/>
+        <viewAttribute id="ACCOUNT_SUB_TYPE"/>
+        <viewAttribute id="ADR_PROVINCE"/>
+        <viewAttribute id="DEFAULT_SUB_MARKET"/>
+        <viewAttribute id="FIRST_NAME"/>
+        <viewAttribute id="LAST_BUSINESS_NAME"/>
+        <viewAttribute id="ADR_POSTAL"/>
+        <viewAttribute id="EXPY_DT"/>
+        <viewAttribute id="STATUS_ACTV_CODE"/>
+        <viewAttribute id="STATUS_ACTV_RSN_CODE"/>
+        <viewAttribute id="TAX_PROVINCE"/>
+        <viewAttribute id="EFF_DT"/>
+        <viewAttribute id="HIERARCHY_ID"/>
+        <viewAttribute id="RELATED_MARKET"/>
+        <viewAttribute id="IS_20600103"/>
+        <viewAttribute id="IS_20600102"/>
+        <viewAttribute id="IS_20600101"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#JOIN_CUST">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_ID_RIGHT" source="CUSTOMER_ID_RIGHT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBSCRIBER_NO" source="SUBSCRIBER_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUSINESS_ID" source="BUSINESS_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFFECTIVE_DATE" source="EFFECTIVE_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INIT_ACTIVATION_DATE" source="INIT_ACTIVATION_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT_TYPE" source="PRODUCT_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUB_STATUS_RSN_CODE" source="SUB_STATUS_RSN_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRV_BAN" source="PRV_BAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUB_STATUS_DATE" source="SUB_STATUS_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUB_STATUS" source="SUB_STATUS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUB_STATUS_LAST_ACT" source="SUB_STATUS_LAST_ACT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUB_STS_ISSUE_DATE" source="SUB_STS_ISSUE_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NEXT_BAN" source="NEXT_BAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KUNNR_SID" source="KUNNR_SID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BAN_STATUS_RIGHT" source="BAN_STATUS_RIGHT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_ID" source="CUSTOMER_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_CYCLE" source="BILL_CYCLE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BAN_STATUS" source="BAN_STATUS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="STATUS_LAST_DATE" source="STATUS_LAST_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="START_SERVICE_DATE" source="START_SERVICE_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACCOUNT_TYPE" source="ACCOUNT_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACCOUNT_SUB_TYPE" source="ACCOUNT_SUB_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ADR_PROVINCE" source="ADR_PROVINCE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DEFAULT_SUB_MARKET" source="DEFAULT_SUB_MARKET"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FIRST_NAME" source="FIRST_NAME"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LAST_BUSINESS_NAME" source="LAST_BUSINESS_NAME"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ADR_POSTAL" source="ADR_POSTAL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXPY_DT" source="EXPY_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="STATUS_ACTV_CODE" source="STATUS_ACTV_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="STATUS_ACTV_RSN_CODE" source="STATUS_ACTV_RSN_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TAX_PROVINCE" source="TAX_PROVINCE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFF_DT" source="EFF_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="HIERARCHY_ID" source="HIERARCHY_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RELATED_MARKET" source="RELATED_MARKET"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20600103" source="IS_20600103"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20600102" source="IS_20600102"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20600101" source="IS_20600101"/>
+      </input>
+      <windowFunction>
+        <partitionViewAttributeName>CUSTOMER_ID</partitionViewAttributeName>
+        <order byViewAttributeName="EFF_DT" direction="ASC"/>
+        <rankThreshold>
+          <value>1000</value>
+        </rankThreshold>
+        <rankViewAttributeName>RANK_SEQ</rankViewAttributeName>
+      </windowFunction>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_INSRT_UPDT">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="CUSTOMER_ID_RIGHT"/>
+        <viewAttribute id="SUBSCRIBER_NO"/>
+        <viewAttribute id="BUSINESS_ID"/>
+        <viewAttribute id="EFFECTIVE_DATE"/>
+        <viewAttribute id="INIT_ACTIVATION_DATE"/>
+        <viewAttribute id="PRODUCT_TYPE"/>
+        <viewAttribute id="SUB_STATUS_RSN_CODE"/>
+        <viewAttribute id="PRV_BAN"/>
+        <viewAttribute id="SUB_STATUS_DATE"/>
+        <viewAttribute id="SUB_STATUS"/>
+        <viewAttribute id="SUB_STATUS_LAST_ACT"/>
+        <viewAttribute id="SUB_STS_ISSUE_DATE"/>
+        <viewAttribute id="NEXT_BAN"/>
+        <viewAttribute id="KUNNR_SID"/>
+        <viewAttribute id="BAN_STATUS_RIGHT"/>
+        <viewAttribute id="CUSTOMER_ID"/>
+        <viewAttribute id="BILL_CYCLE"/>
+        <viewAttribute id="BAN_STATUS"/>
+        <viewAttribute id="STATUS_LAST_DATE"/>
+        <viewAttribute id="START_SERVICE_DATE"/>
+        <viewAttribute id="ACCOUNT_TYPE"/>
+        <viewAttribute id="ACCOUNT_SUB_TYPE"/>
+        <viewAttribute id="ADR_PROVINCE"/>
+        <viewAttribute id="DEFAULT_SUB_MARKET"/>
+        <viewAttribute id="FIRST_NAME"/>
+        <viewAttribute id="LAST_BUSINESS_NAME"/>
+        <viewAttribute id="ADR_POSTAL"/>
+        <viewAttribute id="EXPY_DT"/>
+        <viewAttribute id="STATUS_ACTV_CODE"/>
+        <viewAttribute id="STATUS_ACTV_RSN_CODE"/>
+        <viewAttribute id="TAX_PROVINCE"/>
+        <viewAttribute id="EFF_DT"/>
+        <viewAttribute id="HIERARCHY_ID"/>
+        <viewAttribute id="RELATED_MARKET"/>
+        <viewAttribute id="IS_20600103"/>
+        <viewAttribute id="IS_20600102"/>
+        <viewAttribute id="IS_20600101"/>
+        <viewAttribute id="RANK_SEQ"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CC_EXISTING_RECORD" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isNull(&quot;BAN_STATUS_RIGHT&quot;) and (&quot;RANK_SEQ&quot; = 1),'I','U')</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="DATE" id="CC_EFFECTIVE_DATE_PREV_DAY" expressionLanguage="COLUMN_ENGINE">
+          <formula>adddays(&quot;EFF_DT&quot;,-1)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CC_CONCAT_PK" length="100" expressionLanguage="COLUMN_ENGINE">
+          <formula>&quot;CUSTOMER_ID&quot;+'|'+&quot;SUBSCRIBER_NO&quot;</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#RANK_CONTRACT">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_ID_RIGHT" source="CUSTOMER_ID_RIGHT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBSCRIBER_NO" source="SUBSCRIBER_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUSINESS_ID" source="BUSINESS_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFFECTIVE_DATE" source="EFFECTIVE_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INIT_ACTIVATION_DATE" source="INIT_ACTIVATION_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT_TYPE" source="PRODUCT_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUB_STATUS_RSN_CODE" source="SUB_STATUS_RSN_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRV_BAN" source="PRV_BAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUB_STATUS_DATE" source="SUB_STATUS_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUB_STATUS" source="SUB_STATUS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUB_STATUS_LAST_ACT" source="SUB_STATUS_LAST_ACT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUB_STS_ISSUE_DATE" source="SUB_STS_ISSUE_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NEXT_BAN" source="NEXT_BAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KUNNR_SID" source="KUNNR_SID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BAN_STATUS_RIGHT" source="BAN_STATUS_RIGHT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_ID" source="CUSTOMER_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_CYCLE" source="BILL_CYCLE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BAN_STATUS" source="BAN_STATUS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="STATUS_LAST_DATE" source="STATUS_LAST_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="START_SERVICE_DATE" source="START_SERVICE_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACCOUNT_TYPE" source="ACCOUNT_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACCOUNT_SUB_TYPE" source="ACCOUNT_SUB_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ADR_PROVINCE" source="ADR_PROVINCE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DEFAULT_SUB_MARKET" source="DEFAULT_SUB_MARKET"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FIRST_NAME" source="FIRST_NAME"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LAST_BUSINESS_NAME" source="LAST_BUSINESS_NAME"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ADR_POSTAL" source="ADR_POSTAL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXPY_DT" source="EXPY_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="STATUS_ACTV_CODE" source="STATUS_ACTV_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="STATUS_ACTV_RSN_CODE" source="STATUS_ACTV_RSN_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TAX_PROVINCE" source="TAX_PROVINCE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFF_DT" source="EFF_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="HIERARCHY_ID" source="HIERARCHY_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RELATED_MARKET" source="RELATED_MARKET"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20600103" source="IS_20600103"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20600102" source="IS_20600102"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20600101" source="IS_20600101"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RANK_SEQ" source="RANK_SEQ"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="ERROR_SEMANTICS">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="CC_EXISTING_RECORD"/>
+        <viewAttribute id="CC_EFFECTIVE_DATE_PREV_DAY"/>
+        <viewAttribute id="CONCAT_PK"/>
+        <viewAttribute id="CUSTOMER_ID_RIGHT"/>
+        <viewAttribute id="SUBSCRIBER_NO"/>
+        <viewAttribute id="BUSINESS_ID"/>
+        <viewAttribute id="EFFECTIVE_DATE"/>
+        <viewAttribute id="INIT_ACTIVATION_DATE"/>
+        <viewAttribute id="PRODUCT_TYPE"/>
+        <viewAttribute id="SUB_STATUS_RSN_CODE"/>
+        <viewAttribute id="PRV_BAN"/>
+        <viewAttribute id="SUB_STATUS_DATE"/>
+        <viewAttribute id="SUB_STATUS"/>
+        <viewAttribute id="SUB_STATUS_LAST_ACT"/>
+        <viewAttribute id="SUB_STS_ISSUE_DATE"/>
+        <viewAttribute id="NEXT_BAN"/>
+        <viewAttribute id="KUNNR_SID"/>
+        <viewAttribute id="BAN_STATUS_RIGHT"/>
+        <viewAttribute id="CUSTOMER_ID"/>
+        <viewAttribute id="BILL_CYCLE"/>
+        <viewAttribute id="BAN_STATUS"/>
+        <viewAttribute id="STATUS_LAST_DATE"/>
+        <viewAttribute id="START_SERVICE_DATE"/>
+        <viewAttribute id="ACCOUNT_TYPE"/>
+        <viewAttribute id="ACCOUNT_SUB_TYPE"/>
+        <viewAttribute id="ADR_PROVINCE"/>
+        <viewAttribute id="DEFAULT_SUB_MARKET"/>
+        <viewAttribute id="FIRST_NAME"/>
+        <viewAttribute id="LAST_BUSINESS_NAME"/>
+        <viewAttribute id="ADR_POSTAL"/>
+        <viewAttribute id="EXPY_DT"/>
+        <viewAttribute id="STATUS_ACTV_CODE"/>
+        <viewAttribute id="STATUS_ACTV_RSN_CODE"/>
+        <viewAttribute id="TAX_PROVINCE"/>
+        <viewAttribute id="EFF_DT"/>
+        <viewAttribute id="HIERARCHY_ID"/>
+        <viewAttribute id="RELATED_MARKET"/>
+        <viewAttribute id="IS_20600103"/>
+        <viewAttribute id="IS_20600102"/>
+        <viewAttribute id="IS_20600101"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="ERROR_STATUS" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>if((&quot;IS_20600101&quot;='1') or (&quot;IS_20600102&quot;='1') or (&quot;IS_20600103&quot;='1'),'1','0')</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="ERROR_CODE" length="500" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(&quot;IS_20600101&quot;='1','20600101||','')+&#xD;
+if(&quot;IS_20600102&quot;='1', '20600102||','')  +&#xD;
+if(&quot;IS_20600103&quot;='1', '20600103||','') &#xD;
+</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#PROJ_INSRT_UPDT">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_EXISTING_RECORD" source="CC_EXISTING_RECORD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_EFFECTIVE_DATE_PREV_DAY" source="CC_EFFECTIVE_DATE_PREV_DAY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONCAT_PK" source="CC_CONCAT_PK"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_ID_RIGHT" source="CUSTOMER_ID_RIGHT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBSCRIBER_NO" source="SUBSCRIBER_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUSINESS_ID" source="BUSINESS_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFFECTIVE_DATE" source="EFFECTIVE_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INIT_ACTIVATION_DATE" source="INIT_ACTIVATION_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT_TYPE" source="PRODUCT_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUB_STATUS_RSN_CODE" source="SUB_STATUS_RSN_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRV_BAN" source="PRV_BAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUB_STATUS_DATE" source="SUB_STATUS_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUB_STATUS" source="SUB_STATUS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUB_STATUS_LAST_ACT" source="SUB_STATUS_LAST_ACT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUB_STS_ISSUE_DATE" source="SUB_STS_ISSUE_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NEXT_BAN" source="NEXT_BAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KUNNR_SID" source="KUNNR_SID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BAN_STATUS_RIGHT" source="BAN_STATUS_RIGHT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_ID" source="CUSTOMER_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_CYCLE" source="BILL_CYCLE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BAN_STATUS" source="BAN_STATUS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="STATUS_LAST_DATE" source="STATUS_LAST_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="START_SERVICE_DATE" source="START_SERVICE_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACCOUNT_TYPE" source="ACCOUNT_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACCOUNT_SUB_TYPE" source="ACCOUNT_SUB_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ADR_PROVINCE" source="ADR_PROVINCE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DEFAULT_SUB_MARKET" source="DEFAULT_SUB_MARKET"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FIRST_NAME" source="FIRST_NAME"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LAST_BUSINESS_NAME" source="LAST_BUSINESS_NAME"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ADR_POSTAL" source="ADR_POSTAL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXPY_DT" source="EXPY_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="STATUS_ACTV_CODE" source="STATUS_ACTV_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="STATUS_ACTV_RSN_CODE" source="STATUS_ACTV_RSN_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TAX_PROVINCE" source="TAX_PROVINCE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFF_DT" source="EFF_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="HIERARCHY_ID" source="HIERARCHY_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RELATED_MARKET" source="RELATED_MARKET"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20600103" source="IS_20600103"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20600102" source="IS_20600102"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20600101" source="IS_20600101"/>
+      </input>
+    </calculationView>
+  </calculationViews>
+  <logicalModel id="ERROR_SEMANTICS">
+    <descriptions/>
+    <attributes>
+      <attribute id="EFFECTIVE_DATE_PREV_DAY" order="1" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="EFFECTIVE_DATE_PREV_DAY"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="CC_EFFECTIVE_DATE_PREV_DAY"/>
+      </attribute>
+      <attribute id="FLAG_EXISTING_RECORD" order="2" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="FLAG_EXISTING_RECORD"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="CC_EXISTING_RECORD"/>
+      </attribute>
+      <attribute id="ERROR_STATUS" order="3" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ERROR_STATUS"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="ERROR_STATUS"/>
+      </attribute>
+      <attribute id="ERROR_CODE" order="4" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ERROR_CODE"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="ERROR_CODE"/>
+      </attribute>
+      <attribute id="CONCAT_PK" order="5" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CONCAT_PK"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="CONCAT_PK"/>
+      </attribute>
+      <attribute id="SUBSCRIBER_NO" order="6" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SUBSCRIBER_NO"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="SUBSCRIBER_NO"/>
+      </attribute>
+      <attribute id="BUSINESS_ID" order="7" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="BUSINESS_ID"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="BUSINESS_ID"/>
+      </attribute>
+      <attribute id="EFFECTIVE_DATE" order="8" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="EFFECTIVE_DATE"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="EFFECTIVE_DATE"/>
+      </attribute>
+      <attribute id="INIT_ACTIVATION_DATE" order="9" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="INIT_ACTIVATION_DATE"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="INIT_ACTIVATION_DATE"/>
+      </attribute>
+      <attribute id="PRODUCT_TYPE" order="10" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="PRODUCT_TYPE"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="PRODUCT_TYPE"/>
+      </attribute>
+      <attribute id="SUB_STATUS_RSN_CODE" order="11" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SUB_STATUS_RSN_CODE"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="SUB_STATUS_RSN_CODE"/>
+      </attribute>
+      <attribute id="PRV_BAN" order="12" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="PRV_BAN"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="PRV_BAN"/>
+      </attribute>
+      <attribute id="SUB_STATUS_DATE" order="13" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SUB_STATUS_DATE"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="SUB_STATUS_DATE"/>
+      </attribute>
+      <attribute id="SUB_STATUS" order="14" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SUB_STATUS"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="SUB_STATUS"/>
+      </attribute>
+      <attribute id="SUB_STATUS_LAST_ACT" order="15" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SUB_STATUS_LAST_ACT"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="SUB_STATUS_LAST_ACT"/>
+      </attribute>
+      <attribute id="SUB_STS_ISSUE_DATE" order="16" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SUB_STS_ISSUE_DATE"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="SUB_STS_ISSUE_DATE"/>
+      </attribute>
+      <attribute id="NEXT_BAN" order="17" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="NEXT_BAN"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="NEXT_BAN"/>
+      </attribute>
+      <attribute id="KUNNR_SID" order="18" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="KUNNR_SID"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="KUNNR_SID"/>
+      </attribute>
+      <attribute id="CUSTOMER_ID" order="19" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CUSTOMER_ID"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="CUSTOMER_ID"/>
+      </attribute>
+      <attribute id="BILL_CYCLE" order="20" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="BILL_CYCLE"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="BILL_CYCLE"/>
+      </attribute>
+      <attribute id="BAN_STATUS" order="21" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="BAN_STATUS"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="BAN_STATUS"/>
+      </attribute>
+      <attribute id="STATUS_LAST_DATE" order="22" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="STATUS_LAST_DATE"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="STATUS_LAST_DATE"/>
+      </attribute>
+      <attribute id="START_SERVICE_DATE" order="23" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="START_SERVICE_DATE"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="START_SERVICE_DATE"/>
+      </attribute>
+      <attribute id="ACCOUNT_TYPE" order="24" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ACCOUNT_TYPE"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="ACCOUNT_TYPE"/>
+      </attribute>
+      <attribute id="ACCOUNT_SUB_TYPE" order="25" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ACCOUNT_SUB_TYPE"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="ACCOUNT_SUB_TYPE"/>
+      </attribute>
+      <attribute id="ADR_PROVINCE" order="26" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ADR_PROVINCE"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="ADR_PROVINCE"/>
+      </attribute>
+      <attribute id="DEFAULT_SUB_MARKET" order="27" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="DEFAULT_SUB_MARKET"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="DEFAULT_SUB_MARKET"/>
+      </attribute>
+      <attribute id="FIRST_NAME" order="28" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="FIRST_NAME"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="FIRST_NAME"/>
+      </attribute>
+      <attribute id="LAST_BUSINESS_NAME" order="29" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="LAST_BUSINESS_NAME"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="LAST_BUSINESS_NAME"/>
+      </attribute>
+      <attribute id="ADR_POSTAL" order="30" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ADR_POSTAL"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="ADR_POSTAL"/>
+      </attribute>
+      <attribute id="REFERENCE_EXPIRY_DT" order="31" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="REFERENCE_EXPIRY_DT"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="EXPY_DT"/>
+      </attribute>
+      <attribute id="STATUS_ACTV_CODE" order="32" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="STATUS_ACTV_CODE"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="STATUS_ACTV_CODE"/>
+      </attribute>
+      <attribute id="STATUS_ACTV_RSN_CODE" order="33" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="STATUS_ACTV_RSN_CODE"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="STATUS_ACTV_RSN_CODE"/>
+      </attribute>
+      <attribute id="TAX_PROVINCE" order="34" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="TAX_PROVINCE"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="TAX_PROVINCE"/>
+      </attribute>
+      <attribute id="REFERENCE_EFFECTIVE_DT" order="35" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="REFERENCE_EFFECTIVE_DT"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="EFF_DT"/>
+      </attribute>
+      <attribute id="HIERARCHY_ID" order="36" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="HIERARCHY_ID"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="HIERARCHY_ID"/>
+      </attribute>
+      <attribute id="RELATED_MARKET" order="37" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="RELATED_MARKET"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="RELATED_MARKET"/>
+      </attribute>
+      <attribute id="IS_20600103" order="38" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="IS_20600103"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="IS_20600103"/>
+      </attribute>
+      <attribute id="IS_20600102" order="39" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="IS_20600102"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="IS_20600102"/>
+      </attribute>
+      <attribute id="IS_20600101" order="40" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="IS_20600101"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="IS_20600101"/>
+      </attribute>
+    </attributes>
+    <calculatedAttributes/>
+    <privateDataFoundation>
+      <tableProxies/>
+      <joins/>
+      <layout>
+        <shapes/>
+      </layout>
+    </privateDataFoundation>
+    <baseMeasures/>
+    <calculatedMeasures/>
+    <restrictedMeasures/>
+    <localDimensions/>
+  </logicalModel>
+  <layout>
+    <shapes>
+      <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+        <upperLeftCorner x="253" y="87"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_CA_CONTRACT" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="99" y="1017"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_OB_CUSTOMER" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="330" y="495"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_MARKET" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="253" y="1017"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="JOIN_CONTRACT_MARKET" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="176" y="921"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_ACTV" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="176" y="843"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_CUST_EH" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="22" y="843"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="JOIN_INCOMING_EH" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="89" y="747"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_ACTV_INCOMING" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="89" y="669"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+      <shape expanded="true" modelObjectName="AGGR_EH" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="89" y="591"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+      <shape expanded="true" modelObjectName="JOIN_EH_CHK" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="176" y="495"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+      <shape expanded="true" modelObjectName="JOIN_CUST" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="253" y="399"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="RANK_CONTRACT" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="253" y="321"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_INSRT_UPDT" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="253" y="243"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="ERROR_SEMANTICS" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="253" y="165"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+    </shapes>
+  </layout>
+</Calculation:scenario>

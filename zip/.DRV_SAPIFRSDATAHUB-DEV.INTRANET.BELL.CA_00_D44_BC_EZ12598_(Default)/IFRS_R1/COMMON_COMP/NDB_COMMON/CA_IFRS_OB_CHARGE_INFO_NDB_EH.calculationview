@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:AccessControl="http://www.sap.com/ndb/SQLCoreModelAccessControl.ecore" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" schemaVersion="2.3" id="CA_IFRS_OB_CHARGE_INFO_NDB_EH" applyPrivilegeType="NONE" checkAnalyticPrivileges="false" defaultClient="$$client$$" defaultLanguage="$$language$$" hierarchiesSQLEnabled="false" translationRelevant="true" visibility="internal" calculationScenarioType="TREE_BASED" dataCategory="DIMENSION" enforceSqlExecution="false" executionSemantic="UNDEFINED" outputViewType="Projection">
+  <descriptions defaultDescription="CA_IFRS_OB_CHARGE_INFO_NDB_EH"/>
+  <localVariables/>
+  <variableMappings/>
+  <informationModelLayout relativeWidthScenario="30"/>
+  <dataSources>
+    <DataSource id="IFRS_R1.COMMON_COMP.NDB_COMMON::OB_CHARGE_INFO" type="DATA_BASE_TABLE">
+      <viewAttributes allViewAttributes="true"/>
+      <columnObject schemaName="NDB_COMMON" columnObjectName="IFRS_R1.COMMON_COMP.NDB_COMMON::OB_CHARGE_INFO"/>
+    </DataSource>
+    <DataSource id="IFRS_R1.COMMON_COMP.NDB_COMMON::OB_CHARGE_INFO_EH" type="DATA_BASE_TABLE">
+      <viewAttributes allViewAttributes="true"/>
+      <columnObject schemaName="NDB_COMMON" columnObjectName="IFRS_R1.COMMON_COMP.NDB_COMMON::OB_CHARGE_INFO_EH"/>
+    </DataSource>
+  </dataSources>
+  <calculationViews>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_NDB">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="FEATURE_CODE"/>
+        <viewAttribute id="CHARGE_TYPE"/>
+        <viewAttribute id="FTR_REVENUE_CODE"/>
+        <viewAttribute id="INVOICE_TYPE"/>
+        <viewAttribute id="GL_CLASSIF_CODE"/>
+        <viewAttribute id="GL_CHARGE_TYPE"/>
+        <viewAttribute id="PROFIT_CENTER"/>
+        <viewAttribute id="REFERENCE_EFFECTIVE_DT"/>
+        <viewAttribute id="REFERENCE_EXPIRY_DT">
+          <filter xsi:type="AccessControl:SingleValueFilter" including="true" value="9999-12-31"/>
+        </viewAttribute>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#IFRS_R1.COMMON_COMP.NDB_COMMON::OB_CHARGE_INFO">
+        <mapping xsi:type="Calculation:AttributeMapping" target="FEATURE_CODE" source="FEATURE_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CHARGE_TYPE" source="CHARGE_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FTR_REVENUE_CODE" source="FTR_REVENUE_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INVOICE_TYPE" source="INVOICE_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GL_CLASSIF_CODE" source="GL_CLASSIF_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GL_CHARGE_TYPE" source="GL_CHARGE_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROFIT_CENTER" source="PROFIT_CENTER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_EFFECTIVE_DT" source="REFERENCE_EFFECTIVE_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_EXPIRY_DT" source="REFERENCE_EXPIRY_DT"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_EH">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="FEATURE_CODE_EH"/>
+        <viewAttribute id="CHARGE_TYPE"/>
+        <viewAttribute id="FTR_REVENUE_CODE"/>
+        <viewAttribute id="DELETED">
+          <filter xsi:type="AccessControl:SingleValueFilter" operator="NL" including="true"/>
+        </viewAttribute>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#IFRS_R1.COMMON_COMP.NDB_COMMON::OB_CHARGE_INFO_EH">
+        <mapping xsi:type="Calculation:AttributeMapping" target="FEATURE_CODE_EH" source="FEATURE_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CHARGE_TYPE" source="CHARGE_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FTR_REVENUE_CODE" source="FTR_REVENUE_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DELETED" source="DELETED"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="JOIN_NDB_EH" joinType="leftOuter">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="FEATURE_CODE"/>
+        <viewAttribute id="CHARGE_TYPE"/>
+        <viewAttribute id="FTR_REVENUE_CODE"/>
+        <viewAttribute id="INVOICE_TYPE"/>
+        <viewAttribute id="GL_CLASSIF_CODE"/>
+        <viewAttribute id="GL_CHARGE_TYPE"/>
+        <viewAttribute id="PROFIT_CENTER"/>
+        <viewAttribute id="REFERENCE_EFFECTIVE_DT"/>
+        <viewAttribute id="REFERENCE_EXPIRY_DT"/>
+        <viewAttribute id="FEATURE_CODE_EH"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CC_VERSION_CHECK" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isNull(&quot;FEATURE_CODE_EH&quot;),'0','1')</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#PROJ_NDB">
+        <mapping xsi:type="Calculation:AttributeMapping" target="FEATURE_CODE" source="FEATURE_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CHARGE_TYPE" source="CHARGE_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FTR_REVENUE_CODE" source="FTR_REVENUE_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INVOICE_TYPE" source="INVOICE_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GL_CLASSIF_CODE" source="GL_CLASSIF_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GL_CHARGE_TYPE" source="GL_CHARGE_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROFIT_CENTER" source="PROFIT_CENTER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_EFFECTIVE_DT" source="REFERENCE_EFFECTIVE_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_EXPIRY_DT" source="REFERENCE_EXPIRY_DT"/>
+      </input>
+      <input node="#PROJ_EH">
+        <mapping xsi:type="Calculation:AttributeMapping" target="FEATURE_CODE_EH" source="FEATURE_CODE_EH"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FEATURE_CODE" source="FEATURE_CODE_EH"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CHARGE_TYPE" source="CHARGE_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FTR_REVENUE_CODE" source="FTR_REVENUE_CODE"/>
+      </input>
+      <joinAttribute name="FEATURE_CODE"/>
+      <joinAttribute name="CHARGE_TYPE"/>
+      <joinAttribute name="FTR_REVENUE_CODE"/>
+    </calculationView>
+  </calculationViews>
+  <logicalModel id="JOIN_NDB_EH">
+    <descriptions/>
+    <attributes>
+      <attribute id="FEATURE_CODE" order="1" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="FEATURE_CODE"/>
+        <keyMapping columnObjectName="JOIN_NDB_EH" columnName="FEATURE_CODE"/>
+      </attribute>
+      <attribute id="CHARGE_TYPE" order="2" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CHARGE_TYPE"/>
+        <keyMapping columnObjectName="JOIN_NDB_EH" columnName="CHARGE_TYPE"/>
+      </attribute>
+      <attribute id="FTR_REVENUE_CODE" order="3" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="FTR_REVENUE_CODE"/>
+        <keyMapping columnObjectName="JOIN_NDB_EH" columnName="FTR_REVENUE_CODE"/>
+      </attribute>
+      <attribute id="INVOICE_TYPE" order="4" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="INVOICE_TYPE"/>
+        <keyMapping columnObjectName="JOIN_NDB_EH" columnName="INVOICE_TYPE"/>
+      </attribute>
+      <attribute id="GL_CLASSIF_CODE" order="5" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="GL_CLASSIF_CODE"/>
+        <keyMapping columnObjectName="JOIN_NDB_EH" columnName="GL_CLASSIF_CODE"/>
+      </attribute>
+      <attribute id="GL_CHARGE_TYPE" order="6" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="GL_CHARGE_TYPE"/>
+        <keyMapping columnObjectName="JOIN_NDB_EH" columnName="GL_CHARGE_TYPE"/>
+      </attribute>
+      <attribute id="PROFIT_CENTER" order="7" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="PROFIT_CENTER"/>
+        <keyMapping columnObjectName="JOIN_NDB_EH" columnName="PROFIT_CENTER"/>
+      </attribute>
+      <attribute id="REFERENCE_EFFECTIVE_DT" order="8" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="REFERENCE_EFFECTIVE_DT"/>
+        <keyMapping columnObjectName="JOIN_NDB_EH" columnName="REFERENCE_EFFECTIVE_DT"/>
+      </attribute>
+      <attribute id="REFERENCE_EXPIRY_DT" order="9" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="REFERENCE_EXPIRY_DT"/>
+        <keyMapping columnObjectName="JOIN_NDB_EH" columnName="REFERENCE_EXPIRY_DT"/>
+      </attribute>
+      <attribute id="CC_VERSION_CHECK" order="10" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CC_VERSION_CHECK"/>
+        <keyMapping columnObjectName="JOIN_NDB_EH" columnName="CC_VERSION_CHECK"/>
+      </attribute>
+    </attributes>
+    <calculatedAttributes/>
+    <privateDataFoundation>
+      <tableProxies/>
+      <joins/>
+      <layout>
+        <shapes/>
+      </layout>
+    </privateDataFoundation>
+    <baseMeasures/>
+    <calculatedMeasures/>
+    <restrictedMeasures/>
+    <localDimensions/>
+  </logicalModel>
+  <layout>
+    <shapes>
+      <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+        <upperLeftCorner x="99" y="87"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_NDB" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="22" y="261"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_EH" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="176" y="261"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="JOIN_NDB_EH" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="99" y="165"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+    </shapes>
+  </layout>
+</Calculation:scenario>

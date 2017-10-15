@@ -1,0 +1,1458 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" xmlns:Variable="http://www.sap.com/ndb/BiModelVariable.ecore" schemaVersion="2.3" id="CA_HP_BILLING_QC" applyPrivilegeType="NONE" checkAnalyticPrivileges="false" defaultClient="$$client$$" defaultLanguage="$$language$$" hierarchiesSQLEnabled="false" translationRelevant="true" visibility="reportingEnabled" calculationScenarioType="TREE_BASED" dataCategory="CUBE" enforceSqlExecution="false" executionSemantic="UNDEFINED" outputViewType="Aggregation">
+  <descriptions defaultDescription="CA_HP_BILLING_QC">
+    <comment text="This Harmonization view will return records for HP_BILLING that includes data from CBSS_CUST_PROFL_QC and CBSS_BILL_QC and CA_DISCOUNT_REF_VW"/>
+  </descriptions>
+  <localVariables>
+    <variable id="IP_INV_DATE" parameter="true">
+      <descriptions defaultDescription="IP_INV_DATE"/>
+      <variableProperties datatype="DATE" defaultValue="99991231" mandatory="false">
+        <valueDomain type="empty"/>
+        <selection multiLine="false" type="SingleValue"/>
+      </variableProperties>
+    </variable>
+  </localVariables>
+  <variableMappings>
+    <mapping xsi:type="Variable:VariableMapping" dataSource="#CA_CBSS_BILL_DTL_QC">
+      <targetVariable name="IP_INV_DATE" resourceUri="/IFRS_R1.HP.LAND_HP/calculationviews/CA_CBSS_BILL_DTL_QC"/>
+      <localVariable>#IP_INV_DATE</localVariable>
+    </mapping>
+    <mapping xsi:type="Variable:VariableMapping" dataSource="#PROJ_CBSS_BILL_DTL$$$$CA_CBSS_BILL_DTL_QC$$">
+      <targetVariable name="IP_INV_DATE" resourceUri="/IFRS_R1.HP.LAND_HP/calculationviews/CA_CBSS_BILL_DTL_QC"/>
+      <localVariable>#IP_INV_DATE</localVariable>
+    </mapping>
+  </variableMappings>
+  <informationModelLayout relativeWidthScenario="52"/>
+  <dataSources>
+    <DataSource id="CA_HP_CUSTOMER_NDB_EH" type="CALCULATION_VIEW">
+      <viewAttributes allViewAttributes="true"/>
+      <resourceUri>/IFRS_R1.HP.NDB_HP/calculationviews/CA_HP_CUSTOMER_NDB_EH</resourceUri>
+    </DataSource>
+    <DataSource id="CA_CBSS_BILL_DTL_QC" type="CALCULATION_VIEW">
+      <viewAttributes allViewAttributes="true"/>
+      <resourceUri>/IFRS_R1.HP.LAND_HP/calculationviews/CA_CBSS_BILL_DTL_QC</resourceUri>
+    </DataSource>
+    <DataSource id="CA_ARICS_CONS_QC" type="CALCULATION_VIEW">
+      <viewAttributes allViewAttributes="true"/>
+      <resourceUri>/IFRS_R1.HP.NDB_HP/calculationviews/CA_ARICS_CONS_QC</resourceUri>
+    </DataSource>
+    <DataSource id="PROJ_CBSS_BILL_DTL$$$$CA_CBSS_BILL_DTL_QC$$" type="CALCULATION_VIEW">
+      <viewAttributes allViewAttributes="true"/>
+      <resourceUri>/IFRS_R1.HP.LAND_HP/calculationviews/CA_CBSS_BILL_DTL_QC</resourceUri>
+    </DataSource>
+    <DataSource id="CA_HP_MDM_BILL_CD_SQL" type="CALCULATION_VIEW">
+      <viewAttributes allViewAttributes="true"/>
+      <resourceUri>/IFRS_R1.HP.LAND_HP/calculationviews/CA_HP_MDM_BILL_CD_SQL</resourceUri>
+    </DataSource>
+  </dataSources>
+  <calculationViews>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_HP_CUSTOMER">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="REF_EFFECTIVE_DATE"/>
+        <viewAttribute id="REF_EXPIRY_DATE"/>
+        <viewAttribute id="TO_BE_REBILL"/>
+        <viewAttribute id="BILL_SYS_CODE"/>
+        <viewAttribute id="SUBSCRIBER_NUMBER"/>
+        <viewAttribute id="KUNNR_SID"/>
+        <viewAttribute id="CC_VERSION_CHECK"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#CA_HP_CUSTOMER_NDB_EH">
+        <mapping xsi:type="Calculation:AttributeMapping" target="REF_EFFECTIVE_DATE" source="REF_EFFECTIVE_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REF_EXPIRY_DATE" source="REF_EXPIRY_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TO_BE_REBILL" source="TO_BE_REBILL_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_SYS_CODE" source="BILL_SYS_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBSCRIBER_NUMBER" source="SUBSCRIBER_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KUNNR_SID" source="KUNNR_SID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_VERSION_CHECK" source="CC_VERSION_CHECK"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_CBSS_BILL_DTL_QC">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="PSPID"/>
+        <viewAttribute id="CURRENCY"/>
+        <viewAttribute id="BRA_GL_NO"/>
+        <viewAttribute id="BRA_AMT"/>
+        <viewAttribute id="PROD_MSG_SERV_CODE"/>
+        <viewAttribute id="ADJUSTMENT_REASON"/>
+        <viewAttribute id="PS_QTY_PRPS_CD"/>
+        <viewAttribute id="PRODUCT_SERVICE_TYPE"/>
+        <viewAttribute id="PRODUCT_SERVICE_CODE"/>
+        <viewAttribute id="BRA_CODE"/>
+        <viewAttribute id="PRODUCT_END_DATE"/>
+        <viewAttribute id="PRODUCT_START_DATE"/>
+        <viewAttribute id="WTN"/>
+        <viewAttribute id="INV_NO"/>
+        <viewAttribute id="CAN"/>
+        <viewAttribute id="SAN"/>
+        <viewAttribute id="INV_DATE"/>
+        <viewAttribute id="SEQ_ID"/>
+        <viewAttribute id="CYCL_ID"/>
+        <viewAttribute id="COUNT"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CC_WTN" length="16" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isNull(&quot;WTN&quot;),&quot;INV_NO&quot;,&quot;WTN&quot;)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CC_PROD_MSG_SERV_CODE" length="3" expressionLanguage="COLUMN_ENGINE">
+          <formula>if (isnull(&quot;PROD_MSG_SERV_CODE&quot;),'NC',&quot;PROD_MSG_SERV_CODE&quot;)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CC_INV_SUBSCRIBER_NO" length="10" expressionLanguage="COLUMN_ENGINE">
+          <formula>leftstr(&quot;INV_NO&quot;,10)</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#CA_CBSS_BILL_DTL_QC">
+        <mapping xsi:type="Calculation:AttributeMapping" target="PSPID" source="PSPID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CURRENCY" source="CURRENCY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BRA_GL_NO" source="BRA_GL_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BRA_AMT" source="BRA_AMT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROD_MSG_SERV_CODE" source="PROD_MSG_SERV_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ADJUSTMENT_REASON" source="ADJUSTMENT_REASON"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PS_QTY_PRPS_CD" source="PS_QTY_PRPS_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT_SERVICE_TYPE" source="PRODUCT_SERVICE_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT_SERVICE_CODE" source="PRODUCT_SERVICE_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BRA_CODE" source="BRA_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT_END_DATE" source="PRODUCT_END_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT_START_DATE" source="PRODUCT_START_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WTN" source="WTN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INV_NO" source="INV_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CAN" source="CAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SAN" source="SAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INV_DATE" source="INV_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SEQ_ID" source="SEQ_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="COUNT" source="COUNT"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="JOIN_CUST_BILL" dynamic="false" joinOrder="OUTSIDE_IN" joinType="leftOuter">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="REF_EFFECTIVE_DATE"/>
+        <viewAttribute id="REF_EXPIRY_DATE"/>
+        <viewAttribute id="BILL_SYS_CODE"/>
+        <viewAttribute id="SUBSCRIBER_NUMBER_RIGHT"/>
+        <viewAttribute id="TO_BE_REBILL"/>
+        <viewAttribute id="PSPID"/>
+        <viewAttribute id="CURRENCY"/>
+        <viewAttribute id="BRA_GL_NO"/>
+        <viewAttribute id="BRA_AMT"/>
+        <viewAttribute id="PROD_MSG_SERV_CODE"/>
+        <viewAttribute id="ADJUSTMENT_REASON"/>
+        <viewAttribute id="PS_QTY_PRPS_CD"/>
+        <viewAttribute id="PRODUCT_SERVICE_TYPE"/>
+        <viewAttribute id="PRODUCT_SERVICE_CODE"/>
+        <viewAttribute id="BRA_CODE"/>
+        <viewAttribute id="PRODUCT_END_DATE"/>
+        <viewAttribute id="PRODUCT_START_DATE"/>
+        <viewAttribute id="WTN"/>
+        <viewAttribute id="INV_NO"/>
+        <viewAttribute id="CAN"/>
+        <viewAttribute id="SAN"/>
+        <viewAttribute id="INV_DATE"/>
+        <viewAttribute id="CC_PROD_MSG_SERV_CODE"/>
+        <viewAttribute id="CC_WTN"/>
+        <viewAttribute id="CC_INV_SUBSCRIBER_NO"/>
+        <viewAttribute id="KUNNR_SID"/>
+        <viewAttribute id="SEQ_ID"/>
+        <viewAttribute id="CYCL_ID"/>
+        <viewAttribute id="CC_VERSION_CHECK"/>
+        <viewAttribute id="COUNT"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="DATE" id="CC_REF_EXPIRY_DATE" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isNull(&quot;REF_EXPIRY_DATE&quot;), date('99991231'), &quot;REF_EXPIRY_DATE&quot;)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="DATE" id="CC_REF_EFFECTIVE_DATE" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isNull(&quot;REF_EFFECTIVE_DATE&quot;), date('19000101'), &quot;REF_EFFECTIVE_DATE&quot;)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="IS_20300105" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>&quot;CC_VERSION_CHECK&quot;</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#PROJ_CBSS_BILL_DTL_QC">
+        <mapping xsi:type="Calculation:AttributeMapping" target="PSPID" source="PSPID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CURRENCY" source="CURRENCY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BRA_GL_NO" source="BRA_GL_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BRA_AMT" source="BRA_AMT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROD_MSG_SERV_CODE" source="PROD_MSG_SERV_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ADJUSTMENT_REASON" source="ADJUSTMENT_REASON"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PS_QTY_PRPS_CD" source="PS_QTY_PRPS_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT_SERVICE_TYPE" source="PRODUCT_SERVICE_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT_SERVICE_CODE" source="PRODUCT_SERVICE_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BRA_CODE" source="BRA_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT_END_DATE" source="PRODUCT_END_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT_START_DATE" source="PRODUCT_START_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WTN" source="WTN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INV_NO" source="INV_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CAN" source="CAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SAN" source="SAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INV_DATE" source="INV_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_PROD_MSG_SERV_CODE" source="CC_PROD_MSG_SERV_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_WTN" source="CC_WTN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_INV_SUBSCRIBER_NO" source="CC_INV_SUBSCRIBER_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SEQ_ID" source="SEQ_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="COUNT" source="COUNT"/>
+      </input>
+      <input node="#PROJ_HP_CUSTOMER">
+        <mapping xsi:type="Calculation:AttributeMapping" target="REF_EFFECTIVE_DATE" source="REF_EFFECTIVE_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REF_EXPIRY_DATE" source="REF_EXPIRY_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_SYS_CODE" source="BILL_SYS_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBSCRIBER_NUMBER_RIGHT" source="SUBSCRIBER_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TO_BE_REBILL" source="TO_BE_REBILL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KUNNR_SID" source="KUNNR_SID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_VERSION_CHECK" source="CC_VERSION_CHECK"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_INV_SUBSCRIBER_NO" source="SUBSCRIBER_NUMBER"/>
+      </input>
+      <joinAttribute name="CC_INV_SUBSCRIBER_NO"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_PROD_SERV_TYPE" filterExpressionLanguage="COLUMN_ENGINE">
+      <descriptions>
+        <comment text="Join Error will be raised as 20300101&#xD;&#xA;Kunnr SID Error will be raised as 20300102"/>
+      </descriptions>
+      <viewAttributes>
+        <viewAttribute id="PSPID"/>
+        <viewAttribute id="CURRENCY"/>
+        <viewAttribute id="BRA_GL_NO"/>
+        <viewAttribute id="BRA_AMT"/>
+        <viewAttribute id="PS_QTY_PRPS_CD"/>
+        <viewAttribute id="PRODUCT_SERVICE_TYPE"/>
+        <viewAttribute id="BRA_CODE"/>
+        <viewAttribute id="PRODUCT_END_DATE"/>
+        <viewAttribute id="PRODUCT_START_DATE"/>
+        <viewAttribute id="WTN"/>
+        <viewAttribute id="INV_NO"/>
+        <viewAttribute id="CAN"/>
+        <viewAttribute id="SAN"/>
+        <viewAttribute id="INV_DATE"/>
+        <viewAttribute id="REF_EFFECTIVE_DATE"/>
+        <viewAttribute id="REF_EXPIRY_DATE"/>
+        <viewAttribute id="BILL_SYS_CODE"/>
+        <viewAttribute id="PRODUCT_SERVICE_CODE"/>
+        <viewAttribute id="CC_WTN"/>
+        <viewAttribute id="TO_BE_REBILL"/>
+        <viewAttribute id="SUBSCRIBER_NUMBER_RIGHT"/>
+        <viewAttribute id="CC_REF_EXPIRY_DATE"/>
+        <viewAttribute id="CC_REF_EFFECTIVE_DATE"/>
+        <viewAttribute id="KUNNR_SID"/>
+        <viewAttribute id="SEQ_ID"/>
+        <viewAttribute id="CYCL_ID"/>
+        <viewAttribute id="PROD_MSG_SERV_CODE"/>
+        <viewAttribute id="IS_20300105"/>
+        <viewAttribute id="COUNT"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="IS_20300101" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isnull(&quot;SUBSCRIBER_NUMBER_RIGHT&quot;), '1','0')</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="IS_20300102" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isnull(&quot;KUNNR_SID&quot;), '1','0')</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#JOIN_CUST_BILL">
+        <mapping xsi:type="Calculation:AttributeMapping" target="PSPID" source="PSPID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CURRENCY" source="CURRENCY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BRA_GL_NO" source="BRA_GL_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BRA_AMT" source="BRA_AMT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PS_QTY_PRPS_CD" source="PS_QTY_PRPS_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT_SERVICE_TYPE" source="PRODUCT_SERVICE_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BRA_CODE" source="BRA_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT_END_DATE" source="PRODUCT_END_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT_START_DATE" source="PRODUCT_START_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WTN" source="WTN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INV_NO" source="INV_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CAN" source="CAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SAN" source="SAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INV_DATE" source="INV_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REF_EFFECTIVE_DATE" source="REF_EFFECTIVE_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REF_EXPIRY_DATE" source="REF_EXPIRY_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_SYS_CODE" source="BILL_SYS_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT_SERVICE_CODE" source="PRODUCT_SERVICE_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_WTN" source="CC_WTN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TO_BE_REBILL" source="TO_BE_REBILL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBSCRIBER_NUMBER_RIGHT" source="SUBSCRIBER_NUMBER_RIGHT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_REF_EXPIRY_DATE" source="CC_REF_EXPIRY_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_REF_EFFECTIVE_DATE" source="CC_REF_EFFECTIVE_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KUNNR_SID" source="KUNNR_SID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SEQ_ID" source="SEQ_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROD_MSG_SERV_CODE" source="PROD_MSG_SERV_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20300105" source="IS_20300105"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="COUNT" source="COUNT"/>
+      </input>
+      <filter>&quot;INV_DATE&quot; >= &quot;CC_REF_EFFECTIVE_DATE&quot; and &quot;INV_DATE&quot;&lt;= &quot;CC_REF_EXPIRY_DATE&quot;</filter>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_PROD_SERV_TY">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="PSPID"/>
+        <viewAttribute id="CURRENCY"/>
+        <viewAttribute id="BRA_GL_NO"/>
+        <viewAttribute id="BRA_AMT"/>
+        <viewAttribute id="PS_QTY_PRPS_CD"/>
+        <viewAttribute id="PRODUCT_SERVICE_TYPE"/>
+        <viewAttribute id="BRA_CODE"/>
+        <viewAttribute id="PRODUCT_END_DATE"/>
+        <viewAttribute id="PRODUCT_START_DATE"/>
+        <viewAttribute id="WTN"/>
+        <viewAttribute id="INV_NO"/>
+        <viewAttribute id="CAN"/>
+        <viewAttribute id="SAN"/>
+        <viewAttribute id="INV_DATE"/>
+        <viewAttribute id="REF_EFFECTIVE_DATE"/>
+        <viewAttribute id="REF_EXPIRY_DATE"/>
+        <viewAttribute id="BILL_SYS_CODE"/>
+        <viewAttribute id="PRODUCT_SERVICE_CODE"/>
+        <viewAttribute id="CC_WTN"/>
+        <viewAttribute id="TO_BE_REBILL"/>
+        <viewAttribute id="IS_20300101"/>
+        <viewAttribute id="IS_20300102"/>
+        <viewAttribute id="SEQ_ID"/>
+        <viewAttribute id="CYCL_ID"/>
+        <viewAttribute id="KUNNR_SID"/>
+        <viewAttribute id="PROD_MSG_SERV_CODE"/>
+        <viewAttribute id="IS_20300105"/>
+        <viewAttribute id="COUNT"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CC_ITEM_TYPE" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>'S'</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CC_ITEM_ID" length="3" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isnull(&quot;PRODUCT_SERVICE_CODE&quot;), &#xD;
+   (if( isnull(&quot;PROD_MSG_SERV_CODE&quot;),&#xD;
+       'NC',&#xD;
+          &quot;PROD_MSG_SERV_CODE&quot;)),&#xD;
+            &quot;PRODUCT_SERVICE_CODE&quot;)</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#PROJ_PROD_SERV_TYPE">
+        <mapping xsi:type="Calculation:AttributeMapping" target="PSPID" source="PSPID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CURRENCY" source="CURRENCY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BRA_GL_NO" source="BRA_GL_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BRA_AMT" source="BRA_AMT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PS_QTY_PRPS_CD" source="PS_QTY_PRPS_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT_SERVICE_TYPE" source="PRODUCT_SERVICE_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BRA_CODE" source="BRA_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT_END_DATE" source="PRODUCT_END_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT_START_DATE" source="PRODUCT_START_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WTN" source="WTN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INV_NO" source="INV_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CAN" source="CAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SAN" source="SAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INV_DATE" source="INV_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REF_EFFECTIVE_DATE" source="REF_EFFECTIVE_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REF_EXPIRY_DATE" source="REF_EXPIRY_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_SYS_CODE" source="BILL_SYS_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT_SERVICE_CODE" source="PRODUCT_SERVICE_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_WTN" source="CC_WTN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TO_BE_REBILL" source="TO_BE_REBILL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20300101" source="IS_20300101"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20300102" source="IS_20300102"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SEQ_ID" source="SEQ_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KUNNR_SID" source="KUNNR_SID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROD_MSG_SERV_CODE" source="PROD_MSG_SERV_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20300105" source="IS_20300105"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="COUNT" source="COUNT"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_ARICS_CONS_QC" filterExpressionLanguage="COLUMN_ENGINE">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="ADJMT_ACTN_CD"/>
+        <viewAttribute id="PRO_DT"/>
+        <viewAttribute id="REFR_JRNL_ACT_CD"/>
+        <viewAttribute id="CC_CUST_ACCT_ID"/>
+        <viewAttribute id="BILL_SUFFIX_CD"/>
+        <viewAttribute id="TOT_BASIC_AMT"/>
+        <viewAttribute id="ADJMT_TY_CD"/>
+        <viewAttribute id="SER_NUM"/>
+        <viewAttribute id="TCAN_CUST_ACCT_NO"/>
+        <viewAttribute id="BILL_NPA"/>
+        <viewAttribute id="BILL_NXX"/>
+        <viewAttribute id="BILL_LINE_NUM"/>
+        <viewAttribute id="BILL_CUST_CD"/>
+        <viewAttribute id="CYCL_ID_VADJS"/>
+        <viewAttribute id="CYCL_ID_VADJ"/>
+        <viewAttribute id="SEQ_NUM"/>
+        <viewAttribute id="PRODSERV_CD"/>
+        <viewAttribute id="MCC_QC_PRIMARY_KEY"/>
+        <viewAttribute id="VADJSQC_PRIMARY_KEY"/>
+        <viewAttribute id="VADJQC_PRIMARY_KEY"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CC_ADJS_CODE" length="4" expressionLanguage="COLUMN_ENGINE">
+          <formula>&quot;ADJMT_ACTN_CD&quot;+&quot;ADJMT_TY_CD&quot;</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#CA_ARICS_CONS_QC">
+        <mapping xsi:type="Calculation:AttributeMapping" target="ADJMT_ACTN_CD" source="ADJMT_ACTN_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRO_DT" source="PRO_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFR_JRNL_ACT_CD" source="REFR_JRNL_ACT_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_CUST_ACCT_ID" source="CC_CUST_ACCT_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_SUFFIX_CD" source="BILL_SUFFIX_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TOT_BASIC_AMT" source="TOT_BASIC_AMT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ADJMT_TY_CD" source="ADJMT_TY_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SER_NUM" source="SER_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TCAN_CUST_ACCT_NO" source="TCAN_CUST_ACCT_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_NPA" source="BILL_NPA"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_NXX" source="BILL_NXX"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_LINE_NUM" source="BILL_LINE_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_CUST_CD" source="BILL_CUST_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID_VADJS" source="CYCL_ID_VADJS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID_VADJ" source="CYCL_ID_VADJ"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SEQ_NUM" source="SEQ_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRODSERV_CD" source="PRODSERV_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MCC_QC_PRIMARY_KEY" source="MCC_QC_PRIMARY_KEY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VADJSQC_PRIMARY_KEY" source="VADJSQC_PRIMARY_KEY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VADJQC_PRIMARY_KEY" source="VADJQC_PRIMARY_KEY"/>
+      </input>
+      <filter>not(match(&quot;BILL_SUFFIX_CD&quot; ,'W*'))</filter>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_CBSS_BILL_DTL">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="PSPID"/>
+        <viewAttribute id="CURRENCY"/>
+        <viewAttribute id="BRA_GL_NO"/>
+        <viewAttribute id="BRA_AMT"/>
+        <viewAttribute id="GROSS_LD_AMOUNT"/>
+        <viewAttribute id="USAGE_DISCOUNT_AMOUNT"/>
+        <viewAttribute id="MONTHLY_RATE"/>
+        <viewAttribute id="ADJUSTMENT_REASON"/>
+        <viewAttribute id="PS_QTY_PRPS_CD"/>
+        <viewAttribute id="PRODUCT_SERVICE_TYPE"/>
+        <viewAttribute id="BRA_CODE"/>
+        <viewAttribute id="PRODUCT_END_DATE"/>
+        <viewAttribute id="PRODUCT_START_DATE"/>
+        <viewAttribute id="WTN"/>
+        <viewAttribute id="INV_NO"/>
+        <viewAttribute id="CAN"/>
+        <viewAttribute id="SAN"/>
+        <viewAttribute id="INV_DATE"/>
+        <viewAttribute id="COUNT"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CC_INV_CUST_ACCT_ID" length="10" expressionLanguage="COLUMN_ENGINE">
+          <formula>leftstr(&quot;INV_NO&quot;,10)</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#PROJ_CBSS_BILL_DTL$$$$CA_CBSS_BILL_DTL_QC$$">
+        <mapping xsi:type="Calculation:AttributeMapping" target="PSPID" source="PSPID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CURRENCY" source="CURRENCY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BRA_GL_NO" source="BRA_GL_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BRA_AMT" source="BRA_AMT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GROSS_LD_AMOUNT" source="GROSS_LD_AMOUNT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="USAGE_DISCOUNT_AMOUNT" source="USAGE_DISCOUNT_AMOUNT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MONTHLY_RATE" source="MONTHLY_RATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ADJUSTMENT_REASON" source="ADJUSTMENT_REASON"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PS_QTY_PRPS_CD" source="PS_QTY_PRPS_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT_SERVICE_TYPE" source="PRODUCT_SERVICE_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BRA_CODE" source="BRA_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT_END_DATE" source="PRODUCT_END_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT_START_DATE" source="PRODUCT_START_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WTN" source="WTN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INV_NO" source="INV_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CAN" source="CAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SAN" source="SAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INV_DATE" source="INV_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="COUNT" source="COUNT"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="JOIN_CBSS_ADJ" joinOrder="OUTSIDE_IN" joinType="inner">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="ADJMT_ACTN_CD"/>
+        <viewAttribute id="PRO_DT"/>
+        <viewAttribute id="REFR_JRNL_ACT_CD"/>
+        <viewAttribute id="CC_CUST_ACCT_ID"/>
+        <viewAttribute id="BILL_SUFFIX_CD"/>
+        <viewAttribute id="TOT_BASIC_AMT"/>
+        <viewAttribute id="ADJMT_TY_CD"/>
+        <viewAttribute id="CC_ADJS_CODE"/>
+        <viewAttribute id="PSPID"/>
+        <viewAttribute id="CURRENCY"/>
+        <viewAttribute id="BRA_GL_NO"/>
+        <viewAttribute id="BRA_AMT"/>
+        <viewAttribute id="GROSS_LD_AMOUNT"/>
+        <viewAttribute id="USAGE_DISCOUNT_AMOUNT"/>
+        <viewAttribute id="MONTHLY_RATE"/>
+        <viewAttribute id="ADJUSTMENT_REASON"/>
+        <viewAttribute id="PS_QTY_PRPS_CD"/>
+        <viewAttribute id="PRODUCT_SERVICE_TYPE"/>
+        <viewAttribute id="BRA_CODE"/>
+        <viewAttribute id="PRODUCT_END_DATE"/>
+        <viewAttribute id="PRODUCT_START_DATE"/>
+        <viewAttribute id="WTN"/>
+        <viewAttribute id="INV_NO"/>
+        <viewAttribute id="CAN"/>
+        <viewAttribute id="SAN"/>
+        <viewAttribute id="INV_DATE"/>
+        <viewAttribute id="SER_NUM"/>
+        <viewAttribute id="TCAN_CUST_ACCT_NO"/>
+        <viewAttribute id="BILL_NPA"/>
+        <viewAttribute id="BILL_NXX"/>
+        <viewAttribute id="BILL_LINE_NUM"/>
+        <viewAttribute id="BILL_CUST_CD"/>
+        <viewAttribute id="CYCL_ID_VADJS"/>
+        <viewAttribute id="CYCL_ID_VADJ"/>
+        <viewAttribute id="SEQ_NUM"/>
+        <viewAttribute id="PRODSERV_CD"/>
+        <viewAttribute id="MCC_QC_PRIMARY_KEY"/>
+        <viewAttribute id="VADJSQC_PRIMARY_KEY"/>
+        <viewAttribute id="VADJQC_PRIMARY_KEY"/>
+        <viewAttribute id="COUNT"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CC_WTN" length="16" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isNull(&quot;WTN&quot;),&quot;INV_NO&quot;,&quot;WTN&quot;)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="DATE" id="CC_DATE_FROM" expressionLanguage="SQL">
+          <formula>add_months(add_days(&quot;INV_DATE&quot;,1),-1)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="DATE" id="CC_DATE_TO" expressionLanguage="COLUMN_ENGINE">
+          <formula>&quot;INV_DATE&quot;</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#PROJ_ARICS_CONS_QC">
+        <mapping xsi:type="Calculation:AttributeMapping" target="ADJMT_ACTN_CD" source="ADJMT_ACTN_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRO_DT" source="PRO_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFR_JRNL_ACT_CD" source="REFR_JRNL_ACT_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_CUST_ACCT_ID" source="CC_CUST_ACCT_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_SUFFIX_CD" source="BILL_SUFFIX_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TOT_BASIC_AMT" source="TOT_BASIC_AMT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ADJMT_TY_CD" source="ADJMT_TY_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_ADJS_CODE" source="CC_ADJS_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SER_NUM" source="SER_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TCAN_CUST_ACCT_NO" source="TCAN_CUST_ACCT_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_NPA" source="BILL_NPA"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_NXX" source="BILL_NXX"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_LINE_NUM" source="BILL_LINE_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_CUST_CD" source="BILL_CUST_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID_VADJS" source="CYCL_ID_VADJS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID_VADJ" source="CYCL_ID_VADJ"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SEQ_NUM" source="SEQ_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRODSERV_CD" source="PRODSERV_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MCC_QC_PRIMARY_KEY" source="MCC_QC_PRIMARY_KEY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VADJSQC_PRIMARY_KEY" source="VADJSQC_PRIMARY_KEY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VADJQC_PRIMARY_KEY" source="VADJQC_PRIMARY_KEY"/>
+      </input>
+      <input node="#PROJ_CBSS_BILL_DTL">
+        <mapping xsi:type="Calculation:AttributeMapping" target="PSPID" source="PSPID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CURRENCY" source="CURRENCY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BRA_GL_NO" source="BRA_GL_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BRA_AMT" source="BRA_AMT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GROSS_LD_AMOUNT" source="GROSS_LD_AMOUNT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="USAGE_DISCOUNT_AMOUNT" source="USAGE_DISCOUNT_AMOUNT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MONTHLY_RATE" source="MONTHLY_RATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ADJUSTMENT_REASON" source="ADJUSTMENT_REASON"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PS_QTY_PRPS_CD" source="PS_QTY_PRPS_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT_SERVICE_TYPE" source="PRODUCT_SERVICE_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BRA_CODE" source="BRA_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT_END_DATE" source="PRODUCT_END_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT_START_DATE" source="PRODUCT_START_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WTN" source="WTN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INV_NO" source="INV_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CAN" source="CAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SAN" source="SAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INV_DATE" source="INV_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="COUNT" source="COUNT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_CUST_ACCT_ID" source="CC_INV_CUST_ACCT_ID"/>
+      </input>
+      <joinAttribute name="CC_CUST_ACCT_ID"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_ADJMT_CODE" filterExpressionLanguage="COLUMN_ENGINE">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="PRO_DT"/>
+        <viewAttribute id="ADJMT_ACTN_CD"/>
+        <viewAttribute id="REFR_JRNL_ACT_CD"/>
+        <viewAttribute id="TOT_BASIC_AMT"/>
+        <viewAttribute id="INV_DATE"/>
+        <viewAttribute id="CAN"/>
+        <viewAttribute id="SAN"/>
+        <viewAttribute id="INV_NO"/>
+        <viewAttribute id="WTN"/>
+        <viewAttribute id="PRODUCT_END_DATE"/>
+        <viewAttribute id="PRODUCT_START_DATE"/>
+        <viewAttribute id="BRA_CODE"/>
+        <viewAttribute id="PRODUCT_SERVICE_TYPE"/>
+        <viewAttribute id="PS_QTY_PRPS_CD"/>
+        <viewAttribute id="ADJUSTMENT_REASON"/>
+        <viewAttribute id="MONTHLY_RATE"/>
+        <viewAttribute id="BRA_AMT"/>
+        <viewAttribute id="USAGE_DISCOUNT_AMOUNT"/>
+        <viewAttribute id="GROSS_LD_AMOUNT"/>
+        <viewAttribute id="BRA_GL_NO"/>
+        <viewAttribute id="CURRENCY"/>
+        <viewAttribute id="PSPID"/>
+        <viewAttribute id="CC_ADJS_CODE"/>
+        <viewAttribute id="CC_WTN"/>
+        <viewAttribute id="CC_DATE_FROM"/>
+        <viewAttribute id="CC_DATE_TO"/>
+        <viewAttribute id="SER_NUM"/>
+        <viewAttribute id="TCAN_CUST_ACCT_NO"/>
+        <viewAttribute id="BILL_NPA"/>
+        <viewAttribute id="BILL_NXX"/>
+        <viewAttribute id="BILL_LINE_NUM"/>
+        <viewAttribute id="BILL_CUST_CD"/>
+        <viewAttribute id="CYCL_ID_VADJS"/>
+        <viewAttribute id="CYCL_ID_VADJ"/>
+        <viewAttribute id="SEQ_NUM"/>
+        <viewAttribute id="PRODSERV_CD"/>
+        <viewAttribute id="MCC_QC_PRIMARY_KEY"/>
+        <viewAttribute id="ADJMT_TY_CD"/>
+        <viewAttribute id="BILL_SUFFIX_CD"/>
+        <viewAttribute id="VADJSQC_PRIMARY_KEY"/>
+        <viewAttribute id="VADJQC_PRIMARY_KEY"/>
+        <viewAttribute id="COUNT"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CC_ITEM_TYPE" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>'A'</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#JOIN_CBSS_ADJ">
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRO_DT" source="PRO_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ADJMT_ACTN_CD" source="ADJMT_ACTN_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFR_JRNL_ACT_CD" source="REFR_JRNL_ACT_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TOT_BASIC_AMT" source="TOT_BASIC_AMT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INV_DATE" source="INV_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CAN" source="CAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SAN" source="SAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INV_NO" source="INV_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WTN" source="WTN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT_END_DATE" source="PRODUCT_END_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT_START_DATE" source="PRODUCT_START_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BRA_CODE" source="BRA_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT_SERVICE_TYPE" source="PRODUCT_SERVICE_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PS_QTY_PRPS_CD" source="PS_QTY_PRPS_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ADJUSTMENT_REASON" source="ADJUSTMENT_REASON"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MONTHLY_RATE" source="MONTHLY_RATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BRA_AMT" source="BRA_AMT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="USAGE_DISCOUNT_AMOUNT" source="USAGE_DISCOUNT_AMOUNT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GROSS_LD_AMOUNT" source="GROSS_LD_AMOUNT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BRA_GL_NO" source="BRA_GL_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CURRENCY" source="CURRENCY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PSPID" source="PSPID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_ADJS_CODE" source="CC_ADJS_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_WTN" source="CC_WTN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_DATE_FROM" source="CC_DATE_FROM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_DATE_TO" source="CC_DATE_TO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SER_NUM" source="SER_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TCAN_CUST_ACCT_NO" source="TCAN_CUST_ACCT_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_NPA" source="BILL_NPA"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_NXX" source="BILL_NXX"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_LINE_NUM" source="BILL_LINE_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_CUST_CD" source="BILL_CUST_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID_VADJS" source="CYCL_ID_VADJS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID_VADJ" source="CYCL_ID_VADJ"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SEQ_NUM" source="SEQ_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRODSERV_CD" source="PRODSERV_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MCC_QC_PRIMARY_KEY" source="MCC_QC_PRIMARY_KEY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ADJMT_TY_CD" source="ADJMT_TY_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_SUFFIX_CD" source="BILL_SUFFIX_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VADJSQC_PRIMARY_KEY" source="VADJSQC_PRIMARY_KEY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VADJQC_PRIMARY_KEY" source="VADJQC_PRIMARY_KEY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="COUNT" source="COUNT"/>
+      </input>
+      <filter>&quot;PRO_DT&quot; &lt;= &quot;CC_DATE_TO&quot; and &quot;PRO_DT&quot; >= &quot;CC_DATE_FROM&quot;</filter>
+    </calculationView>
+    <calculationView xsi:type="Calculation:UnionView" id="UNION_BILL_ADJ">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="ITEM_TYPE"/>
+        <viewAttribute id="BILL_SYS_CODE"/>
+        <viewAttribute id="TO_BE_REBILL"/>
+        <viewAttribute id="PSPID"/>
+        <viewAttribute id="CURRENCY"/>
+        <viewAttribute id="BRA_AMT"/>
+        <viewAttribute id="BRA_GL_NO"/>
+        <viewAttribute id="BRA_CODE"/>
+        <viewAttribute id="INV_NO"/>
+        <viewAttribute datatype="NVARCHAR" id="PRODUCT_SERVICE_TYPE" length="1" scale="0"/>
+        <viewAttribute id="CAN"/>
+        <viewAttribute id="SAN"/>
+        <viewAttribute id="INV_DATE"/>
+        <viewAttribute id="WTN"/>
+        <viewAttribute id="PRODUCT_START_DATE"/>
+        <viewAttribute id="PRODUCT_END_DATE"/>
+        <viewAttribute id="PS_QTY_PRPS_CD"/>
+        <viewAttribute id="ITEM_ID"/>
+        <viewAttribute datatype="NVARCHAR" id="IS_20300101" length="1" scale="0"/>
+        <viewAttribute datatype="NVARCHAR" id="IS_20300102" length="1" scale="0"/>
+        <viewAttribute id="SEQ_ID"/>
+        <viewAttribute id="CYCL_ID"/>
+        <viewAttribute id="SER_NUM"/>
+        <viewAttribute id="TCAN_CUST_ACCT_NO"/>
+        <viewAttribute id="KUNNR_SID"/>
+        <viewAttribute id="BILL_NPA"/>
+        <viewAttribute id="BILL_NXX"/>
+        <viewAttribute id="BILL_LINE_NUM"/>
+        <viewAttribute id="BILL_CUST_CD"/>
+        <viewAttribute id="CYCL_ID_VADJS"/>
+        <viewAttribute id="CYCL_ID_VADJ"/>
+        <viewAttribute id="SEQ_NUM"/>
+        <viewAttribute id="PRODSERV_CD"/>
+        <viewAttribute id="MCC_QC_PRIMARY_KEY"/>
+        <viewAttribute id="ADJMT_TY_CD"/>
+        <viewAttribute id="BILL_SUFFIX_CD"/>
+        <viewAttribute id="ADJMT_ACTN_CD"/>
+        <viewAttribute id="VADJSQC_PRIMARY_KEY"/>
+        <viewAttribute id="VADJQC_PRIMARY_KEY"/>
+        <viewAttribute datatype="NVARCHAR" id="IS_20300105" length="1" scale="0"/>
+        <viewAttribute id="COUNT"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="DATE" id="CC_DUE_DATE" expressionLanguage="COLUMN_ENGINE">
+          <formula>IF(isnull(&quot;TO_BE_REBILL&quot;), string(adddays(date(&quot;INV_DATE&quot;),30)),string(null))</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input emptyUnionBehavior="NO_ROW" node="#PROJ_PROD_SERV_TY">
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_TYPE" source="CC_ITEM_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_SYS_CODE" source="BILL_SYS_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TO_BE_REBILL" source="TO_BE_REBILL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PSPID" source="PSPID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CURRENCY" source="CURRENCY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BRA_AMT" source="BRA_AMT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BRA_GL_NO" source="BRA_GL_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BRA_CODE" source="BRA_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INV_NO" source="INV_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT_SERVICE_TYPE" source="PRODUCT_SERVICE_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CAN" source="CAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SAN" source="SAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INV_DATE" source="INV_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WTN" source="CC_WTN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT_START_DATE" source="PRODUCT_START_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT_END_DATE" source="PRODUCT_END_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PS_QTY_PRPS_CD" source="PS_QTY_PRPS_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_ID" source="PRODUCT_SERVICE_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20300101" source="IS_20300101"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20300102" source="IS_20300102"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SEQ_ID" source="SEQ_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="SER_NUM" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="TCAN_CUST_ACCT_NO" null="true" value=""/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KUNNR_SID" source="KUNNR_SID"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="BILL_NPA" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="BILL_NXX" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="BILL_LINE_NUM" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="BILL_CUST_CD" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="CYCL_ID_VADJS" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="CYCL_ID_VADJ" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="SEQ_NUM" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="PRODSERV_CD" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="MCC_QC_PRIMARY_KEY" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="ADJMT_TY_CD" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="BILL_SUFFIX_CD" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="ADJMT_ACTN_CD" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="VADJSQC_PRIMARY_KEY" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="VADJQC_PRIMARY_KEY" null="true" value=""/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20300105" source="IS_20300105"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="COUNT" source="COUNT"/>
+      </input>
+      <input emptyUnionBehavior="NO_ROW" node="#PROJ_ADJMT_CODE">
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_TYPE" source="CC_ITEM_TYPE"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="BILL_SYS_CODE" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="TO_BE_REBILL" null="true" value=""/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PSPID" source="PSPID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CURRENCY" source="CURRENCY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BRA_AMT" source="TOT_BASIC_AMT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BRA_GL_NO" source="REFR_JRNL_ACT_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BRA_CODE" source="BRA_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INV_NO" source="INV_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT_SERVICE_TYPE" source="PRODUCT_SERVICE_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CAN" source="CAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SAN" source="SAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INV_DATE" source="PRO_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WTN" source="CC_WTN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT_START_DATE" source="PRODUCT_START_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT_END_DATE" source="PRODUCT_END_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PS_QTY_PRPS_CD" source="PS_QTY_PRPS_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_ID" source="CC_ADJS_CODE"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="IS_20300101" null="false" value="0"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="IS_20300102" null="false" value="0"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="SEQ_ID" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="CYCL_ID" null="true" value=""/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SER_NUM" source="SER_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TCAN_CUST_ACCT_NO" source="TCAN_CUST_ACCT_NO"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="KUNNR_SID" null="true" value=""/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_NPA" source="BILL_NPA"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_NXX" source="BILL_NXX"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_LINE_NUM" source="BILL_LINE_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_CUST_CD" source="BILL_CUST_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID_VADJS" source="CYCL_ID_VADJS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID_VADJ" source="CYCL_ID_VADJ"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SEQ_NUM" source="SEQ_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRODSERV_CD" source="PRODSERV_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MCC_QC_PRIMARY_KEY" source="MCC_QC_PRIMARY_KEY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ADJMT_TY_CD" source="ADJMT_TY_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_SUFFIX_CD" source="BILL_SUFFIX_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ADJMT_ACTN_CD" source="ADJMT_ACTN_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VADJSQC_PRIMARY_KEY" source="VADJSQC_PRIMARY_KEY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VADJQC_PRIMARY_KEY" source="VADJQC_PRIMARY_KEY"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="IS_20300105" null="false" value="0"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="COUNT" source="COUNT"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_MDM_BILL_CD">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="CD_NM"/>
+        <viewAttribute id="REF_EFFC_DT"/>
+        <viewAttribute id="REF_EXP_DT"/>
+        <viewAttribute id="OFFR_TY"/>
+        <viewAttribute id="CC_VERSION_CHECK"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#CA_HP_MDM_BILL_CD_SQL">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CD_NM" source="CD_NM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REF_EFFC_DT" source="REF_EFFC_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REF_EXP_DT" source="REF_EXP_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OFFR_TY" source="OFFR_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_VERSION_CHECK" source="CC_VERSION_CHECK"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="JOIN_MDM_BILL" joinOrder="OUTSIDE_IN" joinType="leftOuter">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="ITEM_TYPE"/>
+        <viewAttribute id="DUE_DATE"/>
+        <viewAttribute id="OFFR_TY"/>
+        <viewAttribute id="REF_EXP_DT"/>
+        <viewAttribute id="REF_EFFC_DT"/>
+        <viewAttribute id="BILL_SYS_CODE"/>
+        <viewAttribute id="TO_BE_REBILL"/>
+        <viewAttribute id="PSPID"/>
+        <viewAttribute id="CURRENCY"/>
+        <viewAttribute id="BRA_AMT"/>
+        <viewAttribute id="BRA_GL_NO"/>
+        <viewAttribute id="BRA_CODE"/>
+        <viewAttribute id="INV_NO"/>
+        <viewAttribute id="PRODUCT_SERVICE_TYPE"/>
+        <viewAttribute id="CAN"/>
+        <viewAttribute id="SAN"/>
+        <viewAttribute id="INV_DATE"/>
+        <viewAttribute id="WTN"/>
+        <viewAttribute id="PRODUCT_START_DATE"/>
+        <viewAttribute id="PRODUCT_END_DATE"/>
+        <viewAttribute id="PS_QTY_PRPS_CD"/>
+        <viewAttribute id="ITEM_ID"/>
+        <viewAttribute id="IS_20300101"/>
+        <viewAttribute id="CD_NM_RIGHT"/>
+        <viewAttribute id="IS_20300102"/>
+        <viewAttribute id="SEQ_ID"/>
+        <viewAttribute id="CYCL_ID"/>
+        <viewAttribute id="SER_NUM"/>
+        <viewAttribute id="TCAN_CUST_ACCT_NO"/>
+        <viewAttribute id="KUNNR_SID"/>
+        <viewAttribute id="BILL_NPA"/>
+        <viewAttribute id="BILL_NXX"/>
+        <viewAttribute id="BILL_LINE_NUM"/>
+        <viewAttribute id="BILL_CUST_CD"/>
+        <viewAttribute id="CYCL_ID_VADJS"/>
+        <viewAttribute id="CYCL_ID_VADJ"/>
+        <viewAttribute id="SEQ_NUM"/>
+        <viewAttribute id="PRODSERV_CD"/>
+        <viewAttribute id="MCC_QC_PRIMARY_KEY"/>
+        <viewAttribute id="ADJMT_TY_CD"/>
+        <viewAttribute id="BILL_SUFFIX_CD"/>
+        <viewAttribute id="ADJMT_ACTN_CD"/>
+        <viewAttribute id="VADJSQC_PRIMARY_KEY"/>
+        <viewAttribute id="VADJQC_PRIMARY_KEY"/>
+        <viewAttribute id="IS_20300105"/>
+        <viewAttribute id="CC_VERSION_CHECK"/>
+        <viewAttribute id="COUNT"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CC_SOURCE_SYSTEM_CODE" length="4" expressionLanguage="COLUMN_ENGINE">
+          <formula>'09'</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="DATE" id="CC_REF_EFFC_DT" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isNull(&quot;REF_EFFC_DT&quot;),date('19000101'),&quot;REF_EFFC_DT&quot;)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="DATE" id="CC_REF_EXP_DT" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isNull(&quot;REF_EXP_DT&quot;),date(99991231),&quot;REF_EXP_DT&quot;)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="IS_20300106" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isnull(&quot;CC_VERSION_CHECK&quot;),'0',&quot;CC_VERSION_CHECK&quot;)</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#UNION_BILL_ADJ">
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_TYPE" source="ITEM_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DUE_DATE" source="CC_DUE_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_SYS_CODE" source="BILL_SYS_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TO_BE_REBILL" source="TO_BE_REBILL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PSPID" source="PSPID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CURRENCY" source="CURRENCY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BRA_AMT" source="BRA_AMT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BRA_GL_NO" source="BRA_GL_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BRA_CODE" source="BRA_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INV_NO" source="INV_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT_SERVICE_TYPE" source="PRODUCT_SERVICE_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CAN" source="CAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SAN" source="SAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INV_DATE" source="INV_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WTN" source="WTN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT_START_DATE" source="PRODUCT_START_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT_END_DATE" source="PRODUCT_END_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PS_QTY_PRPS_CD" source="PS_QTY_PRPS_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_ID" source="ITEM_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20300101" source="IS_20300101"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20300102" source="IS_20300102"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SEQ_ID" source="SEQ_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SER_NUM" source="SER_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TCAN_CUST_ACCT_NO" source="TCAN_CUST_ACCT_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KUNNR_SID" source="KUNNR_SID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_NPA" source="BILL_NPA"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_NXX" source="BILL_NXX"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_LINE_NUM" source="BILL_LINE_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_CUST_CD" source="BILL_CUST_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID_VADJS" source="CYCL_ID_VADJS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID_VADJ" source="CYCL_ID_VADJ"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SEQ_NUM" source="SEQ_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRODSERV_CD" source="PRODSERV_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MCC_QC_PRIMARY_KEY" source="MCC_QC_PRIMARY_KEY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ADJMT_TY_CD" source="ADJMT_TY_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_SUFFIX_CD" source="BILL_SUFFIX_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ADJMT_ACTN_CD" source="ADJMT_ACTN_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VADJSQC_PRIMARY_KEY" source="VADJSQC_PRIMARY_KEY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VADJQC_PRIMARY_KEY" source="VADJQC_PRIMARY_KEY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20300105" source="IS_20300105"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="COUNT" source="COUNT"/>
+      </input>
+      <input node="#PROJ_MDM_BILL_CD">
+        <mapping xsi:type="Calculation:AttributeMapping" target="OFFR_TY" source="OFFR_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REF_EXP_DT" source="REF_EXP_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REF_EFFC_DT" source="REF_EFFC_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CD_NM_RIGHT" source="CD_NM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_VERSION_CHECK" source="CC_VERSION_CHECK"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_ID" source="CD_NM"/>
+      </input>
+      <joinAttribute name="ITEM_ID"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_HP_BILLING_QC" filterExpressionLanguage="COLUMN_ENGINE">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="SOURCE_SYSTEM_CODE"/>
+        <viewAttribute id="ITEM_TYPE"/>
+        <viewAttribute id="DUE_DATE"/>
+        <viewAttribute id="OFFR_TY"/>
+        <viewAttribute id="REF_EXP_DT"/>
+        <viewAttribute id="REF_EFFC_DT"/>
+        <viewAttribute id="BILL_SYS_CODE"/>
+        <viewAttribute id="TO_BE_REBILL"/>
+        <viewAttribute id="PSPID"/>
+        <viewAttribute id="CURRENCY"/>
+        <viewAttribute id="BRA_AMT"/>
+        <viewAttribute id="BRA_GL_NO"/>
+        <viewAttribute id="BRA_CODE"/>
+        <viewAttribute id="INV_NO"/>
+        <viewAttribute id="PRODUCT_SERVICE_TYPE"/>
+        <viewAttribute id="CAN"/>
+        <viewAttribute id="SAN"/>
+        <viewAttribute id="INV_DATE"/>
+        <viewAttribute id="WTN"/>
+        <viewAttribute id="PRODUCT_START_DATE"/>
+        <viewAttribute id="PRODUCT_END_DATE"/>
+        <viewAttribute id="PS_QTY_PRPS_CD"/>
+        <viewAttribute id="ITEM_ID"/>
+        <viewAttribute id="CD_NM_RIGHT"/>
+        <viewAttribute id="IS_20300101"/>
+        <viewAttribute id="CC_REF_EFFC_DT"/>
+        <viewAttribute id="CC_REF_EXP_DT"/>
+        <viewAttribute id="IS_20300102"/>
+        <viewAttribute id="SEQ_ID"/>
+        <viewAttribute id="CYCL_ID"/>
+        <viewAttribute id="SER_NUM"/>
+        <viewAttribute id="TCAN_CUST_ACCT_NO"/>
+        <viewAttribute id="KUNNR_SID"/>
+        <viewAttribute id="BILL_NPA"/>
+        <viewAttribute id="BILL_NXX"/>
+        <viewAttribute id="BILL_LINE_NUM"/>
+        <viewAttribute id="BILL_CUST_CD"/>
+        <viewAttribute id="CYCL_ID_VADJS"/>
+        <viewAttribute id="CYCL_ID_VADJ"/>
+        <viewAttribute id="SEQ_NUM"/>
+        <viewAttribute id="PRODSERV_CD"/>
+        <viewAttribute id="MCC_QC_PRIMARY_KEY"/>
+        <viewAttribute id="ADJMT_TY_CD"/>
+        <viewAttribute id="BILL_SUFFIX_CD"/>
+        <viewAttribute id="ADJMT_ACTN_CD"/>
+        <viewAttribute id="VADJSQC_PRIMARY_KEY"/>
+        <viewAttribute id="VADJQC_PRIMARY_KEY"/>
+        <viewAttribute id="IS_20300105"/>
+        <viewAttribute id="IS_20300106"/>
+        <viewAttribute id="COUNT"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CC_DUO_TRIO_IND" length="4" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(&quot;OFFR_TY&quot; = 1,'UNO',&#xD;
+if(&quot;OFFR_TY&quot; = 2,'DUO',&#xD;
+if(&quot;OFFR_TY&quot; = 3,'TRIO',string(&quot;OFFR_TY&quot;))))</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="INTEGER" id="CC_ITEM_QUANTITY" expressionLanguage="COLUMN_ENGINE">
+          <formula>'1'</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CC_HP_BILLING_PK" length="1000" expressionLanguage="COLUMN_ENGINE">
+          <formula>(string(&quot;INV_DATE&quot;) + '|' + &#xD;
+&quot;SAN&quot;+'|'+&#xD;
+&quot;CAN&quot;+'|'+&#xD;
+&quot;INV_NO&quot; + '|' + &#xD;
+&quot;WTN&quot; + '|' + &#xD;
+&quot;BRA_CODE&quot;+'|'+&#xD;
+&quot;ITEM_ID&quot; + '|' + &#xD;
+&quot;BRA_GL_NO&quot;)</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#JOIN_MDM_BILL">
+        <mapping xsi:type="Calculation:AttributeMapping" target="SOURCE_SYSTEM_CODE" source="CC_SOURCE_SYSTEM_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_TYPE" source="ITEM_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DUE_DATE" source="DUE_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OFFR_TY" source="OFFR_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REF_EXP_DT" source="REF_EXP_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REF_EFFC_DT" source="REF_EFFC_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_SYS_CODE" source="BILL_SYS_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TO_BE_REBILL" source="TO_BE_REBILL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PSPID" source="PSPID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CURRENCY" source="CURRENCY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BRA_AMT" source="BRA_AMT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BRA_GL_NO" source="BRA_GL_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BRA_CODE" source="BRA_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INV_NO" source="INV_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT_SERVICE_TYPE" source="PRODUCT_SERVICE_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CAN" source="CAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SAN" source="SAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INV_DATE" source="INV_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WTN" source="WTN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT_START_DATE" source="PRODUCT_START_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT_END_DATE" source="PRODUCT_END_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PS_QTY_PRPS_CD" source="PS_QTY_PRPS_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_ID" source="ITEM_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CD_NM_RIGHT" source="CD_NM_RIGHT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20300101" source="IS_20300101"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_REF_EFFC_DT" source="CC_REF_EFFC_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_REF_EXP_DT" source="CC_REF_EXP_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20300102" source="IS_20300102"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SEQ_ID" source="SEQ_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SER_NUM" source="SER_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TCAN_CUST_ACCT_NO" source="TCAN_CUST_ACCT_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KUNNR_SID" source="KUNNR_SID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_NPA" source="BILL_NPA"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_NXX" source="BILL_NXX"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_LINE_NUM" source="BILL_LINE_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_CUST_CD" source="BILL_CUST_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID_VADJS" source="CYCL_ID_VADJS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID_VADJ" source="CYCL_ID_VADJ"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SEQ_NUM" source="SEQ_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRODSERV_CD" source="PRODSERV_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MCC_QC_PRIMARY_KEY" source="MCC_QC_PRIMARY_KEY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ADJMT_TY_CD" source="ADJMT_TY_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_SUFFIX_CD" source="BILL_SUFFIX_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ADJMT_ACTN_CD" source="ADJMT_ACTN_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VADJSQC_PRIMARY_KEY" source="VADJSQC_PRIMARY_KEY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VADJQC_PRIMARY_KEY" source="VADJQC_PRIMARY_KEY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20300105" source="IS_20300105"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20300106" source="IS_20300106"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="COUNT" source="COUNT"/>
+      </input>
+      <filter>&quot;INV_DATE&quot; >= &quot;CC_REF_EFFC_DT&quot; AND  &quot;INV_DATE&quot; &lt;= &quot;CC_REF_EXP_DT&quot;</filter>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="ERROR_SEMANTICS">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="BRA_AMT"/>
+        <viewAttribute id="CC_DUO_TRIO_IND"/>
+        <viewAttribute id="ITEM_ID"/>
+        <viewAttribute id="PS_QTY_PRPS_CD"/>
+        <viewAttribute id="PRODUCT_END_DATE"/>
+        <viewAttribute id="PRODUCT_START_DATE"/>
+        <viewAttribute id="WTN"/>
+        <viewAttribute id="INV_DATE"/>
+        <viewAttribute id="SAN"/>
+        <viewAttribute id="CAN"/>
+        <viewAttribute id="PRODUCT_SERVICE_TYPE"/>
+        <viewAttribute id="INV_NO"/>
+        <viewAttribute id="BRA_CODE"/>
+        <viewAttribute id="BRA_GL_NO"/>
+        <viewAttribute id="CURRENCY"/>
+        <viewAttribute id="PSPID"/>
+        <viewAttribute id="TO_BE_REBILL"/>
+        <viewAttribute id="BILL_SYS_CODE"/>
+        <viewAttribute id="OFFR_TY"/>
+        <viewAttribute id="DUE_DATE"/>
+        <viewAttribute id="ITEM_TYPE"/>
+        <viewAttribute id="SOURCE_SYSTEM_CODE"/>
+        <viewAttribute id="IS_20300101"/>
+        <viewAttribute id="IS_20300102"/>
+        <viewAttribute id="SEQ_ID"/>
+        <viewAttribute id="CYCL_ID"/>
+        <viewAttribute id="SER_NUM"/>
+        <viewAttribute id="TCAN_CUST_ACCT_NO"/>
+        <viewAttribute id="KUNNR_SID"/>
+        <viewAttribute id="BILL_NPA"/>
+        <viewAttribute id="BILL_NXX"/>
+        <viewAttribute id="BILL_LINE_NUM"/>
+        <viewAttribute id="BILL_CUST_CD"/>
+        <viewAttribute id="CYCL_ID_VADJS"/>
+        <viewAttribute id="CYCL_ID_VADJ"/>
+        <viewAttribute id="SEQ_NUM"/>
+        <viewAttribute id="PRODSERV_CD"/>
+        <viewAttribute id="MCC_QC_PRIMARY_KEY"/>
+        <viewAttribute id="ADJMT_TY_CD"/>
+        <viewAttribute id="BILL_SUFFIX_CD"/>
+        <viewAttribute id="ADJMT_ACTN_CD"/>
+        <viewAttribute id="VADJSQC_PRIMARY_KEY"/>
+        <viewAttribute id="VADJQC_PRIMARY_KEY"/>
+        <viewAttribute id="ITEM_QUANTITY"/>
+        <viewAttribute id="IS_20300105"/>
+        <viewAttribute id="IS_20300106"/>
+        <viewAttribute id="COUNT"/>
+        <viewAttribute id="CC_HP_BILLING_PK"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="ERROR_STATUS" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>if((&quot;IS_20300101&quot;='1') &#xD;
+ or (&quot;IS_20300102&quot; ='1')&#xD;
+      or (&quot;IS_20300105&quot; ='1') &#xD;
+        or (&quot;IS_20300106&quot; ='1'),'1','0')</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="ERROR_CODE" length="500" expressionLanguage="COLUMN_ENGINE">
+          <formula>if (&quot;IS_20300101&quot; ='1', '20300101||','') +&#xD;
+if (&quot;IS_20300102&quot; ='1', '20300102||','') +&#xD;
+if (&quot;IS_20300105&quot; ='1', '20300105||','')  +&#xD;
+if (&quot;IS_20300106&quot; ='1', '20300106||','')  </formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#PROJ_HP_BILLING_QC">
+        <mapping xsi:type="Calculation:AttributeMapping" target="BRA_AMT" source="BRA_AMT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_DUO_TRIO_IND" source="CC_DUO_TRIO_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_ID" source="ITEM_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PS_QTY_PRPS_CD" source="PS_QTY_PRPS_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT_END_DATE" source="PRODUCT_END_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT_START_DATE" source="PRODUCT_START_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WTN" source="WTN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INV_DATE" source="INV_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SAN" source="SAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CAN" source="CAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT_SERVICE_TYPE" source="PRODUCT_SERVICE_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INV_NO" source="INV_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BRA_CODE" source="BRA_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BRA_GL_NO" source="BRA_GL_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CURRENCY" source="CURRENCY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PSPID" source="PSPID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TO_BE_REBILL" source="TO_BE_REBILL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_SYS_CODE" source="BILL_SYS_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OFFR_TY" source="OFFR_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DUE_DATE" source="DUE_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_TYPE" source="ITEM_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SOURCE_SYSTEM_CODE" source="SOURCE_SYSTEM_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20300101" source="IS_20300101"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20300102" source="IS_20300102"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SEQ_ID" source="SEQ_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SER_NUM" source="SER_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TCAN_CUST_ACCT_NO" source="TCAN_CUST_ACCT_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KUNNR_SID" source="KUNNR_SID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_NPA" source="BILL_NPA"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_NXX" source="BILL_NXX"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_LINE_NUM" source="BILL_LINE_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_CUST_CD" source="BILL_CUST_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID_VADJS" source="CYCL_ID_VADJS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID_VADJ" source="CYCL_ID_VADJ"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SEQ_NUM" source="SEQ_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRODSERV_CD" source="PRODSERV_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MCC_QC_PRIMARY_KEY" source="MCC_QC_PRIMARY_KEY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ADJMT_TY_CD" source="ADJMT_TY_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_SUFFIX_CD" source="BILL_SUFFIX_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ADJMT_ACTN_CD" source="ADJMT_ACTN_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VADJSQC_PRIMARY_KEY" source="VADJSQC_PRIMARY_KEY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VADJQC_PRIMARY_KEY" source="VADJQC_PRIMARY_KEY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_QUANTITY" source="CC_ITEM_QUANTITY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20300105" source="IS_20300105"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20300106" source="IS_20300106"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="COUNT" source="COUNT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_HP_BILLING_PK" source="CC_HP_BILLING_PK"/>
+      </input>
+    </calculationView>
+  </calculationViews>
+  <logicalModel id="ERROR_SEMANTICS">
+    <descriptions/>
+    <attributes>
+      <attribute id="INVOICE_DATE" order="1" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="INVOICE_DATE"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="INV_DATE"/>
+      </attribute>
+      <attribute id="DUE_DATE" order="2" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="DUE_DATE"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="DUE_DATE"/>
+      </attribute>
+      <attribute id="SUMMARY_ACCOUNT_NUMBER" order="3" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SUMMARY_ACCOUNT_NUMBER"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="SAN"/>
+      </attribute>
+      <attribute id="CUSTOMER_ACCOUNT_NUMBER" order="4" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CUSTOMER_ACCOUNT_NUMBER"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="CAN"/>
+      </attribute>
+      <attribute id="BILL_SYSTEM_CODE" order="5" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="BILL_SYSTEM_CODE"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="BILL_SYS_CODE"/>
+      </attribute>
+      <attribute id="PRIMARY_TELEPHONE_NUMBER" order="6" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="PRIMARY_TELEPHONE_NUMBER"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="INV_NO"/>
+      </attribute>
+      <attribute id="WORKING_TELEPHONE_NUMBER" order="7" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="WORKING_TELEPHONE_NUMBER"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="WTN"/>
+      </attribute>
+      <attribute id="PRODUCT_START_DATE" order="8" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="PRODUCT_START_DATE"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="PRODUCT_START_DATE"/>
+      </attribute>
+      <attribute id="PRODUCT_END_DATE" order="9" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="PRODUCT_END_DATE"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="PRODUCT_END_DATE"/>
+      </attribute>
+      <attribute id="BRA_CD" order="10" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="BRA_CD"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="BRA_CODE"/>
+      </attribute>
+      <attribute id="ITEM_CODE" order="11" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ITEM_CODE"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="ITEM_ID"/>
+      </attribute>
+      <attribute id="ITEM_TYPE" order="12" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ITEM_TYPE"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="ITEM_TYPE"/>
+      </attribute>
+      <attribute id="PRODUCT_SERVICE_TYPE" order="13" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="PRODUCT_SERVICE_TYPE"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="PRODUCT_SERVICE_TYPE"/>
+      </attribute>
+      <attribute id="PS_QTY_PRPS_CD" order="14" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="PS_QTY_PRPS_CD"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="PS_QTY_PRPS_CD"/>
+      </attribute>
+      <attribute id="RAC_CODE" order="16" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="RAC_CODE"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="BRA_GL_NO"/>
+      </attribute>
+      <attribute id="CURRENCY" order="17" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CURRENCY"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="CURRENCY"/>
+      </attribute>
+      <attribute id="SOURCE_SYSTEM_CODE" order="18" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SOURCE_SYSTEM_CODE"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="SOURCE_SYSTEM_CODE"/>
+      </attribute>
+      <attribute id="MDM_DISCOUNT_TYPE" order="19" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="MDM_DISCOUNT_CODE"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="OFFR_TY"/>
+      </attribute>
+      <attribute id="DUO_TRIO_IND" order="20" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="DUO_TRIO_IND"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="CC_DUO_TRIO_IND"/>
+      </attribute>
+      <attribute id="ERROR_STATUS" order="21" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ERROR_STATUS"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="ERROR_STATUS"/>
+      </attribute>
+      <attribute id="ERROR_CODE" order="22" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ERROR_CODE"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="ERROR_CODE"/>
+      </attribute>
+      <attribute id="SEQ_ID" order="23" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SEQ_ID"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="SEQ_ID"/>
+      </attribute>
+      <attribute id="CYCL_ID" order="24" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CYCL_ID"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="CYCL_ID"/>
+      </attribute>
+      <attribute id="IS_20300101" order="25" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="IS_20300101"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="IS_20300101"/>
+      </attribute>
+      <attribute id="IS_20300102" order="26" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="IS_20300102"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="IS_20300102"/>
+      </attribute>
+      <attribute id="SER_NUM" order="27" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SER_NUM"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="SER_NUM"/>
+      </attribute>
+      <attribute id="TCAN_CUST_ACCT_NO" order="28" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="TCAN_CUST_ACCT_NO"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="TCAN_CUST_ACCT_NO"/>
+      </attribute>
+      <attribute id="KUNNR_SID" order="29" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="KUNNR_SID"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="KUNNR_SID"/>
+      </attribute>
+      <attribute id="BILL_NPA" order="30" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="BILL_NPA"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="BILL_NPA"/>
+      </attribute>
+      <attribute id="BILL_NXX" order="31" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="BILL_NXX"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="BILL_NXX"/>
+      </attribute>
+      <attribute id="BILL_LINE_NUM" order="32" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="BILL_LINE_NUM"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="BILL_LINE_NUM"/>
+      </attribute>
+      <attribute id="BILL_CUST_CD" order="33" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="BILL_CUST_CD"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="BILL_CUST_CD"/>
+      </attribute>
+      <attribute id="CYCL_ID_VADJS" order="34" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CYCL_ID_VADJS"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="CYCL_ID_VADJS"/>
+      </attribute>
+      <attribute id="CYCL_ID_VADJ" order="35" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CYCL_ID_VADJ"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="CYCL_ID_VADJ"/>
+      </attribute>
+      <attribute id="SEQ_NUM" order="36" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SEQ_NUM"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="SEQ_NUM"/>
+      </attribute>
+      <attribute id="PRODSERV_CD" order="37" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="PRODSERV_CD"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="PRODSERV_CD"/>
+      </attribute>
+      <attribute id="MCC_QC_PRIMARY_KEY" order="38" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="MCC_QC_PRIMARY_KEY"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="MCC_QC_PRIMARY_KEY"/>
+      </attribute>
+      <attribute id="ADJMT_TY_CD" order="39" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ADJMT_TY_CD"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="ADJMT_TY_CD"/>
+      </attribute>
+      <attribute id="BILL_SUFFIX_CD" order="40" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ADJMT_TY_CD"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="BILL_SUFFIX_CD"/>
+      </attribute>
+      <attribute id="ADJMT_ACTN_CD" order="41" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ADJMT_ACTN_CD"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="ADJMT_ACTN_CD"/>
+      </attribute>
+      <attribute id="VADJSQC_PRIMARY_KEY" order="42" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="VADJSQC_PRIMARY_KEY"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="VADJSQC_PRIMARY_KEY"/>
+      </attribute>
+      <attribute id="VADJQC_PRIMARY_KEY" order="43" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="VADJQC_PRIMARY_KEY"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="VADJQC_PRIMARY_KEY"/>
+      </attribute>
+      <attribute id="IS_20300105" hidden="false" order="45" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="IS_20300105"/>
+      </attribute>
+      <attribute id="IS_20300106" order="46" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="IS_20300106"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="IS_20300106"/>
+      </attribute>
+      <attribute id="HP_BILLING_PK" hidden="false" order="48" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="HP_BILLING_PK"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="CC_HP_BILLING_PK"/>
+      </attribute>
+    </attributes>
+    <calculatedAttributes/>
+    <privateDataFoundation>
+      <tableProxies/>
+      <joins/>
+      <layout>
+        <shapes/>
+      </layout>
+    </privateDataFoundation>
+    <baseMeasures>
+      <measure id="ITEM_CHARGE" order="15" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="ITEM_CHARGE"/>
+        <measureMapping columnObjectName="ERROR_SEMANTICS" columnName="BRA_AMT"/>
+      </measure>
+      <measure id="ITEM_QUANTITY" order="44" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="ITEM_QUANTITY"/>
+        <measureMapping columnObjectName="ERROR_SEMANTICS" columnName="ITEM_QUANTITY"/>
+      </measure>
+      <measure id="COUNTER" order="47" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="COUNTER"/>
+        <measureMapping columnObjectName="ERROR_SEMANTICS" columnName="COUNT"/>
+      </measure>
+    </baseMeasures>
+    <calculatedMeasures/>
+    <restrictedMeasures/>
+    <localDimensions/>
+  </logicalModel>
+  <layout>
+    <shapes>
+      <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+        <upperLeftCorner x="252" y="87"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_HP_CUSTOMER" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="176" y="803"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_CBSS_BILL_DTL_QC" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="22" y="803"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="JOIN_CUST_BILL" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="99" y="707"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_PROD_SERV_TYPE" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="99" y="611"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_PROD_SERV_TY" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="99" y="533"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_ARICS_CONS_QC" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="253" y="707"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_CBSS_BILL_DTL" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="407" y="707"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="JOIN_CBSS_ADJ" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="253" y="611"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_ADJMT_CODE" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="253" y="533"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="UNION_BILL_ADJ" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="175" y="417"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_MDM_BILL_CD" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="329" y="417"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="JOIN_MDM_BILL" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="252" y="321"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_HP_BILLING_QC" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="252" y="243"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+      <shape expanded="true" modelObjectName="ERROR_SEMANTICS" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="252" y="165"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+    </shapes>
+  </layout>
+</Calculation:scenario>

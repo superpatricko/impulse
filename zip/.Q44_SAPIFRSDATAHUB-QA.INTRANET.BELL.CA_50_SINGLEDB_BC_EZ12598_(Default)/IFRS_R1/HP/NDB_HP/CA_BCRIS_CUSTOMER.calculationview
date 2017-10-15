@@ -1,0 +1,971 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:AccessControl="http://www.sap.com/ndb/SQLCoreModelAccessControl.ecore" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" xmlns:Variable="http://www.sap.com/ndb/BiModelVariable.ecore" schemaVersion="2.3" id="CA_BCRIS_CUSTOMER" applyPrivilegeType="NONE" checkAnalyticPrivileges="false" defaultClient="$$client$$" defaultLanguage="$$language$$" hierarchiesSQLEnabled="false" translationRelevant="true" visibility="internal" calculationScenarioType="TREE_BASED" dataCategory="DIMENSION" enforceSqlExecution="false" executionSemantic="UNDEFINED" outputViewType="Projection">
+  <descriptions defaultDescription="CA_BCRIS_CUSTOMER"/>
+  <localVariables>
+    <variable id="IP_CYCL_ID" parameter="true">
+      <descriptions defaultDescription="IP_CYCL_ID"/>
+      <variableProperties datatype="NVARCHAR" defaultValue="999" length="3" mandatory="false">
+        <valueDomain type="empty"/>
+        <selection multiLine="false" type="SingleValue"/>
+      </variableProperties>
+    </variable>
+  </localVariables>
+  <variableMappings>
+    <mapping xsi:type="Variable:VariableMapping" dataSource="#CA_BCRIS_CUST_CONTR">
+      <targetVariable name="IP_CYCL_ID" resourceUri="/IFRS_R1.HP.NDB_HP/calculationviews/CA_BCRIS_CUST_CONTR"/>
+      <localVariable>#IP_CYCL_ID</localVariable>
+    </mapping>
+  </variableMappings>
+  <informationModelLayout relativeWidthScenario="51"/>
+  <dataSources>
+    <DataSource id="CA_BCRIS_CUST_CONTR" type="CALCULATION_VIEW">
+      <viewAttributes allViewAttributes="true"/>
+      <resourceUri>/IFRS_R1.HP.NDB_HP/calculationviews/CA_BCRIS_CUST_CONTR</resourceUri>
+    </DataSource>
+    <DataSource id="IFRS_R1.HP.NDB_HP::HP_CUSTOMER" type="DATA_BASE_TABLE">
+      <viewAttributes allViewAttributes="true"/>
+      <columnObject schemaName="NDB_HP" columnObjectName="IFRS_R1.HP.NDB_HP::HP_CUSTOMER"/>
+    </DataSource>
+    <DataSource id="IFRS_R1.HP.NDB_HP::HP_CUSTOMER_EH" type="DATA_BASE_TABLE">
+      <viewAttributes allViewAttributes="true"/>
+      <columnObject schemaName="NDB_HP" columnObjectName="IFRS_R1.HP.NDB_HP::HP_CUSTOMER_EH"/>
+    </DataSource>
+  </dataSources>
+  <calculationViews>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_BCRIS_CUST">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="CONTRACT_UNIQUE_IDENTIFIER"/>
+        <viewAttribute id="PRIME_CONTRACTED_CUSTOMER"/>
+        <viewAttribute id="CONTRACTED_SUBSCRIBER"/>
+        <viewAttribute id="CUSTOMER_LOCATION_ID"/>
+        <viewAttribute id="CUSTOMER_SEGMENT_TYPE_CODE"/>
+        <viewAttribute id="REGION"/>
+        <viewAttribute id="CUSTOMER_NAME_FIRST"/>
+        <viewAttribute id="CUSTOMER_NAME_MIDDLE"/>
+        <viewAttribute id="CUSTOMER_NAME_LAST"/>
+        <viewAttribute id="SUBSCRIBER_ACTION"/>
+        <viewAttribute id="TAX_JURISDICTION_CD"/>
+        <viewAttribute id="CUSTOMER_ADDRESS"/>
+        <viewAttribute id="SEQ_ID"/>
+        <viewAttribute id="SRC_TS"/>
+        <viewAttribute id="CLASS_OF_SERVICE"/>
+        <viewAttribute id="NM1_BILLED_IND"/>
+        <viewAttribute id="NM1_BAN"/>
+        <viewAttribute id="ONE_BILL_BAN"/>
+        <viewAttribute id="GIFT_G01"/>
+        <viewAttribute id="GIFT_G02"/>
+        <viewAttribute id="REGULAR_CAN"/>
+        <viewAttribute id="CONTRACT_TERM"/>
+        <viewAttribute id="CONTRACT_INCEPTION_DATE"/>
+        <viewAttribute id="CYCL_ID"/>
+        <viewAttribute id="CNTRT_ONT_PRIMARY_KEY"/>
+        <viewAttribute id="CNTRT_QBC_PRIMARY_KEY"/>
+        <viewAttribute id="IS_20302101"/>
+        <viewAttribute id="IS_20302102"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="DATE" id="CC_SRC_TS" expressionLanguage="COLUMN_ENGINE">
+          <formula>date(&quot;SRC_TS&quot;)</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#CA_BCRIS_CUST_CONTR">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTRACT_UNIQUE_IDENTIFIER" source="CONTRACT_UNIQUE_IDENTIFIER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRIME_CONTRACTED_CUSTOMER" source="PRIME_CONTRACTED_CUSTOMER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTRACTED_SUBSCRIBER" source="CONTRACTED_SUBSCRIBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_LOCATION_ID" source="CUSTOMER_LOCATION_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_SEGMENT_TYPE_CODE" source="CUSTOMER_SEGMENT_TYPE_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REGION" source="REGION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_NAME_FIRST" source="CUSTOMER_NAME_FIRST"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_NAME_MIDDLE" source="CUSTOMER_NAME_MIDDLE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_NAME_LAST" source="CUSTOMER_NAME_LAST"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBSCRIBER_ACTION" source="SUBSCRIBER_ACTION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TAX_JURISDICTION_CD" source="TAX_JURISDICTION_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_ADDRESS" source="CUSTOMER_ADDRESS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SEQ_ID" source="SEQ_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SRC_TS" source="SRC_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CLASS_OF_SERVICE" source="CLASS_OF_SERVICE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NM1_BILLED_IND" source="NM1_BILLED_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NM1_BAN" source="NM1_BAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ONE_BILL_BAN" source="ONE_BILL_BAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GIFT_G01" source="GIFT_G01"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GIFT_G02" source="GIFT_G02"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REGULAR_CAN" source="REGULAR_CAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTRACT_TERM" source="CONTRACT_TERM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTRACT_INCEPTION_DATE" source="CONTRACT_INCEPTION_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CNTRT_ONT_PRIMARY_KEY" source="CNTRT_ONT_PRIMARY_KEY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CNTRT_QBC_PRIMARY_KEY" source="CNTRT_QBC_PRIMARY_KEY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20302101" source="IS_20302101"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20302102" source="IS_20302102"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_NDB">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="CONTRACT_UNIQUE_IDENTIFIER"/>
+        <viewAttribute id="CBSS_ACC_STATUS"/>
+        <viewAttribute id="TO_BE_REBILL_IND"/>
+        <viewAttribute id="ACC_TYPE"/>
+        <viewAttribute id="CBSS_CAN"/>
+        <viewAttribute id="WTN_800_NUMBER"/>
+        <viewAttribute id="TFB_ACCOUNT_STATUS"/>
+        <viewAttribute id="KUNNR_SID"/>
+        <viewAttribute id="BILL_SYS_CODE"/>
+        <viewAttribute id="CONVERSION_IND"/>
+        <viewAttribute id="TOLL_FREE_CAN"/>
+        <viewAttribute id="TFB_CUST_PROV"/>
+        <viewAttribute id="SUBSCRIBER_NUMBER"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#IFRS_R1.HP.NDB_HP::HP_CUSTOMER">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTRACT_UNIQUE_IDENTIFIER" source="CONTRACT_UNIQUE_IDENTIFIER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CBSS_ACC_STATUS" source="CBSS_ACC_STATUS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TO_BE_REBILL_IND" source="TO_BE_REBILL_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACC_TYPE" source="ACC_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CBSS_CAN" source="CBSS_CAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WTN_800_NUMBER" source="WTN_800_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TFB_ACCOUNT_STATUS" source="TFB_ACCOUNT_STATUS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KUNNR_SID" source="KUNNR_SID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_SYS_CODE" source="BILL_SYS_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONVERSION_IND" source="CONVERSION_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TOLL_FREE_CAN" source="TOLL_FREE_CAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TFB_CUST_PROV" source="TFB_CUST_PROV"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBSCRIBER_NUMBER" source="SUBSCRIBER_NUMBER"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_CUST_EH">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="CONTRACT_UNIQUE_IDENTIFIER"/>
+        <viewAttribute id="SUBSCRIBER_NUMBER"/>
+        <viewAttribute id="REF_EFFECTIVE_DATE"/>
+        <viewAttribute id="DELETED">
+          <filter xsi:type="AccessControl:SingleValueFilter" operator="NL" including="true"/>
+        </viewAttribute>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="DATE" id="CC_REF_EFFECTIVE_DATE" expressionLanguage="COLUMN_ENGINE">
+          <formula>date(&quot;REF_EFFECTIVE_DATE&quot;)</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#IFRS_R1.HP.NDB_HP::HP_CUSTOMER_EH">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTRACT_UNIQUE_IDENTIFIER" source="CONTRACT_UNIQUE_IDENTIFIER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBSCRIBER_NUMBER" source="SUBSCRIBER_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REF_EFFECTIVE_DATE" source="REF_EFFECTIVE_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DELETED" source="DELETED"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="JOIN_INCOMING_RECORDS_WITH_EH" joinType="leftOuter">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="CONTRACT_UNIQUE_IDENTIFIER_EH"/>
+        <viewAttribute id="CONTRACT_UNIQUE_IDENTIFIER_LAND"/>
+        <viewAttribute id="CC_REF_EFFECTIVE_DATE"/>
+        <viewAttribute id="SUBSCRIBER_NUMBER"/>
+        <viewAttribute id="IS_20302101"/>
+        <viewAttribute id="IS_20302102"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#PROJ_CUST_EH">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTRACT_UNIQUE_IDENTIFIER_EH" source="CONTRACT_UNIQUE_IDENTIFIER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_REF_EFFECTIVE_DATE" source="CC_REF_EFFECTIVE_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBSCRIBER_NUMBER" source="SUBSCRIBER_NUMBER"/>
+      </input>
+      <input node="#PROJ_BCRIS_CUST">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTRACT_UNIQUE_IDENTIFIER_LAND" source="CONTRACT_UNIQUE_IDENTIFIER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20302101" source="IS_20302101"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20302102" source="IS_20302102"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTRACT_UNIQUE_IDENTIFIER_EH" source="CONTRACT_UNIQUE_IDENTIFIER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBSCRIBER_NUMBER" source="CONTRACTED_SUBSCRIBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_REF_EFFECTIVE_DATE" source="CC_SRC_TS"/>
+      </input>
+      <joinAttribute name="CONTRACT_UNIQUE_IDENTIFIER_EH"/>
+      <joinAttribute name="SUBSCRIBER_NUMBER"/>
+      <joinAttribute name="CC_REF_EFFECTIVE_DATE"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_FILTER_INCOMING_RECORDS">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="CONTRACT_UNIQUE_IDENTIFIER_RIGHT"/>
+        <viewAttribute id="CONTRACT_UNIQUE_IDENTIFIER_LAND">
+          <filter xsi:type="AccessControl:SingleValueFilter" operator="NL" including="true"/>
+        </viewAttribute>
+        <viewAttribute id="SUBSCRIBER_NUMBER"/>
+        <viewAttribute id="CC_REF_EFFECTIVE_DATE"/>
+        <viewAttribute id="IS_20302101"/>
+        <viewAttribute id="IS_20302102"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#JOIN_INCOMING_RECORDS_WITH_EH">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTRACT_UNIQUE_IDENTIFIER_RIGHT" source="CONTRACT_UNIQUE_IDENTIFIER_EH"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTRACT_UNIQUE_IDENTIFIER_LAND" source="CONTRACT_UNIQUE_IDENTIFIER_LAND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBSCRIBER_NUMBER" source="SUBSCRIBER_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_REF_EFFECTIVE_DATE" source="CC_REF_EFFECTIVE_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20302101" source="IS_20302101"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20302102" source="IS_20302102"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:AggregationView" id="AGGR_DISTINCT">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="CONTRACT_UNIQUE_IDENTIFIER_RIGHT"/>
+        <viewAttribute id="SUBSCRIBER_NUMBER"/>
+        <viewAttribute id="IS_20302101"/>
+        <viewAttribute id="IS_20302102"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#PROJ_FILTER_INCOMING_RECORDS">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTRACT_UNIQUE_IDENTIFIER_RIGHT" source="CONTRACT_UNIQUE_IDENTIFIER_RIGHT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBSCRIBER_NUMBER" source="SUBSCRIBER_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20302101" source="IS_20302101"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20302102" source="IS_20302102"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="JOIN_EH" joinType="leftOuter">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="CONTRACT_UNIQUE_IDENTIFIER"/>
+        <viewAttribute id="PRIME_CONTRACTED_CUSTOMER"/>
+        <viewAttribute id="CONTRACTED_SUBSCRIBER"/>
+        <viewAttribute id="CUSTOMER_LOCATION_ID"/>
+        <viewAttribute id="CUSTOMER_SEGMENT_TYPE_CODE"/>
+        <viewAttribute id="REGION"/>
+        <viewAttribute id="CUSTOMER_NAME_FIRST"/>
+        <viewAttribute id="CUSTOMER_NAME_MIDDLE"/>
+        <viewAttribute id="CUSTOMER_NAME_LAST"/>
+        <viewAttribute id="SUBSCRIBER_ACTION"/>
+        <viewAttribute id="TAX_JURISDICTION_CD"/>
+        <viewAttribute id="CUSTOMER_ADDRESS"/>
+        <viewAttribute id="SEQ_ID"/>
+        <viewAttribute id="SRC_TS"/>
+        <viewAttribute id="CLASS_OF_SERVICE"/>
+        <viewAttribute id="NM1_BILLED_IND"/>
+        <viewAttribute id="NM1_BAN"/>
+        <viewAttribute id="ONE_BILL_BAN"/>
+        <viewAttribute id="GIFT_G01"/>
+        <viewAttribute id="GIFT_G02"/>
+        <viewAttribute id="REGULAR_CAN"/>
+        <viewAttribute id="CONTRACT_TERM"/>
+        <viewAttribute id="CONTRACT_INCEPTION_DATE"/>
+        <viewAttribute id="CYCL_ID"/>
+        <viewAttribute id="CNTRT_ONT_PRIMARY_KEY"/>
+        <viewAttribute id="CNTRT_QBC_PRIMARY_KEY"/>
+        <viewAttribute id="CONTRACT_UNIQUE_IDENTIFIER_RIGHT"/>
+        <viewAttribute id="IS_20302101"/>
+        <viewAttribute id="IS_20302102"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="IS_20302103" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isNull(&quot;CONTRACT_UNIQUE_IDENTIFIER_RIGHT&quot;),'0','1')</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#PROJ_BCRIS_CUST">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTRACT_UNIQUE_IDENTIFIER" source="CONTRACT_UNIQUE_IDENTIFIER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRIME_CONTRACTED_CUSTOMER" source="PRIME_CONTRACTED_CUSTOMER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTRACTED_SUBSCRIBER" source="CONTRACTED_SUBSCRIBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_LOCATION_ID" source="CUSTOMER_LOCATION_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_SEGMENT_TYPE_CODE" source="CUSTOMER_SEGMENT_TYPE_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REGION" source="REGION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_NAME_FIRST" source="CUSTOMER_NAME_FIRST"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_NAME_MIDDLE" source="CUSTOMER_NAME_MIDDLE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_NAME_LAST" source="CUSTOMER_NAME_LAST"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBSCRIBER_ACTION" source="SUBSCRIBER_ACTION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TAX_JURISDICTION_CD" source="TAX_JURISDICTION_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_ADDRESS" source="CUSTOMER_ADDRESS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SEQ_ID" source="SEQ_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SRC_TS" source="SRC_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CLASS_OF_SERVICE" source="CLASS_OF_SERVICE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NM1_BILLED_IND" source="NM1_BILLED_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NM1_BAN" source="NM1_BAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ONE_BILL_BAN" source="ONE_BILL_BAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GIFT_G01" source="GIFT_G01"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GIFT_G02" source="GIFT_G02"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REGULAR_CAN" source="REGULAR_CAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTRACT_TERM" source="CONTRACT_TERM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTRACT_INCEPTION_DATE" source="CONTRACT_INCEPTION_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CNTRT_ONT_PRIMARY_KEY" source="CNTRT_ONT_PRIMARY_KEY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CNTRT_QBC_PRIMARY_KEY" source="CNTRT_QBC_PRIMARY_KEY"/>
+      </input>
+      <input node="#AGGR_DISTINCT">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTRACT_UNIQUE_IDENTIFIER_RIGHT" source="CONTRACT_UNIQUE_IDENTIFIER_RIGHT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20302101" source="IS_20302101"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20302102" source="IS_20302102"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTRACT_UNIQUE_IDENTIFIER" source="CONTRACT_UNIQUE_IDENTIFIER_RIGHT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTRACTED_SUBSCRIBER" source="SUBSCRIBER_NUMBER"/>
+      </input>
+      <joinAttribute name="CONTRACT_UNIQUE_IDENTIFIER"/>
+      <joinAttribute name="CONTRACTED_SUBSCRIBER"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="JOIN_SRC_NDB" joinType="leftOuter">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="CONTRACT_UNIQUE_IDENTIFIER_RIGHT"/>
+        <viewAttribute id="CBSS_ACC_STATUS"/>
+        <viewAttribute id="TO_BE_REBILL_IND"/>
+        <viewAttribute id="ACC_TYPE"/>
+        <viewAttribute id="CBSS_CAN"/>
+        <viewAttribute id="WTN_800_NUMBER"/>
+        <viewAttribute id="TFB_ACCOUNT_STATUS"/>
+        <viewAttribute id="KUNNR_SID"/>
+        <viewAttribute id="BILL_SYS_CODE"/>
+        <viewAttribute id="CONVERSION_IND"/>
+        <viewAttribute id="TOLL_FREE_CAN"/>
+        <viewAttribute id="TFB_CUST_PROV"/>
+        <viewAttribute id="CONTRACT_UNIQUE_IDENTIFIER"/>
+        <viewAttribute id="PRIME_CONTRACTED_CUSTOMER"/>
+        <viewAttribute id="CONTRACTED_SUBSCRIBER"/>
+        <viewAttribute id="CUSTOMER_LOCATION_ID"/>
+        <viewAttribute id="CUSTOMER_SEGMENT_TYPE_CODE"/>
+        <viewAttribute id="REGION"/>
+        <viewAttribute id="CUSTOMER_NAME_FIRST"/>
+        <viewAttribute id="CUSTOMER_NAME_MIDDLE"/>
+        <viewAttribute id="CUSTOMER_NAME_LAST"/>
+        <viewAttribute id="SUBSCRIBER_ACTION"/>
+        <viewAttribute id="TAX_JURISDICTION_CD"/>
+        <viewAttribute id="CUSTOMER_ADDRESS"/>
+        <viewAttribute id="SEQ_ID"/>
+        <viewAttribute id="SRC_TS"/>
+        <viewAttribute id="CLASS_OF_SERVICE"/>
+        <viewAttribute id="NM1_BILLED_IND"/>
+        <viewAttribute id="NM1_BAN"/>
+        <viewAttribute id="ONE_BILL_BAN"/>
+        <viewAttribute id="GIFT_G01"/>
+        <viewAttribute id="GIFT_G02"/>
+        <viewAttribute id="REGULAR_CAN"/>
+        <viewAttribute id="CONTRACT_TERM"/>
+        <viewAttribute id="CONTRACT_INCEPTION_DATE"/>
+        <viewAttribute id="CYCL_ID"/>
+        <viewAttribute id="CNTRT_ONT_PRIMARY_KEY"/>
+        <viewAttribute id="CNTRT_QBC_PRIMARY_KEY"/>
+        <viewAttribute id="IS_20302101"/>
+        <viewAttribute id="IS_20302102"/>
+        <viewAttribute id="IS_20302103"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#JOIN_EH">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTRACT_UNIQUE_IDENTIFIER" source="CONTRACT_UNIQUE_IDENTIFIER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRIME_CONTRACTED_CUSTOMER" source="PRIME_CONTRACTED_CUSTOMER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTRACTED_SUBSCRIBER" source="CONTRACTED_SUBSCRIBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_LOCATION_ID" source="CUSTOMER_LOCATION_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_SEGMENT_TYPE_CODE" source="CUSTOMER_SEGMENT_TYPE_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REGION" source="REGION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_NAME_FIRST" source="CUSTOMER_NAME_FIRST"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_NAME_MIDDLE" source="CUSTOMER_NAME_MIDDLE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_NAME_LAST" source="CUSTOMER_NAME_LAST"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBSCRIBER_ACTION" source="SUBSCRIBER_ACTION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TAX_JURISDICTION_CD" source="TAX_JURISDICTION_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_ADDRESS" source="CUSTOMER_ADDRESS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SEQ_ID" source="SEQ_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SRC_TS" source="SRC_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CLASS_OF_SERVICE" source="CLASS_OF_SERVICE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NM1_BILLED_IND" source="NM1_BILLED_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NM1_BAN" source="NM1_BAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ONE_BILL_BAN" source="ONE_BILL_BAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GIFT_G01" source="GIFT_G01"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GIFT_G02" source="GIFT_G02"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REGULAR_CAN" source="REGULAR_CAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTRACT_TERM" source="CONTRACT_TERM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTRACT_INCEPTION_DATE" source="CONTRACT_INCEPTION_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CNTRT_ONT_PRIMARY_KEY" source="CNTRT_ONT_PRIMARY_KEY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CNTRT_QBC_PRIMARY_KEY" source="CNTRT_QBC_PRIMARY_KEY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20302101" source="IS_20302101"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20302102" source="IS_20302102"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20302103" source="IS_20302103"/>
+      </input>
+      <input node="#PROJ_NDB">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTRACT_UNIQUE_IDENTIFIER_RIGHT" source="CONTRACT_UNIQUE_IDENTIFIER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CBSS_ACC_STATUS" source="CBSS_ACC_STATUS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TO_BE_REBILL_IND" source="TO_BE_REBILL_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACC_TYPE" source="ACC_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CBSS_CAN" source="CBSS_CAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WTN_800_NUMBER" source="WTN_800_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TFB_ACCOUNT_STATUS" source="TFB_ACCOUNT_STATUS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KUNNR_SID" source="KUNNR_SID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_SYS_CODE" source="BILL_SYS_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONVERSION_IND" source="CONVERSION_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TOLL_FREE_CAN" source="TOLL_FREE_CAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TFB_CUST_PROV" source="TFB_CUST_PROV"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTRACT_UNIQUE_IDENTIFIER" source="CONTRACT_UNIQUE_IDENTIFIER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTRACTED_SUBSCRIBER" source="SUBSCRIBER_NUMBER"/>
+      </input>
+      <joinAttribute name="CONTRACT_UNIQUE_IDENTIFIER"/>
+      <joinAttribute name="CONTRACTED_SUBSCRIBER"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:RankView" id="RANK_INSERT_UPDATE">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="CONTRACT_UNIQUE_IDENTIFIER"/>
+        <viewAttribute id="PRIME_CONTRACTED_CUSTOMER"/>
+        <viewAttribute id="CONTRACTED_SUBSCRIBER"/>
+        <viewAttribute id="CUSTOMER_LOCATION_ID"/>
+        <viewAttribute id="CUSTOMER_SEGMENT_TYPE_CODE"/>
+        <viewAttribute id="REGION"/>
+        <viewAttribute id="CUSTOMER_NAME_FIRST"/>
+        <viewAttribute id="CUSTOMER_NAME_MIDDLE"/>
+        <viewAttribute id="CUSTOMER_NAME_LAST"/>
+        <viewAttribute id="SUBSCRIBER_ACTION"/>
+        <viewAttribute id="TAX_JURISDICTION_CD"/>
+        <viewAttribute id="CUSTOMER_ADDRESS"/>
+        <viewAttribute id="SEQ_ID"/>
+        <viewAttribute id="SRC_TS"/>
+        <viewAttribute id="CLASS_OF_SERVICE"/>
+        <viewAttribute id="NM1_BILLED_IND"/>
+        <viewAttribute id="NM1_BAN"/>
+        <viewAttribute id="ONE_BILL_BAN"/>
+        <viewAttribute id="GIFT_G01"/>
+        <viewAttribute id="GIFT_G02"/>
+        <viewAttribute id="REGULAR_CAN"/>
+        <viewAttribute id="CONTRACT_TERM"/>
+        <viewAttribute id="CONTRACT_INCEPTION_DATE"/>
+        <viewAttribute id="CONTRACT_UNIQUE_IDENTIFIER_RIGHT"/>
+        <viewAttribute id="CBSS_ACC_STATUS"/>
+        <viewAttribute id="TO_BE_REBILL_IND"/>
+        <viewAttribute id="ACC_TYPE"/>
+        <viewAttribute id="CBSS_CAN"/>
+        <viewAttribute id="WTN_800_NUMBER"/>
+        <viewAttribute id="TFB_ACCOUNT_STATUS"/>
+        <viewAttribute id="KUNNR_SID"/>
+        <viewAttribute id="BILL_SYS_CODE"/>
+        <viewAttribute id="CONVERSION_IND"/>
+        <viewAttribute id="TOLL_FREE_CAN"/>
+        <viewAttribute id="TFB_CUST_PROV"/>
+        <viewAttribute id="CYCL_ID"/>
+        <viewAttribute id="CNTRT_ONT_PRIMARY_KEY"/>
+        <viewAttribute id="CNTRT_QBC_PRIMARY_KEY"/>
+        <viewAttribute id="IS_20302101"/>
+        <viewAttribute id="IS_20302102"/>
+        <viewAttribute id="IS_20302103"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#JOIN_SRC_NDB">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTRACT_UNIQUE_IDENTIFIER" source="CONTRACT_UNIQUE_IDENTIFIER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRIME_CONTRACTED_CUSTOMER" source="PRIME_CONTRACTED_CUSTOMER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTRACTED_SUBSCRIBER" source="CONTRACTED_SUBSCRIBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_LOCATION_ID" source="CUSTOMER_LOCATION_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_SEGMENT_TYPE_CODE" source="CUSTOMER_SEGMENT_TYPE_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REGION" source="REGION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_NAME_FIRST" source="CUSTOMER_NAME_FIRST"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_NAME_MIDDLE" source="CUSTOMER_NAME_MIDDLE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_NAME_LAST" source="CUSTOMER_NAME_LAST"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBSCRIBER_ACTION" source="SUBSCRIBER_ACTION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TAX_JURISDICTION_CD" source="TAX_JURISDICTION_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_ADDRESS" source="CUSTOMER_ADDRESS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SEQ_ID" source="SEQ_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SRC_TS" source="SRC_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CLASS_OF_SERVICE" source="CLASS_OF_SERVICE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NM1_BILLED_IND" source="NM1_BILLED_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NM1_BAN" source="NM1_BAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ONE_BILL_BAN" source="ONE_BILL_BAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GIFT_G01" source="GIFT_G01"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GIFT_G02" source="GIFT_G02"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REGULAR_CAN" source="REGULAR_CAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTRACT_TERM" source="CONTRACT_TERM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTRACT_INCEPTION_DATE" source="CONTRACT_INCEPTION_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTRACT_UNIQUE_IDENTIFIER_RIGHT" source="CONTRACT_UNIQUE_IDENTIFIER_RIGHT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CBSS_ACC_STATUS" source="CBSS_ACC_STATUS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TO_BE_REBILL_IND" source="TO_BE_REBILL_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACC_TYPE" source="ACC_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CBSS_CAN" source="CBSS_CAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WTN_800_NUMBER" source="WTN_800_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TFB_ACCOUNT_STATUS" source="TFB_ACCOUNT_STATUS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KUNNR_SID" source="KUNNR_SID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_SYS_CODE" source="BILL_SYS_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONVERSION_IND" source="CONVERSION_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TOLL_FREE_CAN" source="TOLL_FREE_CAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TFB_CUST_PROV" source="TFB_CUST_PROV"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CNTRT_ONT_PRIMARY_KEY" source="CNTRT_ONT_PRIMARY_KEY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CNTRT_QBC_PRIMARY_KEY" source="CNTRT_QBC_PRIMARY_KEY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20302101" source="IS_20302101"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20302102" source="IS_20302102"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20302103" source="IS_20302103"/>
+      </input>
+      <windowFunction>
+        <partitionViewAttributeName>CONTRACT_UNIQUE_IDENTIFIER</partitionViewAttributeName>
+        <partitionViewAttributeName>CONTRACTED_SUBSCRIBER</partitionViewAttributeName>
+        <order byViewAttributeName="SRC_TS" direction="ASC"/>
+        <rankViewAttributeName>RANK_COL</rankViewAttributeName>
+      </windowFunction>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_INSERT_UPDATE">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="CONTRACT_UNIQUE_IDENTIFIER"/>
+        <viewAttribute id="PRIME_CONTRACTED_CUSTOMER"/>
+        <viewAttribute id="CONTRACTED_SUBSCRIBER"/>
+        <viewAttribute id="CUSTOMER_LOCATION_ID"/>
+        <viewAttribute id="CUSTOMER_SEGMENT_TYPE_CODE"/>
+        <viewAttribute id="REGION"/>
+        <viewAttribute id="CUSTOMER_NAME_FIRST"/>
+        <viewAttribute id="CUSTOMER_NAME_MIDDLE"/>
+        <viewAttribute id="CUSTOMER_NAME_LAST"/>
+        <viewAttribute id="SUBSCRIBER_ACTION"/>
+        <viewAttribute id="TAX_JURISDICTION_CD"/>
+        <viewAttribute id="CUSTOMER_ADDRESS"/>
+        <viewAttribute id="SEQ_ID"/>
+        <viewAttribute id="SRC_TS"/>
+        <viewAttribute id="CLASS_OF_SERVICE"/>
+        <viewAttribute id="NM1_BILLED_IND"/>
+        <viewAttribute id="NM1_BAN"/>
+        <viewAttribute id="ONE_BILL_BAN"/>
+        <viewAttribute id="GIFT_G01"/>
+        <viewAttribute id="GIFT_G02"/>
+        <viewAttribute id="REGULAR_CAN"/>
+        <viewAttribute id="CONTRACT_TERM"/>
+        <viewAttribute id="CONTRACT_INCEPTION_DATE"/>
+        <viewAttribute id="CONTRACT_UNIQUE_IDENTIFIER_RIGHT"/>
+        <viewAttribute id="CBSS_ACC_STATUS"/>
+        <viewAttribute id="TO_BE_REBILL_IND"/>
+        <viewAttribute id="ACC_TYPE"/>
+        <viewAttribute id="CBSS_CAN"/>
+        <viewAttribute id="WTN_800_NUMBER"/>
+        <viewAttribute id="TFB_ACCOUNT_STATUS"/>
+        <viewAttribute id="KUNNR_SID"/>
+        <viewAttribute id="BILL_SYS_CODE"/>
+        <viewAttribute id="CONVERSION_IND"/>
+        <viewAttribute id="TOLL_FREE_CAN"/>
+        <viewAttribute id="TFB_CUST_PROV"/>
+        <viewAttribute id="CYCL_ID"/>
+        <viewAttribute id="CNTRT_ONT_PRIMARY_KEY"/>
+        <viewAttribute id="CNTRT_QBC_PRIMARY_KEY"/>
+        <viewAttribute id="RANK_COL"/>
+        <viewAttribute id="IS_20302101"/>
+        <viewAttribute id="IS_20302102"/>
+        <viewAttribute id="IS_20302103"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CC_FLAG_EXISTING_RECORD" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>if((isNull(&quot;CONTRACT_UNIQUE_IDENTIFIER_RIGHT&quot;) and &quot;RANK_COL&quot; = 1),'I','U')</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="DATE" id="CC_REF_EFFECTIVE_DATE" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(&quot;CC_FLAG_EXISTING_RECORD&quot; = 'I',date('19000101'),date(&quot;SRC_TS&quot;)) </formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="DATE" id="CC_REF_EXPIRY_DATE" expressionLanguage="COLUMN_ENGINE">
+          <formula>'99991231'</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CC_CONCAT_PK" length="34" expressionLanguage="COLUMN_ENGINE">
+          <formula>&quot;CONTRACT_UNIQUE_IDENTIFIER&quot;+'|'+&quot;CONTRACTED_SUBSCRIBER&quot;</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#RANK_INSERT_UPDATE">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTRACT_UNIQUE_IDENTIFIER" source="CONTRACT_UNIQUE_IDENTIFIER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRIME_CONTRACTED_CUSTOMER" source="PRIME_CONTRACTED_CUSTOMER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTRACTED_SUBSCRIBER" source="CONTRACTED_SUBSCRIBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_LOCATION_ID" source="CUSTOMER_LOCATION_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_SEGMENT_TYPE_CODE" source="CUSTOMER_SEGMENT_TYPE_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REGION" source="REGION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_NAME_FIRST" source="CUSTOMER_NAME_FIRST"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_NAME_MIDDLE" source="CUSTOMER_NAME_MIDDLE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_NAME_LAST" source="CUSTOMER_NAME_LAST"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBSCRIBER_ACTION" source="SUBSCRIBER_ACTION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TAX_JURISDICTION_CD" source="TAX_JURISDICTION_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_ADDRESS" source="CUSTOMER_ADDRESS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SEQ_ID" source="SEQ_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SRC_TS" source="SRC_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CLASS_OF_SERVICE" source="CLASS_OF_SERVICE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NM1_BILLED_IND" source="NM1_BILLED_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NM1_BAN" source="NM1_BAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ONE_BILL_BAN" source="ONE_BILL_BAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GIFT_G01" source="GIFT_G01"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GIFT_G02" source="GIFT_G02"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REGULAR_CAN" source="REGULAR_CAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTRACT_TERM" source="CONTRACT_TERM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTRACT_INCEPTION_DATE" source="CONTRACT_INCEPTION_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTRACT_UNIQUE_IDENTIFIER_RIGHT" source="CONTRACT_UNIQUE_IDENTIFIER_RIGHT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CBSS_ACC_STATUS" source="CBSS_ACC_STATUS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TO_BE_REBILL_IND" source="TO_BE_REBILL_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACC_TYPE" source="ACC_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CBSS_CAN" source="CBSS_CAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WTN_800_NUMBER" source="WTN_800_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TFB_ACCOUNT_STATUS" source="TFB_ACCOUNT_STATUS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KUNNR_SID" source="KUNNR_SID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_SYS_CODE" source="BILL_SYS_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONVERSION_IND" source="CONVERSION_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TOLL_FREE_CAN" source="TOLL_FREE_CAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TFB_CUST_PROV" source="TFB_CUST_PROV"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CNTRT_ONT_PRIMARY_KEY" source="CNTRT_ONT_PRIMARY_KEY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CNTRT_QBC_PRIMARY_KEY" source="CNTRT_QBC_PRIMARY_KEY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RANK_COL" source="RANK_COL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20302101" source="IS_20302101"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20302102" source="IS_20302102"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20302103" source="IS_20302103"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="ERROR_SEMANTICS">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="CONTRACT_UNIQUE_IDENTIFIER"/>
+        <viewAttribute id="PRIMARY_TELEPHONE_NUMBER"/>
+        <viewAttribute id="SUBSCRIBER_NUMBER"/>
+        <viewAttribute id="REF_EFFECTIVE_DATE"/>
+        <viewAttribute id="REF_EXPIRY_DATE"/>
+        <viewAttribute id="CONTRACT_INCEPTION_DT"/>
+        <viewAttribute id="CUSTOMER_LOCATION_ID"/>
+        <viewAttribute id="CUSTOMER_ADDRESS"/>
+        <viewAttribute id="CUSTOMER_FIRST_NAME"/>
+        <viewAttribute id="CUSTOMER_LAST_NAME"/>
+        <viewAttribute id="SYSTEM_REGION"/>
+        <viewAttribute id="TAX_JURISDICTION_CD"/>
+        <viewAttribute id="CUSTOMER_SEG_TYP_CD"/>
+        <viewAttribute id="CBSS_ACC_STATUS"/>
+        <viewAttribute id="TO_BE_REBILL_IND"/>
+        <viewAttribute id="CLASS_OF_SERVICE"/>
+        <viewAttribute id="ACC_TYPE"/>
+        <viewAttribute id="CBSS_CAN"/>
+        <viewAttribute id="TOLL_FREE_CAN"/>
+        <viewAttribute id="GIFT_G01"/>
+        <viewAttribute id="GIFT_G02"/>
+        <viewAttribute id="ONE_BILL_BAN"/>
+        <viewAttribute id="NM1_BAN"/>
+        <viewAttribute id="NM1_BILLED_INDICATOR"/>
+        <viewAttribute id="TERM_M2M_INDICATOR"/>
+        <viewAttribute id="TFB_CUST_PROV"/>
+        <viewAttribute id="WTN_800_NUMBER"/>
+        <viewAttribute id="TFB_ACCOUNT_STATUS"/>
+        <viewAttribute id="SUBSCRIBER_ACTION"/>
+        <viewAttribute id="KUNNR_SID"/>
+        <viewAttribute id="BILL_SYS_CODE"/>
+        <viewAttribute id="CONVERSION_IND"/>
+        <viewAttribute id="FLAG_EXISTING_RECORD"/>
+        <viewAttribute id="CUSTOMER_NAME_MIDDLE"/>
+        <viewAttribute id="SEQ_ID"/>
+        <viewAttribute id="SRC_TS"/>
+        <viewAttribute id="REGULAR_CAN"/>
+        <viewAttribute id="CONTRACT_UNIQUE_IDENTIFIER_RIGHT"/>
+        <viewAttribute id="CYCL_ID"/>
+        <viewAttribute id="CNTRT_ONT_PRIMARY_KEY"/>
+        <viewAttribute id="CNTRT_QBC_PRIMARY_KEY"/>
+        <viewAttribute id="RANK_COL"/>
+        <viewAttribute id="CC_CONCAT_PK"/>
+        <viewAttribute id="IS_20302101"/>
+        <viewAttribute id="IS_20302102"/>
+        <viewAttribute id="IS_20302103"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="ERROR_CODE" length="100" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(&quot;IS_20302101&quot;='1', '20302101||','') + &#xD;
+if(&quot;IS_20302102&quot;='1', '20302102||','') +&#xD;
+if(&quot;IS_20302103&quot;='1', '20302103||','') </formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="ERROR_STATUS" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>if((&quot;IS_20302101&quot;='1') &#xD;
+  or (&quot;IS_20302102&quot;='1')&#xD;
+    or (&quot;IS_20302103&quot;='1'),'1','0')</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#PROJ_INSERT_UPDATE">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTRACT_UNIQUE_IDENTIFIER" source="CONTRACT_UNIQUE_IDENTIFIER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRIMARY_TELEPHONE_NUMBER" source="PRIME_CONTRACTED_CUSTOMER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBSCRIBER_NUMBER" source="CONTRACTED_SUBSCRIBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REF_EFFECTIVE_DATE" source="CC_REF_EFFECTIVE_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REF_EXPIRY_DATE" source="CC_REF_EXPIRY_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTRACT_INCEPTION_DT" source="CONTRACT_INCEPTION_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_LOCATION_ID" source="CUSTOMER_LOCATION_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_ADDRESS" source="CUSTOMER_ADDRESS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_FIRST_NAME" source="CUSTOMER_NAME_FIRST"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_LAST_NAME" source="CUSTOMER_NAME_LAST"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SYSTEM_REGION" source="REGION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TAX_JURISDICTION_CD" source="TAX_JURISDICTION_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_SEG_TYP_CD" source="CUSTOMER_SEGMENT_TYPE_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CBSS_ACC_STATUS" source="CBSS_ACC_STATUS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TO_BE_REBILL_IND" source="TO_BE_REBILL_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CLASS_OF_SERVICE" source="CLASS_OF_SERVICE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACC_TYPE" source="ACC_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CBSS_CAN" source="CBSS_CAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TOLL_FREE_CAN" source="TOLL_FREE_CAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GIFT_G01" source="GIFT_G01"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GIFT_G02" source="GIFT_G02"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ONE_BILL_BAN" source="ONE_BILL_BAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NM1_BAN" source="NM1_BAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NM1_BILLED_INDICATOR" source="NM1_BILLED_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TERM_M2M_INDICATOR" source="CONTRACT_TERM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TFB_CUST_PROV" source="TFB_CUST_PROV"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WTN_800_NUMBER" source="WTN_800_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TFB_ACCOUNT_STATUS" source="TFB_ACCOUNT_STATUS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBSCRIBER_ACTION" source="SUBSCRIBER_ACTION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KUNNR_SID" source="KUNNR_SID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_SYS_CODE" source="BILL_SYS_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONVERSION_IND" source="CONVERSION_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FLAG_EXISTING_RECORD" source="CC_FLAG_EXISTING_RECORD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_NAME_MIDDLE" source="CUSTOMER_NAME_MIDDLE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SEQ_ID" source="SEQ_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SRC_TS" source="SRC_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REGULAR_CAN" source="REGULAR_CAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTRACT_UNIQUE_IDENTIFIER_RIGHT" source="CONTRACT_UNIQUE_IDENTIFIER_RIGHT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CNTRT_ONT_PRIMARY_KEY" source="CNTRT_ONT_PRIMARY_KEY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CNTRT_QBC_PRIMARY_KEY" source="CNTRT_QBC_PRIMARY_KEY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RANK_COL" source="RANK_COL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_CONCAT_PK" source="CC_CONCAT_PK"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20302101" source="IS_20302101"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20302102" source="IS_20302102"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20302103" source="IS_20302103"/>
+      </input>
+    </calculationView>
+  </calculationViews>
+  <logicalModel id="ERROR_SEMANTICS">
+    <descriptions/>
+    <attributes>
+      <attribute id="CONTRACT_UNIQUE_IDENTIFIER" order="1" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CONTRACT_UNIQUE_IDENTIFIER"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="CONTRACT_UNIQUE_IDENTIFIER"/>
+      </attribute>
+      <attribute id="PRIMARY_TELEPHONE_NUMBER" order="2" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="PRIMARY_TELEPHONE_NUMBER"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="PRIMARY_TELEPHONE_NUMBER"/>
+      </attribute>
+      <attribute id="SUBSCRIBER_NUMBER" order="3" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SUBSCRIBER_NUMBER"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="SUBSCRIBER_NUMBER"/>
+      </attribute>
+      <attribute id="REF_EFFECTIVE_DATE" order="4" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="REF_EFFECTIVE_DATE"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="REF_EFFECTIVE_DATE"/>
+      </attribute>
+      <attribute id="REF_EXPIRY_DATE" order="5" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="REF_EXPIRY_DATE"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="REF_EXPIRY_DATE"/>
+      </attribute>
+      <attribute id="CONTRACT_INCEPTION_DT" order="6" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CONTRACT_INCEPTION_DT"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="CONTRACT_INCEPTION_DT"/>
+      </attribute>
+      <attribute id="CUSTOMER_LOCATION_ID" order="7" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CUSTOMER_LOCATION_ID"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="CUSTOMER_LOCATION_ID"/>
+      </attribute>
+      <attribute id="CUSTOMER_ADDRESS" order="8" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CUSTOMER_ADDRESS"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="CUSTOMER_ADDRESS"/>
+      </attribute>
+      <attribute id="CUSTOMER_FIRST_NAME" order="9" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CUSTOMER_FIRST_NAME"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="CUSTOMER_FIRST_NAME"/>
+      </attribute>
+      <attribute id="CUSTOMER_LAST_NAME" order="10" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CUSTOMER_LAST_NAME"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="CUSTOMER_LAST_NAME"/>
+      </attribute>
+      <attribute id="SYSTEM_REGION" order="11" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SYSTEM_REGION"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="SYSTEM_REGION"/>
+      </attribute>
+      <attribute id="TAX_JURISDICTION_CD" order="12" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="TAX_JURISDICTION_CD"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="TAX_JURISDICTION_CD"/>
+      </attribute>
+      <attribute id="CUSTOMER_SEG_TYP_CD" order="13" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CUSTOMER_SEG_TYP_CD"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="CUSTOMER_SEG_TYP_CD"/>
+      </attribute>
+      <attribute id="CBSS_ACC_STATUS" order="14" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CBSS_ACC_STATUS"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="CBSS_ACC_STATUS"/>
+      </attribute>
+      <attribute id="TO_BE_REBILL_IND" order="15" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="TO_BE_REBILL_IND"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="TO_BE_REBILL_IND"/>
+      </attribute>
+      <attribute id="CLASS_OF_SERVICE" order="16" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CLASS_OF_SERVICE"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="CLASS_OF_SERVICE"/>
+      </attribute>
+      <attribute id="ACC_TYPE" order="17" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ACC_TYPE"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="ACC_TYPE"/>
+      </attribute>
+      <attribute id="CBSS_CAN" order="18" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CBSS_CAN"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="CBSS_CAN"/>
+      </attribute>
+      <attribute id="TOLL_FREE_CAN" order="19" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="TOLL_FREE_CAN"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="TOLL_FREE_CAN"/>
+      </attribute>
+      <attribute id="GIFT_G01" order="20" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="GIFT_G01"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="GIFT_G01"/>
+      </attribute>
+      <attribute id="GIFT_G02" order="21" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="GIFT_G02"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="GIFT_G02"/>
+      </attribute>
+      <attribute id="ONE_BILL_BAN" order="22" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ONE_BILL_BAN"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="ONE_BILL_BAN"/>
+      </attribute>
+      <attribute id="NM1_BAN" order="23" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="NM1_BAN"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="NM1_BAN"/>
+      </attribute>
+      <attribute id="NM1_BILLED_INDICATOR" order="24" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="NM1_BILLED_INDICATOR"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="NM1_BILLED_INDICATOR"/>
+      </attribute>
+      <attribute id="TERM_M2M_INDICATOR" order="25" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="TERM_M2M_INDICATOR"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="TERM_M2M_INDICATOR"/>
+      </attribute>
+      <attribute id="TFB_CUST_PROV" order="26" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="TFB_CUST_PROV"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="TFB_CUST_PROV"/>
+      </attribute>
+      <attribute id="WTN_800_NUMBER" order="27" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="WTN_800_NUMBER"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="WTN_800_NUMBER"/>
+      </attribute>
+      <attribute id="TFB_ACCOUNT_STATUS" order="28" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="TFB_ACCOUNT_STATUS"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="TFB_ACCOUNT_STATUS"/>
+      </attribute>
+      <attribute id="SUBSCRIBER_ACTION" order="29" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SUBSCRIBER_ACTION"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="SUBSCRIBER_ACTION"/>
+      </attribute>
+      <attribute id="KUNNR_SID" order="30" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="KUNNR_SID"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="KUNNR_SID"/>
+      </attribute>
+      <attribute id="BILL_SYS_CODE" order="31" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="BILL_SYS_CODE"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="BILL_SYS_CODE"/>
+      </attribute>
+      <attribute id="CONVERSION_IND" order="32" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CONVERSION_IND"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="CONVERSION_IND"/>
+      </attribute>
+      <attribute id="FLAG_EXISTING_RECORD" order="33" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="FLAG_EXISTING_RECORD"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="FLAG_EXISTING_RECORD"/>
+      </attribute>
+      <attribute id="CUSTOMER_NAME_MIDDLE" order="34" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CUSTOMER_NAME_MIDDLE"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="CUSTOMER_NAME_MIDDLE"/>
+      </attribute>
+      <attribute id="SEQ_ID" order="35" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SEQ_ID"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="SEQ_ID"/>
+      </attribute>
+      <attribute id="SRC_TS" order="36" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SRC_TS"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="SRC_TS"/>
+      </attribute>
+      <attribute id="REGULAR_CAN" order="37" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="REGULAR_CAN"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="REGULAR_CAN"/>
+      </attribute>
+      <attribute id="CONTRACT_UNIQUE_IDENTIFIER_RIGHT" order="38" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CONTRACT_UNIQUE_IDENTIFIER"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="CONTRACT_UNIQUE_IDENTIFIER_RIGHT"/>
+      </attribute>
+      <attribute id="ERROR_CODE" order="39" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ERROR_CODE"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="ERROR_CODE"/>
+      </attribute>
+      <attribute id="ERROR_STATUS" order="40" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ERROR_STATUS"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="ERROR_STATUS"/>
+      </attribute>
+      <attribute id="CYCL_ID" order="41" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CYCL_ID"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="CYCL_ID"/>
+      </attribute>
+      <attribute id="CNTRT_ONT_PRIMARY_KEY" order="42" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CNTRT_ONT_PRIMARY_KEY"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="CNTRT_ONT_PRIMARY_KEY"/>
+      </attribute>
+      <attribute id="CNTRT_QBC_PRIMARY_KEY" order="43" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CNTRT_QBC_PRIMARY_KEY"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="CNTRT_QBC_PRIMARY_KEY"/>
+      </attribute>
+      <attribute id="RANK_COL" order="44" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="RANK_COL"/>
+      </attribute>
+      <attribute id="CC_CONCAT_PK" hidden="false" order="45" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CC_CONCAT_PK"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="CC_CONCAT_PK"/>
+      </attribute>
+      <attribute id="IS_20302101" order="46" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="IS_20302101"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="IS_20302101"/>
+      </attribute>
+      <attribute id="IS_20302102" order="47" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="IS_20302102"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="IS_20302102"/>
+      </attribute>
+      <attribute id="IS_20302103" hidden="false" order="48" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="IS_20302103"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="IS_20302103"/>
+      </attribute>
+    </attributes>
+    <calculatedAttributes/>
+    <privateDataFoundation>
+      <tableProxies/>
+      <joins/>
+      <layout>
+        <shapes/>
+      </layout>
+    </privateDataFoundation>
+    <baseMeasures/>
+    <calculatedMeasures/>
+    <restrictedMeasures/>
+    <localDimensions/>
+  </logicalModel>
+  <layout>
+    <shapes>
+      <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+        <upperLeftCorner x="253" y="87"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_BCRIS_CUST" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="176" y="843"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_NDB" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="330" y="495"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_CUST_EH" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="22" y="843"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="JOIN_INCOMING_RECORDS_WITH_EH" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="89" y="747"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_FILTER_INCOMING_RECORDS" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="89" y="669"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+      <shape expanded="true" modelObjectName="AGGR_DISTINCT" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="89" y="591"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+      <shape expanded="true" modelObjectName="JOIN_EH" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="176" y="495"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+      <shape expanded="true" modelObjectName="JOIN_SRC_NDB" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="253" y="399"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="RANK_INSERT_UPDATE" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="253" y="321"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_INSERT_UPDATE" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="253" y="243"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="ERROR_SEMANTICS" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="253" y="165"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+    </shapes>
+  </layout>
+</Calculation:scenario>

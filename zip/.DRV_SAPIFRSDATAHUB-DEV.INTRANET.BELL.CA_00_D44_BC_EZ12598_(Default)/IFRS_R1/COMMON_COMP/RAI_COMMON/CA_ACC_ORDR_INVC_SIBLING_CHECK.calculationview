@@ -1,0 +1,816 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" xmlns:Variable="http://www.sap.com/ndb/BiModelVariable.ecore" schemaVersion="2.3" id="CA_ACC_ORDR_INVC_SIBLING_CHECK" applyPrivilegeType="NONE" checkAnalyticPrivileges="false" defaultClient="$$client$$" defaultLanguage="$$language$$" hierarchiesSQLEnabled="false" historyEnabled="false" translationRelevant="true" visibility="internal" calculationScenarioType="TREE_BASED" dataCategory="DIMENSION" enforceSqlExecution="false" executionSemantic="UNDEFINED" outputViewType="Projection">
+  <descriptions defaultDescription="CA_ACC_ORDR_INVC_SIBLING_CHECK"/>
+  <localVariables>
+    <variable id="IP_BILL_DATE" parameter="true">
+      <descriptions defaultDescription="IP_BILL_DATE"/>
+      <variableProperties datatype="DATE" defaultExpressionLanguage="COLUMN_ENGINE" mandatory="false">
+        <valueDomain type="empty"/>
+        <selection multiLine="false" type="SingleValue"/>
+        <defaultExpression>date( format(now(),'YYYYMMDD') )</defaultExpression>
+      </variableProperties>
+    </variable>
+  </localVariables>
+  <variableMappings>
+    <mapping xsi:type="Variable:VariableMapping" dataSource="#CA_ACC_ORDR_INVC_RAI_ITEM">
+      <targetVariable name="IP_BILL_DATE" resourceUri="/IFRS_R1.COMMON_COMP.RAI_COMMON/calculationviews/CA_ACC_ORDR_INVC_RAI_ITEM"/>
+      <localVariable>#IP_BILL_DATE</localVariable>
+    </mapping>
+  </variableMappings>
+  <informationModelLayout relativeWidthScenario="48"/>
+  <dataSources>
+    <DataSource id="CA_ACC_ORDR_INVC_RAI_ITEM" type="CALCULATION_VIEW">
+      <viewAttributes allViewAttributes="true"/>
+      <resourceUri>/IFRS_R1.COMMON_COMP.RAI_COMMON/calculationviews/CA_ACC_ORDR_INVC_RAI_ITEM</resourceUri>
+    </DataSource>
+  </dataSources>
+  <calculationViews>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_ACC_ORDR_INVC">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="CC_SRCDOC_ID_INV"/>
+        <viewAttribute id="CC_REFID"/>
+        <viewAttribute id="CC_SRCDOC_ID"/>
+        <viewAttribute id="CC_RAI_ITEM_ID"/>
+        <viewAttribute id="SCENARIO_IDENTIFIER"/>
+        <viewAttribute id="FINAL_TRANS_PRC"/>
+        <viewAttribute id="CURRN"/>
+        <viewAttribute id="CC_PORTFOLIO"/>
+        <viewAttribute id="KUNNR_SID"/>
+        <viewAttribute id="COMPANY_CD"/>
+        <viewAttribute id="ACT_POST_DT"/>
+        <viewAttribute id="REVNU_GL"/>
+        <viewAttribute id="POB_TYPE"/>
+        <viewAttribute id="VALUE_RELEVANT"/>
+        <viewAttribute id="SRCDOC_COMP"/>
+        <viewAttribute id="SRCDOC_LOGSYS"/>
+        <viewAttribute id="SRCDOC_TYPE"/>
+        <viewAttribute id="REFERENCE_TYPE"/>
+        <viewAttribute id="BUKRS"/>
+        <viewAttribute id="WAERS"/>
+        <viewAttribute id="RECEIV_ACCOUNT"/>
+        <viewAttribute id="ORIGDOC_COMP"/>
+        <viewAttribute id="ORIGDOC_LOGSYS"/>
+        <viewAttribute id="ORIGDOC_TYPE"/>
+        <viewAttribute id="ERROR_STATUS"/>
+        <viewAttribute id="ERROR_CODE"/>
+        <viewAttribute id="CC_SSP"/>
+        <viewAttribute id="CC_TP"/>
+        <viewAttribute id="CC_CATEGORY"/>
+        <viewAttribute id="CC_XNEGATIVE_ITEM"/>
+        <viewAttribute id="CC_BILREL"/>
+        <viewAttribute id="CC_MAIN_COND_TYPE"/>
+        <viewAttribute id="CC_QUANTITY"/>
+        <viewAttribute id="CC_QUANTITY_UNIT"/>
+        <viewAttribute id="IS_30500101"/>
+        <viewAttribute id="IS_30500102"/>
+        <viewAttribute id="IS_30500201"/>
+        <viewAttribute id="IS_30500202"/>
+        <viewAttribute id="IS_30500203"/>
+        <viewAttribute id="IS_30500204"/>
+        <viewAttribute id="IS_30500205"/>
+        <viewAttribute id="IS_30500206"/>
+        <viewAttribute id="CHARGE_TYPE"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#CA_ACC_ORDR_INVC_RAI_ITEM">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_SRCDOC_ID_INV" source="CC_SRCDOC_ID_INV"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_REFID" source="CC_REFID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_SRCDOC_ID" source="CC_SRCDOC_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_RAI_ITEM_ID" source="CC_RAI_ITEM_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SCENARIO_IDENTIFIER" source="SCENARIO_IDENTIFIER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FINAL_TRANS_PRC" source="FINAL_TRANS_PRC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CURRN" source="CURRN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_PORTFOLIO" source="CC_PORTFOLIO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KUNNR_SID" source="KUNNR_SID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="COMPANY_CD" source="COMPANY_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACT_POST_DT" source="ACT_POST_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REVNU_GL" source="REVNU_GL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="POB_TYPE" source="POB_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VALUE_RELEVANT" source="VALUE_RELEVANT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SRCDOC_COMP" source="SRCDOC_COMP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SRCDOC_LOGSYS" source="SRCDOC_LOGSYS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SRCDOC_TYPE" source="SRCDOC_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_TYPE" source="REFERENCE_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WAERS" source="WAERS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RECEIV_ACCOUNT" source="RECEIV_ACCOUNT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ORIGDOC_COMP" source="ORIGDOC_COMP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ORIGDOC_LOGSYS" source="ORIGDOC_LOGSYS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ORIGDOC_TYPE" source="ORIGDOC_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ERROR_STATUS" source="ERROR_STATUS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ERROR_CODE" source="ERROR_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_SSP" source="CC_SSP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_TP" source="CC_TP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_CATEGORY" source="CC_CATEGORY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_XNEGATIVE_ITEM" source="CC_XNEGATIVE_ITEM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_BILREL" source="CC_BILREL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_MAIN_COND_TYPE" source="CC_MAIN_COND_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_QUANTITY" source="CC_QUANTITY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_QUANTITY_UNIT" source="CC_QUANTITY_UNIT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30500101" source="IS_30500101"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30500102" source="IS_30500102"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30500201" source="IS_30500201"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30500202" source="IS_30500202"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30500203" source="IS_30500203"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30500204" source="IS_30500204"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30500205" source="IS_30500205"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30500206" source="IS_30500206"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CHARGE_TYPE" source="CHARGE_TYPE"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_ERROR_RECORD" filterExpressionLanguage="COLUMN_ENGINE">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="CC_SRCDOC_ID_INV"/>
+        <viewAttribute id="CC_REFID"/>
+        <viewAttribute id="CC_SRCDOC_ID"/>
+        <viewAttribute id="CC_RAI_ITEM_ID"/>
+        <viewAttribute id="SCENARIO_IDENTIFIER"/>
+        <viewAttribute id="FINAL_TRANS_PRC"/>
+        <viewAttribute id="CURRN"/>
+        <viewAttribute id="CC_PORTFOLIO"/>
+        <viewAttribute id="KUNNR_SID"/>
+        <viewAttribute id="COMPANY_CD"/>
+        <viewAttribute id="ACT_POST_DT"/>
+        <viewAttribute id="REVNU_GL"/>
+        <viewAttribute id="POB_TYPE"/>
+        <viewAttribute id="VALUE_RELEVANT"/>
+        <viewAttribute id="SRCDOC_COMP"/>
+        <viewAttribute id="SRCDOC_LOGSYS"/>
+        <viewAttribute id="SRCDOC_TYPE"/>
+        <viewAttribute id="REFERENCE_TYPE"/>
+        <viewAttribute id="BUKRS"/>
+        <viewAttribute id="WAERS"/>
+        <viewAttribute id="RECEIV_ACCOUNT"/>
+        <viewAttribute id="ORIGDOC_COMP"/>
+        <viewAttribute id="ORIGDOC_LOGSYS"/>
+        <viewAttribute id="ORIGDOC_TYPE"/>
+        <viewAttribute id="IS_30500201"/>
+        <viewAttribute id="IS_30500202"/>
+        <viewAttribute id="IS_30500203"/>
+        <viewAttribute id="IS_30500204"/>
+        <viewAttribute id="ERROR_STATUS"/>
+        <viewAttribute id="ERROR_CODE"/>
+        <viewAttribute id="CC_SSP"/>
+        <viewAttribute id="CC_TP"/>
+        <viewAttribute id="CC_CATEGORY"/>
+        <viewAttribute id="CC_XNEGATIVE_ITEM"/>
+        <viewAttribute id="CC_BILREL"/>
+        <viewAttribute id="CC_MAIN_COND_TYPE"/>
+        <viewAttribute id="CC_QUANTITY"/>
+        <viewAttribute id="CC_QUANTITY_UNIT"/>
+        <viewAttribute id="IS_30500101"/>
+        <viewAttribute id="IS_30500102"/>
+        <viewAttribute id="IS_30500205"/>
+        <viewAttribute id="IS_30500206"/>
+        <viewAttribute id="CHARGE_TYPE"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#PROJ_ACC_ORDR_INVC">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_SRCDOC_ID_INV" source="CC_SRCDOC_ID_INV"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_REFID" source="CC_REFID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_SRCDOC_ID" source="CC_SRCDOC_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_RAI_ITEM_ID" source="CC_RAI_ITEM_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SCENARIO_IDENTIFIER" source="SCENARIO_IDENTIFIER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FINAL_TRANS_PRC" source="FINAL_TRANS_PRC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CURRN" source="CURRN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_PORTFOLIO" source="CC_PORTFOLIO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KUNNR_SID" source="KUNNR_SID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="COMPANY_CD" source="COMPANY_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACT_POST_DT" source="ACT_POST_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REVNU_GL" source="REVNU_GL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="POB_TYPE" source="POB_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VALUE_RELEVANT" source="VALUE_RELEVANT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SRCDOC_COMP" source="SRCDOC_COMP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SRCDOC_LOGSYS" source="SRCDOC_LOGSYS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SRCDOC_TYPE" source="SRCDOC_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_TYPE" source="REFERENCE_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WAERS" source="WAERS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RECEIV_ACCOUNT" source="RECEIV_ACCOUNT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ORIGDOC_COMP" source="ORIGDOC_COMP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ORIGDOC_LOGSYS" source="ORIGDOC_LOGSYS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ORIGDOC_TYPE" source="ORIGDOC_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30500201" source="IS_30500201"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30500202" source="IS_30500202"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30500203" source="IS_30500203"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30500204" source="IS_30500204"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ERROR_STATUS" source="ERROR_STATUS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ERROR_CODE" source="ERROR_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_SSP" source="CC_SSP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_TP" source="CC_TP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_CATEGORY" source="CC_CATEGORY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_XNEGATIVE_ITEM" source="CC_XNEGATIVE_ITEM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_BILREL" source="CC_BILREL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_MAIN_COND_TYPE" source="CC_MAIN_COND_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_QUANTITY" source="CC_QUANTITY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_QUANTITY_UNIT" source="CC_QUANTITY_UNIT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30500101" source="IS_30500101"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30500102" source="IS_30500102"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30500205" source="IS_30500205"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30500206" source="IS_30500206"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CHARGE_TYPE" source="CHARGE_TYPE"/>
+      </input>
+      <filter>(&quot;ERROR_STATUS&quot; ='1')</filter>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_VALID_RECORD" filterExpressionLanguage="COLUMN_ENGINE">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="CC_SRCDOC_ID_INV"/>
+        <viewAttribute id="CC_REFID"/>
+        <viewAttribute id="CC_SRCDOC_ID"/>
+        <viewAttribute id="CC_RAI_ITEM_ID"/>
+        <viewAttribute id="SCENARIO_IDENTIFIER"/>
+        <viewAttribute id="FINAL_TRANS_PRC"/>
+        <viewAttribute id="CURRN"/>
+        <viewAttribute id="CC_PORTFOLIO"/>
+        <viewAttribute id="KUNNR_SID"/>
+        <viewAttribute id="COMPANY_CD"/>
+        <viewAttribute id="ACT_POST_DT"/>
+        <viewAttribute id="REVNU_GL"/>
+        <viewAttribute id="POB_TYPE"/>
+        <viewAttribute id="VALUE_RELEVANT"/>
+        <viewAttribute id="SRCDOC_COMP"/>
+        <viewAttribute id="SRCDOC_LOGSYS"/>
+        <viewAttribute id="SRCDOC_TYPE"/>
+        <viewAttribute id="REFERENCE_TYPE"/>
+        <viewAttribute id="BUKRS"/>
+        <viewAttribute id="WAERS"/>
+        <viewAttribute id="RECEIV_ACCOUNT"/>
+        <viewAttribute id="ORIGDOC_COMP"/>
+        <viewAttribute id="ORIGDOC_LOGSYS"/>
+        <viewAttribute id="ORIGDOC_TYPE"/>
+        <viewAttribute id="IS_30500201"/>
+        <viewAttribute id="IS_30500202"/>
+        <viewAttribute id="IS_30500203"/>
+        <viewAttribute id="IS_30500204"/>
+        <viewAttribute id="ERROR_STATUS"/>
+        <viewAttribute id="ERROR_CODE"/>
+        <viewAttribute id="CC_SSP"/>
+        <viewAttribute id="CC_TP"/>
+        <viewAttribute id="CC_CATEGORY"/>
+        <viewAttribute id="CC_XNEGATIVE_ITEM"/>
+        <viewAttribute id="CC_BILREL"/>
+        <viewAttribute id="CC_MAIN_COND_TYPE"/>
+        <viewAttribute id="CC_QUANTITY"/>
+        <viewAttribute id="CC_QUANTITY_UNIT"/>
+        <viewAttribute id="IS_30500101"/>
+        <viewAttribute id="IS_30500102"/>
+        <viewAttribute id="IS_30500205"/>
+        <viewAttribute id="IS_30500206"/>
+        <viewAttribute id="CHARGE_TYPE"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#PROJ_ACC_ORDR_INVC">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_SRCDOC_ID_INV" source="CC_SRCDOC_ID_INV"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_REFID" source="CC_REFID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_SRCDOC_ID" source="CC_SRCDOC_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_RAI_ITEM_ID" source="CC_RAI_ITEM_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SCENARIO_IDENTIFIER" source="SCENARIO_IDENTIFIER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FINAL_TRANS_PRC" source="FINAL_TRANS_PRC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CURRN" source="CURRN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_PORTFOLIO" source="CC_PORTFOLIO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KUNNR_SID" source="KUNNR_SID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="COMPANY_CD" source="COMPANY_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACT_POST_DT" source="ACT_POST_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REVNU_GL" source="REVNU_GL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="POB_TYPE" source="POB_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VALUE_RELEVANT" source="VALUE_RELEVANT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SRCDOC_COMP" source="SRCDOC_COMP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SRCDOC_LOGSYS" source="SRCDOC_LOGSYS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SRCDOC_TYPE" source="SRCDOC_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_TYPE" source="REFERENCE_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WAERS" source="WAERS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RECEIV_ACCOUNT" source="RECEIV_ACCOUNT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ORIGDOC_COMP" source="ORIGDOC_COMP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ORIGDOC_LOGSYS" source="ORIGDOC_LOGSYS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ORIGDOC_TYPE" source="ORIGDOC_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30500201" source="IS_30500201"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30500202" source="IS_30500202"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30500203" source="IS_30500203"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30500204" source="IS_30500204"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ERROR_STATUS" source="ERROR_STATUS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ERROR_CODE" source="ERROR_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_SSP" source="CC_SSP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_TP" source="CC_TP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_CATEGORY" source="CC_CATEGORY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_XNEGATIVE_ITEM" source="CC_XNEGATIVE_ITEM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_BILREL" source="CC_BILREL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_MAIN_COND_TYPE" source="CC_MAIN_COND_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_QUANTITY" source="CC_QUANTITY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_QUANTITY_UNIT" source="CC_QUANTITY_UNIT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30500101" source="IS_30500101"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30500102" source="IS_30500102"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30500205" source="IS_30500205"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30500206" source="IS_30500206"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CHARGE_TYPE" source="CHARGE_TYPE"/>
+      </input>
+      <filter>(&quot;ERROR_STATUS&quot; ='0')</filter>
+    </calculationView>
+    <calculationView xsi:type="Calculation:RankView" id="RANK_INVALID_RECORDS">
+      <descriptions>
+        <comment text="Rank is used to group all error records for a particular KUNNR_SID"/>
+      </descriptions>
+      <viewAttributes>
+        <viewAttribute id="KUNNR_SID_RIGHT"/>
+        <viewAttribute id="ACT_POST_DT"/>
+        <viewAttribute id="CHARGE_TYPE"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#PROJ_ERROR_RECORD">
+        <mapping xsi:type="Calculation:AttributeMapping" target="KUNNR_SID_RIGHT" source="KUNNR_SID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACT_POST_DT" source="ACT_POST_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CHARGE_TYPE" source="CHARGE_TYPE"/>
+      </input>
+      <windowFunction>
+        <partitionViewAttributeName>KUNNR_SID_RIGHT</partitionViewAttributeName>
+        <order byViewAttributeName="ACT_POST_DT" direction="DESC"/>
+        <rankThreshold>
+          <value>1</value>
+        </rankThreshold>
+      </windowFunction>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="JOIN_DETERMINE_SIBLING" cardinality="C1_N" joinType="leftOuter" joinOrder="OUTSIDE_IN">
+      <descriptions>
+        <comment text="Join Error will be raised as IS_SIBLING_ERROR"/>
+      </descriptions>
+      <viewAttributes>
+        <viewAttribute id="CC_SRCDOC_ID_INV"/>
+        <viewAttribute id="CC_REFID"/>
+        <viewAttribute id="CC_SRCDOC_ID"/>
+        <viewAttribute id="CC_RAI_ITEM_ID"/>
+        <viewAttribute id="SCENARIO_IDENTIFIER"/>
+        <viewAttribute id="FINAL_TRANS_PRC"/>
+        <viewAttribute id="CURRN"/>
+        <viewAttribute id="CC_PORTFOLIO"/>
+        <viewAttribute id="KUNNR_SID"/>
+        <viewAttribute id="COMPANY_CD"/>
+        <viewAttribute id="ACT_POST_DT"/>
+        <viewAttribute id="REVNU_GL"/>
+        <viewAttribute id="POB_TYPE"/>
+        <viewAttribute id="VALUE_RELEVANT"/>
+        <viewAttribute id="SRCDOC_COMP"/>
+        <viewAttribute id="SRCDOC_LOGSYS"/>
+        <viewAttribute id="SRCDOC_TYPE"/>
+        <viewAttribute id="REFERENCE_TYPE"/>
+        <viewAttribute id="BUKRS"/>
+        <viewAttribute id="WAERS"/>
+        <viewAttribute id="RECEIV_ACCOUNT"/>
+        <viewAttribute id="ORIGDOC_COMP"/>
+        <viewAttribute id="ORIGDOC_LOGSYS"/>
+        <viewAttribute id="ORIGDOC_TYPE"/>
+        <viewAttribute id="IS_30500201"/>
+        <viewAttribute id="IS_30500202"/>
+        <viewAttribute id="IS_30500203"/>
+        <viewAttribute id="IS_30500204"/>
+        <viewAttribute id="ERROR_STATUS"/>
+        <viewAttribute id="ERROR_CODE"/>
+        <viewAttribute id="KUNNR_SID_RIGHT"/>
+        <viewAttribute id="CC_SSP"/>
+        <viewAttribute id="CC_TP"/>
+        <viewAttribute id="CC_CATEGORY"/>
+        <viewAttribute id="CC_XNEGATIVE_ITEM"/>
+        <viewAttribute id="CC_BILREL"/>
+        <viewAttribute id="CC_MAIN_COND_TYPE"/>
+        <viewAttribute id="CC_QUANTITY"/>
+        <viewAttribute id="CC_QUANTITY_UNIT"/>
+        <viewAttribute id="IS_30500101"/>
+        <viewAttribute id="IS_30500102"/>
+        <viewAttribute id="IS_30500205"/>
+        <viewAttribute id="IS_30500206"/>
+        <viewAttribute id="CHARGE_TYPE"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="IS_SIBLING_ERROR" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isNull(&quot;KUNNR_SID_RIGHT&quot;),'0','1')</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CC_ERROR_CODE" length="500" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(&quot;IS_SIBLING_ERROR&quot;='1','SIBLING_ERROR||','')</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#PROJ_VALID_RECORD">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_SRCDOC_ID_INV" source="CC_SRCDOC_ID_INV"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_REFID" source="CC_REFID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_SRCDOC_ID" source="CC_SRCDOC_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_RAI_ITEM_ID" source="CC_RAI_ITEM_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SCENARIO_IDENTIFIER" source="SCENARIO_IDENTIFIER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FINAL_TRANS_PRC" source="FINAL_TRANS_PRC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CURRN" source="CURRN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_PORTFOLIO" source="CC_PORTFOLIO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KUNNR_SID" source="KUNNR_SID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="COMPANY_CD" source="COMPANY_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACT_POST_DT" source="ACT_POST_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REVNU_GL" source="REVNU_GL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="POB_TYPE" source="POB_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VALUE_RELEVANT" source="VALUE_RELEVANT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SRCDOC_COMP" source="SRCDOC_COMP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SRCDOC_LOGSYS" source="SRCDOC_LOGSYS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SRCDOC_TYPE" source="SRCDOC_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_TYPE" source="REFERENCE_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WAERS" source="WAERS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RECEIV_ACCOUNT" source="RECEIV_ACCOUNT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ORIGDOC_COMP" source="ORIGDOC_COMP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ORIGDOC_LOGSYS" source="ORIGDOC_LOGSYS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ORIGDOC_TYPE" source="ORIGDOC_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30500201" source="IS_30500201"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30500202" source="IS_30500202"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30500203" source="IS_30500203"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30500204" source="IS_30500204"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ERROR_STATUS" source="ERROR_STATUS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ERROR_CODE" source="ERROR_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_SSP" source="CC_SSP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_TP" source="CC_TP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_CATEGORY" source="CC_CATEGORY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_XNEGATIVE_ITEM" source="CC_XNEGATIVE_ITEM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_BILREL" source="CC_BILREL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_MAIN_COND_TYPE" source="CC_MAIN_COND_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_QUANTITY" source="CC_QUANTITY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_QUANTITY_UNIT" source="CC_QUANTITY_UNIT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30500101" source="IS_30500101"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30500102" source="IS_30500102"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30500205" source="IS_30500205"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30500206" source="IS_30500206"/>
+      </input>
+      <input node="#RANK_INVALID_RECORDS">
+        <mapping xsi:type="Calculation:AttributeMapping" target="KUNNR_SID_RIGHT" source="KUNNR_SID_RIGHT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CHARGE_TYPE" source="CHARGE_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KUNNR_SID" source="KUNNR_SID_RIGHT"/>
+      </input>
+      <joinAttribute name="KUNNR_SID"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:UnionView" id="UNION">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="CC_SRCDOC_ID_INV"/>
+        <viewAttribute id="CC_REFID"/>
+        <viewAttribute id="CC_SRCDOC_ID"/>
+        <viewAttribute id="CC_RAI_ITEM_ID"/>
+        <viewAttribute id="SCENARIO_IDENTIFIER"/>
+        <viewAttribute id="FINAL_TRANS_PRC"/>
+        <viewAttribute id="CURRN"/>
+        <viewAttribute id="CC_PORTFOLIO"/>
+        <viewAttribute id="KUNNR_SID"/>
+        <viewAttribute id="COMPANY_CD"/>
+        <viewAttribute id="ACT_POST_DT"/>
+        <viewAttribute id="REVNU_GL"/>
+        <viewAttribute id="POB_TYPE"/>
+        <viewAttribute id="VALUE_RELEVANT"/>
+        <viewAttribute id="SRCDOC_COMP"/>
+        <viewAttribute id="SRCDOC_LOGSYS"/>
+        <viewAttribute id="SRCDOC_TYPE"/>
+        <viewAttribute id="REFERENCE_TYPE"/>
+        <viewAttribute id="BUKRS"/>
+        <viewAttribute id="WAERS"/>
+        <viewAttribute id="RECEIV_ACCOUNT"/>
+        <viewAttribute id="ORIGDOC_COMP"/>
+        <viewAttribute id="ORIGDOC_LOGSYS"/>
+        <viewAttribute id="ORIGDOC_TYPE"/>
+        <viewAttribute id="CC_CATEGORY"/>
+        <viewAttribute id="CC_XNEGATIVE_ITEM"/>
+        <viewAttribute id="CC_BILREL"/>
+        <viewAttribute id="CC_SSP"/>
+        <viewAttribute id="CC_TP"/>
+        <viewAttribute id="CC_MAIN_COND_TYPE"/>
+        <viewAttribute id="CC_QUANTITY"/>
+        <viewAttribute id="CC_QUANTITY_UNIT"/>
+        <viewAttribute id="IS_30500201"/>
+        <viewAttribute id="IS_30500202"/>
+        <viewAttribute id="IS_30500203"/>
+        <viewAttribute id="IS_30500204"/>
+        <viewAttribute datatype="NVARCHAR" id="IS_SIBLING_ERROR" length="1" scale="0"/>
+        <viewAttribute id="ERROR_STATUS"/>
+        <viewAttribute id="ERROR_CODE"/>
+        <viewAttribute id="IS_30500101"/>
+        <viewAttribute id="IS_30500102"/>
+        <viewAttribute id="IS_30500205"/>
+        <viewAttribute id="IS_30500206"/>
+        <viewAttribute datatype="NVARCHAR" id="CHARGE_TYPE" length="20" scale="0"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input emptyUnionBehavior="NO_ROW" node="#PROJ_ERROR_RECORD">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_SRCDOC_ID_INV" source="CC_SRCDOC_ID_INV"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_REFID" source="CC_REFID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_SRCDOC_ID" source="CC_SRCDOC_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_RAI_ITEM_ID" source="CC_RAI_ITEM_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SCENARIO_IDENTIFIER" source="SCENARIO_IDENTIFIER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FINAL_TRANS_PRC" source="FINAL_TRANS_PRC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CURRN" source="CURRN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_PORTFOLIO" source="CC_PORTFOLIO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KUNNR_SID" source="KUNNR_SID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="COMPANY_CD" source="COMPANY_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACT_POST_DT" source="ACT_POST_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REVNU_GL" source="REVNU_GL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="POB_TYPE" source="POB_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VALUE_RELEVANT" source="VALUE_RELEVANT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SRCDOC_COMP" source="SRCDOC_COMP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SRCDOC_LOGSYS" source="SRCDOC_LOGSYS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SRCDOC_TYPE" source="SRCDOC_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_TYPE" source="REFERENCE_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WAERS" source="WAERS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RECEIV_ACCOUNT" source="RECEIV_ACCOUNT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ORIGDOC_COMP" source="ORIGDOC_COMP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ORIGDOC_LOGSYS" source="ORIGDOC_LOGSYS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ORIGDOC_TYPE" source="ORIGDOC_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_CATEGORY" source="CC_CATEGORY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_XNEGATIVE_ITEM" source="CC_XNEGATIVE_ITEM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_BILREL" source="CC_BILREL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_SSP" source="CC_SSP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_TP" source="CC_TP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_MAIN_COND_TYPE" source="CC_MAIN_COND_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_QUANTITY" source="CC_QUANTITY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_QUANTITY_UNIT" source="CC_QUANTITY_UNIT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30500201" source="IS_30500201"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30500202" source="IS_30500202"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30500203" source="IS_30500203"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30500204" source="IS_30500204"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="IS_SIBLING_ERROR" null="false" value="0"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ERROR_STATUS" source="ERROR_STATUS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ERROR_CODE" source="ERROR_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30500101" source="IS_30500101"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30500102" source="IS_30500102"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30500205" source="IS_30500205"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30500206" source="IS_30500206"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CHARGE_TYPE" source="CHARGE_TYPE"/>
+      </input>
+      <input emptyUnionBehavior="NO_ROW" node="#JOIN_DETERMINE_SIBLING">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_SRCDOC_ID_INV" source="CC_SRCDOC_ID_INV"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_REFID" source="CC_REFID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_SRCDOC_ID" source="CC_SRCDOC_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_RAI_ITEM_ID" source="CC_RAI_ITEM_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SCENARIO_IDENTIFIER" source="SCENARIO_IDENTIFIER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FINAL_TRANS_PRC" source="FINAL_TRANS_PRC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CURRN" source="CURRN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_PORTFOLIO" source="CC_PORTFOLIO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KUNNR_SID" source="KUNNR_SID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="COMPANY_CD" source="COMPANY_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACT_POST_DT" source="ACT_POST_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REVNU_GL" source="REVNU_GL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="POB_TYPE" source="POB_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VALUE_RELEVANT" source="VALUE_RELEVANT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SRCDOC_COMP" source="SRCDOC_COMP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SRCDOC_LOGSYS" source="SRCDOC_LOGSYS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SRCDOC_TYPE" source="SRCDOC_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_TYPE" source="REFERENCE_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WAERS" source="WAERS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RECEIV_ACCOUNT" source="RECEIV_ACCOUNT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ORIGDOC_COMP" source="ORIGDOC_COMP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ORIGDOC_LOGSYS" source="ORIGDOC_LOGSYS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ORIGDOC_TYPE" source="ORIGDOC_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_CATEGORY" source="CC_CATEGORY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_XNEGATIVE_ITEM" source="CC_XNEGATIVE_ITEM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_BILREL" source="CC_BILREL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_SSP" source="CC_SSP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_TP" source="CC_TP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_MAIN_COND_TYPE" source="CC_MAIN_COND_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_QUANTITY" source="CC_QUANTITY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_QUANTITY_UNIT" source="CC_QUANTITY_UNIT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30500201" source="IS_30500201"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30500202" source="IS_30500202"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30500203" source="IS_30500203"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30500204" source="IS_30500204"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_SIBLING_ERROR" source="IS_SIBLING_ERROR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ERROR_STATUS" source="ERROR_STATUS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ERROR_CODE" source="CC_ERROR_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30500101" source="IS_30500101"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30500102" source="IS_30500102"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30500205" source="IS_30500205"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30500206" source="IS_30500206"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CHARGE_TYPE" source="CHARGE_TYPE"/>
+      </input>
+    </calculationView>
+  </calculationViews>
+  <logicalModel id="UNION">
+    <descriptions/>
+    <attributes>
+      <attribute id="SRCDOC_ID_INV" order="1" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SRCDOC_ID_INV"/>
+        <keyMapping columnObjectName="UNION" columnName="CC_SRCDOC_ID_INV"/>
+      </attribute>
+      <attribute id="REFERENCE_ID" order="2" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="REFERENCE_ID"/>
+        <keyMapping columnObjectName="UNION" columnName="CC_REFID"/>
+      </attribute>
+      <attribute id="SRC_DOC_ID" order="3" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SRC_DOC_ID"/>
+        <keyMapping columnObjectName="UNION" columnName="CC_SRCDOC_ID"/>
+      </attribute>
+      <attribute id="ITEM_ID" order="4" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ITEM_ID"/>
+        <keyMapping columnObjectName="UNION" columnName="CC_RAI_ITEM_ID"/>
+      </attribute>
+      <attribute id="SCENARIO_IDENTIFIER" order="5" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SCENARIO_IDENTIFIER"/>
+        <keyMapping columnObjectName="UNION" columnName="SCENARIO_IDENTIFIER"/>
+      </attribute>
+      <attribute id="HEADER_ID" order="6" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="HEADER_ID"/>
+        <keyMapping columnObjectName="UNION" columnName="KUNNR_SID"/>
+      </attribute>
+      <attribute id="FINAL_TRANS_PRC" order="7" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="FINAL_TRANS_PRC"/>
+        <keyMapping columnObjectName="UNION" columnName="FINAL_TRANS_PRC"/>
+      </attribute>
+      <attribute id="CURRN" order="8" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CURRN"/>
+        <keyMapping columnObjectName="UNION" columnName="CURRN"/>
+      </attribute>
+      <attribute id="CC_PORTFOLIO" order="9" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CC_PORTFOLIO"/>
+        <keyMapping columnObjectName="UNION" columnName="CC_PORTFOLIO"/>
+      </attribute>
+      <attribute id="KUNNR" order="10" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="KUNNR"/>
+        <keyMapping columnObjectName="UNION" columnName="KUNNR_SID"/>
+      </attribute>
+      <attribute id="COMPANY_CD" order="11" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="COMPANY_CD"/>
+        <keyMapping columnObjectName="UNION" columnName="COMPANY_CD"/>
+      </attribute>
+      <attribute id="INCEPTION_DATE" order="12" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="INCEPTION_DATE"/>
+        <keyMapping columnObjectName="UNION" columnName="ACT_POST_DT"/>
+      </attribute>
+      <attribute id="REVNU_GL" order="13" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="REVNU_GL"/>
+        <keyMapping columnObjectName="UNION" columnName="REVNU_GL"/>
+      </attribute>
+      <attribute id="POB_TYPE" order="14" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="POB_TYPE"/>
+        <keyMapping columnObjectName="UNION" columnName="POB_TYPE"/>
+      </attribute>
+      <attribute id="VALUE_RELEVANT" order="15" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="VALUE_RELEVANT"/>
+        <keyMapping columnObjectName="UNION" columnName="VALUE_RELEVANT"/>
+      </attribute>
+      <attribute id="SRCDOC_COMP" order="16" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SRCDOC_COMP"/>
+        <keyMapping columnObjectName="UNION" columnName="SRCDOC_COMP"/>
+      </attribute>
+      <attribute id="SRCDOC_LOGSYS" order="17" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SRCDOC_LOGSYS"/>
+        <keyMapping columnObjectName="UNION" columnName="SRCDOC_LOGSYS"/>
+      </attribute>
+      <attribute id="SRCDOC_TYPE" order="18" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SRCDOC_TYPE"/>
+        <keyMapping columnObjectName="UNION" columnName="SRCDOC_TYPE"/>
+      </attribute>
+      <attribute id="REFERENCE_TYPE" order="19" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="REFERENCE_TYPE"/>
+        <keyMapping columnObjectName="UNION" columnName="REFERENCE_TYPE"/>
+      </attribute>
+      <attribute id="BUKRS" order="20" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="BUKRS"/>
+        <keyMapping columnObjectName="UNION" columnName="BUKRS"/>
+      </attribute>
+      <attribute id="WAERS" order="21" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="WAERS"/>
+        <keyMapping columnObjectName="UNION" columnName="WAERS"/>
+      </attribute>
+      <attribute id="RECEIV_ACCOUNT" order="22" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="RECEIV_ACCOUNT"/>
+        <keyMapping columnObjectName="UNION" columnName="RECEIV_ACCOUNT"/>
+      </attribute>
+      <attribute id="ORIGDOC_COMP" order="23" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ORIGDOC_COMP"/>
+        <keyMapping columnObjectName="UNION" columnName="ORIGDOC_COMP"/>
+      </attribute>
+      <attribute id="ORIGDOC_LOGSYS" order="24" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ORIGDOC_LOGSYS"/>
+        <keyMapping columnObjectName="UNION" columnName="ORIGDOC_LOGSYS"/>
+      </attribute>
+      <attribute id="ORIGDOC_TYPE" order="25" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ORIGDOC_TYPE"/>
+        <keyMapping columnObjectName="UNION" columnName="ORIGDOC_TYPE"/>
+      </attribute>
+      <attribute id="SSP" order="26" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SSP"/>
+        <keyMapping columnObjectName="UNION" columnName="CC_SSP"/>
+      </attribute>
+      <attribute id="TP" order="27" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="TP"/>
+        <keyMapping columnObjectName="UNION" columnName="CC_TP"/>
+      </attribute>
+      <attribute id="CATEGORY" order="28" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CATEGORY"/>
+        <keyMapping columnObjectName="UNION" columnName="CC_CATEGORY"/>
+      </attribute>
+      <attribute id="XNEGATIVE_ITEM" order="29" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="XNEGATIVE_ITEM"/>
+        <keyMapping columnObjectName="UNION" columnName="CC_XNEGATIVE_ITEM"/>
+      </attribute>
+      <attribute id="BILREL" order="30" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="BILREL"/>
+        <keyMapping columnObjectName="UNION" columnName="CC_BILREL"/>
+      </attribute>
+      <attribute id="MAIN_COND_TYPE" order="31" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="MAIN_COND_TYPE"/>
+        <keyMapping columnObjectName="UNION" columnName="CC_MAIN_COND_TYPE"/>
+      </attribute>
+      <attribute id="QUANTITY" order="32" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="QUANTITY"/>
+        <keyMapping columnObjectName="UNION" columnName="CC_QUANTITY"/>
+      </attribute>
+      <attribute id="QUANTITY_UNIT" order="33" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="QUANTITY_UNIT"/>
+        <keyMapping columnObjectName="UNION" columnName="CC_QUANTITY_UNIT"/>
+      </attribute>
+      <attribute id="IS_30500101" order="34" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="IS_30500101"/>
+        <keyMapping columnObjectName="UNION" columnName="IS_30500101"/>
+      </attribute>
+      <attribute id="IS_30500102" order="35" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="IS_30500102"/>
+        <keyMapping columnObjectName="UNION" columnName="IS_30500102"/>
+      </attribute>
+      <attribute id="IS_30500201" order="36" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="IS_30500201"/>
+        <keyMapping columnObjectName="UNION" columnName="IS_30500201"/>
+      </attribute>
+      <attribute id="IS_30500202" order="37" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="IS_30500202"/>
+        <keyMapping columnObjectName="UNION" columnName="IS_30500202"/>
+      </attribute>
+      <attribute id="IS_30500203" order="38" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="IS_30500203"/>
+        <keyMapping columnObjectName="UNION" columnName="IS_30500203"/>
+      </attribute>
+      <attribute id="IS_30500204" order="39" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="IS_30500204"/>
+        <keyMapping columnObjectName="UNION" columnName="IS_30500204"/>
+      </attribute>
+      <attribute id="IS_30500205" order="40" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="IS_30500205"/>
+        <keyMapping columnObjectName="UNION" columnName="IS_30500205"/>
+      </attribute>
+      <attribute id="IS_SIBLING_ERROR" order="41" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="IS_SIBLING_ERROR"/>
+        <keyMapping columnObjectName="UNION" columnName="IS_SIBLING_ERROR"/>
+      </attribute>
+      <attribute id="ERROR_STATUS" order="42" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ERROR_STATUS"/>
+        <keyMapping columnObjectName="UNION" columnName="ERROR_STATUS"/>
+      </attribute>
+      <attribute id="ERROR_CODE" order="43" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ERROR_CODE"/>
+        <keyMapping columnObjectName="UNION" columnName="ERROR_CODE"/>
+      </attribute>
+      <attribute id="IS_30500206" order="44" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions/>
+        <keyMapping columnObjectName="UNION" columnName="IS_30500206"/>
+      </attribute>
+      <attribute id="CHARGE_TYPE" order="45" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CHARGE_TYPE"/>
+        <keyMapping columnObjectName="UNION" columnName="CHARGE_TYPE"/>
+      </attribute>
+    </attributes>
+    <calculatedAttributes/>
+    <privateDataFoundation>
+      <tableProxies/>
+      <joins/>
+      <layout>
+        <shapes/>
+      </layout>
+    </privateDataFoundation>
+    <baseMeasures/>
+    <calculatedMeasures/>
+    <restrictedMeasures/>
+    <localDimensions/>
+  </logicalModel>
+  <layout>
+    <shapes>
+      <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+        <upperLeftCorner x="263" y="87"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_ACC_ORDR_INVC" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="22" y="533"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_ERROR_RECORD" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="181" y="455"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_VALID_RECORD" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="22" y="377"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="RANK_INVALID_RECORDS" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="176" y="377"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="JOIN_DETERMINE_SIBLING" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="176" y="281"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="UNION" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="263" y="165"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+    </shapes>
+  </layout>
+</Calculation:scenario>

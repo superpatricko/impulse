@@ -1,0 +1,491 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" schemaVersion="2.3" id="CA_ARICS_CONS_ON" applyPrivilegeType="NONE" checkAnalyticPrivileges="false" defaultClient="$$client$$" defaultLanguage="$$language$$" hierarchiesSQLEnabled="false" translationRelevant="true" visibility="reportingEnabled" calculationScenarioType="TREE_BASED" dataCategory="CUBE" enforceSqlExecution="false" executionSemantic="UNDEFINED" outputViewType="Aggregation">
+  <descriptions defaultDescription="PRIVATE VIEW ON ARICS_VADJS_ON AND ARICS_VADJ_ON">
+    <comment text="1.PROJ_VADJS_ON (Adjustment Information for Billing): &#xD;&#xA;It will populate records from private view CA_ARICS_VADJS_ON_VW.This private view includes calculation column of Customer Account ID(CC_CUST_ACCT_ID).&#xD;&#xA;&#xD;&#xA;2.PROJ_VADJ_ON  (Adjustment Information for Billing): &#xD;&#xA;   a.It will populate records from private view   &#xD;&#xA;       CA_ARICS_VADJ_ON.&#xD;&#xA;    b.Refer Journal Action code(REFR_JRNL_ACT_CD) column values is used in Billing.&#xD;&#xA;&#xD;&#xA;3.Join_1 :  &#xD;&#xA;PROJ_VADJS_ON and PROJ_VADJ_ON joined on the basis of Customer Account Number,Process Date and Serial Number.&#xD;&#xA;&#xD;&#xA;4.Agrregation : &#xD;&#xA;It will aggregate data based on Total Basic Amount(TOT_BASIC_AMT) as measure also aggregation will remove the data duplicacy from view.&#xD;&#xA;&#xD;&#xA;5.View : &#xD;&#xA;This Harmonization view will return records for adjustments for Ontario region."/>
+  </descriptions>
+  <localVariables/>
+  <variableMappings/>
+  <informationModelLayout relativeWidthScenario="54"/>
+  <dataSources>
+    <DataSource id="CA_ARICS_VADJS_ON" type="CALCULATION_VIEW">
+      <viewAttributes allViewAttributes="true"/>
+      <resourceUri>/IFRS_R1.HP.LAND_HP/calculationviews/CA_ARICS_VADJS_ON</resourceUri>
+    </DataSource>
+    <DataSource id="CA_ARICS_VADJ_ON" type="CALCULATION_VIEW">
+      <viewAttributes allViewAttributes="true"/>
+      <resourceUri>/IFRS_R1.HP.LAND_HP/calculationviews/CA_ARICS_VADJ_ON</resourceUri>
+    </DataSource>
+    <DataSource id="CA_ARICS_MCC_ONA" type="CALCULATION_VIEW">
+      <viewAttributes allViewAttributes="true"/>
+      <resourceUri>/IFRS_R1.HP.LAND_HP/calculationviews/CA_ARICS_MCC_ONA</resourceUri>
+    </DataSource>
+    <DataSource id="CA_ARICS_MCC_ONB" type="CALCULATION_VIEW">
+      <viewAttributes allViewAttributes="true"/>
+      <resourceUri>/IFRS_R1.HP.LAND_HP/calculationviews/CA_ARICS_MCC_ONB</resourceUri>
+    </DataSource>
+  </dataSources>
+  <calculationViews>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_VADJS_ON">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="ADJMT_ACCT_CD"/>
+        <viewAttribute id="ADJMT_DET_INDR"/>
+        <viewAttribute id="ADJMT_TL_DET_INDR"/>
+        <viewAttribute id="ADJMT_TY_CD"/>
+        <viewAttribute id="BILL_CUST_CD"/>
+        <viewAttribute id="BILL_LINE_NUM"/>
+        <viewAttribute id="BILL_NPA"/>
+        <viewAttribute id="BILL_NXX"/>
+        <viewAttribute id="BILL_SUFFIX_CD"/>
+        <viewAttribute id="CUST_BILL_DT"/>
+        <viewAttribute id="PRO_DT"/>
+        <viewAttribute id="REFR_JRNL_ACT_CD"/>
+        <viewAttribute id="SER_NUM"/>
+        <viewAttribute id="TCAN_CUST_ACCT_NO"/>
+        <viewAttribute id="TOT_BASIC_AMT"/>
+        <viewAttribute id="CC_CUST_ACCT_ID"/>
+        <viewAttribute id="CYCL_ID_VADJS"/>
+        <viewAttribute id="VADJSON_PRIMARY_KEY"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#CA_ARICS_VADJS_ON">
+        <mapping xsi:type="Calculation:AttributeMapping" target="ADJMT_ACCT_CD" source="ADJMT_ACCT_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ADJMT_DET_INDR" source="ADJMT_DET_INDR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ADJMT_TL_DET_INDR" source="ADJMT_TL_DET_INDR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ADJMT_TY_CD" source="ADJMT_TY_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_CUST_CD" source="BILL_CUST_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_LINE_NUM" source="BILL_LINE_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_NPA" source="BILL_NPA"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_NXX" source="BILL_NXX"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_SUFFIX_CD" source="BILL_SUFFIX_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUST_BILL_DT" source="CUST_BILL_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRO_DT" source="PRO_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFR_JRNL_ACT_CD" source="REFR_JRNL_ACT_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SER_NUM" source="SER_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TCAN_CUST_ACCT_NO" source="TCAN_CUST_ACCT_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TOT_BASIC_AMT" source="TOT_BASIC_AMT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_CUST_ACCT_ID" source="CC_CUST_ACCT_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID_VADJS" source="CYCL_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VADJSON_PRIMARY_KEY" source="VADJSON_PRIMARY_KEY"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_VADJ_ON">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="CUST_ACCT_NO"/>
+        <viewAttribute id="PRO_DT"/>
+        <viewAttribute id="SEQ_NUM"/>
+        <viewAttribute id="DTL_TY_CD"/>
+        <viewAttribute id="REFR_JRNL_ACT_CD"/>
+        <viewAttribute id="PRODSERV_CD"/>
+        <viewAttribute id="EFF_DT"/>
+        <viewAttribute id="SYSTEM_REGION"/>
+        <viewAttribute id="SER_NUM"/>
+        <viewAttribute id="CYCL_ID_VADJ"/>
+        <viewAttribute id="VADJON_PRIMARY_KEY"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#CA_ARICS_VADJ_ON">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUST_ACCT_NO" source="CUST_ACCT_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRO_DT" source="PRO_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SEQ_NUM" source="SEQ_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DTL_TY_CD" source="DTL_TY_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFR_JRNL_ACT_CD" source="REFR_JRNL_ACT_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRODSERV_CD" source="PRODSERV_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFF_DT" source="EFF_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SYSTEM_REGION" source="SYSTEM_REGION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SER_NUM" source="SER_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID_VADJ" source="CYCL_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VADJON_PRIMARY_KEY" source="VADJON_PRIMARY_KEY"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="JOIN_ARICS_VADJ_VADJS_ON" joinType="inner">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="ADJMT_ACCT_CD"/>
+        <viewAttribute id="ADJMT_DET_INDR"/>
+        <viewAttribute id="ADJMT_TL_DET_INDR"/>
+        <viewAttribute id="ADJMT_TY_CD"/>
+        <viewAttribute id="BILL_CUST_CD"/>
+        <viewAttribute id="BILL_LINE_NUM"/>
+        <viewAttribute id="BILL_NPA"/>
+        <viewAttribute id="BILL_NXX"/>
+        <viewAttribute id="BILL_SUFFIX_CD"/>
+        <viewAttribute id="CUST_BILL_DT"/>
+        <viewAttribute id="PRO_DT"/>
+        <viewAttribute id="SER_NUM"/>
+        <viewAttribute id="TOT_BASIC_AMT"/>
+        <viewAttribute id="TCAN_CUST_ACCT_NO"/>
+        <viewAttribute id="REFR_JRNL_ACT_CD"/>
+        <viewAttribute id="SYSTEM_REGION"/>
+        <viewAttribute id="PRODSERV_CD"/>
+        <viewAttribute id="SEQ_NUM"/>
+        <viewAttribute id="CC_CUST_ACCT_ID"/>
+        <viewAttribute id="CYCL_ID_VADJS"/>
+        <viewAttribute id="CYCL_ID_VADJ"/>
+        <viewAttribute id="VADJSON_PRIMARY_KEY"/>
+        <viewAttribute id="VADJON_PRIMARY_KEY"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#PROJ_VADJS_ON">
+        <mapping xsi:type="Calculation:AttributeMapping" target="ADJMT_ACCT_CD" source="ADJMT_ACCT_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ADJMT_DET_INDR" source="ADJMT_DET_INDR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ADJMT_TL_DET_INDR" source="ADJMT_TL_DET_INDR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ADJMT_TY_CD" source="ADJMT_TY_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_CUST_CD" source="BILL_CUST_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_LINE_NUM" source="BILL_LINE_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_NPA" source="BILL_NPA"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_NXX" source="BILL_NXX"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_SUFFIX_CD" source="BILL_SUFFIX_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUST_BILL_DT" source="CUST_BILL_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRO_DT" source="PRO_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SER_NUM" source="SER_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TOT_BASIC_AMT" source="TOT_BASIC_AMT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TCAN_CUST_ACCT_NO" source="TCAN_CUST_ACCT_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFR_JRNL_ACT_CD" source="REFR_JRNL_ACT_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_CUST_ACCT_ID" source="CC_CUST_ACCT_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID_VADJS" source="CYCL_ID_VADJS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VADJSON_PRIMARY_KEY" source="VADJSON_PRIMARY_KEY"/>
+      </input>
+      <input node="#PROJ_VADJ_ON">
+        <mapping xsi:type="Calculation:AttributeMapping" target="SYSTEM_REGION" source="SYSTEM_REGION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRODSERV_CD" source="PRODSERV_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SEQ_NUM" source="SEQ_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID_VADJ" source="CYCL_ID_VADJ"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VADJON_PRIMARY_KEY" source="VADJON_PRIMARY_KEY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TCAN_CUST_ACCT_NO" source="CUST_ACCT_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRO_DT" source="PRO_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SER_NUM" source="SER_NUM"/>
+      </input>
+      <joinAttribute name="TCAN_CUST_ACCT_NO"/>
+      <joinAttribute name="PRO_DT"/>
+      <joinAttribute name="SER_NUM"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_MCC_ONA">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="BASIC_ADJ_AMNT"/>
+        <viewAttribute id="CUST_ACC_NUM"/>
+        <viewAttribute id="INPUT_NPA"/>
+        <viewAttribute id="INPUT_NXX"/>
+        <viewAttribute id="INPUT_LINE_NUM"/>
+        <viewAttribute id="INPUT_SUFFIX_CD"/>
+        <viewAttribute id="INPUT_CUST_CD"/>
+        <viewAttribute id="REF_JRNL_ACC_CD"/>
+        <viewAttribute id="PRO_DT"/>
+        <viewAttribute id="ACTION_CD"/>
+        <viewAttribute id="TYPE_CD"/>
+        <viewAttribute id="MCC_ONA_PRIMARY_KEY"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#CA_ARICS_MCC_ONA">
+        <mapping xsi:type="Calculation:AttributeMapping" target="BASIC_ADJ_AMNT" source="BASIC_ADJ_AMNT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUST_ACC_NUM" source="CUST_ACC_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INPUT_NPA" source="INPUT_NPA"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INPUT_NXX" source="INPUT_NXX"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INPUT_LINE_NUM" source="INPUT_LINE_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INPUT_SUFFIX_CD" source="INPUT_SUFFIX_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INPUT_CUST_CD" source="INPUT_CUST_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REF_JRNL_ACC_CD" source="REF_JRNL_ACC_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRO_DT" source="PRO_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACTION_CD" source="ACTION_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TYPE_CD" source="TYPE_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MCC_ONA_PRIMARY_KEY" source="MCC_ONA_PRIMARY_KEY"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_MCC_ONB">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="PRO_DT"/>
+        <viewAttribute id="REF_JRNL_ACC_CD"/>
+        <viewAttribute id="CUST_ACC_NUM"/>
+        <viewAttribute id="INPUT_NPA"/>
+        <viewAttribute id="INPUT_NXX"/>
+        <viewAttribute id="INPUT_LINE_NUM"/>
+        <viewAttribute id="INPUT_SUFFIX_CD"/>
+        <viewAttribute id="INPUT_CUST_CD"/>
+        <viewAttribute id="BASIC_ADJ_AMNT"/>
+        <viewAttribute id="ACTION_CD"/>
+        <viewAttribute id="TYPE_CD"/>
+        <viewAttribute id="MCC_ONB_PRIMARY_KEY"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#CA_ARICS_MCC_ONB">
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRO_DT" source="PRO_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REF_JRNL_ACC_CD" source="REF_JRNL_ACC_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUST_ACC_NUM" source="CUST_ACC_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INPUT_NPA" source="INPUT_NPA"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INPUT_NXX" source="INPUT_NXX"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INPUT_LINE_NUM" source="INPUT_LINE_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INPUT_SUFFIX_CD" source="INPUT_SUFFIX_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INPUT_CUST_CD" source="INPUT_CUST_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BASIC_ADJ_AMNT" source="BASIC_ADJ_AMNT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACTION_CD" source="ACTION_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TYPE_CD" source="TYPE_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MCC_ONB_PRIMARY_KEY" source="MCC_ONB_PRIMARY_KEY"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:UnionView" id="Union_1">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="ADJMT_ACCT_CD"/>
+        <viewAttribute id="ADJMT_DET_INDR"/>
+        <viewAttribute id="ADJMT_TL_DET_INDR"/>
+        <viewAttribute id="ADJMT_TY_CD"/>
+        <viewAttribute id="BILL_CUST_CD"/>
+        <viewAttribute id="BILL_LINE_NUM"/>
+        <viewAttribute id="BILL_NPA"/>
+        <viewAttribute id="BILL_NXX"/>
+        <viewAttribute id="BILL_SUFFIX_CD"/>
+        <viewAttribute id="CUST_BILL_DT"/>
+        <viewAttribute id="PRO_DT"/>
+        <viewAttribute id="SER_NUM"/>
+        <viewAttribute id="TCAN_CUST_ACCT_NO"/>
+        <viewAttribute id="REFR_JRNL_ACT_CD"/>
+        <viewAttribute id="SYSTEM_REGION"/>
+        <viewAttribute id="PRODSERV_CD"/>
+        <viewAttribute id="SEQ_NUM"/>
+        <viewAttribute id="CC_CUST_ACCT_ID"/>
+        <viewAttribute id="TOT_BASIC_AMT"/>
+        <viewAttribute id="CYCL_ID_VADJS"/>
+        <viewAttribute id="CYCL_ID_VADJ"/>
+        <viewAttribute id="MCC_ONA_PRIMARY_KEY"/>
+        <viewAttribute id="VADJSON_PRIMARY_KEY"/>
+        <viewAttribute id="VADJON_PRIMARY_KEY"/>
+        <viewAttribute id="MCC_ONB_PRIMARY_KEY"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input emptyUnionBehavior="NO_ROW" node="#JOIN_ARICS_VADJ_VADJS_ON">
+        <mapping xsi:type="Calculation:AttributeMapping" target="ADJMT_ACCT_CD" source="ADJMT_ACCT_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ADJMT_DET_INDR" source="ADJMT_DET_INDR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ADJMT_TL_DET_INDR" source="ADJMT_TL_DET_INDR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ADJMT_TY_CD" source="ADJMT_TY_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_CUST_CD" source="BILL_CUST_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_LINE_NUM" source="BILL_LINE_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_NPA" source="BILL_NPA"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_NXX" source="BILL_NXX"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_SUFFIX_CD" source="BILL_SUFFIX_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUST_BILL_DT" source="CUST_BILL_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRO_DT" source="PRO_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SER_NUM" source="SER_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TCAN_CUST_ACCT_NO" source="TCAN_CUST_ACCT_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFR_JRNL_ACT_CD" source="REFR_JRNL_ACT_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SYSTEM_REGION" source="SYSTEM_REGION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRODSERV_CD" source="PRODSERV_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SEQ_NUM" source="SEQ_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_CUST_ACCT_ID" source="CC_CUST_ACCT_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TOT_BASIC_AMT" source="TOT_BASIC_AMT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID_VADJS" source="CYCL_ID_VADJS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID_VADJ" source="CYCL_ID_VADJ"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="MCC_ONA_PRIMARY_KEY" null="true" value=""/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VADJSON_PRIMARY_KEY" source="VADJSON_PRIMARY_KEY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VADJON_PRIMARY_KEY" source="VADJON_PRIMARY_KEY"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="MCC_ONB_PRIMARY_KEY" null="true" value=""/>
+      </input>
+      <input emptyUnionBehavior="NO_ROW" node="#PROJ_MCC_ONA">
+        <mapping xsi:type="Calculation:AttributeMapping" target="ADJMT_ACCT_CD" source="ACTION_CD"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="ADJMT_DET_INDR" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="ADJMT_TL_DET_INDR" null="true" value=""/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ADJMT_TY_CD" source="TYPE_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_CUST_CD" source="INPUT_CUST_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_LINE_NUM" source="INPUT_LINE_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_NPA" source="INPUT_NPA"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_NXX" source="INPUT_NXX"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_SUFFIX_CD" source="INPUT_SUFFIX_CD"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="CUST_BILL_DT" null="true" value=""/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRO_DT" source="PRO_DT"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="SER_NUM" null="true" value=""/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TCAN_CUST_ACCT_NO" source="CUST_ACC_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFR_JRNL_ACT_CD" source="REF_JRNL_ACC_CD"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="SYSTEM_REGION" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="PRODSERV_CD" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="SEQ_NUM" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="CC_CUST_ACCT_ID" null="true" value=""/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TOT_BASIC_AMT" source="BASIC_ADJ_AMNT"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="CYCL_ID_VADJS" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="CYCL_ID_VADJ" null="true" value=""/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MCC_ONA_PRIMARY_KEY" source="MCC_ONA_PRIMARY_KEY"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="VADJSON_PRIMARY_KEY" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="VADJON_PRIMARY_KEY" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="MCC_ONB_PRIMARY_KEY" null="true" value=""/>
+      </input>
+      <input emptyUnionBehavior="NO_ROW" node="#PROJ_MCC_ONB">
+        <mapping xsi:type="Calculation:AttributeMapping" target="ADJMT_ACCT_CD" source="ACTION_CD"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="ADJMT_DET_INDR" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="ADJMT_TL_DET_INDR" null="true" value=""/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ADJMT_TY_CD" source="TYPE_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_CUST_CD" source="INPUT_CUST_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_LINE_NUM" source="INPUT_LINE_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_NPA" source="INPUT_NPA"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_NXX" source="INPUT_NXX"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_SUFFIX_CD" source="INPUT_SUFFIX_CD"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="CUST_BILL_DT" null="true" value=""/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRO_DT" source="PRO_DT"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="SER_NUM" null="true" value=""/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TCAN_CUST_ACCT_NO" source="CUST_ACC_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFR_JRNL_ACT_CD" source="REF_JRNL_ACC_CD"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="SYSTEM_REGION" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="PRODSERV_CD" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="SEQ_NUM" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="CC_CUST_ACCT_ID" null="true" value=""/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TOT_BASIC_AMT" source="BASIC_ADJ_AMNT"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="CYCL_ID_VADJS" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="CYCL_ID_VADJ" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="MCC_ONA_PRIMARY_KEY" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="VADJSON_PRIMARY_KEY" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="VADJON_PRIMARY_KEY" null="true" value=""/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MCC_ONB_PRIMARY_KEY" source="MCC_ONB_PRIMARY_KEY"/>
+      </input>
+    </calculationView>
+  </calculationViews>
+  <logicalModel id="Union_1">
+    <descriptions/>
+    <attributes>
+      <attribute id="ADJMT_ACCT_CD" order="1" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ADJMT_ACCT_CD"/>
+        <keyMapping columnObjectName="Union_1" columnName="ADJMT_ACCT_CD"/>
+      </attribute>
+      <attribute id="ADJMT_DET_INDR" order="2" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ADJMT_DET_INDR"/>
+        <keyMapping columnObjectName="Union_1" columnName="ADJMT_DET_INDR"/>
+      </attribute>
+      <attribute id="ADJMT_TL_DET_INDR" order="3" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ADJMT_TL_DET_INDR"/>
+        <keyMapping columnObjectName="Union_1" columnName="ADJMT_TL_DET_INDR"/>
+      </attribute>
+      <attribute id="ADJMT_TY_CD" order="4" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ADJMT_TY_CD"/>
+        <keyMapping columnObjectName="Union_1" columnName="ADJMT_TY_CD"/>
+      </attribute>
+      <attribute id="BILL_CUST_CD" order="5" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="BILL_CUST_CD"/>
+        <keyMapping columnObjectName="Union_1" columnName="BILL_CUST_CD"/>
+      </attribute>
+      <attribute id="BILL_LINE_NUM" order="6" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="BILL_LINE_NUM"/>
+        <keyMapping columnObjectName="Union_1" columnName="BILL_LINE_NUM"/>
+      </attribute>
+      <attribute id="BILL_NPA" order="7" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="BILL_NPA"/>
+        <keyMapping columnObjectName="Union_1" columnName="BILL_NPA"/>
+      </attribute>
+      <attribute id="BILL_NXX" order="8" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="BILL_NXX"/>
+        <keyMapping columnObjectName="Union_1" columnName="BILL_NXX"/>
+      </attribute>
+      <attribute id="BILL_SUFFIX_CD" order="9" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="BILL_SUFFIX_CD"/>
+        <keyMapping columnObjectName="Union_1" columnName="BILL_SUFFIX_CD"/>
+      </attribute>
+      <attribute id="CUST_BILL_DT" order="10" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CUST_BILL_DT"/>
+        <keyMapping columnObjectName="Union_1" columnName="CUST_BILL_DT"/>
+      </attribute>
+      <attribute id="PRO_DT" order="11" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="PRO_DT"/>
+        <keyMapping columnObjectName="Union_1" columnName="PRO_DT"/>
+      </attribute>
+      <attribute id="SER_NUM" order="12" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SER_NUM"/>
+        <keyMapping columnObjectName="Union_1" columnName="SER_NUM"/>
+      </attribute>
+      <attribute id="TCAN_CUST_ACCT_NO" order="13" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="TCAN_CUST_ACCT_NO"/>
+        <keyMapping columnObjectName="Union_1" columnName="TCAN_CUST_ACCT_NO"/>
+      </attribute>
+      <attribute id="REFR_JRNL_ACT_CD" order="14" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="REFR_JRNL_ACT_CD"/>
+        <keyMapping columnObjectName="Union_1" columnName="REFR_JRNL_ACT_CD"/>
+      </attribute>
+      <attribute id="SYSTEM_REGION" order="15" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SYSTEM_REGION"/>
+        <keyMapping columnObjectName="Union_1" columnName="SYSTEM_REGION"/>
+      </attribute>
+      <attribute id="PRODSERV_CD" order="16" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="PRODSERV_CD"/>
+        <keyMapping columnObjectName="Union_1" columnName="PRODSERV_CD"/>
+      </attribute>
+      <attribute id="SEQ_NUM" order="17" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SEQ_NUM"/>
+        <keyMapping columnObjectName="Union_1" columnName="SEQ_NUM"/>
+      </attribute>
+      <attribute id="CC_CUST_ACCT_ID" order="18" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CC_CUST_ACCT_ID"/>
+        <keyMapping columnObjectName="Union_1" columnName="CC_CUST_ACCT_ID"/>
+      </attribute>
+      <attribute id="CYCL_ID_VADJS" order="20" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CYCL_ID_VADJS"/>
+        <keyMapping columnObjectName="Union_1" columnName="CYCL_ID_VADJS"/>
+      </attribute>
+      <attribute id="CYCL_ID_VADJ" order="21" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CYCL_ID_VADJ"/>
+        <keyMapping columnObjectName="Union_1" columnName="CYCL_ID_VADJ"/>
+      </attribute>
+      <attribute id="MCC_ONA_PRIMARY_KEY" order="22" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="MCC_ONA_PRIMARY_KEY"/>
+        <keyMapping columnObjectName="Union_1" columnName="MCC_ONA_PRIMARY_KEY"/>
+      </attribute>
+      <attribute id="VADJSON_PRIMARY_KEY" order="23" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="VADJSON_PRIMARY_KEY"/>
+        <keyMapping columnObjectName="Union_1" columnName="VADJSON_PRIMARY_KEY"/>
+      </attribute>
+      <attribute id="VADJON_PRIMARY_KEY" order="24" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="VADJON_PRIMARY_KEY"/>
+        <keyMapping columnObjectName="Union_1" columnName="VADJON_PRIMARY_KEY"/>
+      </attribute>
+      <attribute id="MCC_ONB_PRIMARY_KEY" order="25" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="MCC_ONB_PRIMARY_KEY"/>
+        <keyMapping columnObjectName="Union_1" columnName="MCC_ONB_PRIMARY_KEY"/>
+      </attribute>
+    </attributes>
+    <calculatedAttributes/>
+    <privateDataFoundation>
+      <tableProxies/>
+      <joins/>
+      <layout>
+        <shapes/>
+      </layout>
+    </privateDataFoundation>
+    <baseMeasures>
+      <measure id="TOT_BASIC_AMT" order="19" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="TOT_BASIC_AMT"/>
+        <measureMapping columnObjectName="Union_1" columnName="TOT_BASIC_AMT"/>
+      </measure>
+    </baseMeasures>
+    <calculatedMeasures/>
+    <restrictedMeasures/>
+    <localDimensions/>
+  </logicalModel>
+  <layout>
+    <shapes>
+      <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+        <upperLeftCorner x="253" y="87"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_VADJS_ON" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="22" y="395"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_VADJ_ON" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="176" y="395"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="JOIN_ARICS_VADJ_VADJS_ON" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="99" y="299"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_MCC_ONA" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="253" y="299"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_MCC_ONB" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="407" y="299"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Union_1" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="253" y="165"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+    </shapes>
+  </layout>
+</Calculation:scenario>

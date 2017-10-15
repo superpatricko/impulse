@@ -1,0 +1,547 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:AccessControl="http://www.sap.com/ndb/SQLCoreModelAccessControl.ecore" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" xmlns:Variable="http://www.sap.com/ndb/BiModelVariable.ecore" schemaVersion="2.3" id="CA_MDM_PROMO" applyPrivilegeType="NONE" checkAnalyticPrivileges="false" defaultClient="$$client$$" defaultLanguage="$$language$$" hierarchiesSQLEnabled="false" translationRelevant="true" visibility="internal" calculationScenarioType="TREE_BASED" dataCategory="DIMENSION" enforceSqlExecution="false" executionSemantic="UNDEFINED" outputViewType="Projection">
+  <descriptions defaultDescription="CA_MDM_PROMO"/>
+  <localVariables>
+    <variable id="IP_CYCL_ID" parameter="true">
+      <descriptions defaultDescription="IP_CYCL_ID"/>
+      <variableProperties datatype="DATE" defaultValue="999" mandatory="false">
+        <valueDomain type="Date"/>
+        <selection multiLine="false" type="SingleValue"/>
+      </variableProperties>
+    </variable>
+  </localVariables>
+  <variableMappings>
+    <mapping xsi:type="Variable:VariableMapping" dataSource="#CA_MDM_PROMO">
+      <targetVariable name="IP_CYCL_ID" resourceUri="/IFRS_R1.INTERNET.LAND_INTERNET/calculationviews/CA_MDM_PROMO"/>
+      <localVariable>#IP_CYCL_ID</localVariable>
+    </mapping>
+  </variableMappings>
+  <informationModelLayout relativeWidthScenario="39"/>
+  <dataSources>
+    <DataSource id="CA_MDM_PROMO" type="CALCULATION_VIEW">
+      <viewAttributes allViewAttributes="true"/>
+      <resourceUri>/IFRS_R1.INTERNET.LAND_INTERNET/calculationviews/CA_MDM_PROMO</resourceUri>
+    </DataSource>
+    <DataSource id="IFRS_R1.INTERNET.NDB_INTERNET::MDM_PROMO" type="DATA_BASE_TABLE">
+      <viewAttributes allViewAttributes="true"/>
+      <columnObject schemaName="NDB_INTERNET" columnObjectName="IFRS_R1.INTERNET.NDB_INTERNET::MDM_PROMO"/>
+    </DataSource>
+    <DataSource id="IFRS_R1.INTERNET.NDB_INTERNET::MDM_PROMO_EH" type="DATA_BASE_TABLE">
+      <viewAttributes allViewAttributes="true"/>
+      <columnObject schemaName="NDB_INTERNET" columnObjectName="IFRS_R1.INTERNET.NDB_INTERNET::MDM_PROMO_EH"/>
+    </DataSource>
+  </dataSources>
+  <calculationViews>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_PVT_VW">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="CYCL_ID"/>
+        <viewAttribute id="SRC_TS"/>
+        <viewAttribute id="PROMO_CD"/>
+        <viewAttribute id="SERV_CD"/>
+        <viewAttribute id="ENG_NM"/>
+        <viewAttribute id="RT_PLN_CD"/>
+        <viewAttribute id="DISC_CD"/>
+        <viewAttribute id="SEQ_ID"/>
+        <viewAttribute id="STRT_SELL_DT"/>
+        <viewAttribute id="INT_PROMO_PRIMARY_KEY_LAND"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="DATE" id="CC_REFERENCE_EXPIRY_DT" expressionLanguage="COLUMN_ENGINE">
+          <formula>'99991231'</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CC_INT_PROMO_PRIMARY_KEY" length="81" expressionLanguage="COLUMN_ENGINE">
+          <formula>&quot;PROMO_CD&quot;+'|'+&quot;DISC_CD&quot;</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="DATE" id="CC_SRC_TS" expressionLanguage="COLUMN_ENGINE">
+          <formula>date(&quot;SRC_TS&quot;)</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#CA_MDM_PROMO">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SRC_TS" source="SRC_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROMO_CD" source="PROMO_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SERV_CD" source="SERV_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ENG_NM" source="ENG_NM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RT_PLN_CD" source="RT_PLN_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DISC_CD" source="DISC_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SEQ_ID" source="SEQ_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="STRT_SELL_DT" source="STRT_SELL_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INT_PROMO_PRIMARY_KEY_LAND" source="INT_PROMO_PRIMARY_KEY_LAND"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_NDB">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="PROMO_CD"/>
+        <viewAttribute id="ENG_NM"/>
+        <viewAttribute id="SERV_CD"/>
+        <viewAttribute id="RT_PLN_CD"/>
+        <viewAttribute id="DISC_CD"/>
+        <viewAttribute id="REFERENCE_EFFECTIVE_DT"/>
+        <viewAttribute id="REFERENCE_EXPIRY_DT">
+          <filter xsi:type="AccessControl:SingleValueFilter" including="true" value="9999-12-31"/>
+        </viewAttribute>
+        <viewAttribute id="EXECUTION_ID"/>
+        <viewAttribute id="INSRT_TS"/>
+        <viewAttribute id="MODIFIED_TS"/>
+        <viewAttribute id="BATCH_ID"/>
+        <viewAttribute id="CONVERSION_IND"/>
+        <viewAttribute id="STRT_SELL_DT"/>
+        <viewAttribute id="INT_PROMO_PRIMARY_KEY"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#IFRS_R1.INTERNET.NDB_INTERNET::MDM_PROMO">
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROMO_CD" source="PROMO_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ENG_NM" source="ENG_NM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SERV_CD" source="SERV_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RT_PLN_CD" source="RT_PLN_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DISC_CD" source="DISC_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_EFFECTIVE_DT" source="REFERENCE_EFFECTIVE_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_EXPIRY_DT" source="REFERENCE_EXPIRY_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXECUTION_ID" source="EXECUTION_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INSRT_TS" source="INSRT_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MODIFIED_TS" source="MODIFIED_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BATCH_ID" source="BATCH_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONVERSION_IND" source="CONVERSION_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="STRT_SELL_DT" source="STRT_SELL_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INT_PROMO_PRIMARY_KEY" source="INT_PROMO_PRIMARY_KEY"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_EH">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="INT_PROMO_PRIMARY_KEY"/>
+        <viewAttribute id="DELETED">
+          <filter xsi:type="AccessControl:SingleValueFilter" operator="NL" including="true"/>
+        </viewAttribute>
+        <viewAttribute id="REFERENCE_EFFECTIVE_DT"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="DATE" id="CC_REFERENCE_EFFECTIVE_DT_EH" expressionLanguage="COLUMN_ENGINE">
+          <formula>date(&quot;REFERENCE_EFFECTIVE_DT&quot;)</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#IFRS_R1.INTERNET.NDB_INTERNET::MDM_PROMO_EH">
+        <mapping xsi:type="Calculation:AttributeMapping" target="INT_PROMO_PRIMARY_KEY" source="INT_PROMO_PRIMARY_KEY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DELETED" source="DELETED"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_EFFECTIVE_DT" source="REFERENCE_EFFECTIVE_DT"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="JOIN_INCOMING_RECORDS_WITH_EH" joinOrder="OUTSIDE_IN" joinType="leftOuter">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="INT_PROMO_PRIMARY_KEY_EH"/>
+        <viewAttribute id="CC_INT_PROMO_PRIMARY_KEY_LAND"/>
+        <viewAttribute hidden="true" id="JOIN$CC_REFERENCE_EFFECTIVE_DT_EH$CC_SRC_TS"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#PROJ_EH">
+        <mapping xsi:type="Calculation:AttributeMapping" target="INT_PROMO_PRIMARY_KEY_EH" source="INT_PROMO_PRIMARY_KEY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$CC_REFERENCE_EFFECTIVE_DT_EH$CC_SRC_TS" source="CC_REFERENCE_EFFECTIVE_DT_EH"/>
+      </input>
+      <input node="#PROJ_PVT_VW">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_INT_PROMO_PRIMARY_KEY_LAND" source="CC_INT_PROMO_PRIMARY_KEY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$CC_REFERENCE_EFFECTIVE_DT_EH$CC_SRC_TS" source="CC_SRC_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INT_PROMO_PRIMARY_KEY_EH" source="CC_INT_PROMO_PRIMARY_KEY"/>
+      </input>
+      <joinAttribute name="JOIN$CC_REFERENCE_EFFECTIVE_DT_EH$CC_SRC_TS"/>
+      <joinAttribute name="INT_PROMO_PRIMARY_KEY_EH"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_INCOMING_RECORDS">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="INT_PROMO_PRIMARY_KEY_EH"/>
+        <viewAttribute id="CC_INT_PROMO_PRIMARY_KEY_LAND">
+          <filter xsi:type="AccessControl:SingleValueFilter" operator="NL" including="true"/>
+        </viewAttribute>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#JOIN_INCOMING_RECORDS_WITH_EH">
+        <mapping xsi:type="Calculation:AttributeMapping" target="INT_PROMO_PRIMARY_KEY_EH" source="INT_PROMO_PRIMARY_KEY_EH"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_INT_PROMO_PRIMARY_KEY_LAND" source="CC_INT_PROMO_PRIMARY_KEY_LAND"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:AggregationView" id="AGGR_DISTINCT">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="INT_PROMO_PRIMARY_KEY_EH"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#PROJ_INCOMING_RECORDS">
+        <mapping xsi:type="Calculation:AttributeMapping" target="INT_PROMO_PRIMARY_KEY_EH" source="INT_PROMO_PRIMARY_KEY_EH"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="JOIN_PV_EH" joinOrder="OUTSIDE_IN" joinType="leftOuter">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="CYCL_ID"/>
+        <viewAttribute id="PROMO_CD"/>
+        <viewAttribute id="SERV_CD"/>
+        <viewAttribute id="ENG_NM"/>
+        <viewAttribute id="RT_PLN_CD"/>
+        <viewAttribute id="DISC_CD"/>
+        <viewAttribute id="REFERENCE_EXPIRY_DT"/>
+        <viewAttribute id="SRC_TS"/>
+        <viewAttribute id="SEQ_ID"/>
+        <viewAttribute id="STRT_SELL_DT"/>
+        <viewAttribute id="INT_PROMO_PRIMARY_KEY"/>
+        <viewAttribute id="INT_PROMO_PRIMARY_KEY_LAND"/>
+        <viewAttribute id="INT_PROMO_PRIMARY_KEY_EH"/>
+        <viewAttribute id="CC_SRC_TS"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="IS_20201501" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isnull(&quot;INT_PROMO_PRIMARY_KEY_EH&quot;),'0','1')</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#PROJ_PVT_VW">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROMO_CD" source="PROMO_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SERV_CD" source="SERV_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ENG_NM" source="ENG_NM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RT_PLN_CD" source="RT_PLN_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DISC_CD" source="DISC_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_EXPIRY_DT" source="CC_REFERENCE_EXPIRY_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SRC_TS" source="SRC_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SEQ_ID" source="SEQ_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="STRT_SELL_DT" source="STRT_SELL_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INT_PROMO_PRIMARY_KEY" source="CC_INT_PROMO_PRIMARY_KEY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INT_PROMO_PRIMARY_KEY_LAND" source="INT_PROMO_PRIMARY_KEY_LAND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_SRC_TS" source="CC_SRC_TS"/>
+      </input>
+      <input node="#AGGR_DISTINCT">
+        <mapping xsi:type="Calculation:AttributeMapping" target="INT_PROMO_PRIMARY_KEY_EH" source="INT_PROMO_PRIMARY_KEY_EH"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INT_PROMO_PRIMARY_KEY" source="INT_PROMO_PRIMARY_KEY_EH"/>
+      </input>
+      <joinAttribute name="INT_PROMO_PRIMARY_KEY"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="JOIN_NDB" joinOrder="OUTSIDE_IN" joinType="leftOuter">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="INT_PROMO_PRIMARY_KEY_RIGHT"/>
+        <viewAttribute id="CYCL_ID"/>
+        <viewAttribute id="PROMO_CD"/>
+        <viewAttribute id="SERV_CD"/>
+        <viewAttribute id="ENG_NM"/>
+        <viewAttribute id="RT_PLN_CD"/>
+        <viewAttribute id="DISC_CD"/>
+        <viewAttribute id="REFERENCE_EXPIRY_DT"/>
+        <viewAttribute id="SRC_TS"/>
+        <viewAttribute id="SEQ_ID"/>
+        <viewAttribute id="STRT_SELL_DT"/>
+        <viewAttribute id="INT_PROMO_PRIMARY_KEY"/>
+        <viewAttribute id="IS_20201501"/>
+        <viewAttribute id="INT_PROMO_PRIMARY_KEY_LAND"/>
+        <viewAttribute id="CC_SRC_TS"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#JOIN_PV_EH">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROMO_CD" source="PROMO_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SERV_CD" source="SERV_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ENG_NM" source="ENG_NM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RT_PLN_CD" source="RT_PLN_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DISC_CD" source="DISC_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_EXPIRY_DT" source="REFERENCE_EXPIRY_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SRC_TS" source="SRC_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SEQ_ID" source="SEQ_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="STRT_SELL_DT" source="STRT_SELL_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INT_PROMO_PRIMARY_KEY" source="INT_PROMO_PRIMARY_KEY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20201501" source="IS_20201501"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INT_PROMO_PRIMARY_KEY_LAND" source="INT_PROMO_PRIMARY_KEY_LAND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_SRC_TS" source="CC_SRC_TS"/>
+      </input>
+      <input node="#PROJ_NDB">
+        <mapping xsi:type="Calculation:AttributeMapping" target="INT_PROMO_PRIMARY_KEY_RIGHT" source="INT_PROMO_PRIMARY_KEY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INT_PROMO_PRIMARY_KEY" source="INT_PROMO_PRIMARY_KEY"/>
+      </input>
+      <joinAttribute name="INT_PROMO_PRIMARY_KEY"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:RankView" id="RANK_EFF_DT">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="CYCL_ID"/>
+        <viewAttribute id="PROMO_CD"/>
+        <viewAttribute id="SERV_CD"/>
+        <viewAttribute id="ENG_NM"/>
+        <viewAttribute id="RT_PLN_CD"/>
+        <viewAttribute id="DISC_CD"/>
+        <viewAttribute id="REFERENCE_EXPIRY_DT"/>
+        <viewAttribute id="SRC_TS"/>
+        <viewAttribute id="SEQ_ID"/>
+        <viewAttribute id="STRT_SELL_DT"/>
+        <viewAttribute id="INT_PROMO_PRIMARY_KEY_RIGHT"/>
+        <viewAttribute id="INT_PROMO_PRIMARY_KEY"/>
+        <viewAttribute id="IS_20201501"/>
+        <viewAttribute id="INT_PROMO_PRIMARY_KEY_LAND"/>
+        <viewAttribute id="CC_SRC_TS"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#JOIN_NDB">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROMO_CD" source="PROMO_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SERV_CD" source="SERV_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ENG_NM" source="ENG_NM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RT_PLN_CD" source="RT_PLN_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DISC_CD" source="DISC_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_EXPIRY_DT" source="REFERENCE_EXPIRY_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SRC_TS" source="SRC_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SEQ_ID" source="SEQ_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="STRT_SELL_DT" source="STRT_SELL_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INT_PROMO_PRIMARY_KEY_RIGHT" source="INT_PROMO_PRIMARY_KEY_RIGHT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INT_PROMO_PRIMARY_KEY" source="INT_PROMO_PRIMARY_KEY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20201501" source="IS_20201501"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INT_PROMO_PRIMARY_KEY_LAND" source="INT_PROMO_PRIMARY_KEY_LAND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_SRC_TS" source="CC_SRC_TS"/>
+      </input>
+      <windowFunction dynamicPartitionAttributes="false">
+        <partitionViewAttributeName>PROMO_CD</partitionViewAttributeName>
+        <partitionViewAttributeName>DISC_CD</partitionViewAttributeName>
+        <order byViewAttributeName="CC_SRC_TS" direction="ASC"/>
+        <rankThreshold>
+          <value>1000</value>
+        </rankThreshold>
+        <rankViewAttributeName>RANK_SEQ</rankViewAttributeName>
+      </windowFunction>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_INSERT_UPDATE">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="CYCL_ID"/>
+        <viewAttribute id="PROMO_CD"/>
+        <viewAttribute id="SERV_CD"/>
+        <viewAttribute id="ENG_NM"/>
+        <viewAttribute id="RT_PLN_CD"/>
+        <viewAttribute id="DISC_CD"/>
+        <viewAttribute id="REFERENCE_EXPIRY_DT"/>
+        <viewAttribute id="SRC_TS"/>
+        <viewAttribute id="SEQ_ID"/>
+        <viewAttribute id="STRT_SELL_DT"/>
+        <viewAttribute id="RANK_SEQ"/>
+        <viewAttribute id="INT_PROMO_PRIMARY_KEY_RIGHT"/>
+        <viewAttribute id="INT_PROMO_PRIMARY_KEY"/>
+        <viewAttribute id="IS_20201501"/>
+        <viewAttribute id="INT_PROMO_PRIMARY_KEY_LAND"/>
+        <viewAttribute id="CC_SRC_TS"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CC_EXISTING_RECORD" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isNull(&quot;INT_PROMO_PRIMARY_KEY_RIGHT&quot;)  and (&quot;RANK_SEQ&quot;=1), 'I' , 'U')</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="DATE" id="CC_EFFECTIVE_DATE_PREV_DAY" expressionLanguage="COLUMN_ENGINE">
+          <formula>adddays(&quot;SRC_TS&quot;,-1)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="DATE" id="CC_REFERENCE_EFFECIVE_DT" expressionLanguage="COLUMN_ENGINE">
+          <formula>if((&quot;RANK_SEQ&quot; = 1) and (&quot;CC_EXISTING_RECORD&quot; = 'I'), date('19000101'),&quot;CC_SRC_TS&quot;)</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#RANK_EFF_DT">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROMO_CD" source="PROMO_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SERV_CD" source="SERV_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ENG_NM" source="ENG_NM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RT_PLN_CD" source="RT_PLN_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DISC_CD" source="DISC_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_EXPIRY_DT" source="REFERENCE_EXPIRY_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SRC_TS" source="SRC_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SEQ_ID" source="SEQ_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="STRT_SELL_DT" source="STRT_SELL_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RANK_SEQ" source="RANK_SEQ"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INT_PROMO_PRIMARY_KEY_RIGHT" source="INT_PROMO_PRIMARY_KEY_RIGHT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INT_PROMO_PRIMARY_KEY" source="INT_PROMO_PRIMARY_KEY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20201501" source="IS_20201501"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INT_PROMO_PRIMARY_KEY_LAND" source="INT_PROMO_PRIMARY_KEY_LAND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_SRC_TS" source="CC_SRC_TS"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="ERROR_SEMANTICS">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="PROMO_CD"/>
+        <viewAttribute id="ENG_NM"/>
+        <viewAttribute id="SERV_CD"/>
+        <viewAttribute id="RT_PLN_CD"/>
+        <viewAttribute id="DISC_CD"/>
+        <viewAttribute id="CYCL_ID"/>
+        <viewAttribute id="REFERENCE_EXPIRY_DT"/>
+        <viewAttribute id="EFFECTIVE_DATE_PREV_DAY"/>
+        <viewAttribute id="FLAG_EXISTING_RECORD"/>
+        <viewAttribute id="SEQ_ID"/>
+        <viewAttribute id="STRT_SELL_DT"/>
+        <viewAttribute id="INT_PROMO_PRIMARY_KEY"/>
+        <viewAttribute id="IS_20201501"/>
+        <viewAttribute id="INT_PROMO_PRIMARY_KEY_LAND"/>
+        <viewAttribute id="REFERENCE_EFFECIVE_DT"/>
+        <viewAttribute id="SRC_TS"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="ERROR_CODE" length="500" expressionLanguage="COLUMN_ENGINE">
+          <formula>if((&quot;IS_20201501&quot; = '1'),'20201501||','')</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="ERROR_STATUS" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(&quot;IS_20201501&quot;='1','1','0')</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#PROJ_INSERT_UPDATE">
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROMO_CD" source="PROMO_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ENG_NM" source="ENG_NM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SERV_CD" source="SERV_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RT_PLN_CD" source="RT_PLN_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DISC_CD" source="DISC_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_EXPIRY_DT" source="REFERENCE_EXPIRY_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFFECTIVE_DATE_PREV_DAY" source="CC_EFFECTIVE_DATE_PREV_DAY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FLAG_EXISTING_RECORD" source="CC_EXISTING_RECORD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SEQ_ID" source="SEQ_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="STRT_SELL_DT" source="STRT_SELL_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INT_PROMO_PRIMARY_KEY" source="INT_PROMO_PRIMARY_KEY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20201501" source="IS_20201501"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INT_PROMO_PRIMARY_KEY_LAND" source="INT_PROMO_PRIMARY_KEY_LAND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_EFFECIVE_DT" source="CC_REFERENCE_EFFECIVE_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SRC_TS" source="CC_SRC_TS"/>
+      </input>
+    </calculationView>
+  </calculationViews>
+  <logicalModel id="ERROR_SEMANTICS">
+    <descriptions/>
+    <attributes>
+      <attribute id="PROMO_CD" order="1" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="PROMO_CD"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="PROMO_CD"/>
+      </attribute>
+      <attribute id="ENG_NM" order="2" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ENG_NM"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="ENG_NM"/>
+      </attribute>
+      <attribute id="SERV_CD" order="3" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SERV_CD"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="SERV_CD"/>
+      </attribute>
+      <attribute id="RT_PLN_CD" order="4" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="RT_PLN_CD"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="RT_PLN_CD"/>
+      </attribute>
+      <attribute id="DISC_CD" order="5" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="DISC_CD"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="DISC_CD"/>
+      </attribute>
+      <attribute id="CYCL_ID" order="6" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CYCL_ID"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="CYCL_ID"/>
+      </attribute>
+      <attribute id="REFERENCE_EXPIRY_DT" order="7" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="REFERENCE_EXPIRY_DT"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="REFERENCE_EXPIRY_DT"/>
+      </attribute>
+      <attribute id="EFFECTIVE_DATE_PREV_DAY" order="8" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="EFFECTIVE_DATE_PREV_DAY"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="EFFECTIVE_DATE_PREV_DAY"/>
+      </attribute>
+      <attribute id="FLAG_EXISTING_RECORD" order="9" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="FLAG_EXISTING_RECORD"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="FLAG_EXISTING_RECORD"/>
+      </attribute>
+      <attribute id="SEQ_ID" order="10" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SEQ_ID"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="SEQ_ID"/>
+      </attribute>
+      <attribute id="STRT_SELL_DT" order="11" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="STRT_SELL_DT"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="STRT_SELL_DT"/>
+      </attribute>
+      <attribute id="INT_PROMO_PRIMARY_KEY_NDB" order="12" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="INT_PROMO_PRIMARY_KEY_NDB"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="INT_PROMO_PRIMARY_KEY"/>
+      </attribute>
+      <attribute id="IS_20201501" hidden="false" order="13" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="IS_20201501"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="IS_20201501"/>
+      </attribute>
+      <attribute id="ERROR_CODE" order="14" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ERROR_CODE"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="ERROR_CODE"/>
+      </attribute>
+      <attribute id="ERROR_STATUS" order="15" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ERROR_STATUS"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="ERROR_STATUS"/>
+      </attribute>
+      <attribute id="INT_PROMO_PRIMARY_KEY_LAND" order="16" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="INT_PROMO_PRIMARY_KEY_LAND"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="INT_PROMO_PRIMARY_KEY_LAND"/>
+      </attribute>
+      <attribute id="REFERENCE_EFFECTIVE_DT" order="17" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="REFERENCE_EFFECTIVE_DT"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="REFERENCE_EFFECIVE_DT"/>
+      </attribute>
+      <attribute id="SRC_TS" order="18" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SRC_TS"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="SRC_TS"/>
+      </attribute>
+    </attributes>
+    <calculatedAttributes/>
+    <privateDataFoundation>
+      <tableProxies/>
+      <joins/>
+      <layout>
+        <shapes/>
+      </layout>
+    </privateDataFoundation>
+    <baseMeasures/>
+    <calculatedMeasures/>
+    <restrictedMeasures/>
+    <localDimensions/>
+  </logicalModel>
+  <layout>
+    <shapes>
+      <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+        <upperLeftCorner x="253" y="87"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_PVT_VW" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="176" y="843"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_NDB" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="330" y="495"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_EH" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="22" y="843"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="JOIN_INCOMING_RECORDS_WITH_EH" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="89" y="747"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_INCOMING_RECORDS" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="89" y="669"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="AGGR_DISTINCT" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="89" y="591"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="JOIN_PV_EH" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="176" y="495"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+      <shape expanded="true" modelObjectName="JOIN_NDB" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="253" y="399"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="RANK_EFF_DT" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="253" y="321"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_INSERT_UPDATE" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="253" y="243"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="ERROR_SEMANTICS" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="253" y="165"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+    </shapes>
+  </layout>
+</Calculation:scenario>

@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" schemaVersion="2.3" id="CA_TV_PROD_AGNT_REF_NDB_EH" applyPrivilegeType="ANALYTIC_PRIVILEGE" checkAnalyticPrivileges="true" defaultClient="$$client$$" defaultLanguage="$$language$$" hierarchiesSQLEnabled="false" translationRelevant="true" visibility="internal" calculationScenarioType="TREE_BASED" dataCategory="DIMENSION" enforceSqlExecution="false" executionSemantic="UNDEFINED" outputViewType="Projection">
+  <descriptions defaultDescription="CA_TV_PROD_AGNT_REF_NDB_EH"/>
+  <localVariables/>
+  <variableMappings/>
+  <informationModelLayout relativeWidthScenario="52"/>
+  <dataSources>
+    <DataSource id="IFRS_R1.BELLTV.NDB_BELLTV::TV_PROD_AGNT_REF" type="DATA_BASE_TABLE">
+      <viewAttributes allViewAttributes="true"/>
+      <columnObject schemaName="NDB_TV" columnObjectName="IFRS_R1.BELLTV.NDB_BELLTV::TV_PROD_AGNT_REF"/>
+    </DataSource>
+    <DataSource id="IFRS_R1.BELLTV.NDB_BELLTV::TV_PROD_AGNT_REF_EH" type="DATA_BASE_TABLE">
+      <viewAttributes allViewAttributes="true"/>
+      <columnObject schemaName="NDB_TV" columnObjectName="IFRS_R1.BELLTV.NDB_BELLTV::TV_PROD_AGNT_REF_EH"/>
+    </DataSource>
+  </dataSources>
+  <calculationViews>
+    <calculationView xsi:type="Calculation:ProjectionView" id="AGNT_REF_NDB">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="PRIN_NUM"/>
+        <viewAttribute id="AGNT_NUM"/>
+        <viewAttribute id="LANG_CD"/>
+        <viewAttribute id="PROV_CD"/>
+        <viewAttribute id="EXECUTION_ID"/>
+        <viewAttribute id="INSERT_TS"/>
+        <viewAttribute id="MODIFIED_TS"/>
+        <viewAttribute id="BATCH_ID"/>
+        <viewAttribute id="CONVERSION_IND"/>
+        <viewAttribute id="NDB_MART"/>
+        <viewAttribute id="REFERENCE_EXPIRY_DT"/>
+        <viewAttribute id="REFERENCE_EFFECTIVE_DT"/>
+        <viewAttribute id="RAI_TS"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#IFRS_R1.BELLTV.NDB_BELLTV::TV_PROD_AGNT_REF">
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRIN_NUM" source="PRIN_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AGNT_NUM" source="AGNT_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LANG_CD" source="LANG_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROV_CD" source="PROV_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXECUTION_ID" source="EXECUTION_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INSERT_TS" source="INSERT_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MODIFIED_TS" source="MODIFIED_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BATCH_ID" source="BATCH_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONVERSION_IND" source="CONVERSION_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NDB_MART" source="NDB_MART"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_EXPIRY_DT" source="REFERENCE_EXPIRY_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_EFFECTIVE_DT" source="REFERENCE_EFFECTIVE_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RAI_TS" source="RAI_TS"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:AggregationView" id="AGGR_EH">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="PRIN_NUM"/>
+        <viewAttribute id="AGNT_NUM"/>
+        <viewAttribute id="DELETED"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#IFRS_R1.BELLTV.NDB_BELLTV::TV_PROD_AGNT_REF_EH">
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRIN_NUM" source="PRIN_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AGNT_NUM" source="AGNT_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DELETED" source="DELETED"/>
+      </input>
+      <filter>isNull(&quot;DELETED&quot;)</filter>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="JOIN_EH" joinType="leftOuter" joinOrder="OUTSIDE_IN">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="PRIN_NUM"/>
+        <viewAttribute id="AGNT_NUM"/>
+        <viewAttribute id="LANG_CD"/>
+        <viewAttribute id="PROV_CD"/>
+        <viewAttribute id="EXECUTION_ID"/>
+        <viewAttribute id="INSERT_TS"/>
+        <viewAttribute id="MODIFIED_TS"/>
+        <viewAttribute id="BATCH_ID"/>
+        <viewAttribute id="CONVERSION_IND"/>
+        <viewAttribute id="NDB_MART"/>
+        <viewAttribute id="REFERENCE_EXPIRY_DT"/>
+        <viewAttribute id="REFERENCE_EFFECTIVE_DT"/>
+        <viewAttribute id="RAI_TS"/>
+        <viewAttribute id="PRIN_NUM_RIGHT"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CC_VERSION_CHECK" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isNull(&quot;PRIN_NUM_RIGHT&quot;),'0','1')</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#AGNT_REF_NDB">
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRIN_NUM" source="PRIN_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AGNT_NUM" source="AGNT_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LANG_CD" source="LANG_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROV_CD" source="PROV_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXECUTION_ID" source="EXECUTION_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INSERT_TS" source="INSERT_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MODIFIED_TS" source="MODIFIED_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BATCH_ID" source="BATCH_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONVERSION_IND" source="CONVERSION_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NDB_MART" source="NDB_MART"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_EXPIRY_DT" source="REFERENCE_EXPIRY_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_EFFECTIVE_DT" source="REFERENCE_EFFECTIVE_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RAI_TS" source="RAI_TS"/>
+      </input>
+      <input node="#AGGR_EH">
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRIN_NUM_RIGHT" source="PRIN_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRIN_NUM" source="PRIN_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AGNT_NUM" source="AGNT_NUM"/>
+      </input>
+      <joinAttribute name="PRIN_NUM"/>
+      <joinAttribute name="AGNT_NUM"/>
+    </calculationView>
+  </calculationViews>
+  <logicalModel id="JOIN_EH">
+    <descriptions/>
+    <attributes>
+      <attribute id="PRIN_NUM" order="1" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="PRIN_NUM"/>
+        <keyMapping columnObjectName="JOIN_EH" columnName="PRIN_NUM"/>
+      </attribute>
+      <attribute id="AGNT_NUM" order="2" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="AGNT_NUM"/>
+        <keyMapping columnObjectName="JOIN_EH" columnName="AGNT_NUM"/>
+      </attribute>
+      <attribute id="LANG_CD" order="3" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="LANG_CD"/>
+        <keyMapping columnObjectName="JOIN_EH" columnName="LANG_CD"/>
+      </attribute>
+      <attribute id="PROV_CD" order="4" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="PROV_CD"/>
+        <keyMapping columnObjectName="JOIN_EH" columnName="PROV_CD"/>
+      </attribute>
+      <attribute id="EXECUTION_ID" order="5" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="EXECUTION_ID"/>
+        <keyMapping columnObjectName="JOIN_EH" columnName="EXECUTION_ID"/>
+      </attribute>
+      <attribute id="INSERT_TS" order="6" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="INSERT_TS"/>
+        <keyMapping columnObjectName="JOIN_EH" columnName="INSERT_TS"/>
+      </attribute>
+      <attribute id="MODIFIED_TS" order="7" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="MODIFIED_TS"/>
+        <keyMapping columnObjectName="JOIN_EH" columnName="MODIFIED_TS"/>
+      </attribute>
+      <attribute id="BATCH_ID" order="8" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="BATCH_ID"/>
+        <keyMapping columnObjectName="JOIN_EH" columnName="BATCH_ID"/>
+      </attribute>
+      <attribute id="CONVERSION_IND" order="9" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CONVERSION_IND"/>
+        <keyMapping columnObjectName="JOIN_EH" columnName="CONVERSION_IND"/>
+      </attribute>
+      <attribute id="NDB_MART" order="10" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="NDB_MART"/>
+        <keyMapping columnObjectName="JOIN_EH" columnName="NDB_MART"/>
+      </attribute>
+      <attribute id="REFERENCE_EXPIRY_DT" order="11" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="REFERENCE_EXPIRY_DT"/>
+        <keyMapping columnObjectName="JOIN_EH" columnName="REFERENCE_EXPIRY_DT"/>
+      </attribute>
+      <attribute id="REFERENCE_EFFECTIVE_DT" order="12" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="REFERENCE_EFFECTIVE_DT"/>
+        <keyMapping columnObjectName="JOIN_EH" columnName="REFERENCE_EFFECTIVE_DT"/>
+      </attribute>
+      <attribute id="RAI_TS" order="13" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="RAI_TS"/>
+        <keyMapping columnObjectName="JOIN_EH" columnName="RAI_TS"/>
+      </attribute>
+      <attribute id="CC_VERSION_CHECK" order="14" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CC_VERSION_CHECK"/>
+        <keyMapping columnObjectName="JOIN_EH" columnName="CC_VERSION_CHECK"/>
+      </attribute>
+    </attributes>
+    <calculatedAttributes/>
+    <privateDataFoundation>
+      <tableProxies/>
+      <joins/>
+      <layout>
+        <shapes/>
+      </layout>
+    </privateDataFoundation>
+    <baseMeasures/>
+    <calculatedMeasures/>
+    <restrictedMeasures/>
+    <localDimensions/>
+  </logicalModel>
+  <layout>
+    <shapes>
+      <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+        <upperLeftCorner x="99" y="87"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+      <shape expanded="true" modelObjectName="AGNT_REF_NDB" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="22" y="261"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="AGGR_EH" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="176" y="261"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="JOIN_EH" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="99" y="165"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+    </shapes>
+  </layout>
+</Calculation:scenario>

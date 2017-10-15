@@ -1,0 +1,475 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:AccessControl="http://www.sap.com/ndb/SQLCoreModelAccessControl.ecore" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" xmlns:Variable="http://www.sap.com/ndb/BiModelVariable.ecore" schemaVersion="2.3" id="CA_NM1_EDW_REF_RATEDFTR_HIST" applyPrivilegeType="NONE" checkAnalyticPrivileges="false" defaultClient="$$client$$" defaultLanguage="$$language$$" hierarchiesSQLEnabled="false" historyEnabled="false" translationRelevant="true" visibility="internal" calculationScenarioType="TREE_BASED" dataCategory="DIMENSION" enforceSqlExecution="false" executionSemantic="UNDEFINED" outputViewType="Projection">
+  <descriptions defaultDescription="Landing View - Table NM1_EDW_REF_RATEDFTR_HIST">
+    <comment text="This  view will contain the details for identifying whether to look up the recurring charge, one-time charge, or usage charge rate for a SOC/Feature combination.  This is needed as input criteria for applying service rate mapping"/>
+  </descriptions>
+  <localVariables>
+    <variable id="IP_EFF_DT" parameter="true">
+      <descriptions defaultDescription="IP_EFF_DT"/>
+      <variableProperties datatype="DATE" defaultValue="99991231" mandatory="false">
+        <valueDomain type="Date"/>
+        <selection multiLine="false" type="SingleValue"/>
+      </variableProperties>
+    </variable>
+  </localVariables>
+  <variableMappings>
+    <mapping xsi:type="Variable:ConstantVariableMapping" dataSource="#CA_EH_ERROR_TABLE" value="1218">
+      <targetVariable name="IP_JOB_ID" resourceUri="/IFRS_R1.LAND.EH/calculationviews/CA_EH_ERROR_TABLE"/>
+    </mapping>
+  </variableMappings>
+  <informationModelLayout relativeWidthScenario="45"/>
+  <dataSources>
+    <DataSource id="IFRS_R1.LAND::NM1_EDW_REF_RATEDFTR_HIST" type="DATA_BASE_TABLE">
+      <viewAttributes allViewAttributes="true"/>
+      <columnObject schemaName="LAND" columnObjectName="IFRS_R1.LAND::NM1_EDW_REF_RATEDFTR_HIST"/>
+    </DataSource>
+    <DataSource id="CA_EH_ERROR_TABLE" type="CALCULATION_VIEW">
+      <viewAttributes allViewAttributes="true"/>
+      <resourceUri>/IFRS_R1.LAND.EH/calculationviews/CA_EH_ERROR_TABLE</resourceUri>
+    </DataSource>
+  </dataSources>
+  <calculationViews>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_NM1_EDW_REF_RATEDFTR_HIST" filterExpressionLanguage="COLUMN_ENGINE">
+      <descriptions>
+        <comment text="&#xD;&#xA;NM1_EDW_REF_RATEDFTR_HIST Table is a Reference Table and it has no BAN and SUBSCRIBER NO , so there is no need to have Parent ID here.&#xD;&#xA;We use Parent ID check to ensure that if any records with the same Parent ID are present in error table then the whole set of records should not move to the next level."/>
+      </descriptions>
+      <viewAttributes>
+        <viewAttribute id="AC_INFO_IND"/>
+        <viewAttribute id="BILL_DISPLAY_IND"/>
+        <viewAttribute id="CALLING_ROUTE_TYPE"/>
+        <viewAttribute id="COVERAGE_TYPE"/>
+        <viewAttribute id="CSM_INC_FTR_IND"/>
+        <viewAttribute id="EFFECTIVE_DATE"/>
+        <viewAttribute id="EFF_DT"/>
+        <viewAttribute id="ET_REM_MONTH_PEN_TP"/>
+        <viewAttribute id="EXPIRATION_DATE"/>
+        <viewAttribute id="EXPY_DT"/>
+        <viewAttribute id="FEATURE_CODE"/>
+        <viewAttribute id="FTR_DESC_DISP_IND"/>
+        <viewAttribute id="LATE_CALL_IND"/>
+        <viewAttribute id="MANDATORY_IND"/>
+        <viewAttribute id="OC_INFO_IND"/>
+        <viewAttribute id="OTC_CAP_AMNT"/>
+        <viewAttribute id="RC_ADV_ARREAR_CODE"/>
+        <viewAttribute id="RC_CHARGE_LVL_CODE"/>
+        <viewAttribute id="RC_DISP_UOM_CODE"/>
+        <viewAttribute id="RC_FREQ_OF_PYM"/>
+        <viewAttribute id="RC_INFO_IND"/>
+        <viewAttribute id="RC_POOLING_IND"/>
+        <viewAttribute id="RC_RATE_LVL"/>
+        <viewAttribute id="RC_RATE_QTY_TYPE"/>
+        <viewAttribute id="RC_TIER_CALC"/>
+        <viewAttribute id="RC_TIER_TYPE"/>
+        <viewAttribute id="RC_UOM_CODE"/>
+        <viewAttribute id="RC_USG_DEPEND_CODE"/>
+        <viewAttribute id="RERATE_TYPE"/>
+        <viewAttribute id="SHARING_GROUP_CD"/>
+        <viewAttribute id="SOC"/>
+        <viewAttribute id="UC_INFO_IND"/>
+        <viewAttribute id="USG_CAP_IND"/>
+        <viewAttribute id="NDB_TS"/>
+        <viewAttribute id="CYCL_ID"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CC_VERSION_CHECK" length="200" expressionLanguage="COLUMN_ENGINE">
+          <formula>&quot;SOC&quot;+'|'+&quot;FEATURE_CODE&quot;</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#IFRS_R1.LAND::NM1_EDW_REF_RATEDFTR_HIST">
+        <mapping xsi:type="Calculation:AttributeMapping" target="AC_INFO_IND" source="AC_INFO_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_DISPLAY_IND" source="BILL_DISPLAY_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CALLING_ROUTE_TYPE" source="CALLING_ROUTE_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="COVERAGE_TYPE" source="COVERAGE_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CSM_INC_FTR_IND" source="CSM_INC_FTR_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFFECTIVE_DATE" source="EFFECTIVE_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFF_DT" source="EFF_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ET_REM_MONTH_PEN_TP" source="ET_REM_MONTH_PEN_TP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXPIRATION_DATE" source="EXPIRATION_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXPY_DT" source="EXPY_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FEATURE_CODE" source="FEATURE_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FTR_DESC_DISP_IND" source="FTR_DESC_DISP_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LATE_CALL_IND" source="LATE_CALL_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MANDATORY_IND" source="MANDATORY_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OC_INFO_IND" source="OC_INFO_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OTC_CAP_AMNT" source="OTC_CAP_AMNT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RC_ADV_ARREAR_CODE" source="RC_ADV_ARREAR_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RC_CHARGE_LVL_CODE" source="RC_CHARGE_LVL_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RC_DISP_UOM_CODE" source="RC_DISP_UOM_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RC_FREQ_OF_PYM" source="RC_FREQ_OF_PYM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RC_INFO_IND" source="RC_INFO_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RC_POOLING_IND" source="RC_POOLING_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RC_RATE_LVL" source="RC_RATE_LVL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RC_RATE_QTY_TYPE" source="RC_RATE_QTY_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RC_TIER_CALC" source="RC_TIER_CALC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RC_TIER_TYPE" source="RC_TIER_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RC_UOM_CODE" source="RC_UOM_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RC_USG_DEPEND_CODE" source="RC_USG_DEPEND_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RERATE_TYPE" source="RERATE_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SHARING_GROUP_CD" source="SHARING_GROUP_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SOC" source="SOC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="UC_INFO_IND" source="UC_INFO_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="USG_CAP_IND" source="USG_CAP_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NDB_TS" source="NDB_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+      </input>
+      <filter>(isNull(&quot;NDB_TS&quot;)) and (&quot;EFF_DT&quot; &lt;= '$$IP_EFF_DT$$')</filter>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJECT_ERROR_TABLE">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="PARENT_KEY"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#CA_EH_ERROR_TABLE">
+        <mapping xsi:type="Calculation:AttributeMapping" target="PARENT_KEY" source="PARENT_KEY"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="NM1_EDW_REF_RATEDFTR_HIST" joinOrder="OUTSIDE_IN" joinType="leftOuter">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="AC_INFO_IND"/>
+        <viewAttribute id="BILL_DISPLAY_IND"/>
+        <viewAttribute id="CALLING_ROUTE_TYPE"/>
+        <viewAttribute id="COVERAGE_TYPE"/>
+        <viewAttribute id="CSM_INC_FTR_IND"/>
+        <viewAttribute id="EFFECTIVE_DATE"/>
+        <viewAttribute id="EFF_DT"/>
+        <viewAttribute id="ET_REM_MONTH_PEN_TP"/>
+        <viewAttribute id="EXPIRATION_DATE"/>
+        <viewAttribute id="EXPY_DT"/>
+        <viewAttribute id="FEATURE_CODE"/>
+        <viewAttribute id="FTR_DESC_DISP_IND"/>
+        <viewAttribute id="LATE_CALL_IND"/>
+        <viewAttribute id="MANDATORY_IND"/>
+        <viewAttribute id="OC_INFO_IND"/>
+        <viewAttribute id="OTC_CAP_AMNT"/>
+        <viewAttribute id="RC_ADV_ARREAR_CODE"/>
+        <viewAttribute id="RC_CHARGE_LVL_CODE"/>
+        <viewAttribute id="RC_DISP_UOM_CODE"/>
+        <viewAttribute id="RC_FREQ_OF_PYM"/>
+        <viewAttribute id="RC_INFO_IND"/>
+        <viewAttribute id="RC_POOLING_IND"/>
+        <viewAttribute id="RC_RATE_LVL"/>
+        <viewAttribute id="RC_RATE_QTY_TYPE"/>
+        <viewAttribute id="RC_TIER_CALC"/>
+        <viewAttribute id="RC_TIER_TYPE"/>
+        <viewAttribute id="RC_UOM_CODE"/>
+        <viewAttribute id="RC_USG_DEPEND_CODE"/>
+        <viewAttribute id="RERATE_TYPE"/>
+        <viewAttribute id="SHARING_GROUP_CD"/>
+        <viewAttribute id="SOC"/>
+        <viewAttribute id="UC_INFO_IND"/>
+        <viewAttribute id="USG_CAP_IND"/>
+        <viewAttribute id="CYCL_ID"/>
+        <viewAttribute id="PARENT_KEY_ERROR"/>
+        <viewAttribute id="CC_VERSION_CHECK"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#PROJ_NM1_EDW_REF_RATEDFTR_HIST">
+        <mapping xsi:type="Calculation:AttributeMapping" target="AC_INFO_IND" source="AC_INFO_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_DISPLAY_IND" source="BILL_DISPLAY_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CALLING_ROUTE_TYPE" source="CALLING_ROUTE_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="COVERAGE_TYPE" source="COVERAGE_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CSM_INC_FTR_IND" source="CSM_INC_FTR_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFFECTIVE_DATE" source="EFFECTIVE_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFF_DT" source="EFF_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ET_REM_MONTH_PEN_TP" source="ET_REM_MONTH_PEN_TP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXPIRATION_DATE" source="EXPIRATION_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXPY_DT" source="EXPY_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FEATURE_CODE" source="FEATURE_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FTR_DESC_DISP_IND" source="FTR_DESC_DISP_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LATE_CALL_IND" source="LATE_CALL_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MANDATORY_IND" source="MANDATORY_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OC_INFO_IND" source="OC_INFO_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OTC_CAP_AMNT" source="OTC_CAP_AMNT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RC_ADV_ARREAR_CODE" source="RC_ADV_ARREAR_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RC_CHARGE_LVL_CODE" source="RC_CHARGE_LVL_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RC_DISP_UOM_CODE" source="RC_DISP_UOM_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RC_FREQ_OF_PYM" source="RC_FREQ_OF_PYM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RC_INFO_IND" source="RC_INFO_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RC_POOLING_IND" source="RC_POOLING_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RC_RATE_LVL" source="RC_RATE_LVL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RC_RATE_QTY_TYPE" source="RC_RATE_QTY_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RC_TIER_CALC" source="RC_TIER_CALC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RC_TIER_TYPE" source="RC_TIER_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RC_UOM_CODE" source="RC_UOM_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RC_USG_DEPEND_CODE" source="RC_USG_DEPEND_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RERATE_TYPE" source="RERATE_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SHARING_GROUP_CD" source="SHARING_GROUP_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SOC" source="SOC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="UC_INFO_IND" source="UC_INFO_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="USG_CAP_IND" source="USG_CAP_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_VERSION_CHECK" source="CC_VERSION_CHECK"/>
+      </input>
+      <input node="#PROJECT_ERROR_TABLE">
+        <mapping xsi:type="Calculation:AttributeMapping" target="PARENT_KEY_ERROR" source="PARENT_KEY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_VERSION_CHECK" source="PARENT_KEY"/>
+      </input>
+      <joinAttribute name="CC_VERSION_CHECK"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJECT_ERROR_FILTERS">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="CYCL_ID"/>
+        <viewAttribute id="USG_CAP_IND"/>
+        <viewAttribute id="UC_INFO_IND"/>
+        <viewAttribute id="SOC"/>
+        <viewAttribute id="SHARING_GROUP_CD"/>
+        <viewAttribute id="RERATE_TYPE"/>
+        <viewAttribute id="RC_USG_DEPEND_CODE"/>
+        <viewAttribute id="RC_UOM_CODE"/>
+        <viewAttribute id="RC_TIER_TYPE"/>
+        <viewAttribute id="RC_TIER_CALC"/>
+        <viewAttribute id="RC_RATE_QTY_TYPE"/>
+        <viewAttribute id="RC_RATE_LVL"/>
+        <viewAttribute id="RC_POOLING_IND"/>
+        <viewAttribute id="RC_INFO_IND"/>
+        <viewAttribute id="RC_FREQ_OF_PYM"/>
+        <viewAttribute id="RC_DISP_UOM_CODE"/>
+        <viewAttribute id="RC_CHARGE_LVL_CODE"/>
+        <viewAttribute id="RC_ADV_ARREAR_CODE"/>
+        <viewAttribute id="OTC_CAP_AMNT"/>
+        <viewAttribute id="OC_INFO_IND"/>
+        <viewAttribute id="MANDATORY_IND"/>
+        <viewAttribute id="LATE_CALL_IND"/>
+        <viewAttribute id="FTR_DESC_DISP_IND"/>
+        <viewAttribute id="FEATURE_CODE"/>
+        <viewAttribute id="EXPY_DT"/>
+        <viewAttribute id="EXPIRATION_DATE"/>
+        <viewAttribute id="ET_REM_MONTH_PEN_TP"/>
+        <viewAttribute id="EFF_DT"/>
+        <viewAttribute id="EFFECTIVE_DATE"/>
+        <viewAttribute id="CSM_INC_FTR_IND"/>
+        <viewAttribute id="COVERAGE_TYPE"/>
+        <viewAttribute id="CALLING_ROUTE_TYPE"/>
+        <viewAttribute id="BILL_DISPLAY_IND"/>
+        <viewAttribute id="AC_INFO_IND"/>
+        <viewAttribute id="PARENT_KEY_ERROR">
+          <filter xsi:type="AccessControl:SingleValueFilter" operator="NL" including="true"/>
+        </viewAttribute>
+        <viewAttribute id="CC_VERSION_CHECK"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#NM1_EDW_REF_RATEDFTR_HIST">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="USG_CAP_IND" source="USG_CAP_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="UC_INFO_IND" source="UC_INFO_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SOC" source="SOC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SHARING_GROUP_CD" source="SHARING_GROUP_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RERATE_TYPE" source="RERATE_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RC_USG_DEPEND_CODE" source="RC_USG_DEPEND_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RC_UOM_CODE" source="RC_UOM_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RC_TIER_TYPE" source="RC_TIER_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RC_TIER_CALC" source="RC_TIER_CALC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RC_RATE_QTY_TYPE" source="RC_RATE_QTY_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RC_RATE_LVL" source="RC_RATE_LVL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RC_POOLING_IND" source="RC_POOLING_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RC_INFO_IND" source="RC_INFO_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RC_FREQ_OF_PYM" source="RC_FREQ_OF_PYM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RC_DISP_UOM_CODE" source="RC_DISP_UOM_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RC_CHARGE_LVL_CODE" source="RC_CHARGE_LVL_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RC_ADV_ARREAR_CODE" source="RC_ADV_ARREAR_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OTC_CAP_AMNT" source="OTC_CAP_AMNT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OC_INFO_IND" source="OC_INFO_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MANDATORY_IND" source="MANDATORY_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LATE_CALL_IND" source="LATE_CALL_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FTR_DESC_DISP_IND" source="FTR_DESC_DISP_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FEATURE_CODE" source="FEATURE_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXPY_DT" source="EXPY_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXPIRATION_DATE" source="EXPIRATION_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ET_REM_MONTH_PEN_TP" source="ET_REM_MONTH_PEN_TP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFF_DT" source="EFF_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFFECTIVE_DATE" source="EFFECTIVE_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CSM_INC_FTR_IND" source="CSM_INC_FTR_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="COVERAGE_TYPE" source="COVERAGE_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CALLING_ROUTE_TYPE" source="CALLING_ROUTE_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_DISPLAY_IND" source="BILL_DISPLAY_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AC_INFO_IND" source="AC_INFO_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PARENT_KEY_ERROR" source="PARENT_KEY_ERROR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_VERSION_CHECK" source="CC_VERSION_CHECK"/>
+      </input>
+    </calculationView>
+  </calculationViews>
+  <logicalModel id="PROJECT_ERROR_FILTERS">
+    <descriptions/>
+    <attributes>
+      <attribute id="CYCL_ID" order="1" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CYCL ID"/>
+        <keyMapping columnObjectName="PROJECT_ERROR_FILTERS" columnName="CYCL_ID"/>
+      </attribute>
+      <attribute id="USG_CAP_IND" order="2" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="USG_CAP_IND"/>
+        <keyMapping columnObjectName="PROJECT_ERROR_FILTERS" columnName="USG_CAP_IND"/>
+      </attribute>
+      <attribute id="UC_INFO_IND" order="3" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="UC_INFO_IND"/>
+        <keyMapping columnObjectName="PROJECT_ERROR_FILTERS" columnName="UC_INFO_IND"/>
+      </attribute>
+      <attribute id="SOC" order="4" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SOC"/>
+        <keyMapping columnObjectName="PROJECT_ERROR_FILTERS" columnName="SOC"/>
+      </attribute>
+      <attribute id="SHARING_GROUP_CD" order="5" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SHARING_GROUP_CD"/>
+        <keyMapping columnObjectName="PROJECT_ERROR_FILTERS" columnName="SHARING_GROUP_CD"/>
+      </attribute>
+      <attribute id="RERATE_TYPE" order="6" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="RERATE_TYPE"/>
+        <keyMapping columnObjectName="PROJECT_ERROR_FILTERS" columnName="RERATE_TYPE"/>
+      </attribute>
+      <attribute id="RC_USG_DEPEND_CODE" order="7" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="RC_USG_DEPEND_CODE"/>
+        <keyMapping columnObjectName="PROJECT_ERROR_FILTERS" columnName="RC_USG_DEPEND_CODE"/>
+      </attribute>
+      <attribute id="RC_UOM_CODE" order="8" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="RC_UOM_CODE"/>
+        <keyMapping columnObjectName="PROJECT_ERROR_FILTERS" columnName="RC_UOM_CODE"/>
+      </attribute>
+      <attribute id="RC_TIER_TYPE" order="9" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="RC_TIER_TYPE"/>
+        <keyMapping columnObjectName="PROJECT_ERROR_FILTERS" columnName="RC_TIER_TYPE"/>
+      </attribute>
+      <attribute id="RC_TIER_CALC" order="10" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="RC_TIER_CALC"/>
+        <keyMapping columnObjectName="PROJECT_ERROR_FILTERS" columnName="RC_TIER_CALC"/>
+      </attribute>
+      <attribute id="RC_RATE_QTY_TYPE" order="11" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="RC_RATE_QTY_TYPE"/>
+        <keyMapping columnObjectName="PROJECT_ERROR_FILTERS" columnName="RC_RATE_QTY_TYPE"/>
+      </attribute>
+      <attribute id="RC_RATE_LVL" order="12" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="RC_RATE_LVL"/>
+        <keyMapping columnObjectName="PROJECT_ERROR_FILTERS" columnName="RC_RATE_LVL"/>
+      </attribute>
+      <attribute id="RC_POOLING_IND" order="13" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="RC_POOLING_IND"/>
+        <keyMapping columnObjectName="PROJECT_ERROR_FILTERS" columnName="RC_POOLING_IND"/>
+      </attribute>
+      <attribute id="RC_INFO_IND" order="14" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="RC_INFO_IND"/>
+        <keyMapping columnObjectName="PROJECT_ERROR_FILTERS" columnName="RC_INFO_IND"/>
+      </attribute>
+      <attribute id="RC_FREQ_OF_PYM" order="15" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="RC_FREQ_OF_PYM"/>
+        <keyMapping columnObjectName="PROJECT_ERROR_FILTERS" columnName="RC_FREQ_OF_PYM"/>
+      </attribute>
+      <attribute id="RC_DISP_UOM_CODE" order="16" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="RC_DISP_UOM_CODE"/>
+        <keyMapping columnObjectName="PROJECT_ERROR_FILTERS" columnName="RC_DISP_UOM_CODE"/>
+      </attribute>
+      <attribute id="RC_CHARGE_LVL_CODE" order="17" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="RC_CHARGE_LVL_CODE"/>
+        <keyMapping columnObjectName="PROJECT_ERROR_FILTERS" columnName="RC_CHARGE_LVL_CODE"/>
+      </attribute>
+      <attribute id="RC_ADV_ARREAR_CODE" order="18" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="RC_ADV_ARREAR_CODE"/>
+        <keyMapping columnObjectName="PROJECT_ERROR_FILTERS" columnName="RC_ADV_ARREAR_CODE"/>
+      </attribute>
+      <attribute id="OTC_CAP_AMNT" order="19" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="OTC_CAP_AMNT"/>
+        <keyMapping columnObjectName="PROJECT_ERROR_FILTERS" columnName="OTC_CAP_AMNT"/>
+      </attribute>
+      <attribute id="OC_INFO_IND" order="20" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="OC_INFO_IND"/>
+        <keyMapping columnObjectName="PROJECT_ERROR_FILTERS" columnName="OC_INFO_IND"/>
+      </attribute>
+      <attribute id="MANDATORY_IND" order="21" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="MANDATORY_IND"/>
+        <keyMapping columnObjectName="PROJECT_ERROR_FILTERS" columnName="MANDATORY_IND"/>
+      </attribute>
+      <attribute id="LATE_CALL_IND" order="22" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="LATE_CALL_IND"/>
+        <keyMapping columnObjectName="PROJECT_ERROR_FILTERS" columnName="LATE_CALL_IND"/>
+      </attribute>
+      <attribute id="FTR_DESC_DISP_IND" order="23" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="FTR_DESC_DISP_IND"/>
+        <keyMapping columnObjectName="PROJECT_ERROR_FILTERS" columnName="FTR_DESC_DISP_IND"/>
+      </attribute>
+      <attribute id="FEATURE_CODE" order="24" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="FEATURE_CODE"/>
+        <keyMapping columnObjectName="PROJECT_ERROR_FILTERS" columnName="FEATURE_CODE"/>
+      </attribute>
+      <attribute id="EXPY_DT" order="25" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="EXPY_DT"/>
+        <keyMapping columnObjectName="PROJECT_ERROR_FILTERS" columnName="EXPY_DT"/>
+      </attribute>
+      <attribute id="EXPIRATION_DATE" order="26" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="EXPIRATION_DATE"/>
+        <keyMapping columnObjectName="PROJECT_ERROR_FILTERS" columnName="EXPIRATION_DATE"/>
+      </attribute>
+      <attribute id="ET_REM_MONTH_PEN_TP" order="27" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ET_REM_MONTH_PEN_TP"/>
+        <keyMapping columnObjectName="PROJECT_ERROR_FILTERS" columnName="ET_REM_MONTH_PEN_TP"/>
+      </attribute>
+      <attribute id="EFF_DT" order="28" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="EFF_DT"/>
+        <keyMapping columnObjectName="PROJECT_ERROR_FILTERS" columnName="EFF_DT"/>
+      </attribute>
+      <attribute id="EFFECTIVE_DATE" order="29" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="EFFECTIVE_DATE"/>
+        <keyMapping columnObjectName="PROJECT_ERROR_FILTERS" columnName="EFFECTIVE_DATE"/>
+      </attribute>
+      <attribute id="CSM_INC_FTR_IND" order="30" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CSM_INC_FTR_IND"/>
+        <keyMapping columnObjectName="PROJECT_ERROR_FILTERS" columnName="CSM_INC_FTR_IND"/>
+      </attribute>
+      <attribute id="COVERAGE_TYPE" order="31" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="COVERAGE_TYPE"/>
+        <keyMapping columnObjectName="PROJECT_ERROR_FILTERS" columnName="COVERAGE_TYPE"/>
+      </attribute>
+      <attribute id="CALLING_ROUTE_TYPE" order="32" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CALLING_ROUTE_TYPE"/>
+        <keyMapping columnObjectName="PROJECT_ERROR_FILTERS" columnName="CALLING_ROUTE_TYPE"/>
+      </attribute>
+      <attribute id="BILL_DISPLAY_IND" order="33" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="BILL_DISPLAY_IND"/>
+        <keyMapping columnObjectName="PROJECT_ERROR_FILTERS" columnName="BILL_DISPLAY_IND"/>
+      </attribute>
+      <attribute id="AC_INFO_IND" order="34" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="AC_INFO_IND"/>
+        <keyMapping columnObjectName="PROJECT_ERROR_FILTERS" columnName="AC_INFO_IND"/>
+      </attribute>
+      <attribute id="CC_VERSION_CHECK" hidden="false" order="35" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CC_VERSION_CHECK"/>
+        <keyMapping columnObjectName="PROJECT_ERROR_FILTERS" columnName="CC_VERSION_CHECK"/>
+      </attribute>
+    </attributes>
+    <calculatedAttributes/>
+    <privateDataFoundation>
+      <tableProxies/>
+      <joins/>
+      <layout>
+        <shapes/>
+      </layout>
+    </privateDataFoundation>
+    <baseMeasures/>
+    <calculatedMeasures/>
+    <restrictedMeasures/>
+    <localDimensions/>
+  </logicalModel>
+  <layout>
+    <shapes>
+      <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+        <upperLeftCorner x="197" y="87"/>
+        <rectangleSize height="64" width="196"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_NM1_EDW_REF_RATEDFTR_HIST" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="22" y="339"/>
+        <rectangleSize height="64" width="291"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJECT_ERROR_TABLE" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="327" y="339"/>
+        <rectangleSize height="64" width="195"/>
+      </shape>
+      <shape expanded="true" modelObjectName="NM1_EDW_REF_RATEDFTR_HIST" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="177" y="243"/>
+        <rectangleSize height="82" width="236"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJECT_ERROR_FILTERS" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="190" y="165"/>
+        <rectangleSize height="64" width="211"/>
+      </shape>
+    </shapes>
+  </layout>
+</Calculation:scenario>

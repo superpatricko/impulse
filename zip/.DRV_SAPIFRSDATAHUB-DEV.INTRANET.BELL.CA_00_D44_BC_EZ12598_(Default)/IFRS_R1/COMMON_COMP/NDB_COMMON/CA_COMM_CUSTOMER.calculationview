@@ -1,0 +1,1008 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" schemaVersion="2.3" id="CA_COMM_CUSTOMER" applyPrivilegeType="NONE" checkAnalyticPrivileges="false" defaultClient="crossClient" defaultLanguage="$$language$$" hierarchiesSQLEnabled="false" historyEnabled="false" translationRelevant="true" visibility="internal" calculationScenarioType="TREE_BASED" dataCategory="DIMENSION" enforceSqlExecution="false" executionSemantic="UNDEFINED" outputViewType="Projection">
+  <origin/>
+  <descriptions defaultDescription="CA_COMM_CUSTOMER_VW"/>
+  <localVariables>
+    <variable id="P_DATE_FROM" parameter="true">
+      <descriptions defaultDescription="P_DATE_FROM"/>
+      <variableProperties datatype="DATE" defaultValue="" mandatory="false">
+        <valueDomain type="empty"/>
+        <selection multiLine="false" type="SingleValue"/>
+      </variableProperties>
+    </variable>
+    <variable id="P_DATE_TO" parameter="true">
+      <descriptions defaultDescription="P_DATE_TO"/>
+      <variableProperties datatype="DATE" defaultValue="" mandatory="false">
+        <valueDomain type="empty"/>
+        <selection multiLine="false" type="SingleValue"/>
+      </variableProperties>
+    </variable>
+    <variable id="P_LOB" parameter="true">
+      <descriptions defaultDescription="P_LOB"/>
+      <variableProperties datatype="NVARCHAR" length="3" mandatory="false">
+        <valueDomain type="empty"/>
+        <selection multiLine="false" type="SingleValue"/>
+        <defaultRange/>
+      </variableProperties>
+    </variable>
+  </localVariables>
+  <variableMappings/>
+  <informationModelLayout relativeWidthScenario="44"/>
+  <dataSources>
+    <DataSource id="IFRS_R1.HP.NDB_HP::HP_CUSTOMER" type="DATA_BASE_TABLE">
+      <viewAttributes allViewAttributes="true"/>
+      <columnObject schemaName="NDB_HP" columnObjectName="IFRS_R1.HP.NDB_HP::HP_CUSTOMER"/>
+    </DataSource>
+    <DataSource id="IFRS_R1.BELLTV.NDB_BELLTV::TV_CUSTOMER" type="DATA_BASE_TABLE">
+      <viewAttributes allViewAttributes="true"/>
+      <columnObject schemaName="NDB_TV" columnObjectName="IFRS_R1.BELLTV.NDB_BELLTV::TV_CUSTOMER"/>
+    </DataSource>
+    <DataSource id="IFRS_R1.COMMON_COMP.NDB_COMMON::OB_CUSTOMER" type="DATA_BASE_TABLE">
+      <viewAttributes allViewAttributes="true"/>
+      <columnObject schemaName="NDB_COMMON" columnObjectName="IFRS_R1.COMMON_COMP.NDB_COMMON::OB_CUSTOMER"/>
+    </DataSource>
+    <DataSource id="IFRS_R1.INTERNET.NDB_INTERNET::INT_CUST" type="DATA_BASE_TABLE">
+      <viewAttributes allViewAttributes="true"/>
+      <columnObject schemaName="NDB_INTERNET" columnObjectName="IFRS_R1.INTERNET.NDB_INTERNET::INT_CUST"/>
+    </DataSource>
+    <DataSource id="IFRS_R1.MOBILITY.NDB_MOBILITY::MOBL_CUST" type="DATA_BASE_TABLE">
+      <viewAttributes allViewAttributes="true"/>
+      <columnObject schemaName="NDB_MOBILITY" columnObjectName="IFRS_R1.MOBILITY.NDB_MOBILITY::MOBL_CUST"/>
+    </DataSource>
+    <DataSource id="IFRS_R1.COMMON_COMP.NDB_COMMON::P77_ACSY_CUSTOMER" type="DATA_BASE_TABLE">
+      <viewAttributes allViewAttributes="true"/>
+      <columnObject schemaName="NDB_COMMON" columnObjectName="IFRS_R1.COMMON_COMP.NDB_COMMON::P77_ACSY_CUSTOMER"/>
+    </DataSource>
+    <DataSource id="IFRS_R1.MOBILITY.NDB_MOBILITY::PPD_ACSY_CUSTOMER" type="DATA_BASE_TABLE">
+      <viewAttributes allViewAttributes="true"/>
+      <columnObject schemaName="NDB_MOBILITY" columnObjectName="IFRS_R1.MOBILITY.NDB_MOBILITY::PPD_ACSY_CUSTOMER"/>
+    </DataSource>
+    <DataSource id="IFRS_R1.HP.NDB_HP::HP_NM1_CUSTOMER" type="DATA_BASE_TABLE">
+      <viewAttributes allViewAttributes="true"/>
+      <columnObject schemaName="NDB_HP" columnObjectName="IFRS_R1.HP.NDB_HP::HP_NM1_CUSTOMER"/>
+    </DataSource>
+  </dataSources>
+  <calculationViews>
+    <calculationView xsi:type="Calculation:ProjectionView" id="HP_CUSTOMER" filterExpressionLanguage="COLUMN_ENGINE">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="PRIMARY_TELEPHONE_NUMBER"/>
+        <viewAttribute id="SUBSCRIBER_NUMBER"/>
+        <viewAttribute id="KUNNR_SID"/>
+        <viewAttribute id="ONE_BILL_BAN"/>
+        <viewAttribute id="CUSTOMER_LAST_NAME"/>
+        <viewAttribute id="CUSTOMER_ADDRESS"/>
+        <viewAttribute id="CUSTOMER_LOCATION_ID"/>
+        <viewAttribute id="CBSS_ACC_STATUS"/>
+        <viewAttribute id="MODIFIED_TS"/>
+        <viewAttribute id="CUSTOMER_FIRST_NAME"/>
+        <viewAttribute id="REF_EXPIRY_DATE"/>
+        <viewAttribute id="CONVERSION_IND"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="DATE" id="MODIFIED_DATE" expressionLanguage="COLUMN_ENGINE">
+          <formula>date(format(&quot;MODIFIED_TS&quot;,'YYYYMMDD'))</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CUSTOMER_NAME" length="40" expressionLanguage="COLUMN_ENGINE">
+          <formula>if((isnull(&quot;CUSTOMER_LAST_NAME&quot;) and isnull(&quot;CUSTOMER_FIRST_NAME&quot;)),'NA',&#xD;
+if(isnull(&quot;CUSTOMER_LAST_NAME&quot;),&quot;CUSTOMER_FIRST_NAME&quot;,&quot;CUSTOMER_LAST_NAME&quot;))</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CUSTOMER_ADDR" length="10" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isnull(trim(&quot;CUSTOMER_ADDRESS&quot;)),'N1N1N1',&#xD;
+if(trim(&quot;CUSTOMER_ADDRESS&quot;) = 'NA','N1N1N1',&quot;CUSTOMER_ADDRESS&quot;))</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CUSTOMER_REGION" length="3" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isnull(&quot;CUSTOMER_LOCATION_ID&quot;),'NA',&quot;CUSTOMER_LOCATION_ID&quot;)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="DATE" id="EXP_DT" expressionLanguage="COLUMN_ENGINE">
+          <formula>DATE('99991231')</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="SECONDDATE" id="C_MODIFIED_TS" expressionLanguage="COLUMN_ENGINE">
+          <formula>if( isnull(&quot;MODIFIED_TS&quot;) and (not isnull(&quot;KUNNR_SID&quot;)) , NOW() , &quot;CC_MODIFIED_TS&quot;)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="SECONDDATE" id="CC_MODIFIED_TS" expressionLanguage="SQL">
+          <formula>to_seconddate(to_varchar(&quot;MODIFIED_TS&quot;))</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#IFRS_R1.HP.NDB_HP::HP_CUSTOMER">
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRIMARY_TELEPHONE_NUMBER" source="PRIMARY_TELEPHONE_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBSCRIBER_NUMBER" source="SUBSCRIBER_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KUNNR_SID" source="KUNNR_SID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ONE_BILL_BAN" source="ONE_BILL_BAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_LAST_NAME" source="CUSTOMER_LAST_NAME"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_ADDRESS" source="CUSTOMER_ADDRESS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_LOCATION_ID" source="CUSTOMER_LOCATION_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CBSS_ACC_STATUS" source="CBSS_ACC_STATUS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MODIFIED_TS" source="MODIFIED_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_FIRST_NAME" source="CUSTOMER_FIRST_NAME"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REF_EXPIRY_DATE" source="REF_EXPIRY_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONVERSION_IND" source="CONVERSION_IND"/>
+      </input>
+      <filter>isNull(&quot;CONVERSION_IND&quot;) and ((isNull(&quot;KUNNR_SID&quot;) OR ((&quot;MODIFIED_DATE&quot; &lt;= '$$P_DATE_TO$$' AND &quot;MODIFIED_DATE&quot; >= '$$P_DATE_FROM$$') OR ISNULL(&quot;MODIFIED_TS&quot;))) AND (&quot;REF_EXPIRY_DATE&quot; = &quot;EXP_DT&quot;))&#xD;
+OR ((&quot;CONVERSION_IND&quot;='X') and isNull(&quot;KUNNR_SID&quot;) and (&quot;REF_EXPIRY_DATE&quot; = &quot;EXP_DT&quot;))</filter>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="TV_CUSTOMER" filterExpressionLanguage="COLUMN_ENGINE">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="PRM_ACCT_NUM"/>
+        <viewAttribute id="ACCT_NUM"/>
+        <viewAttribute id="KUNNR_SID"/>
+        <viewAttribute id="CUST_PSTL_CD"/>
+        <viewAttribute id="CUST_LOC_ID"/>
+        <viewAttribute id="CUST_ST"/>
+        <viewAttribute id="CUST_NM"/>
+        <viewAttribute id="OB_BAN"/>
+        <viewAttribute id="REFERENCE_EXPIRY_DT"/>
+        <viewAttribute id="CUST_LOC_ID_1"/>
+        <viewAttribute id="MODIFIED_TS"/>
+        <viewAttribute id="CNVR_IND"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CUSTOMER_NUMBER" length="35" expressionLanguage="COLUMN_ENGINE">
+          <formula>&quot;ACCT_NUM&quot;</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="DATE" id="MODIFIED_DATE" expressionLanguage="COLUMN_ENGINE">
+          <formula>date(format(&quot;MODIFIED_TS&quot;,'YYYYMMDD'))</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CUSTOMER_NM" length="40" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isnull(&quot;CUST_NM&quot;),'NA',&quot;CUST_NM&quot;)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CUSTOMER_ADDR" length="10" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isnull(trim(&quot;CUST_PSTL_CD&quot;)),'N1N1N1',&#xD;
+if(trim(&quot;CUST_PSTL_CD&quot;) = 'NA','N1N1N1',&quot;CUST_PSTL_CD&quot;))</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CUST_REGION" length="3" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isnull(&quot;CUST_LOC_ID&quot;),'NA',&quot;CUST_LOC_ID&quot;)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="DATE" id="EXP_DT" expressionLanguage="COLUMN_ENGINE">
+          <formula>DATE('99991231')</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="SECONDDATE" id="C_MODIFIED_TS" expressionLanguage="COLUMN_ENGINE">
+          <formula>if( isnull(&quot;MODIFIED_TS&quot;) and (not isnull(&quot;KUNNR_SID&quot;)) , NOW() , &quot;CC_MODIFIED_TS&quot;)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="SECONDDATE" id="CC_MODIFIED_TS" expressionLanguage="SQL">
+          <formula>to_seconddate(to_varchar(&quot;MODIFIED_TS&quot;))</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#IFRS_R1.BELLTV.NDB_BELLTV::TV_CUSTOMER">
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRM_ACCT_NUM" source="PRM_ACCT_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACCT_NUM" source="ACCT_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KUNNR_SID" source="KUNNR_SID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUST_PSTL_CD" source="CUST_PSTL_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUST_LOC_ID" source="CUST_LOC_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUST_ST" source="CUST_ST"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUST_NM" source="CUST_NM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OB_BAN" source="OB_BAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_EXPIRY_DT" source="REFERENCE_EXPIRY_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUST_LOC_ID_1" source="CUST_LOC_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MODIFIED_TS" source="MODIFIED_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CNVR_IND" source="CNVR_IND"/>
+      </input>
+      <filter>isNull(&quot;CNVR_IND&quot;) and ((isNull(&quot;KUNNR_SID&quot;) OR ((&quot;MODIFIED_DATE&quot; &lt;= '$$P_DATE_TO$$' AND &quot;MODIFIED_DATE&quot; >= '$$P_DATE_FROM$$') OR ISNULL(&quot;MODIFIED_TS&quot;))) AND (&quot;REFERENCE_EXPIRY_DT&quot; = &quot;EXP_DT&quot;))&#xD;
+OR ((&quot;CNVR_IND&quot;='X') and isNull(&quot;KUNNR_SID&quot;) and (&quot;REFERENCE_EXPIRY_DT&quot; = &quot;EXP_DT&quot;))</filter>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="OB_CUSTOMER" filterExpressionLanguage="COLUMN_ENGINE">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="CUSTOMER_ID"/>
+        <viewAttribute id="SUBSCRIBER_NO"/>
+        <viewAttribute id="BUSINESS_ID"/>
+        <viewAttribute id="ADR_PROVINCE"/>
+        <viewAttribute id="BAN_STATUS"/>
+        <viewAttribute id="ADR_POSTAL"/>
+        <viewAttribute id="FIRST_NAME"/>
+        <viewAttribute id="KUNNR_SID"/>
+        <viewAttribute id="MODIFIED_TS"/>
+        <viewAttribute id="LAST_BUSINESS_NAME"/>
+        <viewAttribute id="REFERENCE_EXPIRY_DT"/>
+        <viewAttribute id="CONVERSION_IND"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="SUBSCRIBER_NUMBER" length="35" expressionLanguage="COLUMN_ENGINE">
+          <formula>&quot;CUSTOMER_ID&quot;</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="DATE" id="MODIFIED_DATE" expressionLanguage="COLUMN_ENGINE">
+          <formula>date(format(&quot;MODIFIED_TS&quot;,'YYYYMMDD'))</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CUSTOMER_NM" length="40" expressionLanguage="COLUMN_ENGINE">
+          <formula>if((isnull(&quot;LAST_BUSINESS_NAME&quot;) and isnull(&quot;FIRST_NAME&quot;)),'NA',&#xD;
+if(isnull(&quot;LAST_BUSINESS_NAME&quot;),&quot;FIRST_NAME&quot;,&quot;LAST_BUSINESS_NAME&quot;))</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CUSTOMER_ADDR" length="10" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isnull(trim(&quot;ADR_POSTAL&quot;)),'N1N1N1',&#xD;
+if(trim(&quot;ADR_POSTAL&quot;) = 'NA','N1N1N1',&quot;ADR_POSTAL&quot;))</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CUST_REGION" length="3" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isnull(&quot;ADR_PROVINCE&quot;),'NA',&quot;ADR_PROVINCE&quot;)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="ONEBILL_BAN" length="10" expressionLanguage="COLUMN_ENGINE">
+          <formula>&quot;CUSTOMER_ID&quot;</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="DATE" id="EXP_DT" expressionLanguage="COLUMN_ENGINE">
+          <formula>DATE('99991231')</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="SECONDDATE" id="C_MODIFIED_TS" expressionLanguage="COLUMN_ENGINE">
+          <formula>if( isnull(&quot;MODIFIED_TS&quot;) and (not isnull(&quot;KUNNR_SID&quot;)) , NOW() , &quot;CC_MODIFIED_TS&quot;)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="SECONDDATE" id="CC_MODIFIED_TS" expressionLanguage="SQL">
+          <formula>to_seconddate(to_varchar(&quot;MODIFIED_TS&quot;))</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#IFRS_R1.COMMON_COMP.NDB_COMMON::OB_CUSTOMER">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_ID" source="CUSTOMER_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBSCRIBER_NO" source="SUBSCRIBER_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUSINESS_ID" source="BUSINESS_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ADR_PROVINCE" source="ADR_PROVINCE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BAN_STATUS" source="BAN_STATUS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ADR_POSTAL" source="ADR_POSTAL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FIRST_NAME" source="FIRST_NAME"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KUNNR_SID" source="KUNNR_SID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MODIFIED_TS" source="MODIFIED_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LAST_BUSINESS_NAME" source="LAST_BUSINESS_NAME"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_EXPIRY_DT" source="REFERENCE_EXPIRY_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONVERSION_IND" source="CONVERSION_IND"/>
+      </input>
+      <filter>isNull(&quot;CONVERSION_IND&quot;) and ((isNull(&quot;KUNNR_SID&quot;) OR ((&quot;MODIFIED_DATE&quot; &lt;= '$$P_DATE_TO$$' AND &quot;MODIFIED_DATE&quot; >= '$$P_DATE_FROM$$') OR ISNULL(&quot;MODIFIED_TS&quot;))) AND (&quot;REFERENCE_EXPIRY_DT&quot; = &quot;EXP_DT&quot;))&#xD;
+OR ((&quot;CONVERSION_IND&quot;='X') and isNull(&quot;KUNNR_SID&quot;) and (&quot;REFERENCE_EXPIRY_DT&quot; = &quot;EXP_DT&quot;))</filter>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="INT_CUSTOMER" filterExpressionLanguage="COLUMN_ENGINE">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="PRM_CONTR_CUST"/>
+        <viewAttribute id="CUST_LAST_NM"/>
+        <viewAttribute id="CUST_ADDR"/>
+        <viewAttribute id="CUST_LOC_ID"/>
+        <viewAttribute id="BAN_STS"/>
+        <viewAttribute id="ALTN_CONTR_NUM"/>
+        <viewAttribute id="KUNNR_SID"/>
+        <viewAttribute id="ONEBILL_BAN"/>
+        <viewAttribute id="MODIFIED_TS"/>
+        <viewAttribute id="CUST_FRST_NM"/>
+        <viewAttribute id="REFERENCE_EXPIRY_DT"/>
+        <viewAttribute id="CONVERSION_IND"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="DATE" id="MODIFIED_DATE" expressionLanguage="COLUMN_ENGINE">
+          <formula>date(format(&quot;MODIFIED_TS&quot;,'YYYYMMDD'))</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CUSTOMER_NM" length="40" expressionLanguage="COLUMN_ENGINE">
+          <formula>if((isnull(&quot;CUST_LAST_NM&quot;) and isnull(&quot;CUST_FRST_NM&quot;)),'NA',&#xD;
+if(isnull(&quot;CUST_LAST_NM&quot;),&quot;CUST_FRST_NM&quot;,&quot;CUST_LAST_NM&quot;))</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CUSTOMER_ADDR" length="10" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isnull(trim(&quot;CUST_ADDR&quot;)),'N1N1N1',&#xD;
+if(trim(&quot;CUST_ADDR&quot;) = 'NA','N1N1N1',&quot;CUST_ADDR&quot;))</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CUST_REGION" length="3" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isnull(&quot;CUST_LOC_ID&quot;),'NA',&quot;CUST_LOC_ID&quot;)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="DATE" id="EXP_DT" expressionLanguage="COLUMN_ENGINE">
+          <formula>DATE('99991231')</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="SECONDDATE" id="C_MODIFIED_TS" expressionLanguage="COLUMN_ENGINE">
+          <formula>if( isnull(&quot;MODIFIED_TS&quot;) and (not isnull(&quot;KUNNR_SID&quot;)) , NOW() , &quot;CC_MODIFIED_TS&quot;)&#xD;
+</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="SECONDDATE" id="CC_MODIFIED_TS" expressionLanguage="SQL">
+          <formula>to_seconddate(to_varchar(&quot;MODIFIED_TS&quot;))</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#IFRS_R1.INTERNET.NDB_INTERNET::INT_CUST">
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRM_CONTR_CUST" source="PRM_CONTR_CUST"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUST_LAST_NM" source="CUST_LAST_NM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUST_ADDR" source="CUST_ADDR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUST_LOC_ID" source="CUST_LOC_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BAN_STS" source="BAN_STS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ALTN_CONTR_NUM" source="ALTN_CONTR_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KUNNR_SID" source="KUNNR_SID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ONEBILL_BAN" source="ONEBILL_BAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MODIFIED_TS" source="MODIFIED_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUST_FRST_NM" source="CUST_FRST_NM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_EXPIRY_DT" source="REFERENCE_EXPIRY_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONVERSION_IND" source="CONVERSION_IND"/>
+      </input>
+      <filter>isNull(&quot;CONVERSION_IND&quot;) and ((isNull(&quot;KUNNR_SID&quot;) OR ((&quot;MODIFIED_DATE&quot; &lt;= '$$P_DATE_TO$$' AND &quot;MODIFIED_DATE&quot; >= '$$P_DATE_FROM$$') OR ISNULL(&quot;MODIFIED_TS&quot;))) AND (&quot;REFERENCE_EXPIRY_DT&quot; = &quot;EXP_DT&quot;))&#xD;
+OR ((&quot;CONVERSION_IND&quot;='X') and isNull(&quot;KUNNR_SID&quot;) and (&quot;REFERENCE_EXPIRY_DT&quot; = &quot;EXP_DT&quot;))</filter>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="MOB_CUSTOMER" filterExpressionLanguage="COLUMN_ENGINE">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="BAN"/>
+        <viewAttribute id="SUBSCR_NO"/>
+        <viewAttribute id="KUNNR_SID"/>
+        <viewAttribute id="NAG_OBJ_ID"/>
+        <viewAttribute id="MKT_SEG"/>
+        <viewAttribute id="LAST_BUS_NM"/>
+        <viewAttribute id="SUBSCR_PROV_CD"/>
+        <viewAttribute id="SUBSCR_ST"/>
+        <viewAttribute id="BRND"/>
+        <viewAttribute id="ACCT_TY"/>
+        <viewAttribute id="ACCT_SUB_TY"/>
+        <viewAttribute id="ADR_POSTAL"/>
+        <viewAttribute id="FRST_NM"/>
+        <viewAttribute id="ONEBILL_BAN"/>
+        <viewAttribute id="MODIFIED_TS"/>
+        <viewAttribute id="CUSTOMER_EXPIRY_DT"/>
+        <viewAttribute id="CONVERSION_IND"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="DATE" id="MODIFIED_DATE" expressionLanguage="COLUMN_ENGINE">
+          <formula>date(format(&quot;MODIFIED_TS&quot;,'YYYYMMDD'))</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CUSTOMER_NM" length="40" expressionLanguage="COLUMN_ENGINE">
+          <formula>if((isnull(&quot;LAST_BUS_NM&quot;) and isnull(&quot;FRST_NM&quot;)),'NA',&#xD;
+if(isnull(&quot;LAST_BUS_NM&quot;),&quot;FRST_NM&quot;,&quot;LAST_BUS_NM&quot;))</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CUSTOMER_ADDR" length="10" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isnull(&quot;ADR_POSTAL&quot;),'N1N1N1',&#xD;
+if(trim(&quot;ADR_POSTAL&quot;) = 'NA','N1N1N1',&quot;ADR_POSTAL&quot;))</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CUST_REGION" length="3" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isnull(&quot;SUBSCR_PROV_CD&quot;),'NA',&quot;SUBSCR_PROV_CD&quot;)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="DATE" id="EXP_DT" expressionLanguage="COLUMN_ENGINE">
+          <formula>DATE('99991231')</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="SECONDDATE" id="C_MODIFIED_TS" expressionLanguage="COLUMN_ENGINE">
+          <formula>if( isnull(&quot;MODIFIED_TS&quot;) and (not isnull(&quot;KUNNR_SID&quot;)) , NOW() , &quot;CC_MODIFIED_TS&quot;)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="SECONDDATE" id="CC_MODIFIED_TS" expressionLanguage="SQL">
+          <formula>to_seconddate(to_varchar(&quot;MODIFIED_TS&quot;))</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#IFRS_R1.MOBILITY.NDB_MOBILITY::MOBL_CUST">
+        <mapping xsi:type="Calculation:AttributeMapping" target="BAN" source="BAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBSCR_NO" source="SUBSCR_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KUNNR_SID" source="KUNNR_SID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NAG_OBJ_ID" source="NAG_OBJ_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MKT_SEG" source="MKT_SEG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LAST_BUS_NM" source="LAST_BUS_NM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBSCR_PROV_CD" source="SUBSCR_PROV_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBSCR_ST" source="SUBSCR_ST"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BRND" source="BRND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACCT_TY" source="ACCT_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACCT_SUB_TY" source="ACCT_SUB_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ADR_POSTAL" source="ADR_POSTAL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FRST_NM" source="FRST_NM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ONEBILL_BAN" source="ONEBILL_BAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MODIFIED_TS" source="MODIFIED_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_EXPIRY_DT" source="CUSTOMER_EXPIRY_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONVERSION_IND" source="CONVERSION_IND"/>
+      </input>
+      <filter>isNull(&quot;CONVERSION_IND&quot;) and ((isNull(&quot;KUNNR_SID&quot;) OR ((&quot;MODIFIED_DATE&quot; &lt;= '$$P_DATE_TO$$' AND &quot;MODIFIED_DATE&quot; >= '$$P_DATE_FROM$$') OR ISNULL(&quot;MODIFIED_TS&quot;))) AND (&quot;CUSTOMER_EXPIRY_DT&quot; = &quot;EXP_DT&quot;))&#xD;
+OR ((&quot;CONVERSION_IND&quot;='X') and isNull(&quot;KUNNR_SID&quot;) and (&quot;CUSTOMER_EXPIRY_DT&quot; = &quot;EXP_DT&quot;))</filter>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="ACSY_CUSTOMER" filterExpressionLanguage="COLUMN_ENGINE">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="UNIQUE_ACC_NO"/>
+        <viewAttribute id="KUNNR_SID"/>
+        <viewAttribute id="MODIFIED_TS"/>
+        <viewAttribute id="CONVERSION_IND"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="DATE" id="MODIFIED_DATE" expressionLanguage="COLUMN_ENGINE">
+          <formula>date(format(&quot;MODIFIED_TS&quot;,'YYYYMMDD'))</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="SECONDDATE" id="C_MODIFIED_TS" expressionLanguage="COLUMN_ENGINE">
+          <formula>if( isnull(&quot;MODIFIED_TS&quot;) and (not isnull(&quot;KUNNR_SID&quot;)) , NOW() , &quot;CC_MODIFIED_TS&quot;)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="SECONDDATE" id="CC_MODIFIED_TS" expressionLanguage="SQL">
+          <formula>to_seconddate(to_varchar(&quot;MODIFIED_TS&quot;))</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#IFRS_R1.COMMON_COMP.NDB_COMMON::P77_ACSY_CUSTOMER">
+        <mapping xsi:type="Calculation:AttributeMapping" target="UNIQUE_ACC_NO" source="UNIQUE_ACC_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KUNNR_SID" source="KUNNR_SID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MODIFIED_TS" source="MODIFIED_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONVERSION_IND" source="CONVERSION_IND"/>
+      </input>
+      <filter>isNull(&quot;CONVERSION_IND&quot;) and ((isNull(&quot;KUNNR_SID&quot;) OR ((&quot;MODIFIED_DATE&quot; &lt;= '$$P_DATE_TO$$' AND &quot;MODIFIED_DATE&quot; >= '$$P_DATE_FROM$$') OR ISNULL(&quot;MODIFIED_TS&quot;))) )&#xD;
+OR ((&quot;CONVERSION_IND&quot;='X') and isNull(&quot;KUNNR_SID&quot;) )</filter>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PPD_ACSY_CUSTOMER" filterExpressionLanguage="COLUMN_ENGINE">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="UNIQUE_ACC_NO"/>
+        <viewAttribute id="ACSY_KUNNR_SID"/>
+        <viewAttribute id="MODIFIED_TS"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="DATE" id="MODIFIED_DATE" expressionLanguage="COLUMN_ENGINE">
+          <formula>date(format(&quot;MODIFIED_TS&quot;,'YYYYMMDD'))</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="SECONDDATE" id="C_MODIFIED_TS" expressionLanguage="COLUMN_ENGINE">
+          <formula>if( isnull(&quot;MODIFIED_TS&quot;) and (not isnull(&quot;ACSY_KUNNR_SID&quot;)) , NOW() , &quot;CC_MODIFIED_TS&quot;)&#xD;
+</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="SECONDDATE" id="CC_MODIFIED_TS" expressionLanguage="SQL">
+          <formula>to_seconddate(to_varchar(&quot;MODIFIED_TS&quot;))</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#IFRS_R1.MOBILITY.NDB_MOBILITY::PPD_ACSY_CUSTOMER">
+        <mapping xsi:type="Calculation:AttributeMapping" target="UNIQUE_ACC_NO" source="UNIQUE_ACC_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACSY_KUNNR_SID" source="ACSY_KUNNR_SID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MODIFIED_TS" source="MODIFIED_TS"/>
+      </input>
+      <filter>(isNull(&quot;ACSY_KUNNR_SID&quot;)) OR ((&quot;MODIFIED_DATE&quot; &lt;= '$$P_DATE_TO$$' AND &quot;MODIFIED_DATE&quot; >= '$$P_DATE_FROM$$') OR ISNULL(&quot;MODIFIED_TS&quot;))</filter>
+    </calculationView>
+    <calculationView xsi:type="Calculation:UnionView" id="UNION_HP_TV_OB_CUSTOMER">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="CUSTOMER_NUMBER"/>
+        <viewAttribute id="SUBSCRIBER_NUMBER"/>
+        <viewAttribute id="KUNNR_SID"/>
+        <viewAttribute datatype="NVARCHAR" id="NAG" length="12"/>
+        <viewAttribute datatype="NVARCHAR" id="MARKET_SEGMENT" length="3"/>
+        <viewAttribute id="ONEBILL_NUM"/>
+        <viewAttribute datatype="NVARCHAR" id="LOB" length="3"/>
+        <viewAttribute datatype="NVARCHAR" id="BILL_SRC_SYSTEM" length="8"/>
+        <viewAttribute id="CUSTOMER_NAME"/>
+        <viewAttribute datatype="NVARCHAR" id="CUSTOMER_SEGMENT" length="4"/>
+        <viewAttribute id="CUSTOMER_LOCATION"/>
+        <viewAttribute id="CUSTOMER_REGION"/>
+        <viewAttribute id="CUSTOMER_STATUS"/>
+        <viewAttribute datatype="NVARCHAR" id="BRAND" length="1"/>
+        <viewAttribute datatype="NVARCHAR" id="ACC_TYPE" length="1"/>
+        <viewAttribute datatype="NVARCHAR" id="ACC_SUB_TYPE" length="1"/>
+        <viewAttribute id="MODIFIED_TS"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input emptyUnionBehavior="NO_ROW" node="#HP_CUSTOMER">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_NUMBER" source="PRIMARY_TELEPHONE_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBSCRIBER_NUMBER" source="SUBSCRIBER_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KUNNR_SID" source="KUNNR_SID"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="NAG" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="MARKET_SEGMENT" null="true" value=""/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ONEBILL_NUM" source="ONE_BILL_BAN"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="LOB" null="false" value="HP"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="BILL_SRC_SYSTEM" null="false" value="06"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_NAME" source="CUSTOMER_NAME"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="CUSTOMER_SEGMENT" null="false" value="BRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_LOCATION" source="CUSTOMER_ADDR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_REGION" source="CUSTOMER_REGION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_STATUS" source="CBSS_ACC_STATUS"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="BRAND" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="ACC_TYPE" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="ACC_SUB_TYPE" null="true" value=""/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MODIFIED_TS" source="C_MODIFIED_TS"/>
+      </input>
+      <input emptyUnionBehavior="NO_ROW" node="#TV_CUSTOMER">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_NUMBER" source="CUSTOMER_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBSCRIBER_NUMBER" source="ACCT_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KUNNR_SID" source="KUNNR_SID"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="NAG" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="MARKET_SEGMENT" null="true" value=""/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ONEBILL_NUM" source="OB_BAN"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="LOB" null="false" value="TV"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="BILL_SRC_SYSTEM" null="false" value="17"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_NAME" source="CUSTOMER_NM"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="CUSTOMER_SEGMENT" null="false" value="BBM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_LOCATION" source="CUSTOMER_ADDR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_REGION" source="CUST_REGION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_STATUS" source="CUST_ST"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="BRAND" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="ACC_TYPE" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="ACC_SUB_TYPE" null="true" value=""/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MODIFIED_TS" source="C_MODIFIED_TS"/>
+      </input>
+      <input emptyUnionBehavior="NO_ROW" node="#OB_CUSTOMER">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_NUMBER" source="CUSTOMER_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBSCRIBER_NUMBER" source="SUBSCRIBER_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KUNNR_SID" source="KUNNR_SID"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="NAG" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="MARKET_SEGMENT" null="true" value=""/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ONEBILL_NUM" source="ONEBILL_BAN"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="LOB" null="false" value="OB"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="BILL_SRC_SYSTEM" null="false" value="12"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_NAME" source="CUSTOMER_NM"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="CUSTOMER_SEGMENT" null="true" value=""/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_LOCATION" source="CUSTOMER_ADDR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_REGION" source="CUST_REGION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_STATUS" source="BAN_STATUS"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="BRAND" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="ACC_TYPE" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="ACC_SUB_TYPE" null="true" value=""/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MODIFIED_TS" source="C_MODIFIED_TS"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:UnionView" id="UNION_INT_MOB_CUSTOMER">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="CUSTOMER_NUMBER"/>
+        <viewAttribute id="SUBSCRIBER_NUMBER"/>
+        <viewAttribute id="KUNNR_SID"/>
+        <viewAttribute datatype="NVARCHAR" id="NAG" length="12" scale="0"/>
+        <viewAttribute datatype="NVARCHAR" id="MARKET_SEGMENT" length="3" scale="0"/>
+        <viewAttribute id="ONEBILL_NUM"/>
+        <viewAttribute datatype="NVARCHAR" id="LOB" length="3"/>
+        <viewAttribute datatype="NVARCHAR" id="BILL_SRC_SYSTEM" length="8"/>
+        <viewAttribute id="CUSTOMER_NAME"/>
+        <viewAttribute datatype="NVARCHAR" id="CUSTOMER_SEGMENT" length="4"/>
+        <viewAttribute id="CUSTOMER_LOCATION"/>
+        <viewAttribute id="CUSTOMER_REGION"/>
+        <viewAttribute id="CUSTOMER_STATUS"/>
+        <viewAttribute datatype="NVARCHAR" id="BRAND" length="1" scale="0"/>
+        <viewAttribute datatype="NVARCHAR" id="ACC_TYPE" length="1" scale="0"/>
+        <viewAttribute datatype="NVARCHAR" id="ACC_SUB_TYPE" length="1" scale="0"/>
+        <viewAttribute id="MODIFIED_TS"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input emptyUnionBehavior="NO_ROW" node="#INT_CUSTOMER">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_NUMBER" source="ALTN_CONTR_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBSCRIBER_NUMBER" source="PRM_CONTR_CUST"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KUNNR_SID" source="KUNNR_SID"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="NAG" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="MARKET_SEGMENT" null="true" value=""/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ONEBILL_NUM" source="ONEBILL_BAN"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="LOB" null="false" value="INT"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="BILL_SRC_SYSTEM" null="false" value="13"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_NAME" source="CUSTOMER_NM"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="CUSTOMER_SEGMENT" null="false" value="BRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_LOCATION" source="CUSTOMER_ADDR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_REGION" source="CUST_REGION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_STATUS" source="BAN_STS"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="BRAND" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="ACC_TYPE" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="ACC_SUB_TYPE" null="true" value=""/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MODIFIED_TS" source="C_MODIFIED_TS"/>
+      </input>
+      <input emptyUnionBehavior="NO_ROW" node="#MOB_CUSTOMER">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_NUMBER" source="BAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBSCRIBER_NUMBER" source="SUBSCR_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KUNNR_SID" source="KUNNR_SID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NAG" source="NAG_OBJ_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MARKET_SEGMENT" source="MKT_SEG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ONEBILL_NUM" source="ONEBILL_BAN"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="LOB" null="false" value="MOB"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="BILL_SRC_SYSTEM" null="false" value="01"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_NAME" source="CUSTOMER_NM"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="CUSTOMER_SEGMENT" null="false" value="MOB"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_LOCATION" source="CUSTOMER_ADDR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_REGION" source="CUST_REGION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_STATUS" source="SUBSCR_ST"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BRAND" source="BRND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACC_TYPE" source="ACCT_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACC_SUB_TYPE" source="ACCT_SUB_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MODIFIED_TS" source="C_MODIFIED_TS"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="HP_NM1_CUSTOMER" filterExpressionLanguage="COLUMN_ENGINE">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="BAN"/>
+        <viewAttribute id="KUNNR_SID"/>
+        <viewAttribute id="ADDRESS_POSTAL_ZIP"/>
+        <viewAttribute id="SUB_STATUS"/>
+        <viewAttribute id="SUBSCRIBER_NO"/>
+        <viewAttribute id="MODIFIED_TS"/>
+        <viewAttribute id="EXPY_DT"/>
+        <viewAttribute id="ADDRESS_PROV_STATE_CD"/>
+        <viewAttribute id="NAG_ID"/>
+        <viewAttribute id="MARKET_SEGMENT"/>
+        <viewAttribute id="ONEBILL_BAN"/>
+        <viewAttribute id="FIRST_NM"/>
+        <viewAttribute id="LAST_BUS_NM"/>
+        <viewAttribute id="BRAND"/>
+        <viewAttribute id="ACCOUNT_TYPE"/>
+        <viewAttribute id="ACCOUNT_SUB_TYPE"/>
+        <viewAttribute id="CONVERSION_IND"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CUSTOMER_NAME" length="40" expressionLanguage="COLUMN_ENGINE">
+          <formula>if((isnull(&quot;LAST_BUS_NM&quot;) and isnull(&quot;FIRST_NM&quot;)),'NA',&#xD;
+if(isnull(&quot;LAST_BUS_NM&quot;),&quot;FIRST_NM&quot;,&quot;LAST_BUS_NM&quot;))</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CUSTOMER_REGION" length="3" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isnull(&quot;ADDRESS_PROV_STATE_CD&quot;),'NA',&quot;ADDRESS_PROV_STATE_CD&quot;)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="DATE" id="MODIFIED_DATE" expressionLanguage="COLUMN_ENGINE">
+          <formula>date(format(&quot;MODIFIED_TS&quot;,'YYYYMMDD'))</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="DATE" id="EXP_DT" expressionLanguage="COLUMN_ENGINE">
+          <formula>DATE('99991231')</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="SECONDDATE" id="C_MODIFIED_TS" expressionLanguage="COLUMN_ENGINE">
+          <formula>if( isnull(&quot;MODIFIED_TS&quot;) and (not isnull(&quot;KUNNR_SID&quot;)) , NOW() , &quot;CC_MODIFIED_TS&quot;)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="SECONDDATE" id="CC_MODIFIED_TS" expressionLanguage="SQL">
+          <formula>to_seconddate(to_varchar(&quot;MODIFIED_TS&quot;))</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#IFRS_R1.HP.NDB_HP::HP_NM1_CUSTOMER">
+        <mapping xsi:type="Calculation:AttributeMapping" target="BAN" source="BAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KUNNR_SID" source="KUNNR_SID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ADDRESS_POSTAL_ZIP" source="ADDRESS_POSTAL_ZIP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUB_STATUS" source="SUB_STATUS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBSCRIBER_NO" source="SUBSCRIBER_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MODIFIED_TS" source="MODIFIED_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXPY_DT" source="EXPY_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ADDRESS_PROV_STATE_CD" source="ADDRESS_PROV_STATE_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NAG_ID" source="NAG_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MARKET_SEGMENT" source="MARKET_SEGMENT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ONEBILL_BAN" source="ONEBILL_BAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FIRST_NM" source="FIRST_NM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LAST_BUS_NM" source="LAST_BUS_NM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BRAND" source="BRAND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACCOUNT_TYPE" source="ACCOUNT_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACCOUNT_SUB_TYPE" source="ACCOUNT_SUB_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONVERSION_IND" source="CONVERSION_IND"/>
+      </input>
+      <filter>isNull(&quot;CONVERSION_IND&quot;) and ((isNull(&quot;KUNNR_SID&quot;) OR ((&quot;MODIFIED_DATE&quot; &lt;= '$$P_DATE_TO$$' AND &quot;MODIFIED_DATE&quot; >= '$$P_DATE_FROM$$') OR ISNULL(&quot;MODIFIED_TS&quot;))) AND (&quot;EXPY_DT&quot; = &quot;EXP_DT&quot;))&#xD;
+OR ((&quot;CONVERSION_IND&quot;='X') and isNull(&quot;KUNNR_SID&quot;) and (&quot;EXPY_DT&quot; = &quot;EXP_DT&quot;))</filter>
+    </calculationView>
+    <calculationView xsi:type="Calculation:UnionView" id="UNION_ACSY_PPD_ACSY_HP_NM1_CUSTOMER">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="CUSTOMER_NUMBER"/>
+        <viewAttribute id="SUBSCRIBER_NUMBER"/>
+        <viewAttribute id="KUNNR_SID"/>
+        <viewAttribute datatype="NVARCHAR" id="NAG" length="10" scale="0"/>
+        <viewAttribute datatype="NVARCHAR" id="MARKET_SEGMENT" length="3"/>
+        <viewAttribute datatype="NVARCHAR" id="ONEBILL_NUM" length="10"/>
+        <viewAttribute datatype="NVARCHAR" id="LOB" length="3"/>
+        <viewAttribute datatype="NVARCHAR" id="BILL_SRC_SYSTEM" length="8"/>
+        <viewAttribute datatype="NVARCHAR" id="CUSTOMER_NAME" length="40" scale="0"/>
+        <viewAttribute datatype="NVARCHAR" id="CUSTOMER_SEGMENT" length="4"/>
+        <viewAttribute datatype="NVARCHAR" id="CUSTOMER_LOCATION" length="15" scale="0"/>
+        <viewAttribute datatype="NVARCHAR" id="CUSTOMER_REGION" length="3" scale="0"/>
+        <viewAttribute datatype="NVARCHAR" id="CUSTOMER_STATUS" length="1" scale="0"/>
+        <viewAttribute datatype="NVARCHAR" id="BRAND" length="50" scale="0"/>
+        <viewAttribute datatype="NVARCHAR" id="ACC_TYPE" length="1" scale="0"/>
+        <viewAttribute datatype="NVARCHAR" id="ACC_SUB_TYPE" length="1" scale="0"/>
+        <viewAttribute id="MODIFIED_TS"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input emptyUnionBehavior="NO_ROW" node="#ACSY_CUSTOMER">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_NUMBER" source="UNIQUE_ACC_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBSCRIBER_NUMBER" source="UNIQUE_ACC_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KUNNR_SID" source="KUNNR_SID"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="NAG" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="MARKET_SEGMENT" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="ONEBILL_NUM" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="LOB" null="false" value="ACS"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="BILL_SRC_SYSTEM" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="CUSTOMER_NAME" null="false" value="ACCESSORIES"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="CUSTOMER_SEGMENT" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="CUSTOMER_LOCATION" null="false" value="N1N1N1"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="CUSTOMER_REGION" null="false" value="NA"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="CUSTOMER_STATUS" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="BRAND" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="ACC_TYPE" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="ACC_SUB_TYPE" null="true" value=""/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MODIFIED_TS" source="C_MODIFIED_TS"/>
+      </input>
+      <input emptyUnionBehavior="NO_ROW" node="#PPD_ACSY_CUSTOMER">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_NUMBER" source="UNIQUE_ACC_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBSCRIBER_NUMBER" source="UNIQUE_ACC_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KUNNR_SID" source="ACSY_KUNNR_SID"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="NAG" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="MARKET_SEGMENT" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="ONEBILL_NUM" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="LOB" null="false" value="ACP"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="BILL_SRC_SYSTEM" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="CUSTOMER_NAME" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="CUSTOMER_SEGMENT" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="CUSTOMER_LOCATION" null="false" value="N1N1N1"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="CUSTOMER_REGION" null="false" value="NA"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="CUSTOMER_STATUS" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="BRAND" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="ACC_TYPE" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="ACC_SUB_TYPE" null="true" value=""/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MODIFIED_TS" source="C_MODIFIED_TS"/>
+      </input>
+      <input emptyUnionBehavior="NO_ROW" node="#HP_NM1_CUSTOMER">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_NUMBER" source="BAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBSCRIBER_NUMBER" source="SUBSCRIBER_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KUNNR_SID" source="KUNNR_SID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NAG" source="NAG_ID"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="MARKET_SEGMENT" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="ONEBILL_NUM" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="LOB" null="false" value="HPN"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="BILL_SRC_SYSTEM" null="true" value=""/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_NAME" source="CUSTOMER_NAME"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="CUSTOMER_SEGMENT" null="false" value="BRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_LOCATION" source="ADDRESS_POSTAL_ZIP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_REGION" source="CUSTOMER_REGION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_STATUS" source="SUB_STATUS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BRAND" source="BRAND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACC_TYPE" source="ACCOUNT_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACC_SUB_TYPE" source="ACCOUNT_SUB_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MODIFIED_TS" source="C_MODIFIED_TS"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:UnionView" id="UNION_ALL_NDB_CUSTOMER">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="CUSTOMER_NUMBER"/>
+        <viewAttribute id="SUBSCRIBER_NUMBER"/>
+        <viewAttribute id="KUNNR_SID"/>
+        <viewAttribute id="NAG"/>
+        <viewAttribute id="MARKET_SEGMENT"/>
+        <viewAttribute id="ONEBILL_NUM"/>
+        <viewAttribute id="LOB"/>
+        <viewAttribute id="BILL_SRC_SYSTEM"/>
+        <viewAttribute id="CUSTOMER_NAME"/>
+        <viewAttribute id="CUSTOMER_SEGMENT"/>
+        <viewAttribute id="CUSTOMER_LOCATION"/>
+        <viewAttribute id="CUSTOMER_REGION"/>
+        <viewAttribute id="CUSTOMER_STATUS"/>
+        <viewAttribute id="BRAND"/>
+        <viewAttribute id="ACC_TYPE"/>
+        <viewAttribute id="ACC_SUB_TYPE"/>
+        <viewAttribute id="MODIFIED_TS"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input emptyUnionBehavior="NO_ROW" node="#UNION_HP_TV_OB_CUSTOMER">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_NUMBER" source="CUSTOMER_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBSCRIBER_NUMBER" source="SUBSCRIBER_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KUNNR_SID" source="KUNNR_SID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NAG" source="NAG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MARKET_SEGMENT" source="MARKET_SEGMENT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ONEBILL_NUM" source="ONEBILL_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LOB" source="LOB"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_SRC_SYSTEM" source="BILL_SRC_SYSTEM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_NAME" source="CUSTOMER_NAME"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_SEGMENT" source="CUSTOMER_SEGMENT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_LOCATION" source="CUSTOMER_LOCATION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_REGION" source="CUSTOMER_REGION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_STATUS" source="CUSTOMER_STATUS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BRAND" source="BRAND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACC_TYPE" source="ACC_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACC_SUB_TYPE" source="ACC_SUB_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MODIFIED_TS" source="MODIFIED_TS"/>
+      </input>
+      <input emptyUnionBehavior="NO_ROW" node="#UNION_INT_MOB_CUSTOMER">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_NUMBER" source="CUSTOMER_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBSCRIBER_NUMBER" source="SUBSCRIBER_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KUNNR_SID" source="KUNNR_SID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NAG" source="NAG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MARKET_SEGMENT" source="MARKET_SEGMENT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ONEBILL_NUM" source="ONEBILL_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LOB" source="LOB"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_SRC_SYSTEM" source="BILL_SRC_SYSTEM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_NAME" source="CUSTOMER_NAME"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_SEGMENT" source="CUSTOMER_SEGMENT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_LOCATION" source="CUSTOMER_LOCATION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_REGION" source="CUSTOMER_REGION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_STATUS" source="CUSTOMER_STATUS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BRAND" source="BRAND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACC_TYPE" source="ACC_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACC_SUB_TYPE" source="ACC_SUB_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MODIFIED_TS" source="MODIFIED_TS"/>
+      </input>
+      <input emptyUnionBehavior="NO_ROW" node="#UNION_ACSY_PPD_ACSY_HP_NM1_CUSTOMER">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_NUMBER" source="CUSTOMER_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBSCRIBER_NUMBER" source="SUBSCRIBER_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KUNNR_SID" source="KUNNR_SID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NAG" source="NAG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MARKET_SEGMENT" source="MARKET_SEGMENT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ONEBILL_NUM" source="ONEBILL_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LOB" source="LOB"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_SRC_SYSTEM" source="BILL_SRC_SYSTEM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_NAME" source="CUSTOMER_NAME"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_SEGMENT" source="CUSTOMER_SEGMENT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_LOCATION" source="CUSTOMER_LOCATION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_REGION" source="CUSTOMER_REGION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_STATUS" source="CUSTOMER_STATUS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BRAND" source="BRAND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACC_TYPE" source="ACC_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACC_SUB_TYPE" source="ACC_SUB_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MODIFIED_TS" source="MODIFIED_TS"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_LOB_CUSTOMER_FILTER" filterExpressionLanguage="COLUMN_ENGINE">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="CUSTOMER_NUMBER"/>
+        <viewAttribute id="SUBSCRIBER_NUMBER"/>
+        <viewAttribute id="KUNNR_SID"/>
+        <viewAttribute id="NAG"/>
+        <viewAttribute id="MARKET_SEGMENT"/>
+        <viewAttribute id="ONEBILL_NUM"/>
+        <viewAttribute id="LOB"/>
+        <viewAttribute id="BILL_SRC_SYSTEM"/>
+        <viewAttribute id="CUSTOMER_NAME"/>
+        <viewAttribute id="CUSTOMER_SEGMENT"/>
+        <viewAttribute id="CUSTOMER_LOCATION"/>
+        <viewAttribute id="CUSTOMER_REGION"/>
+        <viewAttribute id="CUSTOMER_STATUS"/>
+        <viewAttribute id="BRAND"/>
+        <viewAttribute id="ACC_TYPE"/>
+        <viewAttribute id="ACC_SUB_TYPE"/>
+        <viewAttribute id="MODIFIED_TS"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#UNION_ALL_NDB_CUSTOMER">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_NUMBER" source="CUSTOMER_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBSCRIBER_NUMBER" source="SUBSCRIBER_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KUNNR_SID" source="KUNNR_SID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NAG" source="NAG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MARKET_SEGMENT" source="MARKET_SEGMENT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ONEBILL_NUM" source="ONEBILL_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LOB" source="LOB"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_SRC_SYSTEM" source="BILL_SRC_SYSTEM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_NAME" source="CUSTOMER_NAME"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_SEGMENT" source="CUSTOMER_SEGMENT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_LOCATION" source="CUSTOMER_LOCATION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_REGION" source="CUSTOMER_REGION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_STATUS" source="CUSTOMER_STATUS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BRAND" source="BRAND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACC_TYPE" source="ACC_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACC_SUB_TYPE" source="ACC_SUB_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MODIFIED_TS" source="MODIFIED_TS"/>
+      </input>
+      <filter>IF('$$P_LOB$$' = '', (in (&quot;LOB&quot;,'HP','TV','OB','INT','MOB','ACS','ACP','HPN')),&quot;LOB&quot; = '$$P_LOB$$')</filter>
+    </calculationView>
+  </calculationViews>
+  <logicalModel id="PROJ_LOB_CUSTOMER_FILTER">
+    <descriptions/>
+    <attributes>
+      <attribute id="CUSTOMER_NUMBER" order="5" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CUSTOMER_NUMBER"/>
+        <keyMapping columnObjectName="PROJ_LOB_CUSTOMER_FILTER" columnName="CUSTOMER_NUMBER"/>
+      </attribute>
+      <attribute id="SUBSCRIBER_NUMBER" order="6" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SUBSCRIBER_NUMBER"/>
+        <keyMapping columnObjectName="PROJ_LOB_CUSTOMER_FILTER" columnName="SUBSCRIBER_NUMBER"/>
+      </attribute>
+      <attribute id="KUNNR_SID" order="7" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="KUNNR_SID"/>
+        <keyMapping columnObjectName="PROJ_LOB_CUSTOMER_FILTER" columnName="KUNNR_SID"/>
+      </attribute>
+      <attribute id="NAG" order="8" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="NAG"/>
+        <keyMapping columnObjectName="PROJ_LOB_CUSTOMER_FILTER" columnName="NAG"/>
+      </attribute>
+      <attribute id="MARKET_SEGMENT" order="9" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="MARKET_SEGMENT"/>
+        <keyMapping columnObjectName="PROJ_LOB_CUSTOMER_FILTER" columnName="MARKET_SEGMENT"/>
+      </attribute>
+      <attribute id="ONEBILL_NUM" order="10" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ONEBILL_NUM"/>
+        <keyMapping columnObjectName="PROJ_LOB_CUSTOMER_FILTER" columnName="ONEBILL_NUM"/>
+      </attribute>
+      <attribute id="LOB" order="11" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="LOB"/>
+        <keyMapping columnObjectName="PROJ_LOB_CUSTOMER_FILTER" columnName="LOB"/>
+      </attribute>
+      <attribute id="BILL_SRC_SYSTEM" order="12" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="BILL_SRC_SYSTEM"/>
+        <keyMapping columnObjectName="PROJ_LOB_CUSTOMER_FILTER" columnName="BILL_SRC_SYSTEM"/>
+      </attribute>
+      <attribute id="CUSTOMER_NAME" order="13" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CUSTOMER_NAME"/>
+        <keyMapping columnObjectName="PROJ_LOB_CUSTOMER_FILTER" columnName="CUSTOMER_NAME"/>
+      </attribute>
+      <attribute id="CUSTOMER_SEGMENT" order="14" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CUSTOMER_SEGMENT"/>
+        <keyMapping columnObjectName="PROJ_LOB_CUSTOMER_FILTER" columnName="CUSTOMER_SEGMENT"/>
+      </attribute>
+      <attribute id="CUSTOMER_LOCATION" order="15" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CUSTOMER_LOCATION"/>
+        <keyMapping columnObjectName="PROJ_LOB_CUSTOMER_FILTER" columnName="CUSTOMER_LOCATION"/>
+      </attribute>
+      <attribute id="CUSTOMER_REGION" order="16" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CUSTOMER_REGION"/>
+        <keyMapping columnObjectName="PROJ_LOB_CUSTOMER_FILTER" columnName="CUSTOMER_REGION"/>
+      </attribute>
+      <attribute id="CUSTOMER_STATUS" order="17" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CUSTOMER_STATUS"/>
+        <keyMapping columnObjectName="PROJ_LOB_CUSTOMER_FILTER" columnName="CUSTOMER_STATUS"/>
+      </attribute>
+      <attribute id="BRAND" order="18" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="BRAND"/>
+        <keyMapping columnObjectName="PROJ_LOB_CUSTOMER_FILTER" columnName="BRAND"/>
+      </attribute>
+      <attribute id="ACC_TYPE" order="19" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ACC_TYPE"/>
+        <keyMapping columnObjectName="PROJ_LOB_CUSTOMER_FILTER" columnName="ACC_TYPE"/>
+      </attribute>
+      <attribute id="ACC_SUB_TYPE" order="20" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ACC_SUB_TYPE"/>
+        <keyMapping columnObjectName="PROJ_LOB_CUSTOMER_FILTER" columnName="ACC_SUB_TYPE"/>
+      </attribute>
+      <attribute id="MODIFIED_TS" order="21" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="MODIFIED_TS"/>
+        <keyMapping columnObjectName="PROJ_LOB_CUSTOMER_FILTER" columnName="MODIFIED_TS"/>
+      </attribute>
+    </attributes>
+    <calculatedAttributes>
+      <calculatedAttribute id="PORTFOLIO_CUST_FLAG" hidden="false" order="1" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="PORTFOLIO_CUST_FLAG"/>
+        <keyCalculation datatype="NVARCHAR" expressionLanguage="COLUMN_ENGINE" length="1">
+          <formula>NULL</formula>
+        </keyCalculation>
+      </calculatedAttribute>
+      <calculatedAttribute id="CRD" hidden="false" order="2" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CRD"/>
+        <keyCalculation datatype="NVARCHAR" expressionLanguage="COLUMN_ENGINE" length="1">
+          <formula>NULL</formula>
+        </keyCalculation>
+      </calculatedAttribute>
+      <calculatedAttribute id="DDST" hidden="false" order="3" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="DDST"/>
+        <keyCalculation datatype="NVARCHAR" expressionLanguage="COLUMN_ENGINE" length="1">
+          <formula>NULL</formula>
+        </keyCalculation>
+      </calculatedAttribute>
+      <calculatedAttribute id="CUSTOMER_COUNTRY" hidden="false" order="4" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CUSTOMER_COUNTRY"/>
+        <keyCalculation datatype="NVARCHAR" expressionLanguage="COLUMN_ENGINE" length="3">
+          <formula>'CA'</formula>
+        </keyCalculation>
+      </calculatedAttribute>
+    </calculatedAttributes>
+    <privateDataFoundation>
+      <tableProxies/>
+      <joins/>
+      <layout>
+        <shapes/>
+      </layout>
+    </privateDataFoundation>
+    <baseMeasures/>
+    <calculatedMeasures/>
+    <restrictedMeasures/>
+    <localDimensions/>
+  </logicalModel>
+  <layout>
+    <shapes>
+      <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+        <upperLeftCorner x="546" y="87"/>
+        <rectangleSize height="74" width="170"/>
+      </shape>
+      <shape expanded="true" modelObjectName="HP_CUSTOMER" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="22" y="511"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="TV_CUSTOMER" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="176" y="511"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="OB_CUSTOMER" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="330" y="511"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="INT_CUSTOMER" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="484" y="511"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="MOB_CUSTOMER" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="638" y="511"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="ACSY_CUSTOMER" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="792" y="511"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PPD_ACSY_CUSTOMER" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="946" y="511"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="UNION_HP_TV_OB_CUSTOMER" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="237" y="377"/>
+        <rectangleSize height="120" width="213"/>
+      </shape>
+      <shape expanded="true" modelObjectName="UNION_INT_MOB_CUSTOMER" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="526" y="377"/>
+        <rectangleSize height="102" width="211"/>
+      </shape>
+      <shape expanded="true" modelObjectName="HP_NM1_CUSTOMER" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="1100" y="511"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="UNION_ACSY_PPD_ACSY_HP_NM1_CUSTOMER" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="849" y="377"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+      <shape expanded="true" modelObjectName="UNION_ALL_NDB_CUSTOMER" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="521" y="243"/>
+        <rectangleSize height="246" width="220"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_LOB_CUSTOMER_FILTER" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="523" y="165"/>
+        <rectangleSize height="64" width="217"/>
+      </shape>
+    </shapes>
+  </layout>
+</Calculation:scenario>

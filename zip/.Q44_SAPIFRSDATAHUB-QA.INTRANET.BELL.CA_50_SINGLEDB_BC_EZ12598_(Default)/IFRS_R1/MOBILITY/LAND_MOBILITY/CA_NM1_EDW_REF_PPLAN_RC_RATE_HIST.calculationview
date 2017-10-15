@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:AccessControl="http://www.sap.com/ndb/SQLCoreModelAccessControl.ecore" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" xmlns:Variable="http://www.sap.com/ndb/BiModelVariable.ecore" schemaVersion="2.3" id="CA_NM1_EDW_REF_PPLAN_RC_RATE_HIST" applyPrivilegeType="NONE" checkAnalyticPrivileges="false" defaultClient="$$client$$" defaultLanguage="$$language$$" hierarchiesSQLEnabled="false" historyEnabled="false" translationRelevant="true" visibility="internal" calculationScenarioType="TREE_BASED" dataCategory="DIMENSION" enforceSqlExecution="false" executionSemantic="UNDEFINED" outputViewType="Projection">
+  <descriptions defaultDescription="Landing View - Table NM1_EDW_REF_PPLAN_RC_RATE_HIST&#xD;&#xA;">
+    <comment text="The Price Plan Recurring Charge (RC) Rate History Table will contain the rate for recurring charge SOC/Feature combinations"/>
+  </descriptions>
+  <localVariables>
+    <variable id="IP_EFF_DT" parameter="true">
+      <descriptions defaultDescription="IP_EFF_DT"/>
+      <variableProperties datatype="DATE" defaultValue="99991231" mandatory="false">
+        <valueDomain type="Date"/>
+        <selection multiLine="false" type="SingleValue"/>
+      </variableProperties>
+    </variable>
+  </localVariables>
+  <variableMappings>
+    <mapping xsi:type="Variable:ConstantVariableMapping" dataSource="#CA_EH_ERROR_TABLE" value="1238">
+      <targetVariable name="IP_JOB_ID" resourceUri="/IFRS_R1.LAND.EH/calculationviews/CA_EH_ERROR_TABLE"/>
+    </mapping>
+  </variableMappings>
+  <informationModelLayout relativeWidthScenario="60"/>
+  <dataSources>
+    <DataSource id="IFRS_R1.LAND::NM1_EDW_REF_PPLAN_RC_RATE_HIST" type="DATA_BASE_TABLE">
+      <viewAttributes allViewAttributes="true"/>
+      <columnObject schemaName="LAND" columnObjectName="IFRS_R1.LAND::NM1_EDW_REF_PPLAN_RC_RATE_HIST"/>
+    </DataSource>
+    <DataSource id="CA_EH_ERROR_TABLE" type="CALCULATION_VIEW">
+      <viewAttributes allViewAttributes="true"/>
+      <resourceUri>/IFRS_R1.LAND.EH/calculationviews/CA_EH_ERROR_TABLE</resourceUri>
+    </DataSource>
+  </dataSources>
+  <calculationViews>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_NM1_EDW_REF_PPLAN_RC_RATE_HIST" filterExpressionLanguage="COLUMN_ENGINE">
+      <descriptions>
+        <comment text="&#xD;&#xA;NM1_EDW_REF_PPLAN_RC_RATE_HIST Table is a Reference Table and it has no BAN and SUBSCRIBER NO , so there is no need to have Parent ID here.&#xD;&#xA;We use Parent ID check to ensure that if any records with the same Parent ID are present in error table then the whole set of records should not move to the next level."/>
+      </descriptions>
+      <viewAttributes>
+        <viewAttribute id="EFFECTIVE_DATE"/>
+        <viewAttribute id="EFF_DT"/>
+        <viewAttribute id="EXPIRATION_DATE"/>
+        <viewAttribute id="EXPY_DT"/>
+        <viewAttribute id="FEATURE_CODE"/>
+        <viewAttribute id="RATE"/>
+        <viewAttribute id="SOC"/>
+        <viewAttribute id="SUSPENSION_AMOUNT"/>
+        <viewAttribute id="TIER_LEVEL_CODE"/>
+        <viewAttribute id="NDB_TS"/>
+        <viewAttribute id="CYCL_ID"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CC_VERSION_CHECK" length="200" expressionLanguage="COLUMN_ENGINE">
+          <formula>&quot;SOC&quot;+'|'+&quot;FEATURE_CODE&quot;+'|'+string(&quot;EFFECTIVE_DATE&quot;)+'|'+string(&quot;TIER_LEVEL_CODE&quot;)</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#IFRS_R1.LAND::NM1_EDW_REF_PPLAN_RC_RATE_HIST">
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFFECTIVE_DATE" source="EFFECTIVE_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFF_DT" source="EFF_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXPIRATION_DATE" source="EXPIRATION_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXPY_DT" source="EXPY_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FEATURE_CODE" source="FEATURE_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RATE" source="RATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SOC" source="SOC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUSPENSION_AMOUNT" source="SUSPENSION_AMOUNT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TIER_LEVEL_CODE" source="TIER_LEVEL_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NDB_TS" source="NDB_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+      </input>
+      <filter>(isNull(&quot;NDB_TS&quot;)) and (&quot;EFF_DT&quot; &lt;= '$$IP_EFF_DT$$')</filter>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJECT_ERROR_TABLE">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="PARENT_KEY"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#CA_EH_ERROR_TABLE">
+        <mapping xsi:type="Calculation:AttributeMapping" target="PARENT_KEY" source="PARENT_KEY"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="PROJECT_NM1_EDW_RC_TATE_HIST_ERRORS" joinOrder="OUTSIDE_IN" joinType="leftOuter">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="EFFECTIVE_DATE"/>
+        <viewAttribute id="EFF_DT"/>
+        <viewAttribute id="EXPIRATION_DATE"/>
+        <viewAttribute id="EXPY_DT"/>
+        <viewAttribute id="FEATURE_CODE"/>
+        <viewAttribute id="RATE"/>
+        <viewAttribute id="SOC"/>
+        <viewAttribute id="SUSPENSION_AMOUNT"/>
+        <viewAttribute id="TIER_LEVEL_CODE"/>
+        <viewAttribute id="CYCL_ID"/>
+        <viewAttribute id="PARENT_KEY_ERROR"/>
+        <viewAttribute id="CC_VERSION_CHECK"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#PROJ_NM1_EDW_REF_PPLAN_RC_RATE_HIST">
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFFECTIVE_DATE" source="EFFECTIVE_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFF_DT" source="EFF_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXPIRATION_DATE" source="EXPIRATION_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXPY_DT" source="EXPY_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FEATURE_CODE" source="FEATURE_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RATE" source="RATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SOC" source="SOC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUSPENSION_AMOUNT" source="SUSPENSION_AMOUNT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TIER_LEVEL_CODE" source="TIER_LEVEL_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_VERSION_CHECK" source="CC_VERSION_CHECK"/>
+      </input>
+      <input node="#PROJECT_ERROR_TABLE">
+        <mapping xsi:type="Calculation:AttributeMapping" target="PARENT_KEY_ERROR" source="PARENT_KEY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_VERSION_CHECK" source="PARENT_KEY"/>
+      </input>
+      <joinAttribute name="CC_VERSION_CHECK"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJECT_ERROR_TABLE_FILTER">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="CYCL_ID"/>
+        <viewAttribute id="TIER_LEVEL_CODE"/>
+        <viewAttribute id="SUSPENSION_AMOUNT"/>
+        <viewAttribute id="SOC"/>
+        <viewAttribute id="RATE"/>
+        <viewAttribute id="FEATURE_CODE"/>
+        <viewAttribute id="EXPY_DT"/>
+        <viewAttribute id="EXPIRATION_DATE"/>
+        <viewAttribute id="EFF_DT"/>
+        <viewAttribute id="EFFECTIVE_DATE"/>
+        <viewAttribute id="PARENT_KEY_ERROR">
+          <filter xsi:type="AccessControl:SingleValueFilter" operator="NL" including="true"/>
+        </viewAttribute>
+        <viewAttribute id="CC_VERSION_CHECK"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#PROJECT_NM1_EDW_RC_TATE_HIST_ERRORS">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TIER_LEVEL_CODE" source="TIER_LEVEL_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUSPENSION_AMOUNT" source="SUSPENSION_AMOUNT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SOC" source="SOC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RATE" source="RATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FEATURE_CODE" source="FEATURE_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXPY_DT" source="EXPY_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXPIRATION_DATE" source="EXPIRATION_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFF_DT" source="EFF_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFFECTIVE_DATE" source="EFFECTIVE_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PARENT_KEY_ERROR" source="PARENT_KEY_ERROR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_VERSION_CHECK" source="CC_VERSION_CHECK"/>
+      </input>
+    </calculationView>
+  </calculationViews>
+  <logicalModel id="PROJECT_ERROR_TABLE_FILTER">
+    <descriptions/>
+    <attributes>
+      <attribute id="CYCL_ID" order="1" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CYCL ID"/>
+        <keyMapping columnObjectName="PROJECT_ERROR_TABLE_FILTER" columnName="CYCL_ID"/>
+      </attribute>
+      <attribute id="TIER_LEVEL_CODE" order="2" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="TIER_LEVEL_CODE"/>
+        <keyMapping columnObjectName="PROJECT_ERROR_TABLE_FILTER" columnName="TIER_LEVEL_CODE"/>
+      </attribute>
+      <attribute id="SUSPENSION_AMOUNT" order="3" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SUSPENSION_AMOUNT"/>
+        <keyMapping columnObjectName="PROJECT_ERROR_TABLE_FILTER" columnName="SUSPENSION_AMOUNT"/>
+      </attribute>
+      <attribute id="SOC" order="4" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SOC"/>
+        <keyMapping columnObjectName="PROJECT_ERROR_TABLE_FILTER" columnName="SOC"/>
+      </attribute>
+      <attribute id="RATE" order="5" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="RATE"/>
+        <keyMapping columnObjectName="PROJECT_ERROR_TABLE_FILTER" columnName="RATE"/>
+      </attribute>
+      <attribute id="FEATURE_CODE" order="6" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="FEATURE_CODE"/>
+        <keyMapping columnObjectName="PROJECT_ERROR_TABLE_FILTER" columnName="FEATURE_CODE"/>
+      </attribute>
+      <attribute id="EXPY_DT" order="7" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="EXPY_DT"/>
+        <keyMapping columnObjectName="PROJECT_ERROR_TABLE_FILTER" columnName="EXPY_DT"/>
+      </attribute>
+      <attribute id="EXPIRATION_DATE" order="8" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="EXPIRATION_DATE"/>
+        <keyMapping columnObjectName="PROJECT_ERROR_TABLE_FILTER" columnName="EXPIRATION_DATE"/>
+      </attribute>
+      <attribute id="EFF_DT" order="9" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="EFF_DT"/>
+        <keyMapping columnObjectName="PROJECT_ERROR_TABLE_FILTER" columnName="EFF_DT"/>
+      </attribute>
+      <attribute id="EFFECTIVE_DATE" order="10" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="EFFECTIVE_DATE"/>
+        <keyMapping columnObjectName="PROJECT_ERROR_TABLE_FILTER" columnName="EFFECTIVE_DATE"/>
+      </attribute>
+      <attribute id="CC_VERSION_CHECK" hidden="false" order="11" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CC_VERSION_CHECK"/>
+        <keyMapping columnObjectName="PROJECT_ERROR_TABLE_FILTER" columnName="CC_VERSION_CHECK"/>
+      </attribute>
+    </attributes>
+    <calculatedAttributes/>
+    <privateDataFoundation>
+      <tableProxies/>
+      <joins/>
+      <layout>
+        <shapes/>
+      </layout>
+    </privateDataFoundation>
+    <baseMeasures/>
+    <calculatedMeasures/>
+    <restrictedMeasures/>
+    <localDimensions/>
+  </logicalModel>
+  <layout>
+    <shapes>
+      <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+        <upperLeftCorner x="193" y="87"/>
+        <rectangleSize height="64" width="262"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_NM1_EDW_REF_PPLAN_RC_RATE_HIST" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="22" y="339"/>
+        <rectangleSize height="64" width="329"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJECT_ERROR_TABLE" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="365" y="339"/>
+        <rectangleSize height="64" width="195"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJECT_NM1_EDW_RC_TATE_HIST_ERRORS" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="178" y="243"/>
+        <rectangleSize height="82" width="292"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJECT_ERROR_TABLE_FILTER" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="184" y="165"/>
+        <rectangleSize height="64" width="281"/>
+      </shape>
+    </shapes>
+  </layout>
+</Calculation:scenario>

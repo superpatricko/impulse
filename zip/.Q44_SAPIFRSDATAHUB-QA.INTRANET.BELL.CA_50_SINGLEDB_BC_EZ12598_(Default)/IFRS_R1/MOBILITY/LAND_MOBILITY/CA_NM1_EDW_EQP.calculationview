@@ -1,0 +1,401 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:AccessControl="http://www.sap.com/ndb/SQLCoreModelAccessControl.ecore" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" xmlns:Variable="http://www.sap.com/ndb/BiModelVariable.ecore" schemaVersion="2.3" id="CA_NM1_EDW_EQP" applyPrivilegeType="NONE" checkAnalyticPrivileges="false" defaultClient="$$client$$" defaultLanguage="$$language$$" hierarchiesSQLEnabled="false" historyEnabled="false" translationRelevant="false" visibility="internal" calculationScenarioType="TREE_BASED" dataCategory="DIMENSION" enforceSqlExecution="false" executionSemantic="UNDEFINED" outputViewType="Projection">
+  <descriptions defaultDescription="Landing View -Table NM1_EDW_EQP">
+    <comment text="To select only new/modified records which have not yet been processed in NDB from the EDW Equipment landing table.&#xD;&#xA;"/>
+  </descriptions>
+  <localVariables>
+    <variable id="IP_EFF_DT" parameter="true">
+      <descriptions defaultDescription="IP_EFF_DT"/>
+      <variableProperties datatype="DATE" defaultValue="99991231" mandatory="false">
+        <valueDomain type="Date"/>
+        <selection multiLine="false" type="SingleValue"/>
+      </variableProperties>
+    </variable>
+  </localVariables>
+  <variableMappings>
+    <mapping xsi:type="Variable:ConstantVariableMapping" dataSource="#CA_EH_ERROR_TABLE" value="1211">
+      <targetVariable name="IP_JOB_ID" resourceUri="/IFRS_R1.LAND.EH/calculationviews/CA_EH_ERROR_TABLE"/>
+    </mapping>
+  </variableMappings>
+  <informationModelLayout relativeWidthScenario="53"/>
+  <dataSources>
+    <DataSource id="IFRS_R1.LAND::NM1_EDW_EQP" type="DATA_BASE_TABLE">
+      <viewAttributes allViewAttributes="true"/>
+      <columnObject schemaName="LAND" columnObjectName="IFRS_R1.LAND::NM1_EDW_EQP"/>
+    </DataSource>
+    <DataSource id="CA_EH_ERROR_TABLE" type="CALCULATION_VIEW">
+      <viewAttributes allViewAttributes="true"/>
+      <resourceUri>/IFRS_R1.LAND.EH/calculationviews/CA_EH_ERROR_TABLE</resourceUri>
+    </DataSource>
+  </dataSources>
+  <calculationViews>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_NM1_EDW_EQP" filterExpressionLanguage="COLUMN_ENGINE">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="BAN"/>
+        <viewAttribute id="EFF_DT"/>
+        <viewAttribute id="EQP_SRC"/>
+        <viewAttribute id="EQP_TY"/>
+        <viewAttribute id="ESN_IMEI"/>
+        <viewAttribute id="EXPIRATION_DATE"/>
+        <viewAttribute id="MDL_NUM"/>
+        <viewAttribute id="NTWK_SUB_TY"/>
+        <viewAttribute id="REP_IMEI_DUE_RPR"/>
+        <viewAttribute id="RPR_WRNTY_STRT_DT"/>
+        <viewAttribute id="SIM"/>
+        <viewAttribute id="SIM_BRND_CD"/>
+        <viewAttribute id="SIM_NTWK_SUB_TY"/>
+        <viewAttribute id="SUBCR_NO"/>
+        <viewAttribute id="TRX_SRP"/>
+        <viewAttribute id="INSRT_TS"/>
+        <viewAttribute id="NDB_MART"/>
+        <viewAttribute id="PROCESS_ID"/>
+        <viewAttribute id="CYCL_ID"/>
+        <viewAttribute id="SEQ_ID"/>
+        <viewAttribute id="SRC_TS"/>
+        <viewAttribute id="ODS_SYST_CD"/>
+        <viewAttribute id="EXPY_DT"/>
+        <viewAttribute id="SP_ORDER_BYOD_CONTR_TS"/>
+        <viewAttribute id="SP_ORDER_COAM_CONTR_TS"/>
+        <viewAttribute id="SP_ORDER_SUBSIDY_CONTR_TS"/>
+        <viewAttribute id="TRANS_DT"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CC_PARENT_KEY" length="200" expressionLanguage="COLUMN_ENGINE">
+          <formula>&quot;BAN&quot;+ '|'+&quot;SUBCR_NO&quot;+'|'+string(&quot;TRANS_DT&quot;)</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#IFRS_R1.LAND::NM1_EDW_EQP">
+        <mapping xsi:type="Calculation:AttributeMapping" target="BAN" source="BAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFF_DT" source="EFF_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EQP_SRC" source="EQP_SRC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EQP_TY" source="EQP_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ESN_IMEI" source="ESN_IMEI"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXPIRATION_DATE" source="EXPIRATION_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MDL_NUM" source="MDL_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NTWK_SUB_TY" source="NTWK_SUB_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REP_IMEI_DUE_RPR" source="REP_IMEI_DUE_RPR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RPR_WRNTY_STRT_DT" source="RPR_WRNTY_STRT_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SIM" source="SIM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SIM_BRND_CD" source="SIM_BRND_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SIM_NTWK_SUB_TY" source="SIM_NTWK_SUB_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBCR_NO" source="SUBCR_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRX_SRP" source="TRX_SRP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INSRT_TS" source="INSRT_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NDB_MART" source="NDB_MART"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROCESS_ID" source="PROCESS_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SEQ_ID" source="SEQ_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SRC_TS" source="SRC_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ODS_SYST_CD" source="ODS_SYST_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXPY_DT" source="EXPY_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SP_ORDER_BYOD_CONTR_TS" source="SP_ORDER_BYOD_CONTR_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SP_ORDER_COAM_CONTR_TS" source="SP_ORDER_COAM_CONTR_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SP_ORDER_SUBSIDY_CONTR_TS" source="SP_ORDER_SUBSIDY_CONTR_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRANS_DT" source="TRANS_DT"/>
+      </input>
+      <filter>((&quot;EFF_DT&quot;!=&quot;EXPIRATION_DATE&quot;) or (isNull(&quot;EXPIRATION_DATE&quot;))) and (&quot;SIM&quot;= '-1') and (&quot;EFF_DT&quot;  &lt;= '$$IP_EFF_DT$$')</filter>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_ERROR_TABLE">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="PARENT_KEY"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#CA_EH_ERROR_TABLE">
+        <mapping xsi:type="Calculation:AttributeMapping" target="PARENT_KEY" source="PARENT_KEY"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="PROJ_NM1_EDW_EQP_OVERRIDE_ERRORS" joinOrder="OUTSIDE_IN" joinType="leftOuter">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="BAN"/>
+        <viewAttribute id="EFF_DT"/>
+        <viewAttribute id="EQP_SRC"/>
+        <viewAttribute id="EQP_TY"/>
+        <viewAttribute id="ESN_IMEI"/>
+        <viewAttribute id="EXPIRATION_DATE"/>
+        <viewAttribute id="MDL_NUM"/>
+        <viewAttribute id="NTWK_SUB_TY"/>
+        <viewAttribute id="REP_IMEI_DUE_RPR"/>
+        <viewAttribute id="RPR_WRNTY_STRT_DT"/>
+        <viewAttribute id="SIM"/>
+        <viewAttribute id="SIM_BRND_CD"/>
+        <viewAttribute id="SIM_NTWK_SUB_TY"/>
+        <viewAttribute id="SUBCR_NO"/>
+        <viewAttribute id="TRX_SRP"/>
+        <viewAttribute id="INSRT_TS"/>
+        <viewAttribute id="NDB_MART"/>
+        <viewAttribute id="PROCESS_ID"/>
+        <viewAttribute id="CYCL_ID"/>
+        <viewAttribute id="SEQ_ID"/>
+        <viewAttribute id="SRC_TS"/>
+        <viewAttribute id="ODS_SYST_CD"/>
+        <viewAttribute id="EXPY_DT"/>
+        <viewAttribute id="SP_ORDER_BYOD_CONTR_TS"/>
+        <viewAttribute id="SP_ORDER_COAM_CONTR_TS"/>
+        <viewAttribute id="SP_ORDER_SUBSIDY_CONTR_TS"/>
+        <viewAttribute id="TRANS_DT"/>
+        <viewAttribute id="PARENT_KEY_ERROR"/>
+        <viewAttribute id="CC_PARENT_KEY"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#PROJ_NM1_EDW_EQP">
+        <mapping xsi:type="Calculation:AttributeMapping" target="BAN" source="BAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFF_DT" source="EFF_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EQP_SRC" source="EQP_SRC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EQP_TY" source="EQP_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ESN_IMEI" source="ESN_IMEI"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXPIRATION_DATE" source="EXPIRATION_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MDL_NUM" source="MDL_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NTWK_SUB_TY" source="NTWK_SUB_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REP_IMEI_DUE_RPR" source="REP_IMEI_DUE_RPR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RPR_WRNTY_STRT_DT" source="RPR_WRNTY_STRT_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SIM" source="SIM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SIM_BRND_CD" source="SIM_BRND_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SIM_NTWK_SUB_TY" source="SIM_NTWK_SUB_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBCR_NO" source="SUBCR_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRX_SRP" source="TRX_SRP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INSRT_TS" source="INSRT_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NDB_MART" source="NDB_MART"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROCESS_ID" source="PROCESS_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SEQ_ID" source="SEQ_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SRC_TS" source="SRC_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ODS_SYST_CD" source="ODS_SYST_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXPY_DT" source="EXPY_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SP_ORDER_BYOD_CONTR_TS" source="SP_ORDER_BYOD_CONTR_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SP_ORDER_COAM_CONTR_TS" source="SP_ORDER_COAM_CONTR_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SP_ORDER_SUBSIDY_CONTR_TS" source="SP_ORDER_SUBSIDY_CONTR_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRANS_DT" source="TRANS_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_PARENT_KEY" source="CC_PARENT_KEY"/>
+      </input>
+      <input node="#PROJ_ERROR_TABLE">
+        <mapping xsi:type="Calculation:AttributeMapping" target="PARENT_KEY_ERROR" source="PARENT_KEY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_PARENT_KEY" source="PARENT_KEY"/>
+      </input>
+      <joinAttribute name="CC_PARENT_KEY"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_ERROR_FILTER">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="BAN"/>
+        <viewAttribute id="EFF_DT"/>
+        <viewAttribute id="EQP_SRC"/>
+        <viewAttribute id="EQP_TY"/>
+        <viewAttribute id="ESN_IMEI"/>
+        <viewAttribute id="EXPIRATION_DATE"/>
+        <viewAttribute id="MDL_NUM"/>
+        <viewAttribute id="NTWK_SUB_TY"/>
+        <viewAttribute id="REP_IMEI_DUE_RPR"/>
+        <viewAttribute id="RPR_WRNTY_STRT_DT"/>
+        <viewAttribute id="SIM"/>
+        <viewAttribute id="SIM_BRND_CD"/>
+        <viewAttribute id="SIM_NTWK_SUB_TY"/>
+        <viewAttribute id="SUBCR_NO"/>
+        <viewAttribute id="TRX_SRP"/>
+        <viewAttribute id="INSRT_TS"/>
+        <viewAttribute id="NDB_MART"/>
+        <viewAttribute id="PROCESS_ID"/>
+        <viewAttribute id="CYCL_ID"/>
+        <viewAttribute id="SEQ_ID"/>
+        <viewAttribute id="SRC_TS"/>
+        <viewAttribute id="ODS_SYST_CD"/>
+        <viewAttribute id="EXPY_DT"/>
+        <viewAttribute id="SP_ORDER_BYOD_CONTR_TS"/>
+        <viewAttribute id="SP_ORDER_COAM_CONTR_TS"/>
+        <viewAttribute id="SP_ORDER_SUBSIDY_CONTR_TS"/>
+        <viewAttribute id="TRANS_DT"/>
+        <viewAttribute id="PARENT_KEY_ERROR">
+          <filter xsi:type="AccessControl:SingleValueFilter" operator="NL" including="true"/>
+        </viewAttribute>
+        <viewAttribute id="CC_PARENT_KEY"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#PROJ_NM1_EDW_EQP_OVERRIDE_ERRORS">
+        <mapping xsi:type="Calculation:AttributeMapping" target="BAN" source="BAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFF_DT" source="EFF_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EQP_SRC" source="EQP_SRC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EQP_TY" source="EQP_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ESN_IMEI" source="ESN_IMEI"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXPIRATION_DATE" source="EXPIRATION_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MDL_NUM" source="MDL_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NTWK_SUB_TY" source="NTWK_SUB_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REP_IMEI_DUE_RPR" source="REP_IMEI_DUE_RPR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RPR_WRNTY_STRT_DT" source="RPR_WRNTY_STRT_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SIM" source="SIM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SIM_BRND_CD" source="SIM_BRND_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SIM_NTWK_SUB_TY" source="SIM_NTWK_SUB_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBCR_NO" source="SUBCR_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRX_SRP" source="TRX_SRP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INSRT_TS" source="INSRT_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NDB_MART" source="NDB_MART"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROCESS_ID" source="PROCESS_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SEQ_ID" source="SEQ_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SRC_TS" source="SRC_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ODS_SYST_CD" source="ODS_SYST_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXPY_DT" source="EXPY_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SP_ORDER_BYOD_CONTR_TS" source="SP_ORDER_BYOD_CONTR_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SP_ORDER_COAM_CONTR_TS" source="SP_ORDER_COAM_CONTR_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SP_ORDER_SUBSIDY_CONTR_TS" source="SP_ORDER_SUBSIDY_CONTR_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRANS_DT" source="TRANS_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PARENT_KEY_ERROR" source="PARENT_KEY_ERROR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_PARENT_KEY" source="CC_PARENT_KEY"/>
+      </input>
+    </calculationView>
+  </calculationViews>
+  <logicalModel id="PROJ_ERROR_FILTER">
+    <descriptions/>
+    <attributes>
+      <attribute id="BAN" order="1" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="BAN"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="BAN"/>
+      </attribute>
+      <attribute id="EFF_DT" order="2" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="EFF_DT"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="EFF_DT"/>
+      </attribute>
+      <attribute id="EQP_SRC" order="3" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="EQP_SRC"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="EQP_SRC"/>
+      </attribute>
+      <attribute id="EQP_TY" order="4" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="EQP_TY"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="EQP_TY"/>
+      </attribute>
+      <attribute id="ESN_IMEI" order="5" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ESN_IMEI"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="ESN_IMEI"/>
+      </attribute>
+      <attribute id="EXPIRATION_DATE" order="6" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="EXPIRATION_DATE"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="EXPIRATION_DATE"/>
+      </attribute>
+      <attribute id="MDL_NUM" order="7" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="MDL_NUM"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="MDL_NUM"/>
+      </attribute>
+      <attribute id="NTWK_SUB_TY" order="8" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="NTWK_SUB_TY"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="NTWK_SUB_TY"/>
+      </attribute>
+      <attribute id="REP_IMEI_DUE_RPR" order="9" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="REP_IMEI_DUE_RPR"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="REP_IMEI_DUE_RPR"/>
+      </attribute>
+      <attribute id="RPR_WRNTY_STRT_DT" order="10" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="RPR_WRNTY_STRT_DT"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="RPR_WRNTY_STRT_DT"/>
+      </attribute>
+      <attribute id="SIM" order="11" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SIM"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="SIM"/>
+      </attribute>
+      <attribute id="SIM_BRND_CD" order="12" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SIM_BRND_CD"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="SIM_BRND_CD"/>
+      </attribute>
+      <attribute id="SIM_NTWK_SUB_TY" order="13" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SIM_NTWK_SUB_TY"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="SIM_NTWK_SUB_TY"/>
+      </attribute>
+      <attribute id="SUBCR_NO" order="14" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SUBCR_NO"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="SUBCR_NO"/>
+      </attribute>
+      <attribute id="TRX_SRP" order="15" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="TRX_SRP"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="TRX_SRP"/>
+      </attribute>
+      <attribute id="INSRT_TS" order="16" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="INSRT_TS"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="INSRT_TS"/>
+      </attribute>
+      <attribute id="NDB_MART" order="17" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="NDB_MART"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="NDB_MART"/>
+      </attribute>
+      <attribute id="PROCESS_ID" order="18" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="PROCESS_ID"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="PROCESS_ID"/>
+      </attribute>
+      <attribute id="CYCL_ID" order="19" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CYCL_ID"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="CYCL_ID"/>
+      </attribute>
+      <attribute id="SEQ_ID" order="20" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SEQ_ID"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="SEQ_ID"/>
+      </attribute>
+      <attribute id="SRC_TS" order="21" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SRC_TS"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="SRC_TS"/>
+      </attribute>
+      <attribute id="ODS_SYST_CD" order="22" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ODS_SYST_CD"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="ODS_SYST_CD"/>
+      </attribute>
+      <attribute id="EXPY_DT" order="23" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="EXPY_DT"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="EXPY_DT"/>
+      </attribute>
+      <attribute id="SP_ORDER_BYOD_CONTR_TS" order="24" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SP_ORDER_BYOD_CONTR_TS"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="SP_ORDER_BYOD_CONTR_TS"/>
+      </attribute>
+      <attribute id="SP_ORDER_COAM_CONTR_TS" order="25" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SP_ORDER_COAM_CONTR_TS"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="SP_ORDER_COAM_CONTR_TS"/>
+      </attribute>
+      <attribute id="SP_ORDER_SUBSIDY_CONTR_TS" order="26" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SP_ORDER_SUBSIDY_CONTR_TS"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="SP_ORDER_SUBSIDY_CONTR_TS"/>
+      </attribute>
+      <attribute id="TRANS_DT" order="27" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="TRANS_DT"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="TRANS_DT"/>
+      </attribute>
+      <attribute id="CC_PARENT_KEY" order="28" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CC_PARENT_KEY"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="CC_PARENT_KEY"/>
+      </attribute>
+    </attributes>
+    <calculatedAttributes/>
+    <privateDataFoundation>
+      <tableProxies/>
+      <joins/>
+      <layout>
+        <shapes/>
+      </layout>
+    </privateDataFoundation>
+    <baseMeasures/>
+    <calculatedMeasures/>
+    <restrictedMeasures/>
+    <localDimensions/>
+  </logicalModel>
+  <layout>
+    <shapes>
+      <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+        <upperLeftCorner x="129" y="87"/>
+        <rectangleSize height="64" width="209"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_NM1_EDW_EQP" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="22" y="339"/>
+        <rectangleSize height="64" width="209"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_ERROR_TABLE" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="245" y="339"/>
+        <rectangleSize height="66" width="191"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_NM1_EDW_EQP_OVERRIDE_ERRORS" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="129" y="243"/>
+        <rectangleSize height="82" width="209"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_ERROR_FILTER" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="129" y="165"/>
+        <rectangleSize height="64" width="209"/>
+      </shape>
+    </shapes>
+  </layout>
+</Calculation:scenario>

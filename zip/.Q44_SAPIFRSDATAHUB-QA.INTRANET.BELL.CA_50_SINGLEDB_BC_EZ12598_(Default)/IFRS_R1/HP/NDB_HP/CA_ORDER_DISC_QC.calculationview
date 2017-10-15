@@ -1,0 +1,562 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" xmlns:Variable="http://www.sap.com/ndb/BiModelVariable.ecore" schemaVersion="2.3" id="CA_ORDER_DISC_QC" applyPrivilegeType="NONE" checkAnalyticPrivileges="false" defaultClient="$$client$$" defaultLanguage="$$language$$" hierarchiesSQLEnabled="false" translationRelevant="true" visibility="reportingEnabled" calculationScenarioType="TREE_BASED" dataCategory="CUBE" enforceSqlExecution="false" executionSemantic="UNDEFINED" outputViewType="Projection">
+  <descriptions defaultDescription="CA_ORDER_DISC_QC">
+    <comment text="View Created on top of Discount On Consolidated View(CA_BCRIS_DISC_QC_CONS_VW).&#xD;&#xA;This Harmonization view will consolidate data of Discount Item, Customer and Pricing for Quebec region."/>
+  </descriptions>
+  <localVariables>
+    <variable id="IP_CYCL_ID" parameter="true">
+      <descriptions defaultDescription="IP_CYCL_ID"/>
+      <variableProperties datatype="NVARCHAR" defaultValue="999" length="3" mandatory="false">
+        <valueDomain type="empty"/>
+        <selection multiLine="false" type="SingleValue"/>
+      </variableProperties>
+    </variable>
+  </localVariables>
+  <variableMappings>
+    <mapping xsi:type="Variable:VariableMapping" dataSource="#CA_ORDER_DISC_QC_CONS">
+      <targetVariable name="IP_CYCL_ID" resourceUri="/IFRS_R1.HP.NDB_HP/calculationviews/CA_ORDER_DISC_QC_CONS"/>
+      <localVariable>#IP_CYCL_ID</localVariable>
+    </mapping>
+  </variableMappings>
+  <informationModelLayout relativeWidthScenario="53"/>
+  <dataSources>
+    <DataSource id="CA_ORDER_DISC_QC_CONS" type="CALCULATION_VIEW">
+      <viewAttributes allViewAttributes="true"/>
+      <resourceUri>/IFRS_R1.HP.NDB_HP/calculationviews/CA_ORDER_DISC_QC_CONS</resourceUri>
+    </DataSource>
+    <DataSource id="IFRS_R1.HP.NDB_HP::HP_ORDER" type="DATA_BASE_TABLE">
+      <viewAttributes allViewAttributes="true"/>
+      <columnObject schemaName="NDB_HP" columnObjectName="IFRS_R1.HP.NDB_HP::HP_ORDER"/>
+    </DataSource>
+  </dataSources>
+  <calculationViews>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_SRC_ORDER">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="CC_ITEM_TN"/>
+        <viewAttribute id="TEMPORARY_SEASONAL_SUSPENSION"/>
+        <viewAttribute id="CC_DISCOUNT_TYPE"/>
+        <viewAttribute id="DISCOUNT_START_DATE"/>
+        <viewAttribute id="DISCOUNT_END_DATE"/>
+        <viewAttribute id="CONTRACT_UNIQUE_IDENTIFIER"/>
+        <viewAttribute id="DISCOUNT_TN"/>
+        <viewAttribute id="DISCOUNT_ID"/>
+        <viewAttribute id="MODIFICATION_EVENT_ID"/>
+        <viewAttribute id="DISCOUNT_AMOUNT"/>
+        <viewAttribute id="DISCOUNT_TYPE_CODE"/>
+        <viewAttribute id="DISCOUNT_QUANTITY"/>
+        <viewAttribute id="REGION"/>
+        <viewAttribute id="RATE_BAND"/>
+        <viewAttribute id="FIXED_OR_VARIABLE_RATE_INDICATOR"/>
+        <viewAttribute id="DISCOUNT_ACTION"/>
+        <viewAttribute id="PRC"/>
+        <viewAttribute id="PRIMARY_TELEPHONE_NUMBER"/>
+        <viewAttribute id="SUBSCRIBER_NUMBER"/>
+        <viewAttribute id="CONTRACT_INCEPTION_DT"/>
+        <viewAttribute id="TERM_M2M_INDICATOR"/>
+        <viewAttribute id="CC_ITEM_INCEPTION_DATE"/>
+        <viewAttribute id="CC_SOURCE_SYSTEM_CODE"/>
+        <viewAttribute id="IS_20300701"/>
+        <viewAttribute id="KUNNR_SID"/>
+        <viewAttribute id="DUO_TRIO_IND"/>
+        <viewAttribute id="IS_20300705"/>
+        <viewAttribute id="IS_20300702"/>
+        <viewAttribute id="CYCL_ID"/>
+        <viewAttribute id="SEQ_ID"/>
+        <viewAttribute id="EVENT_EFFECTIVE_DATE"/>
+        <viewAttribute id="DSCT_QB_PRIMARY_KEY"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#CA_ORDER_DISC_QC_CONS">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_ITEM_TN" source="CC_ITEM_TN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TEMPORARY_SEASONAL_SUSPENSION" source="TEMPORARY_SEASONAL_SUSPENSION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_DISCOUNT_TYPE" source="CC_DISCOUNT_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DISCOUNT_START_DATE" source="DISCOUNT_START_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DISCOUNT_END_DATE" source="DISCOUNT_END_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTRACT_UNIQUE_IDENTIFIER" source="CONTRACT_UNIQUE_IDENTIFIER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DISCOUNT_TN" source="DISCOUNT_TN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DISCOUNT_ID" source="DISCOUNT_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MODIFICATION_EVENT_ID" source="MODIFICATION_EVENT_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DISCOUNT_AMOUNT" source="DISCOUNT_AMOUNT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DISCOUNT_TYPE_CODE" source="DISCOUNT_TYPE_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DISCOUNT_QUANTITY" source="DISCOUNT_QUANTITY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REGION" source="REGION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RATE_BAND" source="RATE_BAND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FIXED_OR_VARIABLE_RATE_INDICATOR" source="FIXED_OR_VARIABLE_RATE_INDICATOR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DISCOUNT_ACTION" source="DISCOUNT_ACTION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRC" source="PRC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRIMARY_TELEPHONE_NUMBER" source="PRIMARY_TELEPHONE_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBSCRIBER_NUMBER" source="SUBSCRIBER_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTRACT_INCEPTION_DT" source="CONTRACT_INCEPTION_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TERM_M2M_INDICATOR" source="TERM_M2M_INDICATOR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_ITEM_INCEPTION_DATE" source="CC_ITEM_INCEPTION_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_SOURCE_SYSTEM_CODE" source="CC_SOURCE_SYSTEM_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20300701" source="IS_20300701"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KUNNR_SID" source="KUNNR_SID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DUO_TRIO_IND" source="DUO_TRIO_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20300705" source="IS_20300705"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20300702" source="IS_20300702"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SEQ_ID" source="SEQ_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EVENT_EFFECTIVE_DATE" source="EVENT_EFFECTIVE_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DSCT_QB_PRIMARY_KEY" source="DSCT_QB_PRIMARY_KEY"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_NDB_ORDER_DISC_QC" filterExpressionLanguage="COLUMN_ENGINE">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="CONTRACT_UNIQUE_IDENTIFIER"/>
+        <viewAttribute id="ITEM_CODE"/>
+        <viewAttribute id="ITEM_TYPE"/>
+        <viewAttribute id="SYSTEM_REGION"/>
+        <viewAttribute id="WORKING_TELEPHONE_NUMBER"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#IFRS_R1.HP.NDB_HP::HP_ORDER">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTRACT_UNIQUE_IDENTIFIER" source="CONTRACT_UNIQUE_IDENTIFIER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_CODE" source="ITEM_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_TYPE" source="ITEM_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SYSTEM_REGION" source="SYSTEM_REGION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WORKING_TELEPHONE_NUMBER" source="WORKING_TELEPHONE_NUMBER"/>
+      </input>
+      <filter>(&quot;SYSTEM_REGION&quot; ='O') AND (&quot;ITEM_TYPE&quot; ='D')</filter>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="JOIN_INSRT_UPDT" joinType="leftOuter">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="CC_ITEM_TN"/>
+        <viewAttribute id="TEMPORARY_SEASONAL_SUSPENSION"/>
+        <viewAttribute id="CC_DISCOUNT_TYPE"/>
+        <viewAttribute id="DISCOUNT_START_DATE"/>
+        <viewAttribute id="DISCOUNT_END_DATE"/>
+        <viewAttribute id="CONTRACT_UNIQUE_IDENTIFIER"/>
+        <viewAttribute id="DISCOUNT_TN"/>
+        <viewAttribute id="DISCOUNT_ID"/>
+        <viewAttribute id="MODIFICATION_EVENT_ID"/>
+        <viewAttribute id="DISCOUNT_AMOUNT"/>
+        <viewAttribute id="DISCOUNT_TYPE_CODE"/>
+        <viewAttribute id="DISCOUNT_QUANTITY"/>
+        <viewAttribute id="REGION"/>
+        <viewAttribute id="RATE_BAND"/>
+        <viewAttribute id="FIXED_OR_VARIABLE_RATE_INDICATOR"/>
+        <viewAttribute id="DISCOUNT_ACTION"/>
+        <viewAttribute id="PRC"/>
+        <viewAttribute id="PRIMARY_TELEPHONE_NUMBER"/>
+        <viewAttribute id="SUBSCRIBER_NUMBER"/>
+        <viewAttribute id="CONTRACT_INCEPTION_DT"/>
+        <viewAttribute id="TERM_M2M_INDICATOR"/>
+        <viewAttribute id="CC_ITEM_INCEPTION_DATE"/>
+        <viewAttribute id="CC_SOURCE_SYSTEM_CODE"/>
+        <viewAttribute id="IS_20300701"/>
+        <viewAttribute id="KUNNR_SID"/>
+        <viewAttribute id="DUO_TRIO_IND"/>
+        <viewAttribute id="IS_20300705"/>
+        <viewAttribute id="IS_20300702"/>
+        <viewAttribute id="CYCL_ID"/>
+        <viewAttribute id="SEQ_ID"/>
+        <viewAttribute id="EVENT_EFFECTIVE_DATE"/>
+        <viewAttribute id="CONTRACT_UNIQUE_IDENTIFIER_RIGHT"/>
+        <viewAttribute id="DSCT_QB_PRIMARY_KEY"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#PROJ_SRC_ORDER">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_ITEM_TN" source="CC_ITEM_TN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TEMPORARY_SEASONAL_SUSPENSION" source="TEMPORARY_SEASONAL_SUSPENSION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_DISCOUNT_TYPE" source="CC_DISCOUNT_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DISCOUNT_START_DATE" source="DISCOUNT_START_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DISCOUNT_END_DATE" source="DISCOUNT_END_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTRACT_UNIQUE_IDENTIFIER" source="CONTRACT_UNIQUE_IDENTIFIER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DISCOUNT_TN" source="DISCOUNT_TN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DISCOUNT_ID" source="DISCOUNT_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MODIFICATION_EVENT_ID" source="MODIFICATION_EVENT_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DISCOUNT_AMOUNT" source="DISCOUNT_AMOUNT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DISCOUNT_TYPE_CODE" source="DISCOUNT_TYPE_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DISCOUNT_QUANTITY" source="DISCOUNT_QUANTITY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REGION" source="REGION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RATE_BAND" source="RATE_BAND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FIXED_OR_VARIABLE_RATE_INDICATOR" source="FIXED_OR_VARIABLE_RATE_INDICATOR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DISCOUNT_ACTION" source="DISCOUNT_ACTION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRC" source="PRC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRIMARY_TELEPHONE_NUMBER" source="PRIMARY_TELEPHONE_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBSCRIBER_NUMBER" source="SUBSCRIBER_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTRACT_INCEPTION_DT" source="CONTRACT_INCEPTION_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TERM_M2M_INDICATOR" source="TERM_M2M_INDICATOR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_ITEM_INCEPTION_DATE" source="CC_ITEM_INCEPTION_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_SOURCE_SYSTEM_CODE" source="CC_SOURCE_SYSTEM_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20300701" source="IS_20300701"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KUNNR_SID" source="KUNNR_SID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DUO_TRIO_IND" source="DUO_TRIO_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20300705" source="IS_20300705"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20300702" source="IS_20300702"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SEQ_ID" source="SEQ_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EVENT_EFFECTIVE_DATE" source="EVENT_EFFECTIVE_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DSCT_QB_PRIMARY_KEY" source="DSCT_QB_PRIMARY_KEY"/>
+      </input>
+      <input node="#PROJ_NDB_ORDER_DISC_QC">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTRACT_UNIQUE_IDENTIFIER_RIGHT" source="CONTRACT_UNIQUE_IDENTIFIER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTRACT_UNIQUE_IDENTIFIER" source="CONTRACT_UNIQUE_IDENTIFIER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DISCOUNT_ID" source="ITEM_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_ITEM_TN" source="WORKING_TELEPHONE_NUMBER"/>
+      </input>
+      <joinAttribute name="CONTRACT_UNIQUE_IDENTIFIER"/>
+      <joinAttribute name="DISCOUNT_ID"/>
+      <joinAttribute name="CC_ITEM_TN"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_INSRT_UPDT">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="CC_ITEM_TN"/>
+        <viewAttribute id="TEMPORARY_SEASONAL_SUSPENSION"/>
+        <viewAttribute id="CC_DISCOUNT_TYPE"/>
+        <viewAttribute id="DISCOUNT_START_DATE"/>
+        <viewAttribute id="DISCOUNT_END_DATE"/>
+        <viewAttribute id="CONTRACT_UNIQUE_IDENTIFIER"/>
+        <viewAttribute id="DISCOUNT_TN"/>
+        <viewAttribute id="DISCOUNT_ID"/>
+        <viewAttribute id="MODIFICATION_EVENT_ID"/>
+        <viewAttribute id="DISCOUNT_AMOUNT"/>
+        <viewAttribute id="DISCOUNT_TYPE_CODE"/>
+        <viewAttribute id="DISCOUNT_QUANTITY"/>
+        <viewAttribute id="REGION"/>
+        <viewAttribute id="RATE_BAND"/>
+        <viewAttribute id="FIXED_OR_VARIABLE_RATE_INDICATOR"/>
+        <viewAttribute id="DISCOUNT_ACTION"/>
+        <viewAttribute id="PRC"/>
+        <viewAttribute id="PRIMARY_TELEPHONE_NUMBER"/>
+        <viewAttribute id="SUBSCRIBER_NUMBER"/>
+        <viewAttribute id="CONTRACT_INCEPTION_DT"/>
+        <viewAttribute id="TERM_M2M_INDICATOR"/>
+        <viewAttribute id="CC_ITEM_INCEPTION_DATE"/>
+        <viewAttribute id="CC_SOURCE_SYSTEM_CODE"/>
+        <viewAttribute id="IS_20300701"/>
+        <viewAttribute id="KUNNR_SID"/>
+        <viewAttribute id="DUO_TRIO_IND"/>
+        <viewAttribute id="IS_20300705"/>
+        <viewAttribute id="IS_20300702"/>
+        <viewAttribute id="CYCL_ID"/>
+        <viewAttribute id="SEQ_ID"/>
+        <viewAttribute id="EVENT_EFFECTIVE_DATE"/>
+        <viewAttribute id="CONTRACT_UNIQUE_IDENTIFIER_RIGHT"/>
+        <viewAttribute id="DSCT_QB_PRIMARY_KEY"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="FLAG_EXISTING_RECORD" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isnull(&quot;CONTRACT_UNIQUE_IDENTIFIER_RIGHT&quot;),'I','U')</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="DATE" id="POB_END_DATE" expressionLanguage="COLUMN_ENGINE">
+          <formula>99991231</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CC_ITEM_TYPE" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>'D'</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#JOIN_INSRT_UPDT">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_ITEM_TN" source="CC_ITEM_TN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TEMPORARY_SEASONAL_SUSPENSION" source="TEMPORARY_SEASONAL_SUSPENSION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_DISCOUNT_TYPE" source="CC_DISCOUNT_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DISCOUNT_START_DATE" source="DISCOUNT_START_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DISCOUNT_END_DATE" source="DISCOUNT_END_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTRACT_UNIQUE_IDENTIFIER" source="CONTRACT_UNIQUE_IDENTIFIER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DISCOUNT_TN" source="DISCOUNT_TN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DISCOUNT_ID" source="DISCOUNT_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MODIFICATION_EVENT_ID" source="MODIFICATION_EVENT_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DISCOUNT_AMOUNT" source="DISCOUNT_AMOUNT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DISCOUNT_TYPE_CODE" source="DISCOUNT_TYPE_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DISCOUNT_QUANTITY" source="DISCOUNT_QUANTITY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REGION" source="REGION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RATE_BAND" source="RATE_BAND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FIXED_OR_VARIABLE_RATE_INDICATOR" source="FIXED_OR_VARIABLE_RATE_INDICATOR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DISCOUNT_ACTION" source="DISCOUNT_ACTION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRC" source="PRC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRIMARY_TELEPHONE_NUMBER" source="PRIMARY_TELEPHONE_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBSCRIBER_NUMBER" source="SUBSCRIBER_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTRACT_INCEPTION_DT" source="CONTRACT_INCEPTION_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TERM_M2M_INDICATOR" source="TERM_M2M_INDICATOR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_ITEM_INCEPTION_DATE" source="CC_ITEM_INCEPTION_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_SOURCE_SYSTEM_CODE" source="CC_SOURCE_SYSTEM_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20300701" source="IS_20300701"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KUNNR_SID" source="KUNNR_SID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DUO_TRIO_IND" source="DUO_TRIO_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20300705" source="IS_20300705"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20300702" source="IS_20300702"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SEQ_ID" source="SEQ_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EVENT_EFFECTIVE_DATE" source="EVENT_EFFECTIVE_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTRACT_UNIQUE_IDENTIFIER_RIGHT" source="CONTRACT_UNIQUE_IDENTIFIER_RIGHT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DSCT_QB_PRIMARY_KEY" source="DSCT_QB_PRIMARY_KEY"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="ERROR_SEMANTICS">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="CONTRACT_UNIQUE_IDENTIFIER"/>
+        <viewAttribute id="POB_END_DATE"/>
+        <viewAttribute id="PRIMARY_TELEPHONE_NUMBER"/>
+        <viewAttribute id="SYSTEM_REGION"/>
+        <viewAttribute id="SUBSCRIBER_NUMBER"/>
+        <viewAttribute id="TERM_M2M"/>
+        <viewAttribute id="WORKING_TELEPHONE_NUMBER"/>
+        <viewAttribute id="ITEM_CODE"/>
+        <viewAttribute id="ITEM_QUANTITY"/>
+        <viewAttribute id="ITEM_RATE"/>
+        <viewAttribute id="ITEM_GROUP_CODE"/>
+        <viewAttribute id="ITEM_INCEPTION_DT"/>
+        <viewAttribute id="ITEM_END_DT"/>
+        <viewAttribute id="DISCOUNT_TYPE"/>
+        <viewAttribute id="SOURCE_SYSTEM_CODE"/>
+        <viewAttribute id="MOD_EVENT_ID"/>
+        <viewAttribute id="FIXED_OR_VARIABLE_RATE_INDICATOR"/>
+        <viewAttribute id="RATE_BAND"/>
+        <viewAttribute id="KUNNR_SID"/>
+        <viewAttribute id="CONTRACT_INCEPTION_DT"/>
+        <viewAttribute id="TEMPORARY_SEASONAL_SUSPENSION"/>
+        <viewAttribute id="POB_EFFC_DATE"/>
+        <viewAttribute id="ITEM_ACTION"/>
+        <viewAttribute id="DUO_TRIO_IND"/>
+        <viewAttribute id="FLAG_EXISTING_RECORD"/>
+        <viewAttribute id="DISCOUNT_START_DATE"/>
+        <viewAttribute id="CYCL_ID"/>
+        <viewAttribute id="SEQ_ID"/>
+        <viewAttribute id="IS_20300701"/>
+        <viewAttribute id="IS_20300705"/>
+        <viewAttribute id="IS_20300702"/>
+        <viewAttribute id="DSCT_QB_PRIMARY_KEY"/>
+        <viewAttribute id="ITEM_TYPE"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="ERROR_STATUS" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>if((&quot;IS_20300701&quot;='1') &#xD;
+or (&quot;IS_20300702&quot; ='1') &#xD;
+or (&quot;IS_20300705&quot; ='1'),'1','0')</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="ERROR_CODE" length="100" expressionLanguage="COLUMN_ENGINE">
+          <formula>if (&quot;IS_20300701&quot; ='1', '20300701||','') +&#xD;
+if (&quot;IS_20300702&quot; ='1', '20300702||','') +&#xD;
+if (&quot;IS_20300705&quot; ='1', '20300705||','') </formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#PROJ_INSRT_UPDT">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTRACT_UNIQUE_IDENTIFIER" source="CONTRACT_UNIQUE_IDENTIFIER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="POB_END_DATE" source="POB_END_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRIMARY_TELEPHONE_NUMBER" source="PRIMARY_TELEPHONE_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SYSTEM_REGION" source="REGION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBSCRIBER_NUMBER" source="SUBSCRIBER_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TERM_M2M" source="TERM_M2M_INDICATOR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WORKING_TELEPHONE_NUMBER" source="CC_ITEM_TN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_CODE" source="DISCOUNT_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_QUANTITY" source="DISCOUNT_QUANTITY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_RATE" source="PRC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_GROUP_CODE" source="DISCOUNT_TYPE_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_INCEPTION_DT" source="CC_ITEM_INCEPTION_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_END_DT" source="DISCOUNT_END_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DISCOUNT_TYPE" source="CC_DISCOUNT_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SOURCE_SYSTEM_CODE" source="CC_SOURCE_SYSTEM_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MOD_EVENT_ID" source="MODIFICATION_EVENT_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FIXED_OR_VARIABLE_RATE_INDICATOR" source="FIXED_OR_VARIABLE_RATE_INDICATOR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RATE_BAND" source="RATE_BAND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KUNNR_SID" source="KUNNR_SID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTRACT_INCEPTION_DT" source="CONTRACT_INCEPTION_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TEMPORARY_SEASONAL_SUSPENSION" source="TEMPORARY_SEASONAL_SUSPENSION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="POB_EFFC_DATE" source="EVENT_EFFECTIVE_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_ACTION" source="DISCOUNT_ACTION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DUO_TRIO_IND" source="DUO_TRIO_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FLAG_EXISTING_RECORD" source="FLAG_EXISTING_RECORD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DISCOUNT_START_DATE" source="DISCOUNT_START_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SEQ_ID" source="SEQ_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20300701" source="IS_20300701"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20300705" source="IS_20300705"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20300702" source="IS_20300702"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DSCT_QB_PRIMARY_KEY" source="DSCT_QB_PRIMARY_KEY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_TYPE" source="CC_ITEM_TYPE"/>
+      </input>
+    </calculationView>
+  </calculationViews>
+  <logicalModel id="ERROR_SEMANTICS">
+    <descriptions/>
+    <attributes>
+      <attribute id="CONTRACT_UNIQUE_IDENTIFIER" order="1" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CONTRACT_UNIQUE_IDENTIFIER"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="CONTRACT_UNIQUE_IDENTIFIER"/>
+      </attribute>
+      <attribute id="POB_END_DATE" order="2" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="POB_END_DATE"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="POB_END_DATE"/>
+      </attribute>
+      <attribute id="PRIMARY_TELEPHONE_NUMBER" order="3" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="PRIMARY_TELEPHONE_NUMBER"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="PRIMARY_TELEPHONE_NUMBER"/>
+      </attribute>
+      <attribute id="SYSTEM_REGION" order="4" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SYSTEM_REGION"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="SYSTEM_REGION"/>
+      </attribute>
+      <attribute id="SUBSCRIBER_NUMBER" order="5" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SUBSCRIBER_NUMBER"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="SUBSCRIBER_NUMBER"/>
+      </attribute>
+      <attribute id="TERM_M2M" order="6" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="TERM_M2M"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="TERM_M2M"/>
+      </attribute>
+      <attribute id="WORKING_TELEPHONE_NUMBER" order="7" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="WORKING_TELEPHONE_NUMBER"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="WORKING_TELEPHONE_NUMBER"/>
+      </attribute>
+      <attribute id="ITEM_CODE" order="8" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ITEM_CODE"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="ITEM_CODE"/>
+      </attribute>
+      <attribute id="ITEM_GROUP_CODE" order="11" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ITEM_GROUP_CODE"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="ITEM_GROUP_CODE"/>
+      </attribute>
+      <attribute id="ITEM_INCEPTION_DT" order="12" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ITEM_INCEPTION_DT"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="ITEM_INCEPTION_DT"/>
+      </attribute>
+      <attribute id="ITEM_END_DT" order="13" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ITEM_END_DT"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="ITEM_END_DT"/>
+      </attribute>
+      <attribute id="DISCOUNT_TYPE" order="14" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="DISCOUNT_TYPE"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="DISCOUNT_TYPE"/>
+      </attribute>
+      <attribute id="SOURCE_SYSTEM_CODE" order="15" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SOURCE_SYSTEM_CODE"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="SOURCE_SYSTEM_CODE"/>
+      </attribute>
+      <attribute id="MOD_EVENT_ID" order="16" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="MOD_EVENT_ID"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="MOD_EVENT_ID"/>
+      </attribute>
+      <attribute id="FIXED_OR_VARIABLE_RATE_INDICATOR" order="17" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="FIXED_OR_VARIABLE_RATE_INDICATOR"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="FIXED_OR_VARIABLE_RATE_INDICATOR"/>
+      </attribute>
+      <attribute id="RATE_BAND" order="18" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="RATE_BAND"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="RATE_BAND"/>
+      </attribute>
+      <attribute id="KUNNR_SID" order="19" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="KUNNR_SID"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="KUNNR_SID"/>
+      </attribute>
+      <attribute id="CONTRACT_INCEPTION_DT" order="20" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CONTRACT_INCEPTION_DT"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="CONTRACT_INCEPTION_DT"/>
+      </attribute>
+      <attribute id="TEMPORARY_SEASONAL_SUSPENSION" order="21" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="TEMPORARY_SEASONAL_SUSPENSION"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="TEMPORARY_SEASONAL_SUSPENSION"/>
+      </attribute>
+      <attribute id="POB_EFFC_DATE" order="22" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="POB_EFFC_DATE"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="POB_EFFC_DATE"/>
+      </attribute>
+      <attribute id="ITEM_ACTION" order="23" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ITEM_ACTION"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="ITEM_ACTION"/>
+      </attribute>
+      <attribute id="DUO_TRIO_IND" order="24" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="DUO_TRIO_IND"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="DUO_TRIO_IND"/>
+      </attribute>
+      <attribute id="FLAG_EXISTING_RECORD" order="25" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="FLAG_EXISTING_RECORD"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="FLAG_EXISTING_RECORD"/>
+      </attribute>
+      <attribute id="DISCOUNT_START_DATE" order="26" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="DISCOUNT_START_DATE"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="DISCOUNT_START_DATE"/>
+      </attribute>
+      <attribute id="ERROR_STATUS" order="27" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ERROR_STATUS"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="ERROR_STATUS"/>
+      </attribute>
+      <attribute id="ERROR_CODE" order="28" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ERROR_CODE"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="ERROR_CODE"/>
+      </attribute>
+      <attribute id="CYCL_ID" order="29" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CYCL_ID"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="CYCL_ID"/>
+      </attribute>
+      <attribute id="SEQ_ID" order="30" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SEQ_ID"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="SEQ_ID"/>
+      </attribute>
+      <attribute id="DSCT_QB_PRIMARY_KEY" order="31" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="DSCT_QB_PRIMARY_KEY"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="DSCT_QB_PRIMARY_KEY"/>
+      </attribute>
+      <attribute id="IS_20300701" order="32" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="IS_20300701"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="IS_20300701"/>
+      </attribute>
+      <attribute id="IS_20300705" order="33" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="IS_20300705"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="IS_20300705"/>
+      </attribute>
+      <attribute id="IS_20300702" order="34" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="IS_20300702"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="IS_20300702"/>
+      </attribute>
+      <attribute id="ITEM_TYPE" order="35" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ITEM_TYPE"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="ITEM_TYPE"/>
+      </attribute>
+    </attributes>
+    <calculatedAttributes/>
+    <privateDataFoundation>
+      <tableProxies/>
+      <joins/>
+      <layout>
+        <shapes/>
+      </layout>
+    </privateDataFoundation>
+    <baseMeasures>
+      <measure id="ITEM_QUANTITY" order="9" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="ITEM_QUANTITY"/>
+        <measureMapping columnObjectName="ERROR_SEMANTICS" columnName="ITEM_QUANTITY"/>
+      </measure>
+      <measure id="ITEM_RATE" order="10" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="ITEM_RATE"/>
+        <measureMapping columnObjectName="ERROR_SEMANTICS" columnName="ITEM_RATE"/>
+      </measure>
+    </baseMeasures>
+    <calculatedMeasures/>
+    <restrictedMeasures/>
+    <localDimensions/>
+  </logicalModel>
+  <layout>
+    <shapes>
+      <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+        <upperLeftCorner x="99" y="87"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_SRC_ORDER" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="22" y="417"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_NDB_ORDER_DISC_QC" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="176" y="417"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="JOIN_INSRT_UPDT" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="99" y="321"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_INSRT_UPDT" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="99" y="243"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="ERROR_SEMANTICS" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="99" y="165"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+    </shapes>
+  </layout>
+</Calculation:scenario>

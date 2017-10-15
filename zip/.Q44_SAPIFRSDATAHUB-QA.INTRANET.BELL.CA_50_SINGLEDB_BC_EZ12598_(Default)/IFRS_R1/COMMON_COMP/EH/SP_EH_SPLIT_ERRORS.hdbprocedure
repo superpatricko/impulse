@@ -1,0 +1,28 @@
+PROCEDURE "NDB_COMMON"."IFRS_R1.COMMON_COMP.EH::SP_EH_SPLIT_ERRORS" 
+( IN error_code_str nvarchar(1000),
+  OUT error_tab table(ERROR_CODE nvarchar(100)/**, "SOURCE_TABLE" nvarchar(200), "SOURCE_KEY" nvarchar(300), "REFERENCE_TABLE" nvarchar(200), "REFERENCE_KEY" nvarchar(300)*/ ),
+  OUT num_of_records integer
+) 
+	LANGUAGE SQLSCRIPT
+	SQL SECURITY INVOKER 
+	READS SQL DATA AS
+BEGIN
+  DECLARE lc_separator CONSTANT NVARCHAR(2) DEFAULT '||';
+  DECLARE error_codes NVARCHAR(100) ARRAY;
+  DECLARE current_str NVARCHAR(1000);
+  DECLARE current_index INTEGER;
+  current_str := :error_code_str;
+  current_index := 1;
+
+  WHILE LOCATE(:current_str, lc_separator) > 0 DO
+	  error_codes[:current_index] := SUBSTR_BEFORE(:current_str,lc_separator);
+	  current_str := SUBSTR_AFTER(:current_str,lc_separator);
+	  current_index := :current_index + 1;
+  END WHILE;
+  if :current_str != '' then
+  	error_codes[:current_index] := :current_str;
+  end if;
+  error_tab = UNNEST(:error_codes) AS ("ERROR_CODE");
+  num_of_records = cardinality(:error_codes);
+  
+END; 

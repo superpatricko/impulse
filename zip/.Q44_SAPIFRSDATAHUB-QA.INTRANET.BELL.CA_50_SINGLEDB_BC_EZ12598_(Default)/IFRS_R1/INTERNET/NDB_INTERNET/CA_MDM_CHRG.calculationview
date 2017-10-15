@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:AccessControl="http://www.sap.com/ndb/SQLCoreModelAccessControl.ecore" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" xmlns:Variable="http://www.sap.com/ndb/BiModelVariable.ecore" schemaVersion="2.3" id="CA_MDM_CHRG" applyPrivilegeType="NONE" checkAnalyticPrivileges="false" defaultClient="$$client$$" defaultLanguage="$$language$$" hierarchiesSQLEnabled="false" translationRelevant="true" visibility="internal" calculationScenarioType="TREE_BASED" dataCategory="DIMENSION" enforceSqlExecution="false" executionSemantic="UNDEFINED" outputViewType="Projection">
+  <descriptions defaultDescription="CA_MDM_CHRG"/>
+  <localVariables>
+    <variable id="IP_CYCL_ID" parameter="true">
+      <descriptions defaultDescription="IP_CYCL_ID"/>
+      <variableProperties datatype="NVARCHAR" defaultValue="999" length="3" mandatory="false">
+        <valueDomain type="empty"/>
+        <selection multiLine="false" type="SingleValue"/>
+      </variableProperties>
+    </variable>
+  </localVariables>
+  <variableMappings>
+    <mapping xsi:type="Variable:VariableMapping" dataSource="#CA_MDM_CHRG">
+      <targetVariable name="IP_CYCL_ID" resourceUri="/IFRS_R1.INTERNET.LAND_INTERNET/calculationviews/CA_MDM_CHRG"/>
+      <localVariable>#IP_CYCL_ID</localVariable>
+    </mapping>
+  </variableMappings>
+  <informationModelLayout relativeWidthScenario="49"/>
+  <dataSources>
+    <DataSource id="CA_MDM_CHRG" type="CALCULATION_VIEW">
+      <viewAttributes allViewAttributes="true"/>
+      <resourceUri>/IFRS_R1.INTERNET.LAND_INTERNET/calculationviews/CA_MDM_CHRG</resourceUri>
+    </DataSource>
+    <DataSource id="IFRS_R1.INTERNET.NDB_INTERNET::MDM_CHRG" type="DATA_BASE_TABLE">
+      <viewAttributes allViewAttributes="true"/>
+      <columnObject schemaName="NDB_INTERNET" columnObjectName="IFRS_R1.INTERNET.NDB_INTERNET::MDM_CHRG"/>
+    </DataSource>
+  </dataSources>
+  <calculationViews>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_CA_MDM_CHRG">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="CHRG_COND"/>
+        <viewAttribute id="CYCL_ID"/>
+        <viewAttribute id="SRC_TS"/>
+        <viewAttribute id="CHRG_ID"/>
+        <viewAttribute id="CHRG_CD"/>
+        <viewAttribute id="ASSOC_SRVC_CD"/>
+        <viewAttribute id="SEQ_ID"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="DATE" id="CC_REFERENCE_EFFECTIVE_DT" expressionLanguage="COLUMN_ENGINE">
+          <formula>&quot;SRC_TS&quot;</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="DATE" id="CC_REFERENCE_EXPIRY_DT" expressionLanguage="COLUMN_ENGINE">
+          <formula>date('99991231')</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#CA_MDM_CHRG">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CHRG_COND" source="CHRG_COND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SRC_TS" source="SRC_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CHRG_ID" source="CHRG_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CHRG_CD" source="CHRG_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ASSOC_SRVC_CD" source="ASSOC_SRVC_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SEQ_ID" source="SEQ_ID"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_MDM_CHRG">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="CHRG_ID"/>
+        <viewAttribute id="ASSOC_SRVC_CD"/>
+        <viewAttribute id="CHRG_CD"/>
+        <viewAttribute id="REFERENCE_EFFECTIVE_DT"/>
+        <viewAttribute id="REFERENCE_EXPIRY_DT">
+          <filter xsi:type="AccessControl:SingleValueFilter" including="true" value="9999-12-31"/>
+        </viewAttribute>
+        <viewAttribute id="EXECUTION_ID"/>
+        <viewAttribute id="MODIFIED_TS"/>
+        <viewAttribute id="BATCH_ID"/>
+        <viewAttribute id="INSRT_TS"/>
+        <viewAttribute id="CONVERSION_IND"/>
+        <viewAttribute id="CHRG_COND"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#IFRS_R1.INTERNET.NDB_INTERNET::MDM_CHRG">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CHRG_ID" source="CHRG_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ASSOC_SRVC_CD" source="ASSOC_SRVC_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CHRG_CD" source="CHRG_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_EFFECTIVE_DT" source="REFERENCE_EFFECTIVE_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_EXPIRY_DT" source="REFERENCE_EXPIRY_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXECUTION_ID" source="EXECUTION_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MODIFIED_TS" source="MODIFIED_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BATCH_ID" source="BATCH_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INSRT_TS" source="INSRT_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONVERSION_IND" source="CONVERSION_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CHRG_COND" source="CHRG_COND"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="JOIN" joinType="leftOuter">
+      <descriptions>
+        <comment text="We are not raising any ERRORs ,as we want to find the Existing Records."/>
+      </descriptions>
+      <viewAttributes>
+        <viewAttribute id="CHRG_COND"/>
+        <viewAttribute id="CYCL_ID"/>
+        <viewAttribute id="SRC_TS"/>
+        <viewAttribute id="CHRG_ID"/>
+        <viewAttribute id="CHRG_CD"/>
+        <viewAttribute id="ASSOC_SRVC_CD"/>
+        <viewAttribute id="CHRG_ID_RIGHT"/>
+        <viewAttribute id="REFERENCE_EFFECTIVE_DT"/>
+        <viewAttribute id="REFERENCE_EXPIRY_DT"/>
+        <viewAttribute id="SEQ_ID"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#PROJ_CA_MDM_CHRG">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CHRG_COND" source="CHRG_COND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SRC_TS" source="SRC_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CHRG_ID" source="CHRG_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CHRG_CD" source="CHRG_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ASSOC_SRVC_CD" source="ASSOC_SRVC_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_EFFECTIVE_DT" source="CC_REFERENCE_EFFECTIVE_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_EXPIRY_DT" source="CC_REFERENCE_EXPIRY_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SEQ_ID" source="SEQ_ID"/>
+      </input>
+      <input node="#PROJ_MDM_CHRG">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CHRG_ID_RIGHT" source="CHRG_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CHRG_ID" source="CHRG_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CHRG_COND" source="CHRG_COND"/>
+      </input>
+      <joinAttribute name="CHRG_ID"/>
+      <joinAttribute name="CHRG_COND"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_INSERT_UPDATE">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="CHRG_COND"/>
+        <viewAttribute id="CYCL_ID"/>
+        <viewAttribute id="CHRG_ID"/>
+        <viewAttribute id="CHRG_CD"/>
+        <viewAttribute id="ASSOC_SRVC_CD"/>
+        <viewAttribute id="REFERENCE_EFFECTIVE_DT"/>
+        <viewAttribute id="REFERENCE_EXPIRY_DT"/>
+        <viewAttribute id="SRC_TS"/>
+        <viewAttribute id="SEQ_ID"/>
+        <viewAttribute id="CHRG_ID_RIGHT"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CC_EXISTING_RECORD" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isNULL(&quot;CHRG_ID_RIGHT&quot;) , 'I' , 'U')</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="DATE" id="CC_EFFECTIVE_DATE_PREV_DAY" expressionLanguage="COLUMN_ENGINE">
+          <formula>adddays(&quot;SRC_TS&quot;,-1)</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#JOIN">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CHRG_COND" source="CHRG_COND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CHRG_ID" source="CHRG_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CHRG_CD" source="CHRG_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ASSOC_SRVC_CD" source="ASSOC_SRVC_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_EFFECTIVE_DT" source="REFERENCE_EFFECTIVE_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_EXPIRY_DT" source="REFERENCE_EXPIRY_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SRC_TS" source="SRC_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SEQ_ID" source="SEQ_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CHRG_ID_RIGHT" source="CHRG_ID_RIGHT"/>
+      </input>
+    </calculationView>
+  </calculationViews>
+  <logicalModel id="PROJ_INSERT_UPDATE">
+    <descriptions/>
+    <attributes>
+      <attribute id="CHRG_ID" order="1" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CHRG_ID"/>
+        <keyMapping columnObjectName="PROJ_INSERT_UPDATE" columnName="CHRG_ID"/>
+      </attribute>
+      <attribute id="ASSOC_SRVC_CD" order="2" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ASSOC_SRVC_CD"/>
+        <keyMapping columnObjectName="PROJ_INSERT_UPDATE" columnName="ASSOC_SRVC_CD"/>
+      </attribute>
+      <attribute id="REFERENCE_EFFECTIVE_DT" order="3" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="REFERENCE_EFFECTIVE_DT"/>
+        <keyMapping columnObjectName="PROJ_INSERT_UPDATE" columnName="REFERENCE_EFFECTIVE_DT"/>
+      </attribute>
+      <attribute id="REFERENCE_EXPIRY_DT" order="4" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="REFERENCE_EXPIRY_DT"/>
+        <keyMapping columnObjectName="PROJ_INSERT_UPDATE" columnName="REFERENCE_EXPIRY_DT"/>
+      </attribute>
+      <attribute id="CHRG_COND" order="5" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CHRG_COND"/>
+        <keyMapping columnObjectName="PROJ_INSERT_UPDATE" columnName="CHRG_COND"/>
+      </attribute>
+      <attribute id="CYCL_ID" order="6" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CYCL_ID"/>
+        <keyMapping columnObjectName="PROJ_INSERT_UPDATE" columnName="CYCL_ID"/>
+      </attribute>
+      <attribute id="CHRG_CD" order="7" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CHRG_CD"/>
+        <keyMapping columnObjectName="PROJ_INSERT_UPDATE" columnName="CHRG_CD"/>
+      </attribute>
+      <attribute id="FLAG_EXISTING_RECORD" order="8" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="FLAG_EXISTING_RECORD"/>
+        <keyMapping columnObjectName="PROJ_INSERT_UPDATE" columnName="CC_EXISTING_RECORD"/>
+      </attribute>
+      <attribute id="EFFECTIVE_DATE_PREV_DAY" order="9" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="EFFECTIVE_DATE_PREV_DAY"/>
+        <keyMapping columnObjectName="PROJ_INSERT_UPDATE" columnName="CC_EFFECTIVE_DATE_PREV_DAY"/>
+      </attribute>
+      <attribute id="SEQ_ID" order="10" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SEQ_ID"/>
+        <keyMapping columnObjectName="PROJ_INSERT_UPDATE" columnName="SEQ_ID"/>
+      </attribute>
+    </attributes>
+    <calculatedAttributes/>
+    <privateDataFoundation>
+      <tableProxies/>
+      <joins/>
+      <layout>
+        <shapes/>
+      </layout>
+    </privateDataFoundation>
+    <baseMeasures/>
+    <calculatedMeasures/>
+    <restrictedMeasures/>
+    <localDimensions/>
+  </logicalModel>
+  <layout>
+    <shapes>
+      <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+        <upperLeftCorner x="99" y="87"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_CA_MDM_CHRG" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="22" y="339"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_MDM_CHRG" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="176" y="339"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="JOIN" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="99" y="243"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_INSERT_UPDATE" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="99" y="165"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+    </shapes>
+  </layout>
+</Calculation:scenario>

@@ -1,0 +1,532 @@
+PROCEDURE "NDB_TV"."IFRS_R1.BELLTV.NDB_BELLTV::SP_TV_BILL" 
+    (IN IP_CYCL_ID INTEGER, 
+    OUT OP_STATUS NVARCHAR(100)) 
+	LANGUAGE SQLSCRIPT
+	SQL SECURITY INVOKER
+	  
+	AS
+BEGIN
+--------------------------------------------------------------------------------------------------
+-- Procedure Title : SP_TV_BILL
+-- Created By      : BC_EY96109 (Archana)       
+-- Create Date     : 03-16-2017
+-- Description     : Data Inserted using Calculation View - CA_TV_MON_BILL
+--                   To NDB Table - TV_BILLING Using this stored procedure.
+--                   TV Billing includes data from table TV_MON_TRAN_BASE.			
+-- Project         : Bell Canada
+-- Release         : R1 / IFRS
+--------------------------------------------------------------------------------------------------
+--   M O D I F I C A T I O N   H I S T O R Y
+--------------------------------------------------------------------------------------------------
+-- Date        | User ID          | Modification History/Release
+--------------------------------------------------------------------------------------------------
+--             |                  | 
+--------------------------------------------------------------------------------------------------
+-- Description Of the changes 
+--------------------------------------------------------------------------------------------------
+-- Modification Number          : <Assign Some Number> 
+-- Description of Changes Made> : <Description of Changes>       
+--------------------------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------------------------
+-- Global Variables Declaration
+--------------------------------------------------------------------------------------------------
+
+DECLARE LC_ERROR_TEXT 		NVARCHAR(70) DEFAULT 'OUT STATUS IS 1 : INSERT FOR ONE OR MORE RECORD FAILED';
+DECLARE LC_SUCCESS_TEXT 	NVARCHAR(70) DEFAULT 'OUT STATUS IS 0 : INSERT EXECUTION SUCCESSFUL';
+DECLARE LV_ERROR_FLAG 		NVARCHAR(1) := 'N';
+DECLARE LV_CUR_UTC 			TIMESTAMP := CURRENT_TIMESTAMP;
+DECLARE ERROR_TAB 			TABLE (ERROR_CODE NVARCHAR(100));
+DECLARE i					INTEGER;
+DECLARE RECORD_COUNT		INTEGER;
+DECLARE CURRENT_ERROR		NVARCHAR(100);
+
+--------------------------------------------------------------------------------------------------
+-- Cursors Declaration
+--------------------------------------------------------------------------------------------------
+DECLARE CURSOR C_MON_BILL FOR 
+ 		SELECT "AMT",
+               "MTH_RT",
+               "ACCT_NUM",
+               "BILL_FROM_DT",
+               "BILL_TO_DT",
+               "CHRG_SEQ_NUM",
+               "GL_ACCT_NO",
+               "ITEM_ID",
+               "NAT_OF_SRV_MON",
+               "ADJ_REASON_MON",
+               "ITEM_TYPE_MON",
+               "EVNT_ID",
+               "TRAN_CDE_MON",
+               "PRIN",
+               "SRV_TYP_MON",
+               "NUM_OF_DAYS",
+               "AGENT",
+               "REC_TY_ID",
+               "REVNU_CD",
+               "TRANS_DT",
+               "TRANS_ID",
+               "ORIGDOC_ID",
+               "HEADER_ID",
+               "REFERENCE_ID",
+               "CHRG_TY",
+               "CNVR_IND",
+               "INSRT_TS",
+               "MOD_TS",
+               "BTCH_ID",
+               "POST_DT",
+               "AUDIT_TRL_DTE_MON",
+               "EXTR_DT",
+               "SRCDOC_ID",
+               "RAI_ITEM_ID",
+               "LNK_ITEM_ID",
+               "INVC_ID",
+               "DSCT_IND",
+               "DUOTRIO_IND",
+               "CO_CD",
+               "CHRG_TYP_CLSS",
+               "FEAT_CD",
+               "RUN_ID",
+               "KUNNR_SID",
+               "RAI_TS",
+               "TIME_IND",
+               "SRC_TS",
+               "VIRTUAL_INV_FLAG",
+		       "ERROR_CODE",
+		       "ERROR_STATUS",
+		       "SAP_ACCT_NO",
+		       "PRE_DSCT_CHRG",
+	           "EXECUTION_ID",
+               "CYCL_ID",
+               "SEQ_ID"  
+          FROM "_SYS_BIC"."IFRS_R1.BELLTV.NDB_BELLTV/CA_TV_MON_BILL"
+               (PLACEHOLDER."$$IP_CYCL_ID$$" => :IP_CYCL_ID)	
+               ORDER BY "CYCL_ID","SEQ_ID"
+               WITH HINT(NO_REMOTE_JOIN_RELOCATION);
+               
+--------------------------------------------------------------------------------------------------
+-- Local Temporary Tables Declaration
+--------------------------------------------------------------------------------------------------  
+
+CREATE LOCAL TEMPORARY TABLE #UPDATE_TV_MON_TRAN_BASE(EXTR_DT DATE , VTG_ROW_ID NVARCHAR(18), SUB_ACCT_NUM NVARCHAR(16),TRAN_CD NVARCHAR(4), POST_DT DATE);
+CREATE LOCAL TEMPORARY TABLE #UPDATE_EH_DELETION(ACCT_NUM NVARCHAR(16),PRIN_NUM NVARCHAR(4),AGNT_NUM NVARCHAR(4),REFERENCE_EFFECTIVE_DT DATE);
+        	  
+--------------------------------------------------------------------------------------------------
+-- Cursors Loop
+-------------------------------------------------------------------------------------------------- 
+FOR CUR_BILL AS C_MON_BILL DO
+
+--  Define Exit Handler
+	DECLARE EXIT HANDLER FOR SQLEXCEPTION 
+	BEGIN AUTONOMOUS TRANSACTION
+ 
+--  Define Exit Handler
+	DECLARE EXIT HANDLER FOR SQLEXCEPTION 
+	BEGIN AUTONOMOUS TRANSACTION 
+   
+END;
+   
+-- Insert record into error table
+      INSERT INTO "NDB_TV"."IFRS_R1.BELLTV.NDB_BELLTV::TV_BILLING_EH"(
+                  "AMT",
+                  "MTH_RT",
+                  "ACCT_NUM",
+                  "BILL_FROM_DT",
+                  "BILL_TO_DT",
+                  "CHRG_SEQ_NUM",
+                  "GL_ACCT_NO",
+                  "ITEM_ID",
+                  "NAT_OF_SRV_MON",
+                  "ADJ_REASON_MON",
+                  "ITEM_TYPE_MON",
+                  "EVNT_ID",
+                  "TRAN_CDE_MON",
+                  "PRIN",
+                  "SRV_TYP_MON",
+                  "NUM_OF_DAYS",
+                  "AGENT",
+                  "REC_TY_ID",
+                  "REVNU_CD",
+                  "TRANS_DT",
+                  "TRANS_ID",
+                  "ORIGDOC_ID",
+                  "HEADER_ID",
+                  "REFERENCE_ID",
+                  "CHRG_TY",
+                  "CNVR_IND",
+                  "INSRT_TS",
+                  "MOD_TS",
+                  "BTCH_ID",
+                  "POST_DT",
+                  "AUDIT_TRL_DTE_MON",
+                  "EXTR_DT",
+                  "SRCDOC_ID",
+                  "RAI_ITEM_ID",
+                  "LNK_ITEM_ID",
+                  "INVC_ID",
+                  "DSCT_IND",
+                  "DUOTRIO_IND",
+                  "CO_CD",
+                  "CHRG_TYP_CLSS",
+                  "FEAT_CD",
+                  "RUN_ID",
+                  "KUNNR_SID",
+                  "RAI_TS",
+                  "TIME_IND",
+                  "SRC_TS",
+                  "VIRTUAL_INV_FLAG",
+                  "ERROR_CODE",
+                  "TECHNICAL_MESSAGE",
+                  "ERROR_CREATE_TS")
+		   VALUES (CUR_BILL."AMT",
+				   CUR_BILL."MTH_RT",
+				   CUR_BILL."ACCT_NUM",
+				   CUR_BILL."BILL_FROM_DT",
+				   CUR_BILL."BILL_TO_DT",
+				   CUR_BILL."CHRG_SEQ_NUM",
+				   CUR_BILL."GL_ACCT_NO",
+				   CUR_BILL."ITEM_ID",
+				   CUR_BILL."NAT_OF_SRV_MON",
+				   CUR_BILL."ADJ_REASON_MON",
+				   CUR_BILL."ITEM_TYPE_MON",
+				   CUR_BILL."EVNT_ID",
+				   CUR_BILL."TRAN_CDE_MON",
+				   CUR_BILL."PRIN",
+                   CUR_BILL."SRV_TYP_MON",
+                   CUR_BILL."NUM_OF_DAYS",
+                   CUR_BILL."AGENT",
+                   CUR_BILL."REC_TY_ID",
+                   CUR_BILL."REVNU_CD",
+                   CUR_BILL."TRANS_DT",
+                   CUR_BILL."TRANS_ID",
+                   CUR_BILL."ORIGDOC_ID",
+                   CUR_BILL."HEADER_ID",
+                   CUR_BILL."REFERENCE_ID",
+                   CUR_BILL."CHRG_TY",
+                   CUR_BILL."CNVR_IND",
+                   CUR_BILL."INSRT_TS",
+                   CUR_BILL."MOD_TS",
+                   CUR_BILL."BTCH_ID",
+                   CUR_BILL."POST_DT",
+                   CUR_BILL."AUDIT_TRL_DTE_MON",
+                   CUR_BILL."EXTR_DT",
+                   CUR_BILL."SRCDOC_ID",
+                   CUR_BILL."RAI_ITEM_ID",
+                   CUR_BILL."LNK_ITEM_ID",
+                   CUR_BILL."INVC_ID",
+                   CUR_BILL."DSCT_IND",
+                   CUR_BILL."DUOTRIO_IND",
+                   CUR_BILL."CO_CD",
+                   CUR_BILL."CHRG_TYP_CLSS",
+                   CUR_BILL."FEAT_CD",
+				   CUR_BILL."RUN_ID",
+				   CUR_BILL."KUNNR_SID",
+				   CUR_BILL."RAI_TS",
+				   CUR_BILL."TIME_IND",
+				   CUR_BILL."SRC_TS",
+				   CUR_BILL."VIRTUAL_INV_FLAG",
+                   ::SQL_ERROR_CODE,
+                   ::SQL_ERROR_MESSAGE,
+                   LV_CUR_UTC);
+				   
+		 LV_ERROR_FLAG := 'Y';
+    
+      END;
+				   	 
+-- Check the Error Status of the Record. If Record is with Error, then send to Error Table
+	IF CUR_BILL.ERROR_STATUS = 1 THEN
+
+-- Call the Stored Procedure to split the concatenated Error Messages into Error Rows
+		CALL "NDB_COMMON"."IFRS_R1.COMMON_COMP.EH::SP_EH_SPLIT_ERRORS"(CUR_BILL."ERROR_CODE", ERROR_TAB, RECORD_COUNT);
+
+-- Loop through the Error Records
+		FOR i IN 1 .. :RECORD_COUNT DO
+			
+-- Fetch the Error Code
+			CURRENT_ERROR = :ERROR_TAB."ERROR_CODE"[:i];
+
+-- Insert into the Error Table
+			INSERT INTO "NDB_TV"."IFRS_R1.BELLTV.NDB_BELLTV::TV_BILLING_EH"(
+			    	    "AMT",
+                        "MTH_RT",
+                        "ACCT_NUM",
+                        "BILL_FROM_DT",
+                        "BILL_TO_DT",
+                        "CHRG_SEQ_NUM",
+                        "GL_ACCT_NO",
+                        "ITEM_ID",
+                        "NAT_OF_SRV_MON",
+                        "ADJ_REASON_MON",
+                        "ITEM_TYPE_MON",
+                        "EVNT_ID",
+                        "TRAN_CDE_MON",
+                        "PRIN",
+                        "SRV_TYP_MON",
+                        "NUM_OF_DAYS",
+                        "AGENT",
+                        "REC_TY_ID",
+                        "REVNU_CD",
+                        "TRANS_DT",
+                        "TRANS_ID",
+                        "ORIGDOC_ID",
+                        "HEADER_ID",
+                        "REFERENCE_ID",
+                        "CHRG_TY",
+                        "CNVR_IND",
+                        "INSRT_TS",
+                        "MOD_TS",
+                        "BTCH_ID",
+                        "POST_DT",
+                        "AUDIT_TRL_DTE_MON",
+                        "EXTR_DT",
+                        "SRCDOC_ID",
+                        "RAI_ITEM_ID",
+                        "LNK_ITEM_ID",
+                        "INVC_ID",
+                        "DSCT_IND",
+                        "DUOTRIO_IND",
+                        "CO_CD",
+                        "CHRG_TYP_CLSS",
+                        "FEAT_CD",
+                        "RUN_ID",
+                        "KUNNR_SID",
+                        "RAI_TS",
+                        "TIME_IND",
+                        "SRC_TS",
+                        "VIRTUAL_INV_FLAG",
+                        "ERROR_CODE",
+                        "ERROR_CREATE_TS")
+				 VALUES (CUR_BILL."AMT",
+				        CUR_BILL."MTH_RT",
+				        CUR_BILL."ACCT_NUM",
+				        CUR_BILL."BILL_FROM_DT",
+				        CUR_BILL."BILL_TO_DT",
+				        CUR_BILL."CHRG_SEQ_NUM",
+				        CUR_BILL."GL_ACCT_NO",
+				        CUR_BILL."ITEM_ID",
+				        CUR_BILL."NAT_OF_SRV_MON",
+				        CUR_BILL."ADJ_REASON_MON",
+				        CUR_BILL."ITEM_TYPE_MON",
+				        CUR_BILL."EVNT_ID",
+				        CUR_BILL."TRAN_CDE_MON",
+				        CUR_BILL."PRIN",
+                        CUR_BILL."SRV_TYP_MON",
+                        CUR_BILL."NUM_OF_DAYS",
+                        CUR_BILL."AGENT",
+                        CUR_BILL."REC_TY_ID",
+                        CUR_BILL."REVNU_CD",
+                        CUR_BILL."TRANS_DT",
+                        CUR_BILL."TRANS_ID",
+                        CUR_BILL."ORIGDOC_ID",
+                        CUR_BILL."HEADER_ID",
+                        CUR_BILL."REFERENCE_ID",
+                        CUR_BILL."CHRG_TY",
+                        CUR_BILL."CNVR_IND",
+                        CUR_BILL."INSRT_TS",
+                        CUR_BILL."MOD_TS",
+                        CUR_BILL."BTCH_ID",
+                        CUR_BILL."POST_DT",
+                        CUR_BILL."AUDIT_TRL_DTE_MON",
+                        CUR_BILL."EXTR_DT",
+                        CUR_BILL."SRCDOC_ID",
+                        CUR_BILL."RAI_ITEM_ID",
+                        CUR_BILL."LNK_ITEM_ID",
+                        CUR_BILL."INVC_ID",
+                        CUR_BILL."DSCT_IND",
+                        CUR_BILL."DUOTRIO_IND",
+                        CUR_BILL."CO_CD",
+                        CUR_BILL."CHRG_TYP_CLSS",
+                        CUR_BILL."FEAT_CD",
+				        CUR_BILL."RUN_ID",
+				        CUR_BILL."KUNNR_SID",
+				        CUR_BILL."RAI_TS",
+				        CUR_BILL."TIME_IND",
+				        CUR_BILL."SRC_TS",
+				        CUR_BILL."VIRTUAL_INV_FLAG",
+				        :CURRENT_ERROR,
+				        LV_CUR_UTC);
+				        
+-- Set Error Flag				        
+			LV_ERROR_FLAG := 'Y';	
+ --END IF;
+		END FOR;
+		
+-- If Record exists in the Target NDB Table
+-- ELSE IF CUR_BILL.FLAG_EXISTING_RECORD = 'I' THEN
+
+ELSE
+     
+-- Insert Records into the target NDB table 
+	    INSERT INTO "NDB_TV"."IFRS_R1.BELLTV.NDB_BELLTV::TV_BILLING"
+				    ("AMT",
+                    "MTH_RT",
+                    "ACCT_NUM",
+                    "BILL_FROM_DT",
+                    "BILL_TO_DT",
+                    "CHRG_SEQ_NUM",
+                    "GL_ACCT_NO",
+                    "ITEM_ID",
+                    "NAT_OF_SRV_MON",
+                    "ADJ_REASON_MON",
+                    "ITEM_TYPE_MON",
+                    "EVNT_ID",
+                    "TRAN_CDE_MON",
+                    "PRIN",
+                    "SRV_TYP_MON",
+                    "NUM_OF_DAYS",
+                    "AGENT",
+                    "REC_TY_ID",
+                    "REVNU_CD",
+                    "TRANS_DT",
+                    "TRANS_ID",
+                    "ORIGDOC_ID",
+                    "HEADER_ID",
+                    "REFERENCE_ID",
+                    "CHRG_TY",
+                    "CNVR_IND",
+                    "INSRT_TS",
+                    "MOD_TS",
+                    "BTCH_ID",
+                    "POST_DT",
+                    "AUDIT_TRL_DTE_MON",
+                    "EXTR_DT",
+                    "SRCDOC_ID",
+                    "RAI_ITEM_ID",
+                    "LNK_ITEM_ID",
+                    "INVC_ID",
+                    "DSCT_IND",
+                    "DUOTRIO_IND",
+                    "CO_CD",
+                    "CHRG_TYP_CLSS",
+                    "FEAT_CD",
+                    "RUN_ID",
+                    "KUNNR_SID",
+                    "RAI_TS",
+                    "TIME_IND",
+                    "SRC_TS",
+                    "VIRTUAL_INV_FLAG")
+             VALUES (CUR_BILL."AMT",
+				    CUR_BILL."MTH_RT",
+				    CUR_BILL."ACCT_NUM",
+				    CUR_BILL."BILL_FROM_DT",
+				    CUR_BILL."BILL_TO_DT",
+				    CUR_BILL."CHRG_SEQ_NUM",
+				    CUR_BILL."GL_ACCT_NO",
+				    CUR_BILL."ITEM_ID",
+				    CUR_BILL."NAT_OF_SRV_MON",
+				    CUR_BILL."ADJ_REASON_MON",
+				    CUR_BILL."ITEM_TYPE_MON",
+				    CUR_BILL."EVNT_ID",
+				    CUR_BILL."TRAN_CDE_MON",
+				    CUR_BILL."PRIN",
+                    CUR_BILL."SRV_TYP_MON",
+                    CUR_BILL."NUM_OF_DAYS",
+                    CUR_BILL."AGENT",
+                    CUR_BILL."REC_TY_ID",
+                    CUR_BILL."REVNU_CD",
+                    CUR_BILL."TRANS_DT",
+                    CUR_BILL."TRANS_ID",
+                    CUR_BILL."ORIGDOC_ID",
+                    CUR_BILL."HEADER_ID",
+                    CUR_BILL."REFERENCE_ID",
+                    CUR_BILL."CHRG_TY",
+                    CUR_BILL."CNVR_IND",
+                    CUR_BILL."INSRT_TS",
+                    CUR_BILL."MOD_TS",
+                    CUR_BILL."BTCH_ID",
+                    CUR_BILL."POST_DT",
+                    CUR_BILL."AUDIT_TRL_DTE_MON",
+                    CUR_BILL."EXTR_DT",
+                    CUR_BILL."SRCDOC_ID",
+                    CUR_BILL."RAI_ITEM_ID",
+                    CUR_BILL."LNK_ITEM_ID",
+                    CUR_BILL."INVC_ID",
+                    CUR_BILL."DSCT_IND",
+                    CUR_BILL."DUOTRIO_IND",
+                    CUR_BILL."CO_CD",
+                    CUR_BILL."CHRG_TYP_CLSS",
+                    CUR_BILL."FEAT_CD",
+				    CUR_BILL."RUN_ID",
+				    CUR_BILL."KUNNR_SID",
+				    CUR_BILL."RAI_TS",
+				    CUR_BILL."TIME_IND",
+				    CUR_BILL."SRC_TS",
+				    CUR_BILL."VIRTUAL_INV_FLAG"
+                    ); 
+
+--  Insert PK of successfully processed Records into Local Temp Tables 
+--  For Updating NDB_TS in corresponding Landing Tables records
+		   
+		  INSERT INTO #UPDATE_TV_MON_TRAN_BASE(
+		              EXTR_DT,
+		              VTG_ROW_ID,
+		              SUB_ACCT_NUM,
+		              TRAN_CD,
+		              POST_DT)
+   		      VALUES (CUR_BILL."EXTR_DT",
+           		      CUR_BILL."CHRG_SEQ_NUM",
+           	          CUR_BILL."ACCT_NUM",
+           	          CUR_BILL."TRAN_CDE_MON",
+           	          CUR_BILL.POST_DT);  
+           	      	   
+		 INSERT INTO #UPDATE_EH_DELETION(
+		              ACCT_NUM,
+		              PRIN_NUM,
+		              AGNT_NUM,
+		              REFERENCE_EFFECTIVE_DT)       
+ 	          VALUES (CUR_BILL."EXTR_DT",
+ 	                  CUR_BILL."CHRG_SEQ_NUM",
+ 	                  CUR_BILL."ACCT_NUM",
+ 	           	      CUR_BILL."POST_DT");
+
+END IF;
+--END IF;
+END FOR;
+
+--------------------------------------------------------------------------------------------------
+-- Update Landing Tables
+-------------------------------------------------------------------------------------------------- 
+
+--  Update Landing Table IFRS_R1.LAND::TV_MON_TRAN_BASE
+            UPDATE "LAND"."IFRS_R1.LAND::TV_MON_TRAN_BASE" A
+              FROM "LAND"."IFRS_R1.LAND::TV_MON_TRAN_BASE" A 
+        INNER JOIN #UPDATE_TV_MON_TRAN_BASE B 
+                ON A."EXTR_DT"                      = B."EXTR_DT"
+               AND A."VTG_ROW_ID"                   = B."VTG_ROW_ID"
+               AND A."SUB_ACCT_NUM"                 = B."SUB_ACCT_NUM"
+               AND A."TRAN_CD"                      = B.TRAN_CD
+               AND A."POST_DT"                      = B.POST_DT
+               SET NDB_TS                           = LV_CUR_UTC
+             WHERE A.NDB_TS IS NULL;
+--------------------------------------------------------------------------------------------------
+-- Update Error Table
+--------------------------------------------------------------------------------------------------
+
+             UPDATE "NDB_TV"."IFRS_R1.BELLTV.NDB_BELLTV::TV_BILLING_EH" A
+               FROM "NDB_TV"."IFRS_R1.BELLTV.NDB_BELLTV::TV_BILLING_EH" A 
+         INNER JOIN #UPDATE_EH_DELETION B
+                 ON A."ACCT_NUM"                   = B."ACCT_NUM"
+                AND A."PRIN"                       = B."PRIN_NUM"
+                AND A."AGENT"                      = B."AGNT_NUM"
+              --AND A."REFERENCE_EFFECTIVE_DT"     = B."REFERENCE_EFFECTIVE_DT"
+                SET (DELETE_DATE, DELETED)         = (CURRENT_DATE, 1);
+
+--------------------------------------------------------------------------------------------------
+-- Set Overall Status
+-------------------------------------------------------------------------------------------------- 
+
+-- STATUS 0: Send the success message to scheduling tool to confirm this procedure has been
+-- executed successfully
+    IF(LV_ERROR_FLAG = 'Y') THEN		
+
+     OP_STATUS := LC_ERROR_TEXT; 
+			
+    ELSE
+
+  	 OP_STATUS := LC_SUCCESS_TEXT; 	
+				
+	END IF;
+	
+END ;
+	
+

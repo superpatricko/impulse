@@ -1,0 +1,1259 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" xmlns:Variable="http://www.sap.com/ndb/BiModelVariable.ecore" schemaVersion="2.3" id="CA_TV_TXN_FILTER" applyPrivilegeType="NONE" checkAnalyticPrivileges="false" defaultClient="$$client$$" defaultLanguage="$$language$$" hierarchiesSQLEnabled="false" historyEnabled="false" translationRelevant="true" visibility="internal" calculationScenarioType="TREE_BASED" dataCategory="DIMENSION" enforceSqlExecution="false" executionSemantic="UNDEFINED" outputViewType="Projection">
+  <descriptions defaultDescription="CA_TV_TXN_FILTER"/>
+  <localVariables>
+    <variable id="IP_CYCL_ID" parameter="true">
+      <descriptions defaultDescription="IP_CYCL_ID"/>
+      <variableProperties datatype="NVARCHAR" defaultValue="999" length="3" mandatory="false">
+        <valueDomain type="empty"/>
+        <selection multiLine="false" type="SingleValue"/>
+      </variableProperties>
+    </variable>
+  </localVariables>
+  <variableMappings>
+    <mapping xsi:type="Variable:VariableMapping" dataSource="#CA_TV_MON_TRAN_BASE">
+      <targetVariable name="IP_CYCL_ID" resourceUri="/IFRS_R1.BELLTV.LAND_BELLTV/calculationviews/CA_TV_MON_TRAN_BASE"/>
+      <localVariable>#IP_CYCL_ID</localVariable>
+    </mapping>
+  </variableMappings>
+  <informationModelLayout relativeWidthScenario="48"/>
+  <dataSources>
+    <DataSource id="CA_TV_MON_TRAN_BASE" type="CALCULATION_VIEW">
+      <viewAttributes allViewAttributes="true"/>
+      <resourceUri>/IFRS_R1.BELLTV.LAND_BELLTV/calculationviews/CA_TV_MON_TRAN_BASE</resourceUri>
+    </DataSource>
+    <DataSource id="CA_TV_CUSTOMER_NDB_EH" type="CALCULATION_VIEW">
+      <viewAttributes allViewAttributes="true"/>
+      <resourceUri>/IFRS_R1.BELLTV.NDB_BELLTV/calculationviews/CA_TV_CUSTOMER_NDB_EH</resourceUri>
+    </DataSource>
+    <DataSource id="ZBTVCSG_AGENT" type="DATA_BASE_TABLE">
+      <viewAttributes allViewAttributes="true"/>
+      <columnObject schemaName="SDA" columnObjectName="ZBTVCSG_AGENT"/>
+    </DataSource>
+    <DataSource id="ZBTVCSG_TRAN" type="DATA_BASE_TABLE">
+      <viewAttributes allViewAttributes="true"/>
+      <columnObject schemaName="SDA" columnObjectName="ZBTVCSG_TRAN"/>
+    </DataSource>
+    <DataSource id="PROJ_ZBTV_TRAN$$$$ZBTVCSG_TRAN$$" type="DATA_BASE_TABLE">
+      <viewAttributes allViewAttributes="true"/>
+      <columnObject schemaName="SDA" columnObjectName="ZBTVCSG_TRAN"/>
+    </DataSource>
+  </dataSources>
+  <calculationViews>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_TV_MON_TRAN_BASE" filterExpressionLanguage="COLUMN_ENGINE">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="ACCT_NUM"/>
+        <viewAttribute id="EXTR_DT"/>
+        <viewAttribute id="TRAN_CD"/>
+        <viewAttribute id="SERVICE_CD"/>
+        <viewAttribute id="ADJ_RSN_CD"/>
+        <viewAttribute id="TRAN_DT"/>
+        <viewAttribute id="POST_DT"/>
+        <viewAttribute id="AUDT_TRL_DT"/>
+        <viewAttribute id="AMT"/>
+        <viewAttribute id="VTG_ROW_ID"/>
+        <viewAttribute id="ADJ_ENTR_REF"/>
+        <viewAttribute id="ENTR_REF_NUM"/>
+        <viewAttribute id="CYCL_ID"/>
+        <viewAttribute id="DSCT_CD"/>
+        <viewAttribute id="DSCT_AMT"/>
+        <viewAttribute id="PRE_DSCT_CHRG"/>
+        <viewAttribute id="BILL_CD"/>
+        <viewAttribute id="INSTALL_NUM"/>
+        <viewAttribute id="EXTR_TM"/>
+        <viewAttribute id="SYS_NUM"/>
+        <viewAttribute id="SRC_TS"/>
+        <viewAttribute id="BILL_OPN_DT"/>
+        <viewAttribute id="BILL_CLS_DT"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="DATE" id="CC_BILL_FROM_DT" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(&quot;BILL_OPN_DT&quot; = date('19000101'),date(null),&quot;BILL_OPN_DT&quot;)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="DATE" id="CC_BILL_TO_DT" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(&quot;BILL_CLS_DT&quot; = date('19000101'),date(null),&quot;BILL_CLS_DT&quot;)</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#CA_TV_MON_TRAN_BASE">
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACCT_NUM" source="SUB_ACCT_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXTR_DT" source="EXTR_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRAN_CD" source="TRAN_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SERVICE_CD" source="EVNT_SERV_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ADJ_RSN_CD" source="ADJ_RSN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRAN_DT" source="TRAN_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="POST_DT" source="POST_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AUDT_TRL_DT" source="AUDT_TRL_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AMT" source="TRAN_AMT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VTG_ROW_ID" source="VTG_ROW_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ADJ_ENTR_REF" source="ADJ_ENTR_REF"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ENTR_REF_NUM" source="ENTR_REF_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DSCT_CD" source="DSCT_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DSCT_AMT" source="DSCT_AMT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRE_DSCT_CHRG" source="PRE_DSCT_CHRG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_CD" source="BLL_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INSTALL_NUM" source="INSTALL_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXTR_TM" source="EXTR_TM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SYS_NUM" source="SYS_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SRC_TS" source="SRC_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_OPN_DT" source="BILL_OPN_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_CLS_DT" source="BILL_CLS_DT"/>
+      </input>
+      <filter>&quot;AMT&quot; != 0</filter>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_CUST">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="PRIN_NUM"/>
+        <viewAttribute id="AGNT_NUM"/>
+        <viewAttribute id="CO_CD"/>
+        <viewAttribute id="CONTR_END_DT"/>
+        <viewAttribute id="CONTR_STRT_DT"/>
+        <viewAttribute id="CONTR_TERM"/>
+        <viewAttribute id="CONTR_TY"/>
+        <viewAttribute id="BILL_CYCL"/>
+        <viewAttribute id="CUST_ST"/>
+        <viewAttribute id="NETWK_TY"/>
+        <viewAttribute id="CUST_TY"/>
+        <viewAttribute id="KUNNR_SID"/>
+        <viewAttribute id="COMIT_TY"/>
+        <viewAttribute id="ACCT_NUM"/>
+        <viewAttribute id="REFERENCE_EFFECTIVE_DT"/>
+        <viewAttribute id="REFERENCE_EXPIRY_DT"/>
+        <viewAttribute id="INST_CRD_IND"/>
+        <viewAttribute id="CC_VERSION_CHECK"/>
+        <viewAttribute id="INST_CHRG_IND"/>
+        <viewAttribute id="CNVR_IND"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#CA_TV_CUSTOMER_NDB_EH">
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRIN_NUM" source="PRIN_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AGNT_NUM" source="AGNT_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CO_CD" source="CO_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTR_END_DT" source="CONTR_END_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTR_STRT_DT" source="CONTR_STRT_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTR_TERM" source="CONTR_TERM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTR_TY" source="CONTR_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_CYCL" source="BILL_CYCL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUST_ST" source="CUST_ST"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NETWK_TY" source="NETWK_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUST_TY" source="CUST_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KUNNR_SID" source="KUNNR_SID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="COMIT_TY" source="COMIT_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACCT_NUM" source="ACCT_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_EFFECTIVE_DT" source="REFERENCE_EFFECTIVE_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_EXPIRY_DT" source="REFERENCE_EXPIRY_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INST_CRD_IND" source="INST_CRD_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_VERSION_CHECK" source="CC_VERSION_CHECK"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INST_CHRG_IND" source="INST_CHRG_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CNVR_IND" source="CNVR_IND"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="JOIN_MTB_CUST" joinOrder="OUTSIDE_IN" joinType="leftOuter">
+      <descriptions>
+        <comment text="Join error will be raised as IS_20100201 &#xD;&#xA;Refference Version check will be raised as IS_20100202"/>
+      </descriptions>
+      <viewAttributes>
+        <viewAttribute id="ACCT_NUM"/>
+        <viewAttribute id="EXTR_DT"/>
+        <viewAttribute id="TRAN_CD"/>
+        <viewAttribute id="SERVICE_CD"/>
+        <viewAttribute id="ADJ_RSN_CD"/>
+        <viewAttribute id="TRAN_DT"/>
+        <viewAttribute id="POST_DT"/>
+        <viewAttribute id="AUDT_TRL_DT"/>
+        <viewAttribute id="AMT"/>
+        <viewAttribute id="VTG_ROW_ID"/>
+        <viewAttribute id="ADJ_ENTR_REF"/>
+        <viewAttribute id="ENTR_REF_NUM"/>
+        <viewAttribute id="CYCL_ID"/>
+        <viewAttribute id="DSCT_CD"/>
+        <viewAttribute id="DSCT_AMT"/>
+        <viewAttribute id="PRE_DSCT_CHRG"/>
+        <viewAttribute id="BILL_CD"/>
+        <viewAttribute id="INSTALL_NUM"/>
+        <viewAttribute id="EXTR_TM"/>
+        <viewAttribute id="SYS_NUM"/>
+        <viewAttribute id="SRC_TS"/>
+        <viewAttribute id="PRIN_NUM"/>
+        <viewAttribute id="AGNT_NUM"/>
+        <viewAttribute id="CO_CD"/>
+        <viewAttribute id="CONTR_END_DT"/>
+        <viewAttribute id="CONTR_STRT_DT"/>
+        <viewAttribute id="CONTR_TERM"/>
+        <viewAttribute id="CONTR_TY"/>
+        <viewAttribute id="BILL_CYCL"/>
+        <viewAttribute id="CUST_ST"/>
+        <viewAttribute id="NETWK_TY"/>
+        <viewAttribute id="CUST_TY"/>
+        <viewAttribute id="KUNNR_SID"/>
+        <viewAttribute id="COMIT_TY"/>
+        <viewAttribute id="REFERENCE_EFFECTIVE_DT"/>
+        <viewAttribute id="REFERENCE_EXPIRY_DT"/>
+        <viewAttribute id="ACCT_NUM_RIGHT"/>
+        <viewAttribute id="INST_CRD_IND"/>
+        <viewAttribute id="CC_VERSION_CHECK"/>
+        <viewAttribute id="CNVR_IND"/>
+        <viewAttribute id="CC_BILL_FROM_DT"/>
+        <viewAttribute id="CC_BILL_TO_DT"/>
+        <viewAttribute id="INST_CHRG_IND"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="IS_20100201" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isNull(&quot;ACCT_NUM_RIGHT&quot;),'1','0')</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="IS_20100202" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isNull(&quot;CC_VERSION_CHECK&quot;),'0',if(&quot;CC_VERSION_CHECK&quot; = '0','0','1'))</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="DATE" id="CC_REFERENCE_EFFECTIVE_DT" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isNull(&quot;REFERENCE_EFFECTIVE_DT&quot;),date('19000101'),&quot;REFERENCE_EFFECTIVE_DT&quot;)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="DATE" id="CC_REFERENCE_EXPIRY_DT" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isNull(&quot;REFERENCE_EXPIRY_DT&quot;),date('99991231'),&quot;REFERENCE_EXPIRY_DT&quot;)</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#PROJ_TV_MON_TRAN_BASE">
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACCT_NUM" source="ACCT_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXTR_DT" source="EXTR_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRAN_CD" source="TRAN_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SERVICE_CD" source="SERVICE_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ADJ_RSN_CD" source="ADJ_RSN_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRAN_DT" source="TRAN_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="POST_DT" source="POST_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AUDT_TRL_DT" source="AUDT_TRL_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AMT" source="AMT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VTG_ROW_ID" source="VTG_ROW_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ADJ_ENTR_REF" source="ADJ_ENTR_REF"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ENTR_REF_NUM" source="ENTR_REF_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DSCT_CD" source="DSCT_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DSCT_AMT" source="DSCT_AMT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRE_DSCT_CHRG" source="PRE_DSCT_CHRG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_CD" source="BILL_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INSTALL_NUM" source="INSTALL_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXTR_TM" source="EXTR_TM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SYS_NUM" source="SYS_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SRC_TS" source="SRC_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_BILL_FROM_DT" source="CC_BILL_FROM_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_BILL_TO_DT" source="CC_BILL_TO_DT"/>
+      </input>
+      <input node="#PROJ_CUST">
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRIN_NUM" source="PRIN_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AGNT_NUM" source="AGNT_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CO_CD" source="CO_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTR_END_DT" source="CONTR_END_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTR_STRT_DT" source="CONTR_STRT_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTR_TERM" source="CONTR_TERM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTR_TY" source="CONTR_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_CYCL" source="BILL_CYCL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUST_ST" source="CUST_ST"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NETWK_TY" source="NETWK_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUST_TY" source="CUST_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KUNNR_SID" source="KUNNR_SID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="COMIT_TY" source="COMIT_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_EFFECTIVE_DT" source="REFERENCE_EFFECTIVE_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_EXPIRY_DT" source="REFERENCE_EXPIRY_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACCT_NUM_RIGHT" source="ACCT_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INST_CRD_IND" source="INST_CRD_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_VERSION_CHECK" source="CC_VERSION_CHECK"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CNVR_IND" source="CNVR_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INST_CHRG_IND" source="INST_CHRG_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACCT_NUM" source="ACCT_NUM"/>
+      </input>
+      <joinAttribute name="ACCT_NUM"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_FILT_EFF_DT" filterExpressionLanguage="COLUMN_ENGINE">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="ACCT_NUM"/>
+        <viewAttribute id="EXTR_DT"/>
+        <viewAttribute id="TRAN_CD"/>
+        <viewAttribute id="SERVICE_CD"/>
+        <viewAttribute id="ADJ_RSN_CD"/>
+        <viewAttribute id="TRAN_DT"/>
+        <viewAttribute id="POST_DT"/>
+        <viewAttribute id="AUDT_TRL_DT"/>
+        <viewAttribute id="AMT"/>
+        <viewAttribute id="VTG_ROW_ID"/>
+        <viewAttribute id="ADJ_ENTR_REF"/>
+        <viewAttribute id="ENTR_REF_NUM"/>
+        <viewAttribute id="CYCL_ID"/>
+        <viewAttribute id="DSCT_CD"/>
+        <viewAttribute id="DSCT_AMT"/>
+        <viewAttribute id="PRE_DSCT_CHRG"/>
+        <viewAttribute id="BILL_CD"/>
+        <viewAttribute id="INSTALL_NUM"/>
+        <viewAttribute id="EXTR_TM"/>
+        <viewAttribute id="SYS_NUM"/>
+        <viewAttribute id="SRC_TS"/>
+        <viewAttribute id="PRIN_NUM"/>
+        <viewAttribute id="AGNT_NUM"/>
+        <viewAttribute id="CO_CD"/>
+        <viewAttribute id="CONTR_END_DT"/>
+        <viewAttribute id="CONTR_STRT_DT"/>
+        <viewAttribute id="CONTR_TERM"/>
+        <viewAttribute id="CONTR_TY"/>
+        <viewAttribute id="BILL_CYCL"/>
+        <viewAttribute id="CUST_ST"/>
+        <viewAttribute id="NETWK_TY"/>
+        <viewAttribute id="CUST_TY"/>
+        <viewAttribute id="KUNNR_SID"/>
+        <viewAttribute id="COMIT_TY"/>
+        <viewAttribute id="REFERENCE_EFFECTIVE_DT"/>
+        <viewAttribute id="REFERENCE_EXPIRY_DT"/>
+        <viewAttribute id="ACCT_NUM_RIGHT"/>
+        <viewAttribute id="IS_20100201"/>
+        <viewAttribute id="INST_CRD_IND"/>
+        <viewAttribute id="IS_20100202"/>
+        <viewAttribute id="CC_REFERENCE_EFFECTIVE_DT"/>
+        <viewAttribute id="CC_REFERENCE_EXPIRY_DT"/>
+        <viewAttribute id="CNVR_IND"/>
+        <viewAttribute id="CC_BILL_FROM_DT"/>
+        <viewAttribute id="CC_BILL_TO_DT"/>
+        <viewAttribute id="INST_CHRG_IND"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#JOIN_MTB_CUST">
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACCT_NUM" source="ACCT_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXTR_DT" source="EXTR_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRAN_CD" source="TRAN_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SERVICE_CD" source="SERVICE_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ADJ_RSN_CD" source="ADJ_RSN_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRAN_DT" source="TRAN_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="POST_DT" source="POST_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AUDT_TRL_DT" source="AUDT_TRL_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AMT" source="AMT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VTG_ROW_ID" source="VTG_ROW_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ADJ_ENTR_REF" source="ADJ_ENTR_REF"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ENTR_REF_NUM" source="ENTR_REF_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DSCT_CD" source="DSCT_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DSCT_AMT" source="DSCT_AMT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRE_DSCT_CHRG" source="PRE_DSCT_CHRG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_CD" source="BILL_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INSTALL_NUM" source="INSTALL_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXTR_TM" source="EXTR_TM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SYS_NUM" source="SYS_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SRC_TS" source="SRC_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRIN_NUM" source="PRIN_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AGNT_NUM" source="AGNT_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CO_CD" source="CO_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTR_END_DT" source="CONTR_END_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTR_STRT_DT" source="CONTR_STRT_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTR_TERM" source="CONTR_TERM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTR_TY" source="CONTR_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_CYCL" source="BILL_CYCL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUST_ST" source="CUST_ST"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NETWK_TY" source="NETWK_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUST_TY" source="CUST_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KUNNR_SID" source="KUNNR_SID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="COMIT_TY" source="COMIT_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_EFFECTIVE_DT" source="REFERENCE_EFFECTIVE_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_EXPIRY_DT" source="REFERENCE_EXPIRY_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACCT_NUM_RIGHT" source="ACCT_NUM_RIGHT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20100201" source="IS_20100201"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INST_CRD_IND" source="INST_CRD_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20100202" source="IS_20100202"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_REFERENCE_EFFECTIVE_DT" source="CC_REFERENCE_EFFECTIVE_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_REFERENCE_EXPIRY_DT" source="CC_REFERENCE_EXPIRY_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CNVR_IND" source="CNVR_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_BILL_FROM_DT" source="CC_BILL_FROM_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_BILL_TO_DT" source="CC_BILL_TO_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INST_CHRG_IND" source="INST_CHRG_IND"/>
+      </input>
+      <filter>&quot;EXTR_DT&quot; &lt;=  &quot;CC_REFERENCE_EXPIRY_DT&quot; and&#xD;
+&quot;EXTR_DT&quot; >= &quot;CC_REFERENCE_EFFECTIVE_DT&quot;</filter>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_ZBTV_AGENT" filterExpressionLanguage="COLUMN_ENGINE">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="PRINCIPLE_RIGHT"/>
+        <viewAttribute id="AGENT_RIGHT"/>
+        <viewAttribute id="POST"/>
+        <viewAttribute id="ACTIVE_IND"/>
+        <viewAttribute id="MANDT"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#ZBTVCSG_AGENT">
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRINCIPLE_RIGHT" source="PRINCIPLE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AGENT_RIGHT" source="AGENT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="POST" source="POST"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACTIVE_IND" source="ACTIVE_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
+      </input>
+      <filter>&quot;ACTIVE_IND&quot; = 1 and   ( in(&quot;POST&quot;,'R','N') ) and &quot;MANDT&quot; = '100'</filter>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="JOIN_ZBTV_AGENT" joinOrder="OUTSIDE_IN" joinType="leftOuter">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="ACCT_NUM"/>
+        <viewAttribute id="EXTR_DT"/>
+        <viewAttribute id="TRAN_CD"/>
+        <viewAttribute id="SERVICE_CD"/>
+        <viewAttribute id="ADJ_RSN_CD"/>
+        <viewAttribute id="TRAN_DT"/>
+        <viewAttribute id="POST_DT"/>
+        <viewAttribute id="AUDT_TRL_DT"/>
+        <viewAttribute id="AMT"/>
+        <viewAttribute id="VTG_ROW_ID"/>
+        <viewAttribute id="ADJ_ENTR_REF"/>
+        <viewAttribute id="ENTR_REF_NUM"/>
+        <viewAttribute id="CYCL_ID"/>
+        <viewAttribute id="DSCT_CD"/>
+        <viewAttribute id="DSCT_AMT"/>
+        <viewAttribute id="PRE_DSCT_CHRG"/>
+        <viewAttribute id="BILL_CD"/>
+        <viewAttribute id="INSTALL_NUM"/>
+        <viewAttribute id="EXTR_TM"/>
+        <viewAttribute id="SYS_NUM"/>
+        <viewAttribute id="SRC_TS"/>
+        <viewAttribute id="PRIN_NUM"/>
+        <viewAttribute id="AGNT_NUM"/>
+        <viewAttribute id="CO_CD"/>
+        <viewAttribute id="CONTR_END_DT"/>
+        <viewAttribute id="CONTR_STRT_DT"/>
+        <viewAttribute id="CONTR_TERM"/>
+        <viewAttribute id="CONTR_TY"/>
+        <viewAttribute id="BILL_CYCL"/>
+        <viewAttribute id="CUST_ST"/>
+        <viewAttribute id="NETWK_TY"/>
+        <viewAttribute id="CUST_TY"/>
+        <viewAttribute id="KUNNR_SID"/>
+        <viewAttribute id="COMIT_TY"/>
+        <viewAttribute id="PRINCIPLE_RIGHT"/>
+        <viewAttribute id="IS_20100201"/>
+        <viewAttribute id="INST_CRD_IND"/>
+        <viewAttribute id="IS_20100202"/>
+        <viewAttribute id="CNVR_IND"/>
+        <viewAttribute id="CC_BILL_FROM_DT"/>
+        <viewAttribute id="CC_BILL_TO_DT"/>
+        <viewAttribute id="INST_CHRG_IND"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#PROJ_FILT_EFF_DT">
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACCT_NUM" source="ACCT_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXTR_DT" source="EXTR_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRAN_CD" source="TRAN_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SERVICE_CD" source="SERVICE_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ADJ_RSN_CD" source="ADJ_RSN_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRAN_DT" source="TRAN_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="POST_DT" source="POST_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AUDT_TRL_DT" source="AUDT_TRL_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AMT" source="AMT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VTG_ROW_ID" source="VTG_ROW_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ADJ_ENTR_REF" source="ADJ_ENTR_REF"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ENTR_REF_NUM" source="ENTR_REF_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DSCT_CD" source="DSCT_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DSCT_AMT" source="DSCT_AMT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRE_DSCT_CHRG" source="PRE_DSCT_CHRG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_CD" source="BILL_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INSTALL_NUM" source="INSTALL_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXTR_TM" source="EXTR_TM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SYS_NUM" source="SYS_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SRC_TS" source="SRC_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRIN_NUM" source="PRIN_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AGNT_NUM" source="AGNT_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CO_CD" source="CO_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTR_END_DT" source="CONTR_END_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTR_STRT_DT" source="CONTR_STRT_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTR_TERM" source="CONTR_TERM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTR_TY" source="CONTR_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_CYCL" source="BILL_CYCL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUST_ST" source="CUST_ST"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NETWK_TY" source="NETWK_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUST_TY" source="CUST_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KUNNR_SID" source="KUNNR_SID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="COMIT_TY" source="COMIT_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20100201" source="IS_20100201"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INST_CRD_IND" source="INST_CRD_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20100202" source="IS_20100202"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CNVR_IND" source="CNVR_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_BILL_FROM_DT" source="CC_BILL_FROM_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_BILL_TO_DT" source="CC_BILL_TO_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INST_CHRG_IND" source="INST_CHRG_IND"/>
+      </input>
+      <input node="#PROJ_ZBTV_AGENT">
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRINCIPLE_RIGHT" source="PRINCIPLE_RIGHT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRIN_NUM" source="PRINCIPLE_RIGHT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AGNT_NUM" source="AGENT_RIGHT"/>
+      </input>
+      <joinAttribute name="PRIN_NUM"/>
+      <joinAttribute name="AGNT_NUM"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_FILT_TEST_AGENT" filterExpressionLanguage="COLUMN_ENGINE">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="ACCT_NUM"/>
+        <viewAttribute id="EXTR_DT"/>
+        <viewAttribute id="TRAN_CD"/>
+        <viewAttribute id="SERVICE_CD"/>
+        <viewAttribute id="ADJ_RSN_CD"/>
+        <viewAttribute id="TRAN_DT"/>
+        <viewAttribute id="POST_DT"/>
+        <viewAttribute id="AUDT_TRL_DT"/>
+        <viewAttribute id="AMT"/>
+        <viewAttribute id="VTG_ROW_ID"/>
+        <viewAttribute id="ADJ_ENTR_REF"/>
+        <viewAttribute id="ENTR_REF_NUM"/>
+        <viewAttribute id="CYCL_ID"/>
+        <viewAttribute id="DSCT_CD"/>
+        <viewAttribute id="DSCT_AMT"/>
+        <viewAttribute id="PRE_DSCT_CHRG"/>
+        <viewAttribute id="BILL_CD"/>
+        <viewAttribute id="INSTALL_NUM"/>
+        <viewAttribute id="EXTR_TM"/>
+        <viewAttribute id="SYS_NUM"/>
+        <viewAttribute id="SRC_TS"/>
+        <viewAttribute id="PRIN_NUM"/>
+        <viewAttribute id="AGNT_NUM"/>
+        <viewAttribute id="CO_CD"/>
+        <viewAttribute id="CONTR_END_DT"/>
+        <viewAttribute id="CONTR_STRT_DT"/>
+        <viewAttribute id="CONTR_TERM"/>
+        <viewAttribute id="CONTR_TY"/>
+        <viewAttribute id="BILL_CYCL"/>
+        <viewAttribute id="CUST_ST"/>
+        <viewAttribute id="NETWK_TY"/>
+        <viewAttribute id="CUST_TY"/>
+        <viewAttribute id="KUNNR_SID"/>
+        <viewAttribute id="COMIT_TY"/>
+        <viewAttribute id="PRINCIPLE_RIGHT"/>
+        <viewAttribute id="IS_20100201"/>
+        <viewAttribute id="INST_CRD_IND"/>
+        <viewAttribute id="IS_20100202"/>
+        <viewAttribute id="CNVR_IND"/>
+        <viewAttribute id="CC_BILL_FROM_DT"/>
+        <viewAttribute id="CC_BILL_TO_DT"/>
+        <viewAttribute id="INST_CHRG_IND"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#JOIN_ZBTV_AGENT">
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACCT_NUM" source="ACCT_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXTR_DT" source="EXTR_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRAN_CD" source="TRAN_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SERVICE_CD" source="SERVICE_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ADJ_RSN_CD" source="ADJ_RSN_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRAN_DT" source="TRAN_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="POST_DT" source="POST_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AUDT_TRL_DT" source="AUDT_TRL_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AMT" source="AMT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VTG_ROW_ID" source="VTG_ROW_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ADJ_ENTR_REF" source="ADJ_ENTR_REF"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ENTR_REF_NUM" source="ENTR_REF_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DSCT_CD" source="DSCT_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DSCT_AMT" source="DSCT_AMT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRE_DSCT_CHRG" source="PRE_DSCT_CHRG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_CD" source="BILL_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INSTALL_NUM" source="INSTALL_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXTR_TM" source="EXTR_TM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SYS_NUM" source="SYS_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SRC_TS" source="SRC_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRIN_NUM" source="PRIN_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AGNT_NUM" source="AGNT_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CO_CD" source="CO_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTR_END_DT" source="CONTR_END_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTR_STRT_DT" source="CONTR_STRT_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTR_TERM" source="CONTR_TERM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTR_TY" source="CONTR_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_CYCL" source="BILL_CYCL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUST_ST" source="CUST_ST"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NETWK_TY" source="NETWK_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUST_TY" source="CUST_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KUNNR_SID" source="KUNNR_SID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="COMIT_TY" source="COMIT_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRINCIPLE_RIGHT" source="PRINCIPLE_RIGHT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20100201" source="IS_20100201"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INST_CRD_IND" source="INST_CRD_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20100202" source="IS_20100202"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CNVR_IND" source="CNVR_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_BILL_FROM_DT" source="CC_BILL_FROM_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_BILL_TO_DT" source="CC_BILL_TO_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INST_CHRG_IND" source="INST_CHRG_IND"/>
+      </input>
+      <filter>isNull(&quot;PRINCIPLE_RIGHT&quot;)</filter>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_ABTV_TRAN" filterExpressionLanguage="COLUMN_ENGINE">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="TRAN_TYPE"/>
+        <viewAttribute id="PRINCIPLE"/>
+        <viewAttribute id="AGENT"/>
+        <viewAttribute id="ACTIVE_IND"/>
+        <viewAttribute id="SOURCE"/>
+        <viewAttribute id="MANDT"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#ZBTVCSG_TRAN">
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRAN_TYPE" source="TRAN_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRINCIPLE" source="PRINCIPLE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AGENT" source="AGENT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACTIVE_IND" source="ACTIVE_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SOURCE" source="SOURCE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
+      </input>
+      <filter>&quot;ACTIVE_IND&quot; = 1 and &quot;SOURCE&quot; = 'EXCLUDE' and &quot;MANDT&quot; = '100'and&#xD;
+&quot;AGENT&quot; != ''</filter>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_ZBTV_TRAN" filterExpressionLanguage="COLUMN_ENGINE">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="TRAN_TYPE"/>
+        <viewAttribute id="PRINCIPLE"/>
+        <viewAttribute id="ACTIVE_IND"/>
+        <viewAttribute id="SOURCE"/>
+        <viewAttribute id="AGENT"/>
+        <viewAttribute id="MANDT"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#PROJ_ZBTV_TRAN$$$$ZBTVCSG_TRAN$$">
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRAN_TYPE" source="TRAN_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRINCIPLE" source="PRINCIPLE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACTIVE_IND" source="ACTIVE_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SOURCE" source="SOURCE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AGENT" source="AGENT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
+      </input>
+      <filter>&quot;ACTIVE_IND&quot; =1 and &quot;SOURCE&quot; = 'EXCLUDE' and &quot;MANDT&quot; = '100'and &#xD;
+&quot;AGENT&quot; = ''</filter>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="PROJ_AGNT_NULL_JOIN" joinOrder="OUTSIDE_IN" joinType="leftOuter">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="ACCT_NUM"/>
+        <viewAttribute id="EXTR_DT"/>
+        <viewAttribute id="TRAN_CD"/>
+        <viewAttribute id="SERVICE_CD"/>
+        <viewAttribute id="ADJ_RSN_CD"/>
+        <viewAttribute id="TRAN_DT"/>
+        <viewAttribute id="POST_DT"/>
+        <viewAttribute id="AUDT_TRL_DT"/>
+        <viewAttribute id="AMT"/>
+        <viewAttribute id="VTG_ROW_ID"/>
+        <viewAttribute id="ADJ_ENTR_REF"/>
+        <viewAttribute id="ENTR_REF_NUM"/>
+        <viewAttribute id="CYCL_ID"/>
+        <viewAttribute id="DSCT_CD"/>
+        <viewAttribute id="DSCT_AMT"/>
+        <viewAttribute id="PRE_DSCT_CHRG"/>
+        <viewAttribute id="BILL_CD"/>
+        <viewAttribute id="INSTALL_NUM"/>
+        <viewAttribute id="EXTR_TM"/>
+        <viewAttribute id="SYS_NUM"/>
+        <viewAttribute id="SRC_TS"/>
+        <viewAttribute id="PRIN_NUM"/>
+        <viewAttribute id="AGNT_NUM"/>
+        <viewAttribute id="CO_CD"/>
+        <viewAttribute id="CONTR_END_DT"/>
+        <viewAttribute id="CONTR_STRT_DT"/>
+        <viewAttribute id="CONTR_TERM"/>
+        <viewAttribute id="CONTR_TY"/>
+        <viewAttribute id="BILL_CYCL"/>
+        <viewAttribute id="CUST_ST"/>
+        <viewAttribute id="NETWK_TY"/>
+        <viewAttribute id="CUST_TY"/>
+        <viewAttribute id="KUNNR_SID"/>
+        <viewAttribute id="COMIT_TY"/>
+        <viewAttribute id="IS_20100201"/>
+        <viewAttribute id="INST_CRD_IND"/>
+        <viewAttribute id="IS_20100202"/>
+        <viewAttribute id="PRINCIPLE_RIGHT"/>
+        <viewAttribute id="CNVR_IND"/>
+        <viewAttribute id="CC_BILL_FROM_DT"/>
+        <viewAttribute id="CC_BILL_TO_DT"/>
+        <viewAttribute id="INST_CHRG_IND"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#PROJ_FILT_TEST_AGENT">
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACCT_NUM" source="ACCT_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXTR_DT" source="EXTR_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRAN_CD" source="TRAN_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SERVICE_CD" source="SERVICE_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ADJ_RSN_CD" source="ADJ_RSN_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRAN_DT" source="TRAN_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="POST_DT" source="POST_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AUDT_TRL_DT" source="AUDT_TRL_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AMT" source="AMT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VTG_ROW_ID" source="VTG_ROW_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ADJ_ENTR_REF" source="ADJ_ENTR_REF"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ENTR_REF_NUM" source="ENTR_REF_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DSCT_CD" source="DSCT_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DSCT_AMT" source="DSCT_AMT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRE_DSCT_CHRG" source="PRE_DSCT_CHRG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_CD" source="BILL_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INSTALL_NUM" source="INSTALL_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXTR_TM" source="EXTR_TM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SYS_NUM" source="SYS_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SRC_TS" source="SRC_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRIN_NUM" source="PRIN_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AGNT_NUM" source="AGNT_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CO_CD" source="CO_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTR_END_DT" source="CONTR_END_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTR_STRT_DT" source="CONTR_STRT_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTR_TERM" source="CONTR_TERM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTR_TY" source="CONTR_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_CYCL" source="BILL_CYCL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUST_ST" source="CUST_ST"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NETWK_TY" source="NETWK_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUST_TY" source="CUST_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KUNNR_SID" source="KUNNR_SID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="COMIT_TY" source="COMIT_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20100201" source="IS_20100201"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INST_CRD_IND" source="INST_CRD_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20100202" source="IS_20100202"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CNVR_IND" source="CNVR_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_BILL_FROM_DT" source="CC_BILL_FROM_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_BILL_TO_DT" source="CC_BILL_TO_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INST_CHRG_IND" source="INST_CHRG_IND"/>
+      </input>
+      <input node="#PROJ_ZBTV_TRAN">
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRINCIPLE_RIGHT" source="PRINCIPLE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRIN_NUM" source="PRINCIPLE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRAN_CD" source="TRAN_TYPE"/>
+      </input>
+      <joinAttribute name="PRIN_NUM"/>
+      <joinAttribute name="TRAN_CD"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_PRIN_FILTER" filterExpressionLanguage="COLUMN_ENGINE">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="ACCT_NUM"/>
+        <viewAttribute id="EXTR_DT"/>
+        <viewAttribute id="TRAN_CD"/>
+        <viewAttribute id="SERVICE_CD"/>
+        <viewAttribute id="ADJ_RSN_CD"/>
+        <viewAttribute id="TRAN_DT"/>
+        <viewAttribute id="POST_DT"/>
+        <viewAttribute id="AUDT_TRL_DT"/>
+        <viewAttribute id="AMT"/>
+        <viewAttribute id="VTG_ROW_ID"/>
+        <viewAttribute id="ADJ_ENTR_REF"/>
+        <viewAttribute id="ENTR_REF_NUM"/>
+        <viewAttribute id="CYCL_ID"/>
+        <viewAttribute id="DSCT_CD"/>
+        <viewAttribute id="DSCT_AMT"/>
+        <viewAttribute id="PRE_DSCT_CHRG"/>
+        <viewAttribute id="BILL_CD"/>
+        <viewAttribute id="INSTALL_NUM"/>
+        <viewAttribute id="EXTR_TM"/>
+        <viewAttribute id="SYS_NUM"/>
+        <viewAttribute id="SRC_TS"/>
+        <viewAttribute id="PRIN_NUM"/>
+        <viewAttribute id="AGNT_NUM"/>
+        <viewAttribute id="CO_CD"/>
+        <viewAttribute id="CONTR_END_DT"/>
+        <viewAttribute id="CONTR_STRT_DT"/>
+        <viewAttribute id="CONTR_TERM"/>
+        <viewAttribute id="CONTR_TY"/>
+        <viewAttribute id="BILL_CYCL"/>
+        <viewAttribute id="CUST_ST"/>
+        <viewAttribute id="NETWK_TY"/>
+        <viewAttribute id="CUST_TY"/>
+        <viewAttribute id="KUNNR_SID"/>
+        <viewAttribute id="COMIT_TY"/>
+        <viewAttribute id="IS_20100201"/>
+        <viewAttribute id="INST_CRD_IND"/>
+        <viewAttribute id="IS_20100202"/>
+        <viewAttribute id="PRINCIPLE_RIGHT"/>
+        <viewAttribute id="CNVR_IND"/>
+        <viewAttribute id="CC_BILL_FROM_DT"/>
+        <viewAttribute id="CC_BILL_TO_DT"/>
+        <viewAttribute id="INST_CHRG_IND"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#PROJ_AGNT_NULL_JOIN">
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACCT_NUM" source="ACCT_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXTR_DT" source="EXTR_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRAN_CD" source="TRAN_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SERVICE_CD" source="SERVICE_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ADJ_RSN_CD" source="ADJ_RSN_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRAN_DT" source="TRAN_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="POST_DT" source="POST_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AUDT_TRL_DT" source="AUDT_TRL_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AMT" source="AMT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VTG_ROW_ID" source="VTG_ROW_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ADJ_ENTR_REF" source="ADJ_ENTR_REF"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ENTR_REF_NUM" source="ENTR_REF_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DSCT_CD" source="DSCT_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DSCT_AMT" source="DSCT_AMT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRE_DSCT_CHRG" source="PRE_DSCT_CHRG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_CD" source="BILL_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INSTALL_NUM" source="INSTALL_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXTR_TM" source="EXTR_TM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SYS_NUM" source="SYS_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SRC_TS" source="SRC_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRIN_NUM" source="PRIN_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AGNT_NUM" source="AGNT_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CO_CD" source="CO_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTR_END_DT" source="CONTR_END_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTR_STRT_DT" source="CONTR_STRT_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTR_TERM" source="CONTR_TERM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTR_TY" source="CONTR_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_CYCL" source="BILL_CYCL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUST_ST" source="CUST_ST"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NETWK_TY" source="NETWK_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUST_TY" source="CUST_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KUNNR_SID" source="KUNNR_SID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="COMIT_TY" source="COMIT_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20100201" source="IS_20100201"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INST_CRD_IND" source="INST_CRD_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20100202" source="IS_20100202"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRINCIPLE_RIGHT" source="PRINCIPLE_RIGHT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CNVR_IND" source="CNVR_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_BILL_FROM_DT" source="CC_BILL_FROM_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_BILL_TO_DT" source="CC_BILL_TO_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INST_CHRG_IND" source="INST_CHRG_IND"/>
+      </input>
+      <filter>isNull(&quot;PRINCIPLE_RIGHT&quot;)</filter>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="PROJ_AGNT_JOIN" joinOrder="OUTSIDE_IN" joinType="leftOuter">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="ACCT_NUM"/>
+        <viewAttribute id="EXTR_DT"/>
+        <viewAttribute id="TRAN_CD"/>
+        <viewAttribute id="SERVICE_CD"/>
+        <viewAttribute id="ADJ_RSN_CD"/>
+        <viewAttribute id="TRAN_DT"/>
+        <viewAttribute id="POST_DT"/>
+        <viewAttribute id="AUDT_TRL_DT"/>
+        <viewAttribute id="VTG_ROW_ID"/>
+        <viewAttribute id="ADJ_ENTR_REF"/>
+        <viewAttribute id="AMT"/>
+        <viewAttribute id="ENTR_REF_NUM"/>
+        <viewAttribute id="CYCL_ID"/>
+        <viewAttribute id="DSCT_CD"/>
+        <viewAttribute id="DSCT_AMT"/>
+        <viewAttribute id="PRE_DSCT_CHRG"/>
+        <viewAttribute id="BILL_CD"/>
+        <viewAttribute id="INSTALL_NUM"/>
+        <viewAttribute id="EXTR_TM"/>
+        <viewAttribute id="SYS_NUM"/>
+        <viewAttribute id="SRC_TS"/>
+        <viewAttribute id="PRIN_NUM"/>
+        <viewAttribute id="AGNT_NUM"/>
+        <viewAttribute id="CO_CD"/>
+        <viewAttribute id="CONTR_END_DT"/>
+        <viewAttribute id="CONTR_STRT_DT"/>
+        <viewAttribute id="CONTR_TERM"/>
+        <viewAttribute id="CONTR_TY"/>
+        <viewAttribute id="BILL_CYCL"/>
+        <viewAttribute id="CUST_ST"/>
+        <viewAttribute id="NETWK_TY"/>
+        <viewAttribute id="CUST_TY"/>
+        <viewAttribute id="KUNNR_SID"/>
+        <viewAttribute id="COMIT_TY"/>
+        <viewAttribute id="IS_20100201"/>
+        <viewAttribute id="INST_CRD_IND"/>
+        <viewAttribute id="IS_20100202"/>
+        <viewAttribute id="AGENT_RIGHT"/>
+        <viewAttribute id="CNVR_IND"/>
+        <viewAttribute id="CC_BILL_FROM_DT"/>
+        <viewAttribute id="CC_BILL_TO_DT"/>
+        <viewAttribute id="INST_CHRG_IND"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#PROJ_PRIN_FILTER">
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACCT_NUM" source="ACCT_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXTR_DT" source="EXTR_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRAN_CD" source="TRAN_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SERVICE_CD" source="SERVICE_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ADJ_RSN_CD" source="ADJ_RSN_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRAN_DT" source="TRAN_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="POST_DT" source="POST_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AUDT_TRL_DT" source="AUDT_TRL_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VTG_ROW_ID" source="VTG_ROW_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ADJ_ENTR_REF" source="ADJ_ENTR_REF"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AMT" source="AMT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ENTR_REF_NUM" source="ENTR_REF_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DSCT_CD" source="DSCT_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DSCT_AMT" source="DSCT_AMT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRE_DSCT_CHRG" source="PRE_DSCT_CHRG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_CD" source="BILL_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INSTALL_NUM" source="INSTALL_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXTR_TM" source="EXTR_TM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SYS_NUM" source="SYS_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SRC_TS" source="SRC_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRIN_NUM" source="PRIN_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AGNT_NUM" source="AGNT_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CO_CD" source="CO_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTR_END_DT" source="CONTR_END_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTR_STRT_DT" source="CONTR_STRT_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTR_TERM" source="CONTR_TERM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTR_TY" source="CONTR_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_CYCL" source="BILL_CYCL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUST_ST" source="CUST_ST"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NETWK_TY" source="NETWK_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUST_TY" source="CUST_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KUNNR_SID" source="KUNNR_SID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="COMIT_TY" source="COMIT_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20100201" source="IS_20100201"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INST_CRD_IND" source="INST_CRD_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20100202" source="IS_20100202"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CNVR_IND" source="CNVR_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_BILL_FROM_DT" source="CC_BILL_FROM_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_BILL_TO_DT" source="CC_BILL_TO_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INST_CHRG_IND" source="INST_CHRG_IND"/>
+      </input>
+      <input node="#PROJ_ABTV_TRAN">
+        <mapping xsi:type="Calculation:AttributeMapping" target="AGENT_RIGHT" source="AGENT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRAN_CD" source="TRAN_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRIN_NUM" source="PRINCIPLE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AGNT_NUM" source="AGENT"/>
+      </input>
+      <joinAttribute name="TRAN_CD"/>
+      <joinAttribute name="PRIN_NUM"/>
+      <joinAttribute name="AGNT_NUM"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_AGNT_FILT" filterExpressionLanguage="COLUMN_ENGINE">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="ACCT_NUM"/>
+        <viewAttribute id="EXTR_DT"/>
+        <viewAttribute id="TRAN_CD"/>
+        <viewAttribute id="SERVICE_CD"/>
+        <viewAttribute id="ADJ_RSN_CD"/>
+        <viewAttribute id="TRAN_DT"/>
+        <viewAttribute id="POST_DT"/>
+        <viewAttribute id="AUDT_TRL_DT"/>
+        <viewAttribute id="AMT"/>
+        <viewAttribute id="VTG_ROW_ID"/>
+        <viewAttribute id="ADJ_ENTR_REF"/>
+        <viewAttribute id="ENTR_REF_NUM"/>
+        <viewAttribute id="CYCL_ID"/>
+        <viewAttribute id="DSCT_CD"/>
+        <viewAttribute id="DSCT_AMT"/>
+        <viewAttribute id="PRE_DSCT_CHRG"/>
+        <viewAttribute id="BILL_CD"/>
+        <viewAttribute id="INSTALL_NUM"/>
+        <viewAttribute id="EXTR_TM"/>
+        <viewAttribute id="SYS_NUM"/>
+        <viewAttribute id="SRC_TS"/>
+        <viewAttribute id="PRIN_NUM"/>
+        <viewAttribute id="AGNT_NUM"/>
+        <viewAttribute id="CO_CD"/>
+        <viewAttribute id="CONTR_END_DT"/>
+        <viewAttribute id="CONTR_STRT_DT"/>
+        <viewAttribute id="CONTR_TERM"/>
+        <viewAttribute id="CONTR_TY"/>
+        <viewAttribute id="BILL_CYCL"/>
+        <viewAttribute id="CUST_ST"/>
+        <viewAttribute id="NETWK_TY"/>
+        <viewAttribute id="CUST_TY"/>
+        <viewAttribute id="KUNNR_SID"/>
+        <viewAttribute id="COMIT_TY"/>
+        <viewAttribute id="IS_20100201"/>
+        <viewAttribute id="INST_CRD_IND"/>
+        <viewAttribute id="IS_20100202"/>
+        <viewAttribute id="AGENT_RIGHT"/>
+        <viewAttribute id="CNVR_IND"/>
+        <viewAttribute id="CC_BILL_FROM_DT"/>
+        <viewAttribute id="CC_BILL_TO_DT"/>
+        <viewAttribute id="INST_CHRG_IND"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#PROJ_AGNT_JOIN">
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACCT_NUM" source="ACCT_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXTR_DT" source="EXTR_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRAN_CD" source="TRAN_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SERVICE_CD" source="SERVICE_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ADJ_RSN_CD" source="ADJ_RSN_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRAN_DT" source="TRAN_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="POST_DT" source="POST_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AUDT_TRL_DT" source="AUDT_TRL_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AMT" source="AMT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VTG_ROW_ID" source="VTG_ROW_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ADJ_ENTR_REF" source="ADJ_ENTR_REF"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ENTR_REF_NUM" source="ENTR_REF_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DSCT_CD" source="DSCT_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DSCT_AMT" source="DSCT_AMT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRE_DSCT_CHRG" source="PRE_DSCT_CHRG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_CD" source="BILL_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INSTALL_NUM" source="INSTALL_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXTR_TM" source="EXTR_TM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SYS_NUM" source="SYS_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SRC_TS" source="SRC_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRIN_NUM" source="PRIN_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AGNT_NUM" source="AGNT_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CO_CD" source="CO_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTR_END_DT" source="CONTR_END_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTR_STRT_DT" source="CONTR_STRT_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTR_TERM" source="CONTR_TERM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTR_TY" source="CONTR_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_CYCL" source="BILL_CYCL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUST_ST" source="CUST_ST"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NETWK_TY" source="NETWK_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUST_TY" source="CUST_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KUNNR_SID" source="KUNNR_SID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="COMIT_TY" source="COMIT_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20100201" source="IS_20100201"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INST_CRD_IND" source="INST_CRD_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20100202" source="IS_20100202"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AGENT_RIGHT" source="AGENT_RIGHT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CNVR_IND" source="CNVR_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_BILL_FROM_DT" source="CC_BILL_FROM_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_BILL_TO_DT" source="CC_BILL_TO_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INST_CHRG_IND" source="INST_CHRG_IND"/>
+      </input>
+      <filter>isNull(&quot;AGENT_RIGHT&quot;)</filter>
+    </calculationView>
+  </calculationViews>
+  <logicalModel id="PROJ_AGNT_FILT">
+    <descriptions/>
+    <attributes>
+      <attribute id="ACCT_NUM" order="2" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ACCT_NUM"/>
+        <keyMapping columnObjectName="PROJ_AGNT_FILT" columnName="ACCT_NUM"/>
+      </attribute>
+      <attribute id="EXTR_DT" order="3" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="EXTR_DT"/>
+        <keyMapping columnObjectName="PROJ_AGNT_FILT" columnName="EXTR_DT"/>
+      </attribute>
+      <attribute id="TRAN_CD" order="4" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="TRAN_CD"/>
+        <keyMapping columnObjectName="PROJ_AGNT_FILT" columnName="TRAN_CD"/>
+      </attribute>
+      <attribute id="SERVICE_CD" order="5" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SERVICE_CD"/>
+        <keyMapping columnObjectName="PROJ_AGNT_FILT" columnName="SERVICE_CD"/>
+      </attribute>
+      <attribute id="ADJ_RSN_CD" order="6" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ADJ_RSN_CD"/>
+        <keyMapping columnObjectName="PROJ_AGNT_FILT" columnName="ADJ_RSN_CD"/>
+      </attribute>
+      <attribute id="TRAN_DT" order="7" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="TRAN_DT"/>
+        <keyMapping columnObjectName="PROJ_AGNT_FILT" columnName="TRAN_DT"/>
+      </attribute>
+      <attribute id="POST_DT" order="8" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="POST_DT"/>
+        <keyMapping columnObjectName="PROJ_AGNT_FILT" columnName="POST_DT"/>
+      </attribute>
+      <attribute id="AUDT_TRL_DT" order="9" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="AUDT_TRL_DT"/>
+        <keyMapping columnObjectName="PROJ_AGNT_FILT" columnName="AUDT_TRL_DT"/>
+      </attribute>
+      <attribute id="AMT" order="10" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="AMT"/>
+        <keyMapping columnObjectName="PROJ_AGNT_FILT" columnName="AMT"/>
+      </attribute>
+      <attribute id="VTG_ROW_ID" order="11" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="VTG_ROW_ID"/>
+        <keyMapping columnObjectName="PROJ_AGNT_FILT" columnName="VTG_ROW_ID"/>
+      </attribute>
+      <attribute id="ADJ_ENTR_REF" order="12" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ADJ_ENTR_REF"/>
+        <keyMapping columnObjectName="PROJ_AGNT_FILT" columnName="ADJ_ENTR_REF"/>
+      </attribute>
+      <attribute id="ENTR_REF_NUM" order="13" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ENTR_REF_NUM"/>
+        <keyMapping columnObjectName="PROJ_AGNT_FILT" columnName="ENTR_REF_NUM"/>
+      </attribute>
+      <attribute id="CYCL_ID" order="14" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CYCL_ID"/>
+        <keyMapping columnObjectName="PROJ_AGNT_FILT" columnName="CYCL_ID"/>
+      </attribute>
+      <attribute id="DSCT_CD" order="15" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="DSCT_CD"/>
+        <keyMapping columnObjectName="PROJ_AGNT_FILT" columnName="DSCT_CD"/>
+      </attribute>
+      <attribute id="DSCT_AMT" order="16" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="DSCT_AMT"/>
+        <keyMapping columnObjectName="PROJ_AGNT_FILT" columnName="DSCT_AMT"/>
+      </attribute>
+      <attribute id="PRE_DSCT_CHRG" order="17" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="PRE_DSCT_CHRG"/>
+        <keyMapping columnObjectName="PROJ_AGNT_FILT" columnName="PRE_DSCT_CHRG"/>
+      </attribute>
+      <attribute id="BILL_CD" order="18" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="BILL_CD"/>
+        <keyMapping columnObjectName="PROJ_AGNT_FILT" columnName="BILL_CD"/>
+      </attribute>
+      <attribute id="INSTALL_NUM" order="19" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="INSTALL_NUM"/>
+        <keyMapping columnObjectName="PROJ_AGNT_FILT" columnName="INSTALL_NUM"/>
+      </attribute>
+      <attribute id="EXTR_TM" order="20" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="EXTR_TM"/>
+        <keyMapping columnObjectName="PROJ_AGNT_FILT" columnName="EXTR_TM"/>
+      </attribute>
+      <attribute id="SYS_NUM" order="21" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SYS_NUM"/>
+        <keyMapping columnObjectName="PROJ_AGNT_FILT" columnName="SYS_NUM"/>
+      </attribute>
+      <attribute id="SRC_TS" order="22" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SRC_TS"/>
+        <keyMapping columnObjectName="PROJ_AGNT_FILT" columnName="SRC_TS"/>
+      </attribute>
+      <attribute id="PRIN_NUM" order="23" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="PRIN_NUM"/>
+        <keyMapping columnObjectName="PROJ_AGNT_FILT" columnName="PRIN_NUM"/>
+      </attribute>
+      <attribute id="AGNT_NUM" order="24" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="AGNT_NUM"/>
+        <keyMapping columnObjectName="PROJ_AGNT_FILT" columnName="AGNT_NUM"/>
+      </attribute>
+      <attribute id="CO_CD" order="25" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CO_CD"/>
+        <keyMapping columnObjectName="PROJ_AGNT_FILT" columnName="CO_CD"/>
+      </attribute>
+      <attribute id="CONTR_END_DT" order="26" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CONTR_END_DT"/>
+        <keyMapping columnObjectName="PROJ_AGNT_FILT" columnName="CONTR_END_DT"/>
+      </attribute>
+      <attribute id="CONTR_STRT_DT" order="27" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CONTR_STRT_DT"/>
+        <keyMapping columnObjectName="PROJ_AGNT_FILT" columnName="CONTR_STRT_DT"/>
+      </attribute>
+      <attribute id="CONTR_TERM" order="28" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CONTR_TERM"/>
+        <keyMapping columnObjectName="PROJ_AGNT_FILT" columnName="CONTR_TERM"/>
+      </attribute>
+      <attribute id="CONTR_TY" order="29" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CONTR_TY"/>
+        <keyMapping columnObjectName="PROJ_AGNT_FILT" columnName="CONTR_TY"/>
+      </attribute>
+      <attribute id="BILL_CYCL" order="30" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="BILL_CYCL"/>
+        <keyMapping columnObjectName="PROJ_AGNT_FILT" columnName="BILL_CYCL"/>
+      </attribute>
+      <attribute id="CUST_ST" order="31" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CUST_ST"/>
+        <keyMapping columnObjectName="PROJ_AGNT_FILT" columnName="CUST_ST"/>
+      </attribute>
+      <attribute id="NETWK_TY" order="32" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="NETWK_TY"/>
+        <keyMapping columnObjectName="PROJ_AGNT_FILT" columnName="NETWK_TY"/>
+      </attribute>
+      <attribute id="CUST_TY" order="33" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CUST_TY"/>
+        <keyMapping columnObjectName="PROJ_AGNT_FILT" columnName="CUST_TY"/>
+      </attribute>
+      <attribute id="KUNNR_SID" order="34" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="KUNNR_SID"/>
+        <keyMapping columnObjectName="PROJ_AGNT_FILT" columnName="KUNNR_SID"/>
+      </attribute>
+      <attribute id="COMIT_TY" order="35" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="COMIT_TY"/>
+        <keyMapping columnObjectName="PROJ_AGNT_FILT" columnName="COMIT_TY"/>
+      </attribute>
+      <attribute id="IS_20100201" order="36" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="IS_20100201"/>
+        <keyMapping columnObjectName="PROJ_AGNT_FILT" columnName="IS_20100201"/>
+      </attribute>
+      <attribute id="INST_CRD_IND" order="37" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="INST_CRD_IND"/>
+        <keyMapping columnObjectName="PROJ_AGNT_FILT" columnName="INST_CRD_IND"/>
+      </attribute>
+      <attribute id="IS_20100202" order="38" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="IS_20100202"/>
+        <keyMapping columnObjectName="PROJ_AGNT_FILT" columnName="IS_20100202"/>
+      </attribute>
+      <attribute id="AGENT_RIGHT" order="39" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="AGENT_RIGHT"/>
+        <keyMapping columnObjectName="PROJ_AGNT_FILT" columnName="AGENT_RIGHT"/>
+      </attribute>
+      <attribute id="CNVR_IND" order="40" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CNVR_IND"/>
+        <keyMapping columnObjectName="PROJ_AGNT_FILT" columnName="CNVR_IND"/>
+      </attribute>
+      <attribute id="BILL_FROM_DT" hidden="false" order="41" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="BILL_FROM_DT"/>
+        <keyMapping columnObjectName="PROJ_AGNT_FILT" columnName="CC_BILL_FROM_DT"/>
+      </attribute>
+      <attribute id="BILL_TO_DT" hidden="false" order="42" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="BILL_TO_DT"/>
+        <keyMapping columnObjectName="PROJ_AGNT_FILT" columnName="CC_BILL_TO_DT"/>
+      </attribute>
+      <attribute id="INST_CHRG_IND" order="43" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="INST_CHRG_IND"/>
+        <keyMapping columnObjectName="PROJ_AGNT_FILT" columnName="INST_CHRG_IND"/>
+      </attribute>
+    </attributes>
+    <calculatedAttributes>
+      <calculatedAttribute id="TERM_IND" hidden="false" order="1" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="TERM_IND"/>
+        <keyCalculation datatype="NVARCHAR" expressionLanguage="COLUMN_ENGINE" length="5">
+          <formula>'M2M'</formula>
+        </keyCalculation>
+      </calculatedAttribute>
+    </calculatedAttributes>
+    <privateDataFoundation>
+      <tableProxies/>
+      <joins/>
+      <layout>
+        <shapes/>
+      </layout>
+    </privateDataFoundation>
+    <baseMeasures/>
+    <calculatedMeasures/>
+    <restrictedMeasures/>
+    <localDimensions/>
+  </logicalModel>
+  <layout>
+    <shapes>
+      <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+        <upperLeftCorner x="488" y="87"/>
+        <rectangleSize height="64" width="184"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_TV_MON_TRAN_BASE" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="22" y="861"/>
+        <rectangleSize height="64" width="259"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_CUST" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="295" y="861"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="JOIN_MTB_CUST" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="162" y="765"/>
+        <rectangleSize height="82" width="192"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_FILT_EFF_DT" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="162" y="687"/>
+        <rectangleSize height="64" width="193"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_ZBTV_AGENT" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="369" y="687"/>
+        <rectangleSize height="64" width="215"/>
+      </shape>
+      <shape expanded="true" modelObjectName="JOIN_ZBTV_AGENT" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="268" y="591"/>
+        <rectangleSize height="82" width="197"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_FILT_TEST_AGENT" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="248" y="513"/>
+        <rectangleSize height="64" width="237"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_ABTV_TRAN" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="593" y="339"/>
+        <rectangleSize height="64" width="177"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_ZBTV_TRAN" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="499" y="513"/>
+        <rectangleSize height="64" width="193"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_AGNT_NULL_JOIN" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="379" y="417"/>
+        <rectangleSize height="82" width="200"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_PRIN_FILTER" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="379" y="339"/>
+        <rectangleSize height="64" width="200"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_AGNT_JOIN" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="473" y="243"/>
+        <rectangleSize height="82" width="214"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_AGNT_FILT" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="483" y="165"/>
+        <rectangleSize height="64" width="194"/>
+      </shape>
+    </shapes>
+  </layout>
+</Calculation:scenario>

@@ -1,0 +1,486 @@
+PROCEDURE "NDB_TV"."IFRS_R1.BELLTV.NDB_BELLTV::SP_TV_TRANSACTIONS" 
+(IN IP_CYCLE_ID NVARCHAR(3),OUT OP_STATUS NVARCHAR(100)) 
+	LANGUAGE SQLSCRIPT
+	SQL SECURITY INVOKER 
+	--DEFAULT SCHEMA 
+	--READS SQL DATA 
+	AS
+BEGIN
+--------------------------------------------------------------------------------------------------
+-- Procedure Title : SP_TV_TRANSACTIONS
+-- Created By      : BC_EY96109       
+-- Create Date     : 09-05-2017
+-- Description     : Data Inserted using Calculation View -CA_TV_UNION
+--                   To NDB Table - SP_TV_TRANSACTIONS Using this stored procedure.
+-- Project         : Bell Canada
+-- Release         : R1 / IFRS
+--------------------------------------------------------------------------------------------------
+--   M O D I F I C A T I O N   H I S T O R Y
+--------------------------------------------------------------------------------------------------
+-- Date        | User ID          | Modification History/Release
+--------------------------------------------------------------------------------------------------
+--             |                  | 
+--------------------------------------------------------------------------------------------------
+-- Description Of the changes 
+--------------------------------------------------------------------------------------------------
+-- Modification Number          : <Assign Some Number> 
+-- Description of Changes Made> : <Description of Changes>       
+--------------------------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------------------------
+-- Global Variables Declaration
+--------------------------------------------------------------------------------------------------
+
+DECLARE LC_ERROR_TEXT 		NVARCHAR(70) DEFAULT 'OUT STATUS IS 1 : INSERT/UPDATE FOR ONE OR MORE RECORD FAILED';
+DECLARE LC_SUCCESS_TEXT 	NVARCHAR(70) DEFAULT 'OUT STATUS IS 0 : INSERT/UPDATE EXECUTION SUCCESSFUL';
+DECLARE LV_ERROR_FLAG 		NVARCHAR(1) := 'N';
+DECLARE LV_CUR_UTC 			TIMESTAMP := CURRENT_TIMESTAMP;
+DECLARE ERROR_TAB 			TABLE (ERROR_CODE NVARCHAR(100));
+DECLARE i					INTEGER;
+DECLARE RECORD_COUNT		INTEGER;
+DECLARE CURRENT_ERROR		NVARCHAR(100);
+
+--------------------------------------------------------------------------------------------------
+-- Cursors Declaration
+--------------------------------------------------------------------------------------------------
+DECLARE CURSOR CUR_TRAN FOR 
+        SELECT
+			 "ACCT_NUM",
+			 "PRIN_NUM",
+			 "EXTR_DT",
+			 "AGNT_NUM",
+			 "TRAN_CD",
+			 "SERVICE_CD",
+			 "ADJ_RSN_CD",
+			 "TRAN_DT",
+			 "POST_DT",
+			 "AUDT_TRL_DT",
+			 "CO_CD",
+			 "CONTR_END_DT",
+			 "CONTR_STRT_DT",
+			 "CONTR_TERM",
+			 "CONTR_TY",
+			 "AMT",
+			 "VTG_ROW_ID",
+			 "ADJ_ENTR_REF",
+			 "ENTR_REF_NUM",
+			 "CYCL_ID",
+			 "DUO_TRIO_IND",
+			 "DSCT_CD",
+			 "DSCT_AMT",
+			 "PRE_DSCT_CHRG",
+			 "BILL_CYCL",
+			 "CUST_ST",
+			 "TERM_IND",
+			 "PRODUCT_TYPE",
+			 "NETWK_TY",
+			 "CUST_TY",
+			 "BILL_CD",
+			 "REVENUE_CD",
+			 "KUNNR_SID",
+			 "BILL_FROM_DT",
+			 "BILL_TO_DT",
+			 "FEATURE_CD",
+			 "INSTALL_NUM",
+			 "CNVR_IND",
+			 "EXTR_TM",
+			 "SYS_NUM",
+			 "SRC_TS",
+			 "ERROR_CODE",
+			 "ERROR_STATUS"
+	    FROM "_SYS_BIC"."IFRS_R1.BELLTV.NDB_BELLTV/CA_TV_UNION"
+   WITH HINT(NO_CS_JOIN);
+	 
+--------------------------------------------------------------------------------------------------
+-- Local Temporary Tables Declaration
+-------------------------------------------------------------------------------------------------- 
+
+CREATE LOCAL TEMPORARY TABLE #UPDATE_TV_TRANSACTIONS("ACCT_NUM" NVARCHAR(16),"EXTR_DT" DATE,"VTG_ROW_ID" NVARCHAR(18),"TRAN_CD" NVARCHAR(4),"POST_DT" DATE );
+CREATE LOCAL TEMPORARY TABLE #UPDATE_EH_DELETION   ("ACCT_NUM" NVARCHAR(16),"EXTR_DT" DATE); 
+
+--------------------------------------------------------------------------------------------------
+-- Cursors Loop
+-------------------------------------------------------------------------------------------------- 	 
+
+
+FOR C_TRAN AS CUR_TRAN DO
+
+--  Define Exit Handler
+	DECLARE EXIT HANDLER FOR SQLEXCEPTION 
+	BEGIN AUTONOMOUS TRANSACTION 
+	
+		--  Define Exit Handler
+		DECLARE EXIT HANDLER FOR SQLEXCEPTION 
+		BEGIN AUTONOMOUS TRANSACTION 
+		
+		-- Do Nothing. Exception Handled to ensure SP does not get terminated 
+	
+ 	  END;
+ 	  
+ 	  -- Insert record into error table
+		 INSERT INTO "NDB_TV"."IFRS_R1.BELLTV.NDB_BELLTV::TV_TRANSACTIONS_EH"
+				(
+				"ACCT_NUM",
+                "PRIN_NUM",
+                "EXTR_DT",
+                "AGNT_NUM",
+                "TRAN_CD",
+                "SERVICE_CD",
+                "ADJ_RSN_CD",
+                "TRANS_DT",
+                "POST_DT",
+                "AUDT_TRL_DT",
+                "CO_CD",
+                "CONTR_END_DT",
+                "CONTR_STRT_DT",
+                "CONTR_TERM",
+                "CONTR_TY",
+                "AMT",
+                "VTG_ROW_ID",
+                "ADJ_ENTR_REF",
+                "ENTR_REF_NUM",
+                "CYCL_ID",
+                "DUO_TRIO_IND",
+                "DSCT_CD",
+                "DSCT_AMT",
+                "PRE_DSCT_CHRG",
+                "BILL_CYCL",
+                "CUST_ST",
+                "TERM_IND",
+                "PRODUCT_TYPE",
+                "NETWK_TY",
+                "CUST_TY",
+                "BILL_CD",
+                "REVENUE_CD",
+                "KUNNR_SID",
+                "BILL_FROM_DT",
+                "BILL_TO_DT",
+                "FEAT_CD",
+                "INSTALL_NUM",
+                "CNVR_IND",
+                "EXTR_TM",
+                "SYS_NUM",
+                "SRC_TS",
+                "ERROR_CODE",
+				"TECHNICAL_MESSAGE",
+				"ERROR_CREATE_TS")
+				VALUES (
+	            C_TRAN."ACCT_NUM",
+                C_TRAN."PRIN_NUM",
+                C_TRAN."EXTR_DT",
+                C_TRAN."AGNT_NUM",
+                C_TRAN."TRAN_CD",
+                C_TRAN."SERVICE_CD",
+                C_TRAN."ADJ_RSN_CD",
+                C_TRAN."TRAN_DT",
+                C_TRAN."POST_DT",
+                C_TRAN."AUDT_TRL_DT",
+                C_TRAN."CO_CD",
+                C_TRAN."CONTR_END_DT",
+                C_TRAN."CONTR_STRT_DT",
+                C_TRAN."CONTR_TERM",
+                C_TRAN."CONTR_TY",
+                C_TRAN."AMT",
+                C_TRAN."VTG_ROW_ID",
+                C_TRAN."ADJ_ENTR_REF",
+                C_TRAN."ENTR_REF_NUM",
+                C_TRAN."CYCL_ID",
+                C_TRAN."DUO_TRIO_IND",
+                C_TRAN."DSCT_CD",
+                C_TRAN."DSCT_AMT",
+                C_TRAN."PRE_DSCT_CHRG",
+                C_TRAN."BILL_CYCL",
+                C_TRAN."CUST_ST",
+                C_TRAN."TERM_IND",
+                C_TRAN."PRODUCT_TYPE",
+                C_TRAN."NETWK_TY",
+                C_TRAN."CUST_TY",
+                C_TRAN."BILL_CD",
+                C_TRAN."REVENUE_CD",
+                C_TRAN."KUNNR_SID",
+                C_TRAN."BILL_FROM_DT",
+                C_TRAN."BILL_TO_DT",
+                C_TRAN."FEATURE_CD",
+                C_TRAN."INSTALL_NUM",
+                C_TRAN."CNVR_IND",
+                C_TRAN."EXTR_TM",
+                C_TRAN."SYS_NUM",
+                C_TRAN."SRC_TS",
+                ::SQL_ERROR_CODE,
+				::SQL_ERROR_MESSAGE,
+				LV_CUR_UTC
+				);
+			 LV_ERROR_FLAG := 'Y';
+		  	 
+	    END;
+
+ -----------------------------------------------------------------------------------------------    
+ --  Check the Error Status of the Record. If Record is with Error, then send to Error Table
+	IF C_TRAN.ERROR_STATUS = 1  THEN
+	
+	
+	--  Call the Stored Procedure to split the concatenated Error Messages into Error Rows
+		CALL "NDB_COMMON"."IFRS_R1.COMMON_COMP.EH::SP_EH_SPLIT_ERRORS"(C_TRAN."ERROR_CODE", ERROR_TAB, RECORD_COUNT);
+
+     -- Loop through the Error Records
+		FOR i IN 1 .. :RECORD_COUNT DO
+			
+		 -- Fetch the Error Code
+			CURRENT_ERROR = :ERROR_TAB."ERROR_CODE"[:i];
+			
+		-- Insert into the Error Table	
+	        INSERT INTO "NDB_TV"."IFRS_R1.BELLTV.NDB_BELLTV::TV_TRANSACTIONS_EH"
+				(
+				"ACCT_NUM",
+                "PRIN_NUM",
+                "EXTR_DT",
+                "AGNT_NUM",
+                "TRAN_CD",
+                "SERVICE_CD",
+                "ADJ_RSN_CD",
+                "TRANS_DT",
+                "POST_DT",
+                "AUDT_TRL_DT",
+                "CO_CD",
+                "CONTR_END_DT",
+                "CONTR_STRT_DT",
+                "CONTR_TERM",
+                "CONTR_TY",
+                "AMT",
+                "VTG_ROW_ID",
+                "ADJ_ENTR_REF",
+                "ENTR_REF_NUM",
+                "CYCL_ID",
+                "DUO_TRIO_IND",
+                "DSCT_CD",
+                "DSCT_AMT",
+                "PRE_DSCT_CHRG",
+                "BILL_CYCL",
+                "CUST_ST",
+                "TERM_IND",
+                "PRODUCT_TYPE",
+                "NETWK_TY",
+                "CUST_TY",
+                "BILL_CD",
+                "REVENUE_CD",
+                "KUNNR_SID",
+                "BILL_FROM_DT",
+                "BILL_TO_DT",
+                "FEAT_CD",
+                "INSTALL_NUM",
+                "CNVR_IND",
+                "EXTR_TM",
+                "SYS_NUM",
+                "SRC_TS",
+                "ERROR_CODE",
+				"ERROR_CREATE_TS")
+				VALUES (
+	            C_TRAN."ACCT_NUM",
+                C_TRAN."PRIN_NUM",
+                C_TRAN."EXTR_DT",
+                C_TRAN."AGNT_NUM",
+                C_TRAN."TRAN_CD",
+                C_TRAN."SERVICE_CD",
+                C_TRAN."ADJ_RSN_CD",
+                C_TRAN."TRAN_DT",
+                C_TRAN."POST_DT",
+                C_TRAN."AUDT_TRL_DT",
+                C_TRAN."CO_CD",
+                C_TRAN."CONTR_END_DT",
+                C_TRAN."CONTR_STRT_DT",
+                C_TRAN."CONTR_TERM",
+                C_TRAN."CONTR_TY",
+                C_TRAN."AMT",
+                C_TRAN."VTG_ROW_ID",
+                C_TRAN."ADJ_ENTR_REF",
+                C_TRAN."ENTR_REF_NUM",
+                C_TRAN."CYCL_ID",
+                C_TRAN."DUO_TRIO_IND",
+                C_TRAN."DSCT_CD",
+                C_TRAN."DSCT_AMT",
+                C_TRAN."PRE_DSCT_CHRG",
+                C_TRAN."BILL_CYCL",
+                C_TRAN."CUST_ST",
+                C_TRAN."TERM_IND",
+                C_TRAN."PRODUCT_TYPE",
+                C_TRAN."NETWK_TY",
+                C_TRAN."CUST_TY",
+                C_TRAN."BILL_CD",
+                C_TRAN."REVENUE_CD",
+                C_TRAN."KUNNR_SID",
+                C_TRAN."BILL_FROM_DT",
+                C_TRAN."BILL_TO_DT",
+                C_TRAN."FEATURE_CD",
+                C_TRAN."INSTALL_NUM",
+                C_TRAN."CNVR_IND",
+                C_TRAN."EXTR_TM",
+                C_TRAN."SYS_NUM",
+                C_TRAN."SRC_TS",
+                :CURRENT_ERROR,
+				LV_CUR_UTC);		
+			
+END FOR;
+		
+		-- Set Error Flag				        
+			LV_ERROR_FLAG := 'Y';				
+
+-- Processing for Successful Records
+   ELSE 
+   
+--    Insert Records into the target NDB table
+
+               INSERT INTO "NDB_TV"."IFRS_R1.BELLTV.NDB_BELLTV::TV_TRANSACTIONS"
+				(
+				"ACCT_NUM",
+                "PRIN_NUM",
+                "EXTR_DT",
+                "AGNT_NUM",
+                "TRAN_CD",
+                "SERVICE_CD",
+                "ADJ_RSN_CD",
+                "TRANS_DT",
+                "POST_DT",
+                "AUDT_TRL_DT",
+                "CO_CD",
+                "CONTR_END_DT",
+                "CONTR_STRT_DT",
+                "CONTR_TERM",
+                "CONTR_TY",
+                "AMT",
+                "VTG_ROW_ID",
+                "ADJ_ENTR_REF",
+                "ENTR_REF_NUM",
+                "CYCL_ID",
+                "DUO_TRIO_IND",
+                "DSCT_CD",
+                "DSCT_AMT",
+                "PRE_DSCT_CHRG",
+                "BILL_CYCL",
+                "CUST_ST",
+                "TERM_IND",
+                "PRODUCT_TYPE",
+                "NETWK_TY",
+                "CUST_TY",
+                "BILL_CD",
+                "REVENUE_CD",
+                "KUNNR_SID",
+                "BILL_FROM_DT",
+                "BILL_TO_DT",
+                "FEAT_CD",
+                "INSTALL_NUM",
+                "CNVR_IND",
+                "EXTR_TM",
+                "SYS_NUM",
+                "SRC_TS")
+				VALUES (
+                C_TRAN."ACCT_NUM",
+                C_TRAN."PRIN_NUM",
+                C_TRAN."EXTR_DT",
+                C_TRAN."AGNT_NUM",
+                C_TRAN."TRAN_CD",
+                C_TRAN."SERVICE_CD",
+                C_TRAN."ADJ_RSN_CD",
+                C_TRAN."TRAN_DT",
+                C_TRAN."POST_DT",
+                C_TRAN."AUDT_TRL_DT",
+                C_TRAN."CO_CD",
+                C_TRAN."CONTR_END_DT",
+                C_TRAN."CONTR_STRT_DT",
+                C_TRAN."CONTR_TERM",
+                C_TRAN."CONTR_TY",
+                C_TRAN."AMT",
+                C_TRAN."VTG_ROW_ID",
+                C_TRAN."ADJ_ENTR_REF",
+                C_TRAN."ENTR_REF_NUM",
+                C_TRAN."CYCL_ID",
+                C_TRAN."DUO_TRIO_IND",
+                C_TRAN."DSCT_CD",
+                C_TRAN."DSCT_AMT",
+                C_TRAN."PRE_DSCT_CHRG",
+                C_TRAN."BILL_CYCL",
+                C_TRAN."CUST_ST",
+                C_TRAN."TERM_IND",
+                C_TRAN."PRODUCT_TYPE",
+                C_TRAN."NETWK_TY",
+                C_TRAN."CUST_TY",
+                C_TRAN."BILL_CD",
+                C_TRAN."REVENUE_CD",
+                C_TRAN."KUNNR_SID",
+                C_TRAN."BILL_FROM_DT",
+                C_TRAN."BILL_TO_DT",
+                C_TRAN."FEATURE_CD",
+                C_TRAN."INSTALL_NUM",
+                C_TRAN."CNVR_IND",
+                C_TRAN."EXTR_TM",
+                C_TRAN."SYS_NUM",
+                C_TRAN."SRC_TS");
+
+--         Insert PK of successfully processed Records into Local Temp Tables 
+--         for Updating NDB_TS in corresponding Landing Tables records
+
+		   INSERT INTO #UPDATE_TV_TRANSACTIONS
+					   ("ACCT_NUM",
+					    "EXTR_DT",
+					    "VTG_ROW_ID",
+					     "TRAN_CD",
+					     "POST_DT") 
+			    VALUES (C_TRAN."ACCT_NUM",
+	 			 	    C_TRAN."EXTR_DT",
+	 			 	    C_TRAN."VTG_ROW_ID",
+	 			 	    C_TRAN."TRAN_CD",
+	 			 	    C_TRAN."POST_DT");
+					   					   	    		
+		   INSERT INTO #UPDATE_EH_DELETION
+					   ("ACCT_NUM",
+					    "EXTR_DT" ) 
+			    VALUES (C_TRAN."ACCT_NUM",
+	 			 	    C_TRAN."EXTR_DT");				   	
+		
+	END IF;
+
+END FOR;	
+
+--------------------------------------------------------------------------------------------------
+-- Update Landing Tables
+-------------------------------------------------------------------------------------------------- 
+
+ 	   UPDATE "LAND"."IFRS_R1.LAND::TV_MON_TRAN_BASE"  A 
+	     FROM "LAND"."IFRS_R1.LAND::TV_MON_TRAN_BASE"  A
+   INNER JOIN #UPDATE_TV_TRANSACTIONS  B
+	       ON A."SUB_ACCT_NUM"	 	=	 	B."ACCT_NUM"
+	      AND A."EXTR_DT"           =       B."EXTR_DT"
+	      AND A."VTG_ROW_ID"        =       B."VTG_ROW_ID"
+	      AND A."TRAN_CD"           =       B."TRAN_CD"
+	      AND A."POST_DT"           =       B."POST_DT"
+		  SET NDB_TS                =       LV_CUR_UTC
+		WHERE NDB_TS IS NULL;
+ 	   
+--------------------------------------------------------------------------------------------------
+-- Update Error Table
+--------------------------------------------------------------------------------------------------
+
+     UPDATE "NDB_TV"."IFRS_R1.BELLTV.NDB_BELLTV::TV_TRANSACTIONS_EH" A
+       FROM "NDB_TV"."IFRS_R1.BELLTV.NDB_BELLTV::TV_TRANSACTIONS_EH" A 
+ INNER JOIN #UPDATE_EH_DELETION B
+         ON  A."ACCT_NUM"                  = B."ACCT_NUM"
+        AND  A."EXTR_DT"                   = B."EXTR_DT"
+        SET (DELETE_DATE, DELETED)         = (CURRENT_DATE, 1);
+
+--------------------------------------------------------------------------------------------------
+-- Set Overall Status
+-------------------------------------------------------------------------------------------------- 
+
+--  STATUS 0: Send the success message to scheduling tool to confirm this procedure has been
+--  executed successfully
+    IF(LV_ERROR_FLAG = 'Y') THEN		
+
+     OP_STATUS := LC_ERROR_TEXT;
+			
+    ELSE
+
+  	 OP_STATUS := LC_SUCCESS_TEXT; 	
+				
+	END IF;
+
+END;
+

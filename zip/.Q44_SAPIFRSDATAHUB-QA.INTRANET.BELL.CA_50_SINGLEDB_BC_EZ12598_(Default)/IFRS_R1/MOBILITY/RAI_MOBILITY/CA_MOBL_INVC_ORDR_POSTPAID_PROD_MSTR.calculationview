@@ -1,0 +1,752 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:AccessControl="http://www.sap.com/ndb/SQLCoreModelAccessControl.ecore" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" xmlns:Variable="http://www.sap.com/ndb/BiModelVariable.ecore" schemaVersion="2.3" id="CA_MOBL_INVC_ORDR_POSTPAID_PROD_MSTR" applyPrivilegeType="NONE" checkAnalyticPrivileges="false" defaultClient="$$client$$" defaultLanguage="$$language$$" hierarchiesSQLEnabled="false" translationRelevant="true" visibility="internal" calculationScenarioType="TREE_BASED" dataCategory="DIMENSION" enforceSqlExecution="false" executionSemantic="UNDEFINED" outputViewType="Projection">
+  <descriptions defaultDescription="CA_MOBL_INVC_ORDR_POSTPAID_PROD_MSTR"/>
+  <localVariables>
+    <variable id="IP_BILL_DATE" parameter="true">
+      <descriptions defaultDescription="IP_BILL_DATE"/>
+      <variableProperties datatype="DATE" defaultExpressionLanguage="COLUMN_ENGINE" mandatory="false">
+        <valueDomain type="empty"/>
+        <selection multiLine="false" type="SingleValue"/>
+        <defaultExpression>DATE(NOW())</defaultExpression>
+      </variableProperties>
+    </variable>
+  </localVariables>
+  <variableMappings>
+    <mapping xsi:type="Variable:VariableMapping" dataSource="#CA_MOBL_BILLING">
+      <targetVariable name="IP_BILL_DATE" resourceUri="/IFRS_R1.MOBILITY.RAI_MOBILITY.PRIVATE/calculationviews/CA_MOBL_BILLING"/>
+      <localVariable>#IP_BILL_DATE</localVariable>
+    </mapping>
+    <mapping xsi:type="Variable:VariableMapping" dataSource="#CA_MOBL_ORDR">
+      <targetVariable name="IP_BILL_DATE" resourceUri="/IFRS_R1.MOBILITY.RAI_MOBILITY.PRIVATE/calculationviews/CA_MOBL_ORDR"/>
+      <localVariable>#IP_BILL_DATE</localVariable>
+    </mapping>
+  </variableMappings>
+  <informationModelLayout relativeWidthScenario="54"/>
+  <dataSources>
+    <DataSource id="CA_MOBL_BILLING" type="CALCULATION_VIEW">
+      <viewAttributes allViewAttributes="true"/>
+      <resourceUri>/IFRS_R1.MOBILITY.RAI_MOBILITY.PRIVATE/calculationviews/CA_MOBL_BILLING</resourceUri>
+    </DataSource>
+    <DataSource id="CA_MOBL_ORDR" type="CALCULATION_VIEW">
+      <viewAttributes allViewAttributes="true"/>
+      <resourceUri>/IFRS_R1.MOBILITY.RAI_MOBILITY.PRIVATE/calculationviews/CA_MOBL_ORDR</resourceUri>
+    </DataSource>
+    <DataSource id="MARA" type="DATA_BASE_TABLE">
+      <viewAttributes allViewAttributes="true"/>
+      <columnObject schemaName="SDA" columnObjectName="MARA"/>
+    </DataSource>
+    <DataSource id="IFRS_R1.COMMON_COMP.RAI_COMMON::CHARGE_TYPE" type="DATA_BASE_TABLE">
+      <viewAttributes allViewAttributes="true"/>
+      <columnObject schemaName="RAI_COMMON" columnObjectName="IFRS_R1.COMMON_COMP.RAI_COMMON::CHARGE_TYPE"/>
+    </DataSource>
+  </dataSources>
+  <calculationViews>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_MOBL_BILL">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="BAN"/>
+        <viewAttribute id="BILL_SEQ_NO"/>
+        <viewAttribute id="ENT_SEQ_NO"/>
+        <viewAttribute id="GL_ACCT_NO"/>
+        <viewAttribute id="JOURN_DT"/>
+        <viewAttribute id="SUBSCR_NO"/>
+        <viewAttribute id="ITEM_SUB_ID"/>
+        <viewAttribute id="ITEM_ID"/>
+        <viewAttribute id="DSCT_CD"/>
+        <viewAttribute id="VIRTUAL_INV_FLAG"/>
+        <viewAttribute id="AMT"/>
+        <viewAttribute id="CR_DR_IND"/>
+        <viewAttribute id="TRANS_TY"/>
+        <viewAttribute id="BILL_PRIMARY_KEY"/>
+        <viewAttribute id="FTR_REV_CD"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#CA_MOBL_BILLING">
+        <mapping xsi:type="Calculation:AttributeMapping" target="BAN" source="BAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_SEQ_NO" source="BILL_SEQ_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ENT_SEQ_NO" source="ENT_SEQ_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GL_ACCT_NO" source="GL_ACCT_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="JOURN_DT" source="JOURN_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBSCR_NO" source="SUBSCR_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_SUB_ID" source="ITEM_SUB_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_ID" source="ITEM_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DSCT_CD" source="DSCT_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VIRTUAL_INV_FLAG" source="VIRTUAL_INV_FLAG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AMT" source="AMT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CR_DR_IND" source="CR_DR_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRANS_TY" source="TRANS_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_PRIMARY_KEY" source="BILL_PRIMARY_KEY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FTR_REV_CD" source="FTR_REV_CD"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_MOBL_ORDR">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="BAN"/>
+        <viewAttribute id="SUBSCR_NO"/>
+        <viewAttribute id="ITEM_ID"/>
+        <viewAttribute id="ITEM_SUB_ID"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CC_TMP_SRCDOC_ID" length="150" expressionLanguage="COLUMN_ENGINE">
+          <formula>&quot;SUBSCR_NO&quot;  + &quot;ITEM_ID&quot; + &quot;ITEM_SUB_ID&quot;</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#CA_MOBL_ORDR">
+        <mapping xsi:type="Calculation:AttributeMapping" target="BAN" source="BAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBSCR_NO" source="SUBSCR_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_ID" source="ITEM_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_SUB_ID" source="ITEM_SUB_ID"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="JOIN_BILL_ORDR" joinOrder="OUTSIDE_IN" joinType="leftOuter">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="CC_TMP_SRCDOC_ID"/>
+        <viewAttribute id="BAN"/>
+        <viewAttribute id="BILL_SEQ_NO"/>
+        <viewAttribute id="ENT_SEQ_NO"/>
+        <viewAttribute id="GL_ACCT_NO"/>
+        <viewAttribute id="JOURN_DT"/>
+        <viewAttribute id="SUBSCR_NO"/>
+        <viewAttribute id="ITEM_SUB_ID"/>
+        <viewAttribute id="ITEM_ID"/>
+        <viewAttribute id="DSCT_CD"/>
+        <viewAttribute id="VIRTUAL_INV_FLAG"/>
+        <viewAttribute id="AMT"/>
+        <viewAttribute id="CR_DR_IND"/>
+        <viewAttribute id="TRANS_TY"/>
+        <viewAttribute id="BILL_PRIMARY_KEY"/>
+        <viewAttribute id="FTR_REV_CD"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#PROJ_MOBL_BILL">
+        <mapping xsi:type="Calculation:AttributeMapping" target="BAN" source="BAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_SEQ_NO" source="BILL_SEQ_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ENT_SEQ_NO" source="ENT_SEQ_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GL_ACCT_NO" source="GL_ACCT_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="JOURN_DT" source="JOURN_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBSCR_NO" source="SUBSCR_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_SUB_ID" source="ITEM_SUB_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_ID" source="ITEM_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DSCT_CD" source="DSCT_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VIRTUAL_INV_FLAG" source="VIRTUAL_INV_FLAG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AMT" source="AMT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CR_DR_IND" source="CR_DR_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRANS_TY" source="TRANS_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_PRIMARY_KEY" source="BILL_PRIMARY_KEY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FTR_REV_CD" source="FTR_REV_CD"/>
+      </input>
+      <input node="#PROJ_MOBL_ORDR">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_TMP_SRCDOC_ID" source="CC_TMP_SRCDOC_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BAN" source="BAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBSCR_NO" source="SUBSCR_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_ID" source="ITEM_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_SUB_ID" source="ITEM_SUB_ID"/>
+      </input>
+      <joinAttribute name="BAN"/>
+      <joinAttribute name="SUBSCR_NO"/>
+      <joinAttribute name="ITEM_ID"/>
+      <joinAttribute name="ITEM_SUB_ID"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_Orders_to_Create" filterExpressionLanguage="COLUMN_ENGINE">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="BAN"/>
+        <viewAttribute id="BILL_SEQ_NO"/>
+        <viewAttribute id="ENT_SEQ_NO"/>
+        <viewAttribute id="GL_ACCT_NO"/>
+        <viewAttribute id="JOURN_DT"/>
+        <viewAttribute id="SUBSCR_NO"/>
+        <viewAttribute id="ITEM_SUB_ID"/>
+        <viewAttribute id="ITEM_ID"/>
+        <viewAttribute id="DSCT_CD"/>
+        <viewAttribute id="VIRTUAL_INV_FLAG"/>
+        <viewAttribute id="AMT"/>
+        <viewAttribute id="CC_TMP_SRCDOC_ID"/>
+        <viewAttribute id="CR_DR_IND"/>
+        <viewAttribute id="TRANS_TY"/>
+        <viewAttribute id="BILL_PRIMARY_KEY"/>
+        <viewAttribute id="FTR_REV_CD"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#JOIN_BILL_ORDR">
+        <mapping xsi:type="Calculation:AttributeMapping" target="BAN" source="BAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_SEQ_NO" source="BILL_SEQ_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ENT_SEQ_NO" source="ENT_SEQ_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GL_ACCT_NO" source="GL_ACCT_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="JOURN_DT" source="JOURN_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBSCR_NO" source="SUBSCR_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_SUB_ID" source="ITEM_SUB_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_ID" source="ITEM_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DSCT_CD" source="DSCT_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VIRTUAL_INV_FLAG" source="VIRTUAL_INV_FLAG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AMT" source="AMT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_TMP_SRCDOC_ID" source="CC_TMP_SRCDOC_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CR_DR_IND" source="CR_DR_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRANS_TY" source="TRANS_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_PRIMARY_KEY" source="BILL_PRIMARY_KEY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FTR_REV_CD" source="FTR_REV_CD"/>
+      </input>
+      <filter>(isNull(&quot;CC_TMP_SRCDOC_ID&quot;)) or (&quot;FTR_REV_CD&quot; != 'R')</filter>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_DISC_CD_NOT_NULL">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="BAN"/>
+        <viewAttribute id="BILL_SEQ_NO"/>
+        <viewAttribute id="ENT_SEQ_NO"/>
+        <viewAttribute id="GL_ACCT_NO"/>
+        <viewAttribute id="JOURN_DT"/>
+        <viewAttribute id="SUBSCR_NO"/>
+        <viewAttribute id="ITEM_SUB_ID"/>
+        <viewAttribute id="ITEM_ID"/>
+        <viewAttribute id="DSCT_CD">
+          <filter xsi:type="AccessControl:SingleValueFilter" operator="NL" including="false"/>
+        </viewAttribute>
+        <viewAttribute id="VIRTUAL_INV_FLAG"/>
+        <viewAttribute id="AMT"/>
+        <viewAttribute id="CR_DR_IND"/>
+        <viewAttribute id="TRANS_TY"/>
+        <viewAttribute id="BILL_PRIMARY_KEY"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#PROJ_Orders_to_Create">
+        <mapping xsi:type="Calculation:AttributeMapping" target="BAN" source="BAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_SEQ_NO" source="BILL_SEQ_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ENT_SEQ_NO" source="ENT_SEQ_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GL_ACCT_NO" source="GL_ACCT_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="JOURN_DT" source="JOURN_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBSCR_NO" source="SUBSCR_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_SUB_ID" source="ITEM_SUB_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_ID" source="ITEM_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DSCT_CD" source="DSCT_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VIRTUAL_INV_FLAG" source="VIRTUAL_INV_FLAG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AMT" source="AMT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CR_DR_IND" source="CR_DR_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRANS_TY" source="TRANS_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_PRIMARY_KEY" source="BILL_PRIMARY_KEY"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_DISC_CD_NULL" filterExpressionLanguage="COLUMN_ENGINE">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="BAN"/>
+        <viewAttribute id="BILL_SEQ_NO"/>
+        <viewAttribute id="ENT_SEQ_NO"/>
+        <viewAttribute id="GL_ACCT_NO"/>
+        <viewAttribute id="JOURN_DT"/>
+        <viewAttribute id="SUBSCR_NO"/>
+        <viewAttribute id="ITEM_SUB_ID"/>
+        <viewAttribute id="ITEM_ID"/>
+        <viewAttribute id="DSCT_CD"/>
+        <viewAttribute id="VIRTUAL_INV_FLAG"/>
+        <viewAttribute id="AMT"/>
+        <viewAttribute id="CR_DR_IND"/>
+        <viewAttribute id="TRANS_TY"/>
+        <viewAttribute id="BILL_PRIMARY_KEY"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#PROJ_Orders_to_Create">
+        <mapping xsi:type="Calculation:AttributeMapping" target="BAN" source="BAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_SEQ_NO" source="BILL_SEQ_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ENT_SEQ_NO" source="ENT_SEQ_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GL_ACCT_NO" source="GL_ACCT_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="JOURN_DT" source="JOURN_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBSCR_NO" source="SUBSCR_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_SUB_ID" source="ITEM_SUB_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_ID" source="ITEM_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DSCT_CD" source="DSCT_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VIRTUAL_INV_FLAG" source="VIRTUAL_INV_FLAG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AMT" source="AMT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CR_DR_IND" source="CR_DR_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRANS_TY" source="TRANS_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_PRIMARY_KEY" source="BILL_PRIMARY_KEY"/>
+      </input>
+      <filter>isNull(&quot;DSCT_CD&quot;)</filter>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_SDA_MARA" filterExpressionLanguage="COLUMN_ENGINE">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="MATKL"/>
+        <viewAttribute id="BISMT"/>
+        <viewAttribute id="NORMT"/>
+        <viewAttribute id="LVORM"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#MARA">
+        <mapping xsi:type="Calculation:AttributeMapping" target="MATKL" source="MATKL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BISMT" source="BISMT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NORMT" source="NORMT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LVORM" source="LVORM"/>
+      </input>
+      <filter>(isNull(&quot;LVORM&quot;) or &quot;LVORM&quot;='')</filter>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="JOIN_MARA_DSC_CD" joinOrder="OUTSIDE_IN" joinType="leftOuter">
+      <descriptions>
+        <comment text="Join error is raised at BISMTwhere DSCT_CD is not NUll as 30401201"/>
+      </descriptions>
+      <viewAttributes>
+        <viewAttribute id="BAN"/>
+        <viewAttribute id="BILL_SEQ_NO"/>
+        <viewAttribute id="ENT_SEQ_NO"/>
+        <viewAttribute id="MATKL"/>
+        <viewAttribute id="BISMT_RIGHT"/>
+        <viewAttribute id="CR_DR_IND"/>
+        <viewAttribute id="TRANS_TY"/>
+        <viewAttribute id="GL_ACCT_NO"/>
+        <viewAttribute id="JOURN_DT"/>
+        <viewAttribute id="SUBSCR_NO"/>
+        <viewAttribute id="ITEM_SUB_ID"/>
+        <viewAttribute id="ITEM_ID"/>
+        <viewAttribute id="DSCT_CD"/>
+        <viewAttribute id="BILL_PRIMARY_KEY"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="IS_30401201" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isNull(&quot;BISMT_RIGHT&quot;),'1','0')</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#PROJ_DISC_CD_NOT_NULL">
+        <mapping xsi:type="Calculation:AttributeMapping" target="BAN" source="BAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_SEQ_NO" source="BILL_SEQ_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ENT_SEQ_NO" source="ENT_SEQ_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CR_DR_IND" source="CR_DR_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRANS_TY" source="TRANS_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GL_ACCT_NO" source="GL_ACCT_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="JOURN_DT" source="JOURN_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBSCR_NO" source="SUBSCR_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_SUB_ID" source="ITEM_SUB_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_ID" source="ITEM_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DSCT_CD" source="DSCT_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_PRIMARY_KEY" source="BILL_PRIMARY_KEY"/>
+      </input>
+      <input node="#PROJ_SDA_MARA">
+        <mapping xsi:type="Calculation:AttributeMapping" target="MATKL" source="MATKL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BISMT_RIGHT" source="BISMT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DSCT_CD" source="BISMT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_SUB_ID" source="NORMT"/>
+      </input>
+      <joinAttribute name="DSCT_CD"/>
+      <joinAttribute name="ITEM_SUB_ID"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_ITEM_ID_NOT_NULL" filterExpressionLanguage="COLUMN_ENGINE">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="BAN"/>
+        <viewAttribute id="BILL_SEQ_NO"/>
+        <viewAttribute id="ENT_SEQ_NO"/>
+        <viewAttribute id="GL_ACCT_NO"/>
+        <viewAttribute id="JOURN_DT"/>
+        <viewAttribute id="SUBSCR_NO"/>
+        <viewAttribute id="ITEM_SUB_ID"/>
+        <viewAttribute id="ITEM_ID"/>
+        <viewAttribute id="DSCT_CD"/>
+        <viewAttribute id="VIRTUAL_INV_FLAG"/>
+        <viewAttribute id="AMT"/>
+        <viewAttribute id="CR_DR_IND"/>
+        <viewAttribute id="TRANS_TY"/>
+        <viewAttribute id="BILL_PRIMARY_KEY"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#PROJ_DISC_CD_NULL">
+        <mapping xsi:type="Calculation:AttributeMapping" target="BAN" source="BAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_SEQ_NO" source="BILL_SEQ_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ENT_SEQ_NO" source="ENT_SEQ_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GL_ACCT_NO" source="GL_ACCT_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="JOURN_DT" source="JOURN_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBSCR_NO" source="SUBSCR_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_SUB_ID" source="ITEM_SUB_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_ID" source="ITEM_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DSCT_CD" source="DSCT_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VIRTUAL_INV_FLAG" source="VIRTUAL_INV_FLAG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AMT" source="AMT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CR_DR_IND" source="CR_DR_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRANS_TY" source="TRANS_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_PRIMARY_KEY" source="BILL_PRIMARY_KEY"/>
+      </input>
+      <filter>(not isNull(&quot;ITEM_ID&quot;)) and (not isNull(&quot;ITEM_SUB_ID&quot;))</filter>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="JOIN_MARA_DSC_NULL" joinOrder="OUTSIDE_IN" joinType="leftOuter">
+      <descriptions>
+        <comment text="Join error is raised at BISMT where DSCT_CD is NULL and ITEM_ID is not null as 30401202."/>
+      </descriptions>
+      <viewAttributes>
+        <viewAttribute id="BAN"/>
+        <viewAttribute id="BILL_SEQ_NO"/>
+        <viewAttribute id="ENT_SEQ_NO"/>
+        <viewAttribute id="CR_DR_IND"/>
+        <viewAttribute id="TRANS_TY"/>
+        <viewAttribute id="GL_ACCT_NO"/>
+        <viewAttribute id="JOURN_DT"/>
+        <viewAttribute id="SUBSCR_NO"/>
+        <viewAttribute id="BILL_PRIMARY_KEY"/>
+        <viewAttribute id="MATKL"/>
+        <viewAttribute id="BISMT_RIGHT"/>
+        <viewAttribute id="ITEM_ID"/>
+        <viewAttribute id="ITEM_SUB_ID"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="IS_30401202" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isNull(&quot;BISMT_RIGHT&quot;),'1','0')</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#PROJ_ITEM_ID_NOT_NULL">
+        <mapping xsi:type="Calculation:AttributeMapping" target="BAN" source="BAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_SEQ_NO" source="BILL_SEQ_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ENT_SEQ_NO" source="ENT_SEQ_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CR_DR_IND" source="CR_DR_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRANS_TY" source="TRANS_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GL_ACCT_NO" source="GL_ACCT_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="JOURN_DT" source="JOURN_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBSCR_NO" source="SUBSCR_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_PRIMARY_KEY" source="BILL_PRIMARY_KEY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_ID" source="ITEM_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_SUB_ID" source="ITEM_SUB_ID"/>
+      </input>
+      <input node="#PROJ_SDA_MARA">
+        <mapping xsi:type="Calculation:AttributeMapping" target="MATKL" source="MATKL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BISMT_RIGHT" source="BISMT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_ID" source="BISMT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_SUB_ID" source="NORMT"/>
+      </input>
+      <joinAttribute name="ITEM_ID"/>
+      <joinAttribute name="ITEM_SUB_ID"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_ITEM_ID_NULL" filterExpressionLanguage="COLUMN_ENGINE">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="BAN"/>
+        <viewAttribute id="BILL_SEQ_NO"/>
+        <viewAttribute id="ENT_SEQ_NO"/>
+        <viewAttribute id="GL_ACCT_NO"/>
+        <viewAttribute id="JOURN_DT"/>
+        <viewAttribute id="SUBSCR_NO"/>
+        <viewAttribute id="ITEM_SUB_ID"/>
+        <viewAttribute id="ITEM_ID"/>
+        <viewAttribute id="DSCT_CD"/>
+        <viewAttribute id="VIRTUAL_INV_FLAG"/>
+        <viewAttribute id="AMT"/>
+        <viewAttribute id="CR_DR_IND"/>
+        <viewAttribute id="TRANS_TY"/>
+        <viewAttribute id="BILL_PRIMARY_KEY"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CC_CHARGE_TYPE" length="3" expressionLanguage="COLUMN_ENGINE">
+          <formula>'OTC'</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#PROJ_DISC_CD_NULL">
+        <mapping xsi:type="Calculation:AttributeMapping" target="BAN" source="BAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_SEQ_NO" source="BILL_SEQ_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ENT_SEQ_NO" source="ENT_SEQ_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GL_ACCT_NO" source="GL_ACCT_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="JOURN_DT" source="JOURN_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBSCR_NO" source="SUBSCR_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_SUB_ID" source="ITEM_SUB_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_ID" source="ITEM_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DSCT_CD" source="DSCT_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VIRTUAL_INV_FLAG" source="VIRTUAL_INV_FLAG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AMT" source="AMT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CR_DR_IND" source="CR_DR_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRANS_TY" source="TRANS_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_PRIMARY_KEY" source="BILL_PRIMARY_KEY"/>
+      </input>
+      <filter>isNull(&quot;ITEM_ID&quot;) or isNull(&quot;ITEM_SUB_ID&quot;)</filter>
+    </calculationView>
+    <calculationView xsi:type="Calculation:UnionView" id="UNION_CHARGE_TYPE">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute datatype="NVARCHAR" id="MATKL" length="9" scale="0"/>
+        <viewAttribute datatype="NVARCHAR" id="IS_30401201" length="1" scale="0"/>
+        <viewAttribute datatype="NVARCHAR" id="IS_30401202" length="1" scale="0"/>
+        <viewAttribute id="BAN"/>
+        <viewAttribute id="BILL_SEQ_NO"/>
+        <viewAttribute id="ENT_SEQ_NO"/>
+        <viewAttribute id="CR_DR_IND"/>
+        <viewAttribute id="TRANS_TY"/>
+        <viewAttribute id="GL_ACCT_NO"/>
+        <viewAttribute id="JOURN_DT"/>
+        <viewAttribute id="SUBSCR_NO"/>
+        <viewAttribute id="BILL_PRIMARY_KEY"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CC_CHARGE_TYPE" length="20" expressionLanguage="COLUMN_ENGINE">
+          <formula>&quot;MATKL&quot;</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CC_RULE_PATH" length="2" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(&quot;CC_CHARGE_TYPE&quot;='OPT','C1',&#xD;
+if(&quot;CC_CHARGE_TYPE&quot;='OTC','D1',&#xD;
+if(&quot;CC_CHARGE_TYPE&quot;='ECF','E1',&#xD;
+if(&quot;CC_CHARGE_TYPE&quot;='HUG_FEE','F1',&#xD;
+if(&quot;CC_CHARGE_TYPE&quot;='ACT','G1',&#xD;
+if(&quot;CC_CHARGE_TYPE&quot;='OTHERDISC','H1',&#xD;
+if(&quot;CC_CHARGE_TYPE&quot;='OTHER','I1',&#xD;
+if(&quot;CC_CHARGE_TYPE&quot; = 'BASE_SRVC','B1',''))))))))</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input emptyUnionBehavior="NO_ROW" node="#JOIN_MARA_DSC_CD">
+        <mapping xsi:type="Calculation:AttributeMapping" target="MATKL" source="MATKL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30401201" source="IS_30401201"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="IS_30401202" null="false" value="0"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BAN" source="BAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_SEQ_NO" source="BILL_SEQ_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ENT_SEQ_NO" source="ENT_SEQ_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CR_DR_IND" source="CR_DR_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRANS_TY" source="TRANS_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GL_ACCT_NO" source="GL_ACCT_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="JOURN_DT" source="JOURN_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBSCR_NO" source="SUBSCR_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_PRIMARY_KEY" source="BILL_PRIMARY_KEY"/>
+      </input>
+      <input emptyUnionBehavior="NO_ROW" node="#JOIN_MARA_DSC_NULL">
+        <mapping xsi:type="Calculation:AttributeMapping" target="MATKL" source="MATKL"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="IS_30401201" null="false" value="0"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30401202" source="IS_30401202"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BAN" source="BAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_SEQ_NO" source="BILL_SEQ_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ENT_SEQ_NO" source="ENT_SEQ_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CR_DR_IND" source="CR_DR_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRANS_TY" source="TRANS_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GL_ACCT_NO" source="GL_ACCT_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="JOURN_DT" source="JOURN_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBSCR_NO" source="SUBSCR_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_PRIMARY_KEY" source="BILL_PRIMARY_KEY"/>
+      </input>
+      <input emptyUnionBehavior="NO_ROW" node="#PROJ_ITEM_ID_NULL">
+        <mapping xsi:type="Calculation:AttributeMapping" target="MATKL" source="CC_CHARGE_TYPE"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="IS_30401201" null="false" value="0"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="IS_30401202" null="false" value="0"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BAN" source="BAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_SEQ_NO" source="BILL_SEQ_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ENT_SEQ_NO" source="ENT_SEQ_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CR_DR_IND" source="CR_DR_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRANS_TY" source="TRANS_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GL_ACCT_NO" source="GL_ACCT_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="JOURN_DT" source="JOURN_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBSCR_NO" source="SUBSCR_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_PRIMARY_KEY" source="BILL_PRIMARY_KEY"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_CHARGE_TYPE_TABLE">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="LOB">
+          <filter xsi:type="AccessControl:SingleValueFilter" including="true" value="MOBL"/>
+        </viewAttribute>
+        <viewAttribute id="CHARGE_TYPE"/>
+        <viewAttribute id="RULE_PATH"/>
+        <viewAttribute id="POB_TYPE"/>
+        <viewAttribute id="VALUE_RELEVANT"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#IFRS_R1.COMMON_COMP.RAI_COMMON::CHARGE_TYPE">
+        <mapping xsi:type="Calculation:AttributeMapping" target="LOB" source="LOB"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CHARGE_TYPE" source="CHARGE_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RULE_PATH" source="RULE_PATH"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="POB_TYPE" source="POB_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VALUE_RELEVANT" source="VALUE_RELEVANT"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="JOIN_POB_TYPE" cardinality="C1_N" joinOrder="OUTSIDE_IN" joinType="leftOuter">
+      <descriptions>
+        <comment text="Join Error is raised at CHARGE_TYPE as 30401203&#xD;&#xA;Data Error is raised at POB_TYPE as 30401204"/>
+      </descriptions>
+      <viewAttributes>
+        <viewAttribute id="VALUE_RELEVANT"/>
+        <viewAttribute id="POB_TYPE"/>
+        <viewAttribute id="CC_CHARGE_TYPE"/>
+        <viewAttribute id="CHARGE_TYPE_RIGHT"/>
+        <viewAttribute id="IS_30401201"/>
+        <viewAttribute id="IS_30401202"/>
+        <viewAttribute id="BAN"/>
+        <viewAttribute id="BILL_SEQ_NO"/>
+        <viewAttribute id="ENT_SEQ_NO"/>
+        <viewAttribute id="TRANS_TY"/>
+        <viewAttribute id="CR_DR_IND"/>
+        <viewAttribute id="GL_ACCT_NO"/>
+        <viewAttribute id="JOURN_DT"/>
+        <viewAttribute id="SUBSCR_NO"/>
+        <viewAttribute id="BILL_PRIMARY_KEY"/>
+        <viewAttribute hidden="true" id="JOIN$CC_RULE_PATH$RULE_PATH"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="IS_30401203" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isNull(&quot;CHARGE_TYPE_RIGHT&quot;),'1','0')</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="IS_30401204" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isNull(&quot;POB_TYPE&quot;),'1','0')</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#UNION_CHARGE_TYPE">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_CHARGE_TYPE" source="CC_CHARGE_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30401201" source="IS_30401201"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30401202" source="IS_30401202"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BAN" source="BAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_SEQ_NO" source="BILL_SEQ_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ENT_SEQ_NO" source="ENT_SEQ_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRANS_TY" source="TRANS_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CR_DR_IND" source="CR_DR_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GL_ACCT_NO" source="GL_ACCT_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="JOURN_DT" source="JOURN_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBSCR_NO" source="SUBSCR_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_PRIMARY_KEY" source="BILL_PRIMARY_KEY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$CC_RULE_PATH$RULE_PATH" source="CC_RULE_PATH"/>
+      </input>
+      <input node="#PROJ_CHARGE_TYPE_TABLE">
+        <mapping xsi:type="Calculation:AttributeMapping" target="VALUE_RELEVANT" source="VALUE_RELEVANT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="POB_TYPE" source="POB_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CHARGE_TYPE_RIGHT" source="CHARGE_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_CHARGE_TYPE" source="CHARGE_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$CC_RULE_PATH$RULE_PATH" source="RULE_PATH"/>
+      </input>
+      <joinAttribute name="CC_CHARGE_TYPE"/>
+      <joinAttribute name="JOIN$CC_RULE_PATH$RULE_PATH"/>
+    </calculationView>
+  </calculationViews>
+  <logicalModel id="JOIN_POB_TYPE">
+    <descriptions/>
+    <attributes>
+      <attribute id="BAN" order="1" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="BAN"/>
+        <keyMapping columnObjectName="JOIN_POB_TYPE" columnName="BAN"/>
+      </attribute>
+      <attribute id="BILL_SEQ_NO" order="2" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="BILL_SEQ_NO"/>
+        <keyMapping columnObjectName="JOIN_POB_TYPE" columnName="BILL_SEQ_NO"/>
+      </attribute>
+      <attribute id="ENT_SEQ_NO" order="3" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ENT_SEQ_NO"/>
+        <keyMapping columnObjectName="JOIN_POB_TYPE" columnName="ENT_SEQ_NO"/>
+      </attribute>
+      <attribute id="VALUE_RELEVANT" order="4" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="VALUE_RELEVANT"/>
+        <keyMapping columnObjectName="JOIN_POB_TYPE" columnName="VALUE_RELEVANT"/>
+      </attribute>
+      <attribute id="POB_TYPE" order="5" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="POB_TYPE"/>
+        <keyMapping columnObjectName="JOIN_POB_TYPE" columnName="POB_TYPE"/>
+      </attribute>
+      <attribute id="TRANS_TY" order="6" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="TRANS_TY"/>
+        <keyMapping columnObjectName="JOIN_POB_TYPE" columnName="TRANS_TY"/>
+      </attribute>
+      <attribute id="CR_DR_IND" order="7" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CR_DR_IND"/>
+        <keyMapping columnObjectName="JOIN_POB_TYPE" columnName="CR_DR_IND"/>
+      </attribute>
+      <attribute id="CC_CHARGE_TYPE" order="8" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CC_CHARGE_TYPE"/>
+        <keyMapping columnObjectName="JOIN_POB_TYPE" columnName="CC_CHARGE_TYPE"/>
+      </attribute>
+      <attribute id="IS_30401201" order="9" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="IS_30401201"/>
+        <keyMapping columnObjectName="JOIN_POB_TYPE" columnName="IS_30401201"/>
+      </attribute>
+      <attribute id="IS_30401202" order="10" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="IS_30401202"/>
+        <keyMapping columnObjectName="JOIN_POB_TYPE" columnName="IS_30401202"/>
+      </attribute>
+      <attribute id="IS_30401203" order="11" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="IS_30401203"/>
+        <keyMapping columnObjectName="JOIN_POB_TYPE" columnName="IS_30401203"/>
+      </attribute>
+      <attribute id="IS_30401204" order="12" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="IS_30401204"/>
+        <keyMapping columnObjectName="JOIN_POB_TYPE" columnName="IS_30401204"/>
+      </attribute>
+      <attribute id="GL_ACCT_NO" order="13" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="GL_ACCT_NO"/>
+        <keyMapping columnObjectName="JOIN_POB_TYPE" columnName="GL_ACCT_NO"/>
+      </attribute>
+      <attribute id="JOURN_DT" order="14" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="JOURN_DT"/>
+        <keyMapping columnObjectName="JOIN_POB_TYPE" columnName="JOURN_DT"/>
+      </attribute>
+      <attribute id="SUBSCR_NO" order="15" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SUBSCR_NO"/>
+        <keyMapping columnObjectName="JOIN_POB_TYPE" columnName="SUBSCR_NO"/>
+      </attribute>
+      <attribute id="BILL_PRIMARY_KEY" order="16" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="BILL_PRIMARY_KEY"/>
+        <keyMapping columnObjectName="JOIN_POB_TYPE" columnName="BILL_PRIMARY_KEY"/>
+      </attribute>
+    </attributes>
+    <calculatedAttributes/>
+    <privateDataFoundation>
+      <tableProxies/>
+      <joins/>
+      <layout>
+        <shapes/>
+      </layout>
+    </privateDataFoundation>
+    <baseMeasures/>
+    <calculatedMeasures/>
+    <restrictedMeasures/>
+    <localDimensions/>
+  </logicalModel>
+  <layout>
+    <shapes>
+      <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+        <upperLeftCorner x="263" y="87"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_MOBL_BILL" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="22" y="821"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_MOBL_ORDR" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="176" y="821"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="JOIN_BILL_ORDR" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="99" y="725"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_Orders_to_Create" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="99" y="647"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_DISC_CD_NOT_NULL" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="99" y="491"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_DISC_CD_NULL" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="407" y="569"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_SDA_MARA" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="253" y="491"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="JOIN_MARA_DSC_CD" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="186" y="395"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_ITEM_ID_NOT_NULL" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="407" y="491"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="JOIN_MARA_DSC_NULL" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="340" y="395"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_ITEM_ID_NULL" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="494" y="395"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="UNION_CHARGE_TYPE" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="340" y="261"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_CHARGE_TYPE_TABLE" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="186" y="261"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="JOIN_POB_TYPE" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="263" y="165"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+    </shapes>
+  </layout>
+</Calculation:scenario>

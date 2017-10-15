@@ -1,0 +1,404 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" schemaVersion="2.3" id="CA_TV_MINIMUM_SPEND_DISCONNECT" applyPrivilegeType="ANALYTIC_PRIVILEGE" checkAnalyticPrivileges="true" defaultClient="$$client$$" defaultLanguage="$$language$$" hierarchiesSQLEnabled="false" historyEnabled="false" translationRelevant="true" visibility="internal" calculationScenarioType="TREE_BASED" dataCategory="DIMENSION" enforceSqlExecution="false" executionSemantic="UNDEFINED" outputViewType="Projection">
+  <descriptions defaultDescription="CA_TV_MINIMUM_SPEND_DISCONNECT"/>
+  <localVariables>
+    <variable id="IP_EFF_DT" parameter="true">
+      <descriptions defaultDescription="IP_EFF_DT"/>
+      <variableProperties datatype="DATE" defaultValue="99991231" mandatory="false">
+        <valueDomain type="Date"/>
+        <selection multiLine="false" type="SingleValue"/>
+      </variableProperties>
+    </variable>
+  </localVariables>
+  <variableMappings/>
+  <informationModelLayout relativeWidthScenario="46"/>
+  <dataSources>
+    <DataSource id="IFRS_R1.BELLTV.NDB_BELLTV::TV_CUSTOMER" type="DATA_BASE_TABLE">
+      <viewAttributes allViewAttributes="true"/>
+      <columnObject schemaName="NDB_TV" columnObjectName="IFRS_R1.BELLTV.NDB_BELLTV::TV_CUSTOMER"/>
+    </DataSource>
+    <DataSource id="IFRS_R1.BELLTV.NDB_BELLTV::TV_TRANSACTIONS" type="DATA_BASE_TABLE">
+      <viewAttributes allViewAttributes="true"/>
+      <columnObject schemaName="NDB_TV" columnObjectName="IFRS_R1.BELLTV.NDB_BELLTV::TV_TRANSACTIONS"/>
+    </DataSource>
+  </dataSources>
+  <calculationViews>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_TV_CUSTOMER" filterExpressionLanguage="COLUMN_ENGINE">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="PRM_ACCT_NUM"/>
+        <viewAttribute id="ACCT_NUM"/>
+        <viewAttribute id="CUST_LOC_ID"/>
+        <viewAttribute id="CUST_PSTL_CD"/>
+        <viewAttribute id="BILL_CYCL"/>
+        <viewAttribute id="PRIN_NUM"/>
+        <viewAttribute id="AGNT_NUM"/>
+        <viewAttribute id="NETWK_TY"/>
+        <viewAttribute id="CO_CD"/>
+        <viewAttribute id="TAX_JURISD_CD"/>
+        <viewAttribute id="CUST_TY"/>
+        <viewAttribute id="OLD_ACCT_NUM"/>
+        <viewAttribute id="NEW_ACCT_NUM"/>
+        <viewAttribute id="KUNNR_SID"/>
+        <viewAttribute id="OB_BAN"/>
+        <viewAttribute id="CUST_NM"/>
+        <viewAttribute id="CUST_ST"/>
+        <viewAttribute id="CONNECT_DATE"/>
+        <viewAttribute id="CONTR_TERM"/>
+        <viewAttribute id="CONTR_TY"/>
+        <viewAttribute id="CONTR_STRT_DT"/>
+        <viewAttribute id="CONTR_END_DT"/>
+        <viewAttribute id="COMIT_TY"/>
+        <viewAttribute id="REFERENCE_EXPIRY_DT"/>
+        <viewAttribute id="REFERENCE_EFFECTIVE_DT"/>
+        <viewAttribute id="RAI_TS"/>
+        <viewAttribute id="INSRT_TS"/>
+        <viewAttribute id="MOD_TS"/>
+        <viewAttribute id="BTCH_ID"/>
+        <viewAttribute id="CNVR_IND"/>
+        <viewAttribute id="MIN_SPD_CRE_IND"/>
+        <viewAttribute id="INST_CRD_IND"/>
+        <viewAttribute id="INST_CHRG_IND"/>
+        <viewAttribute id="MIN_SPD_MOD_IND"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CC_SERVICE_CD" length="5" expressionLanguage="COLUMN_ENGINE">
+          <formula>'MINSP'</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CC_TERM_DISQUALF_IND" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>'X'</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CC_CUST_ST" length="2" expressionLanguage="COLUMN_ENGINE">
+          <formula>'D'</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CC_VIRTUAL_IND" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>'X'</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CC_TERM_IND" length="5" expressionLanguage="COLUMN_ENGINE">
+          <formula>'TERM'</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CC_PRODUCT_TYPE" length="20" expressionLanguage="COLUMN_ENGINE">
+          <formula>'BASE_SRVC'</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CC_VTG_ROW_ID" length="18" expressionLanguage="COLUMN_ENGINE">
+          <formula>'MC'+&quot;ACCT_NUM&quot;</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#IFRS_R1.BELLTV.NDB_BELLTV::TV_CUSTOMER">
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRM_ACCT_NUM" source="PRM_ACCT_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACCT_NUM" source="ACCT_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUST_LOC_ID" source="CUST_LOC_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUST_PSTL_CD" source="CUST_PSTL_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_CYCL" source="BILL_CYCL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRIN_NUM" source="PRIN_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AGNT_NUM" source="AGNT_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NETWK_TY" source="NETWK_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CO_CD" source="CO_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TAX_JURISD_CD" source="TAX_JURISD_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUST_TY" source="CUST_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OLD_ACCT_NUM" source="OLD_ACCT_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NEW_ACCT_NUM" source="NEW_ACCT_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KUNNR_SID" source="KUNNR_SID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OB_BAN" source="OB_BAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUST_NM" source="CUST_NM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUST_ST" source="CUST_ST"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONNECT_DATE" source="CONNECT_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTR_TERM" source="CONTR_TERM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTR_TY" source="CONTR_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTR_STRT_DT" source="CONTR_STRT_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTR_END_DT" source="CONTR_END_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="COMIT_TY" source="COMIT_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_EXPIRY_DT" source="REFERENCE_EXPIRY_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_EFFECTIVE_DT" source="REFERENCE_EFFECTIVE_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RAI_TS" source="RAI_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INSRT_TS" source="INSRT_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MOD_TS" source="MODIFIED_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BTCH_ID" source="BATCH_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CNVR_IND" source="CNVR_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MIN_SPD_CRE_IND" source="MIN_SPD_CRE_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INST_CRD_IND" source="INST_CRD_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INST_CHRG_IND" source="INST_CHRG_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MIN_SPD_MOD_IND" source="MIN_SPD_MOD_IND"/>
+      </input>
+      <filter>(&quot;COMIT_TY&quot; ='TERM') and (&quot;CUST_ST&quot; ='D') and (not isNull(&quot;MIN_SPD_CRE_IND&quot;)) and (isNull(&quot;MIN_SPD_MOD_IND&quot;))and (&quot;REFERENCE_EFFECTIVE_DT&quot;&lt;&quot;CONTR_END_DT&quot;) and&#xD;
+(&quot;REFERENCE_EFFECTIVE_DT&quot;&lt;='$$IP_EFF_DT$$')</filter>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_TV_TRANSACTIONS" filterExpressionLanguage="COLUMN_ENGINE">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="ACCT_NUM"/>
+        <viewAttribute id="EXTR_DT"/>
+        <viewAttribute id="SERVICE_CD"/>
+        <viewAttribute id="TERM_DISQUALF_IND"/>
+        <viewAttribute id="CONTR_TERM_DT"/>
+        <viewAttribute id="AMT"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#IFRS_R1.BELLTV.NDB_BELLTV::TV_TRANSACTIONS">
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACCT_NUM" source="ACCT_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXTR_DT" source="EXTR_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SERVICE_CD" source="SERVICE_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TERM_DISQUALF_IND" source="TERM_DISQUALF_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTR_TERM_DT" source="CONTR_TERM_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AMT" source="AMT"/>
+      </input>
+      <filter>(&quot;SERVICE_CD&quot; ='MINSP') and (isNull(&quot;TERM_DISQUALF_IND&quot;)) and (isNull(&quot;CONTR_TERM_DT&quot;))</filter>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="JOIN_CUST_TRANS" dynamic="false" joinOrder="OUTSIDE_IN" joinType="leftOuter">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="PRIN_NUM"/>
+        <viewAttribute id="AGNT_NUM"/>
+        <viewAttribute id="CC_SERVICE_CD"/>
+        <viewAttribute id="CC_TERM_DISQUALF_IND"/>
+        <viewAttribute id="CC_CUST_ST"/>
+        <viewAttribute id="CC_VIRTUAL_IND"/>
+        <viewAttribute id="CC_TERM_IND"/>
+        <viewAttribute id="CC_PRODUCT_TYPE"/>
+        <viewAttribute id="REFERENCE_EFFECTIVE_DT"/>
+        <viewAttribute id="ACCT_NUM"/>
+        <viewAttribute id="CO_CD"/>
+        <viewAttribute id="CONTR_STRT_DT"/>
+        <viewAttribute id="CONTR_END_DT"/>
+        <viewAttribute id="CONTR_TY"/>
+        <viewAttribute id="CONTR_TERM"/>
+        <viewAttribute id="NETWK_TY"/>
+        <viewAttribute id="CUST_TY"/>
+        <viewAttribute id="KUNNR_SID"/>
+        <viewAttribute id="AMT"/>
+        <viewAttribute id="ACCT_NUM_RIGHT"/>
+        <viewAttribute id="CC_VTG_ROW_ID"/>
+        <viewAttribute id="MIN_SPD_MOD_IND"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="IS_20100501" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isNull(&quot;ACCT_NUM_RIGHT&quot;) ,'1','0')</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#PROJ_TV_CUSTOMER">
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRIN_NUM" source="PRIN_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AGNT_NUM" source="AGNT_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_SERVICE_CD" source="CC_SERVICE_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_TERM_DISQUALF_IND" source="CC_TERM_DISQUALF_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_CUST_ST" source="CC_CUST_ST"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_VIRTUAL_IND" source="CC_VIRTUAL_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_TERM_IND" source="CC_TERM_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_PRODUCT_TYPE" source="CC_PRODUCT_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_EFFECTIVE_DT" source="REFERENCE_EFFECTIVE_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACCT_NUM" source="ACCT_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CO_CD" source="CO_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTR_STRT_DT" source="CONTR_STRT_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTR_END_DT" source="CONTR_END_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTR_TY" source="CONTR_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTR_TERM" source="CONTR_TERM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NETWK_TY" source="NETWK_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUST_TY" source="CUST_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KUNNR_SID" source="KUNNR_SID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_VTG_ROW_ID" source="CC_VTG_ROW_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MIN_SPD_MOD_IND" source="MIN_SPD_MOD_IND"/>
+      </input>
+      <input node="#PROJ_TV_TRANSACTIONS">
+        <mapping xsi:type="Calculation:AttributeMapping" target="AMT" source="AMT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACCT_NUM_RIGHT" source="ACCT_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACCT_NUM" source="ACCT_NUM"/>
+      </input>
+      <joinAttribute name="ACCT_NUM"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="ERROR_SEMANTICS">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="PRIN_NUM"/>
+        <viewAttribute id="AGNT_NUM"/>
+        <viewAttribute id="CC_SERVICE_CD"/>
+        <viewAttribute id="CC_TERM_DISQUALF_IND"/>
+        <viewAttribute id="CC_CUST_ST"/>
+        <viewAttribute id="CC_VIRTUAL_IND"/>
+        <viewAttribute id="CC_TERM_IND"/>
+        <viewAttribute id="CC_PRODUCT_TYPE"/>
+        <viewAttribute id="REFERENCE_EFFECTIVE_DT"/>
+        <viewAttribute id="ACCT_NUM"/>
+        <viewAttribute id="CO_CD"/>
+        <viewAttribute id="CONTR_STRT_DT"/>
+        <viewAttribute id="CONTR_END_DT"/>
+        <viewAttribute id="CONTR_TY"/>
+        <viewAttribute id="CONTR_TERM"/>
+        <viewAttribute id="NETWK_TY"/>
+        <viewAttribute id="CUST_TY"/>
+        <viewAttribute id="KUNNR_SID"/>
+        <viewAttribute id="AMT"/>
+        <viewAttribute id="IS_20100501"/>
+        <viewAttribute id="CC_VTG_ROW_ID"/>
+        <viewAttribute id="MIN_SPD_MOD_IND"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="ERROR_STATUS" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>if( (&quot;IS_20100501&quot;='1'),'1','0')</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="ERROR_CODE" length="500" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(&quot;IS_20100501&quot;='1', '20100501||','') </formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#JOIN_CUST_TRANS">
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRIN_NUM" source="PRIN_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AGNT_NUM" source="AGNT_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_SERVICE_CD" source="CC_SERVICE_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_TERM_DISQUALF_IND" source="CC_TERM_DISQUALF_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_CUST_ST" source="CC_CUST_ST"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_VIRTUAL_IND" source="CC_VIRTUAL_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_TERM_IND" source="CC_TERM_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_PRODUCT_TYPE" source="CC_PRODUCT_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_EFFECTIVE_DT" source="REFERENCE_EFFECTIVE_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACCT_NUM" source="ACCT_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CO_CD" source="CO_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTR_STRT_DT" source="CONTR_STRT_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTR_END_DT" source="CONTR_END_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTR_TY" source="CONTR_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTR_TERM" source="CONTR_TERM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NETWK_TY" source="NETWK_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUST_TY" source="CUST_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KUNNR_SID" source="KUNNR_SID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AMT" source="AMT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20100501" source="IS_20100501"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_VTG_ROW_ID" source="CC_VTG_ROW_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MIN_SPD_MOD_IND" source="MIN_SPD_MOD_IND"/>
+      </input>
+    </calculationView>
+  </calculationViews>
+  <logicalModel id="ERROR_SEMANTICS">
+    <descriptions/>
+    <attributes>
+      <attribute id="ERROR_STATUS" order="1" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ERROR_STATUS"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="ERROR_STATUS"/>
+      </attribute>
+      <attribute id="ERROR_CODE" order="2" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ERROR_CODE"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="ERROR_CODE"/>
+      </attribute>
+      <attribute id="AGNT_NUM" order="3" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="AGNT_NUM"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="AGNT_NUM"/>
+      </attribute>
+      <attribute id="SERVICE_CD" order="4" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SERVICE_CD"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="CC_SERVICE_CD"/>
+      </attribute>
+      <attribute id="TERM_DISQUALF_IND" order="5" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="TERM_DISQUALF_IND"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="CC_TERM_DISQUALF_IND"/>
+      </attribute>
+      <attribute id="CUST_ST" order="6" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CUST_ST"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="CC_CUST_ST"/>
+      </attribute>
+      <attribute id="VIRTUAL_IND" order="7" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="VIRTUAL_IND"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="CC_VIRTUAL_IND"/>
+      </attribute>
+      <attribute id="TERM_IND" order="8" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="TERM_IND"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="CC_TERM_IND"/>
+      </attribute>
+      <attribute id="PRODUCT_TYPE" order="9" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="PRODUCT_TYPE"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="CC_PRODUCT_TYPE"/>
+      </attribute>
+      <attribute id="REFERENCE_EFFECTIVE_DT" order="10" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="REFERENCE_EFFECTIVE_DT"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="REFERENCE_EFFECTIVE_DT"/>
+      </attribute>
+      <attribute id="ACCT_NUM" order="11" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ACCT_NUM"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="ACCT_NUM"/>
+      </attribute>
+      <attribute id="CO_CD" order="12" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CO_CD"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="CO_CD"/>
+      </attribute>
+      <attribute id="CONTR_STRT_DT" order="13" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CONTR_STRT_DT"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="CONTR_STRT_DT"/>
+      </attribute>
+      <attribute id="CONTR_END_DT" order="14" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CONTR_END_DT"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="CONTR_END_DT"/>
+      </attribute>
+      <attribute id="CONTR_TY" order="15" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CONTR_TY"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="CONTR_TY"/>
+      </attribute>
+      <attribute id="CONTR_TERM" order="16" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CONTR_TERM"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="CONTR_TERM"/>
+      </attribute>
+      <attribute id="NETWK_TY" order="17" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="NETWK_TY"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="NETWK_TY"/>
+      </attribute>
+      <attribute id="CUST_TY" order="18" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CUST_TY"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="CUST_TY"/>
+      </attribute>
+      <attribute id="KUNNR_SID" order="19" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="KUNNR_SID"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="KUNNR_SID"/>
+      </attribute>
+      <attribute id="PRIN_NUM" order="20" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="PRIN_NUM"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="PRIN_NUM"/>
+      </attribute>
+      <attribute id="AMT" order="21" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="AMT"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="AMT"/>
+      </attribute>
+      <attribute id="IS_20100501" hidden="false" order="22" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="IS_20100501"/>
+      </attribute>
+      <attribute id="VTG_ROW_ID" hidden="false" order="23" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="CC_VTG_ROW_ID"/>
+      </attribute>
+      <attribute id="MIN_SPD_MOD_IND" order="24" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="MIN_SPD_MOD_IND "/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="MIN_SPD_MOD_IND"/>
+      </attribute>
+    </attributes>
+    <calculatedAttributes/>
+    <privateDataFoundation>
+      <tableProxies/>
+      <joins/>
+      <layout>
+        <shapes/>
+      </layout>
+    </privateDataFoundation>
+    <baseMeasures/>
+    <calculatedMeasures/>
+    <restrictedMeasures/>
+    <localDimensions/>
+  </logicalModel>
+  <layout>
+    <shapes>
+      <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+        <upperLeftCorner x="233" y="87"/>
+        <rectangleSize height="64" width="152"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_TV_CUSTOMER" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="22" y="339"/>
+        <rectangleSize height="64" width="272"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_TV_TRANSACTIONS" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="308" y="339"/>
+        <rectangleSize height="64" width="305"/>
+      </shape>
+      <shape expanded="true" modelObjectName="JOIN_CUST_TRANS" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="218" y="243"/>
+        <rectangleSize height="82" width="182"/>
+      </shape>
+      <shape expanded="true" modelObjectName="ERROR_SEMANTICS" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="223" y="165"/>
+        <rectangleSize height="64" width="172"/>
+      </shape>
+    </shapes>
+  </layout>
+</Calculation:scenario>

@@ -1,0 +1,624 @@
+PROCEDURE "NDB_MOBILITY"."IFRS_R1.MOBILITY.NDB_MOBILITY::SP_NGCC_CHRG_USG_ADJ_CDR" 
+(  IN IP_EFF_DATE DATE,
+ 	OUT OP_STATUS NVARCHAR(1000))
+	LANGUAGE SQLSCRIPT
+	SQL SECURITY INVOKER  
+	--DEFAULT SCHEMA <default_schema_name>
+	--READS SQL DATA 
+	AS
+BEGIN
+
+--------------------------------------------------------------------------------
+-- Procedure Title : IFRS_R1.MOBILITY.NDB_MOBILITY::SP_NGCC_CHRG_USG_ADJ_CDR
+--
+-- Created By      : BC_EZ07674(Suresh Konidala)          Date :28/11/2016
+-- 
+-- Procedure Description : 
+--  1.We will Update and Insert Prepaid Order Information into NDB layer
+--
+--Project :Bell Canada
+-- 
+-- Release :R1/IFRS
+--------------------------------------------------------------------------------
+--   M O D I F I C A T I O N   H I S T O R Y
+--------------------------------------------------------------------------------
+-- Date        | User ID          | Modification History/Release
+--------------------------------------------------------------------------------
+--   22-12-2016|   BC_EZ07674     | Add field OFFER_ID and changed hand set flag logic removed
+--   11-07-2017|   BC_EZ07674     | Update PPD_BILLING with look up into CA_NGCC_PP_GL_MAP_VW
+--   01-02-2017|   BC_EZ07674     | Customer History changes and Added cursor logic
+--   13/03/2017|   BC_EZ07674     |cycle id added to PPD_BILLING table
+--   10/05/2017| EZ_18762		  | Effective date as input and one cursor logic/error logic 
+--------------------------------------------------------------------------------
+-- Description Of the changes 
+--------------------------------------------------------------------------------
+-- Modification Number          :<Assign Some Number> 
+-- Description of Changes Made> :<Updated the logic of NDB_TS write back>       
+--------------------------------------------------------------------------------
+
+	DECLARE LC_ERROR_TEXT 		NVARCHAR(70) DEFAULT 'OUT STATUS IS 1 : INSERT/UPDATE FOR ONE OR MORE RECORD FAILED';
+	DECLARE LC_SUCCESS_TEXT 	NVARCHAR(70) DEFAULT 'OUT STATUS IS 0 : INSERT/UPDATE EXECUTION SUCCESSFUL';
+	DECLARE LV_ERROR_FLAG 		NVARCHAR(1) := 'N';
+	DECLARE LV_CUR_UTC 			TIMESTAMP := CURRENT_TIMESTAMP;
+	DECLARE ERROR_TAB 			TABLE (ERROR_CODE NVARCHAR(100));
+	DECLARE i					INTEGER;
+	DECLARE RECORD_COUNT		INTEGER;
+	DECLARE CURRENT_ERROR		NVARCHAR(100);
+	
+	DECLARE CURSOR CA_CHRG_USG_ADJ_CDR FOR
+	SELECT
+	 "EVNT_REC_TY",
+	 "MDN",
+	 "AMOUNT",
+	 "BRAND",
+	 "IMSI",
+	 "CUSTOMER_ID",
+	 "PRODUCT_ID",
+	 "ADJUSTMENT_CODE",
+	 "ADJ_RSN_DESC",
+	 "POSTING_DATE",
+	 "RECRNG_CHRG_TO_DT",
+	 "RECRNG_CHRG_FROM_DT",
+	 "OFFER_ID",
+	 "SAPGL",
+	 "COST_CENTER",
+	 "TAX_JURIS_CODE",
+	 "VALID_FROM",
+	 "DOCUMENT_DATE",
+	 "CYCL_ID",
+	 "SOURCE_IDENTIFIER",
+	 "CREDIT_DEBIT_FLG",
+	 "ORDER_ID",
+	 "CURRENCY",
+	 "COMPANY_CODE",
+	 "ALLOCATION",
+	 "TEXT_LINE_ITEM",
+	 "TRADING_PARTNER",
+	 "SERVICE_PROVIDER",
+	 "LEGAL_ENTITY",
+	 "CROSS_REFERENCE_ORDER_ID",
+	 "ORDER_TYPE",
+	 "ANNIVERSARY_DATE",
+	 "REGION",
+	 "HANDSET_FLAG",
+	 "SUB_MARKET",
+	 "KUNNR_SID",
+	 "ACCOUNT_BALANCE",
+	 "ERROR_CODE",
+	 "ERROR_STATUS",
+	 "FISCAL_YEAR",
+	 "AWARD_CREDIT",
+	 "TERM",
+	 "POSTING_PERIOD",
+	 "INVOICE_NO",
+	 "GL_ACCOUNT",
+	 "TRANSACTION_ID",
+	 "TRANSACTION_DATE",
+	 "END_DATE",
+	 "START_DATE",
+	 "SERVICE_TYPE",
+	 "TERM_INDICATOR",
+	 "REFERENCE_FIELD",
+	 "MODIFIED_TS",
+	 "DATACDR_PRIMARY_KEY",
+	 "NETWORK_TY",
+	 "PRT_ELMNT",
+	 "CALLCDR_PRIMARY_KEY",
+	 "IS_NULL_RECRNG_CHRG_FROM_DT"
+	FROM "_SYS_BIC"."IFRS_R1.MOBILITY.NDB_MOBILITY/CA_NGCC_CHRG_USG_ADJ_CDR"
+	(PLACEHOLDER."$$IP_EFF_DATE$$"=> :IP_EFF_DATE)
+	ORDER BY "DOCUMENT_DATE", "CYCL_ID";
+	
+--------------------------------------------------------------------------------------------------
+-- Local Temporary Tables Declaration
+--------------------------------------------------------------------------------------------------	
+CREATE LOCAL TEMPORARY TABLE #UPDATE_NGCC_CALL_DTL(CALLCDR_PRIMARY_KEY NVARCHAR(115));
+CREATE LOCAL TEMPORARY TABLE #UPDATE_NGCC_DATA(DATACDR_PRIMARY_KEY NVARCHAR(115));
+CREATE LOCAL TEMPORARY TABLE #UPDATE_EH_DELETION(CUSTOMER_ID NVARCHAR(30),INVOICE_NO NVARCHAR(44),PRODUCT_ID NVARCHAR(18),POSTING_DATE DATE,REFERENCE_FIELD NVARCHAR(44));
+
+CREATE LOCAL TEMPORARY TABLE #UPDATE_NGCC_ADJ(EVNT_REC_TY NVARCHAR(20),MDN NVARCHAR(24),
+CUSTOMER_ID NVARCHAR(30),PRODUCT_ID NVARCHAR(18),BRAND NVARCHAR(20),IMSI NVARCHAR(24),
+ADJ_RSN_DESC NVARCHAR(20),CYCL_ID NVARCHAR(3));
+
+
+CREATE LOCAL TEMPORARY TABLE #UPDATE_NGCC_RECURRING_CHRG(EVNT_REC_TY NVARCHAR(20),MDN NVARCHAR(24),
+CUSTOMER_ID NVARCHAR(30),PRODUCT_ID NVARCHAR(18),BRAND NVARCHAR(20),IMSI NVARCHAR(24),
+OFFER_ID NVARCHAR(9),RECRNG_CHRG_FROM_DT DATE, RECRNG_CHRG_TO_DT DATE,CYCL_ID NVARCHAR(3));
+
+--------------------------------------------------------------------------------------------------
+-- Cursors Loop
+-------------------------------------------------------------------------------------------------- 	
+
+	FOR CUR_CHRG AS CA_CHRG_USG_ADJ_CDR DO
+		
+		-- Define Exit Handler
+		DECLARE EXIT HANDLER FOR SQLEXCEPTION 
+		BEGIN AUTONOMOUS TRANSACTION
+			-- Define Exit Handler
+			DECLARE EXIT HANDLER FOR SQLEXCEPTION 
+			BEGIN AUTONOMOUS TRANSACTION 
+			END;
+			INSERT INTO "NDB_MOBILITY"."IFRS_R1.MOBILITY.NDB_MOBILITY::PPD_BILLING_EH"
+				(
+					"SOURCE_IDENTIFIER"
+					,"CUSTOMER_ID"
+					,"GL_ACCOUNT"
+					,"CREDIT_DEBIT_FLG"
+					,"PRODUCT_ID"
+					,"SERVICE_TYPE"
+					,"START_DATE"
+					,"END_DATE"
+					,"TERM"
+					,"TERM_INDICATOR"
+					,"ORDER_ID"
+					,"INVOICE_NO"
+					,"DOCUMENT_DATE"
+					,"CURRENCY"
+					,"COMPANY_CODE"
+					,"POSTING_DATE"
+					,"FISCAL_YEAR"
+					,"POSTING_PERIOD"
+					,"AMOUNT"
+					,"TAX_JURIS_CODE"
+					,"COST_CENTER"
+					,"ALLOCATION"
+					,"TEXT_LINE_ITEM"
+					,"TRADING_PARTNER"
+					,"SERVICE_PROVIDER"
+					,"REFERENCE_FIELD"
+					,"LEGAL_ENTITY"
+					,"SUB_MARKET"
+					,"MDN"
+					,"TRANSACTION_ID"
+					,"TRANSACTION_DATE"
+					,"CROSS_REFERENCE_ORDER_ID"
+					,"ORDER_TYPE"
+					,"ADJUSTMENT_CODE"
+					,"AWARD_CREDIT"
+					,"ANNIVERSARY_DATE"
+					,"REGION"
+					,"ACCOUNT_BALANCE"
+					,"BRAND"
+					,"RECRNG_CHRG_FROM_DT"
+					,"RECRNG_CHRG_TO_DT"
+					,"HANDSET_FLAG"
+					,"KUNNR_SID"
+					,"NETWORK_TY"
+                    ,"PRT_ELMNT"
+                    ,"IMSI"
+					,"INSERT_TS"
+					,"MODIFIED_TS"
+					,"OFFER_ID"
+					,"CYCL_ID"
+					,"ERROR_CODE"
+					,"TECHNICAL_MESSAGE"
+					,"ERROR_CREATE_TS"
+				) VALUES
+				(
+						CUR_CHRG."SOURCE_IDENTIFIER"
+						,CUR_CHRG."CUSTOMER_ID"
+						,CUR_CHRG."GL_ACCOUNT"
+						,CUR_CHRG."CREDIT_DEBIT_FLG"
+						,CUR_CHRG."PRODUCT_ID"
+						,CUR_CHRG."SERVICE_TYPE"
+						,CUR_CHRG."START_DATE"
+						,CUR_CHRG."END_DATE"
+						,CUR_CHRG."TERM"
+						,CUR_CHRG."TERM_INDICATOR"
+						,CUR_CHRG."ORDER_ID"
+						,CUR_CHRG."INVOICE_NO"
+						,CUR_CHRG."DOCUMENT_DATE"
+						,CUR_CHRG."CURRENCY"
+						,CUR_CHRG."COMPANY_CODE"
+						,CUR_CHRG."POSTING_DATE"
+						,CUR_CHRG."FISCAL_YEAR"
+						,CUR_CHRG."POSTING_PERIOD"
+						,CUR_CHRG."AMOUNT"
+						,CUR_CHRG."TAX_JURIS_CODE"
+						,CUR_CHRG."COST_CENTER"
+						,CUR_CHRG."ALLOCATION"
+						,CUR_CHRG."TEXT_LINE_ITEM"
+						,CUR_CHRG."TRADING_PARTNER"
+						,CUR_CHRG."SERVICE_PROVIDER"
+						,CUR_CHRG."REFERENCE_FIELD"
+						,CUR_CHRG."LEGAL_ENTITY"
+						,CUR_CHRG."SUB_MARKET"
+						,CUR_CHRG."MDN"
+						,CUR_CHRG."TRANSACTION_ID"
+						,CUR_CHRG."TRANSACTION_DATE"
+						,CUR_CHRG."CROSS_REFERENCE_ORDER_ID"
+						,CUR_CHRG."ORDER_TYPE"
+						,CUR_CHRG."ADJUSTMENT_CODE"
+						,CUR_CHRG."AWARD_CREDIT"
+						,CUR_CHRG."ANNIVERSARY_DATE"
+						,CUR_CHRG."REGION"
+						,CUR_CHRG."ACCOUNT_BALANCE"
+						,CUR_CHRG."BRAND"
+						,CUR_CHRG."RECRNG_CHRG_FROM_DT"
+						,CUR_CHRG."RECRNG_CHRG_TO_DT"
+						,CUR_CHRG."HANDSET_FLAG"
+						,CUR_CHRG."KUNNR_SID"
+						,CUR_CHRG."NETWORK_TY"
+						,CUR_CHRG."PRT_ELMNT"
+						,CUR_CHRG."IMSI"
+						,LV_CUR_UTC
+						,CUR_CHRG."MODIFIED_TS"
+						,CUR_CHRG."OFFER_ID"
+						,CUR_CHRG."CYCL_ID"
+						,::SQL_ERROR_CODE
+						,::SQL_ERROR_MESSAGE
+				  		,LV_CUR_UTC);
+			--ENTER ERROR CODE INSERT
+			LV_ERROR_FLAG := 'Y';		   
+			--END for AUTONOMOS	
+			END;
+			--Check the Error Status of the Record. If Record is with Error, then send to Error Table
+			IF CUR_CHRG.ERROR_STATUS = 1 THEN
+			--  Call the Stored Procedure to split the concatenated Error Messages into Error Rows
+		    	CALL "NDB_COMMON"."IFRS_R1.COMMON_COMP.EH::SP_EH_SPLIT_ERRORS"(CUR_CHRG."ERROR_CODE", ERROR_TAB, RECORD_COUNT);
+		    	FOR i IN 1 .. :RECORD_COUNT DO
+		    		CURRENT_ERROR = :ERROR_TAB."ERROR_CODE"[:i];
+		    		-- Insert Into NDB table: MOBL_CUST
+		    		----------------------------
+		    		--INSERT INTO ERROR TABLE
+		    		---------------------------
+		    		INSERT INTO "NDB_MOBILITY"."IFRS_R1.MOBILITY.NDB_MOBILITY::PPD_BILLING_EH"
+				(
+					"SOURCE_IDENTIFIER"
+					,"CUSTOMER_ID"
+					,"GL_ACCOUNT"
+					,"CREDIT_DEBIT_FLG"
+					,"PRODUCT_ID"
+					,"SERVICE_TYPE"
+					,"START_DATE"
+					,"END_DATE"
+					,"TERM"
+					,"TERM_INDICATOR"
+					,"ORDER_ID"
+					,"INVOICE_NO"
+					,"DOCUMENT_DATE"
+					,"CURRENCY"
+					,"COMPANY_CODE"
+					,"POSTING_DATE"
+					,"FISCAL_YEAR"
+					,"POSTING_PERIOD"
+					,"AMOUNT"
+					,"TAX_JURIS_CODE"
+					,"COST_CENTER"
+					,"ALLOCATION"
+					,"TEXT_LINE_ITEM"
+					,"TRADING_PARTNER"
+					,"SERVICE_PROVIDER"
+					,"REFERENCE_FIELD"
+					,"LEGAL_ENTITY"
+					,"SUB_MARKET"
+					,"MDN"
+					,"TRANSACTION_ID"
+					,"TRANSACTION_DATE"
+					,"CROSS_REFERENCE_ORDER_ID"
+					,"ORDER_TYPE"
+					,"ADJUSTMENT_CODE"
+					,"AWARD_CREDIT"
+					,"ANNIVERSARY_DATE"
+					,"REGION"
+					,"ACCOUNT_BALANCE"
+					,"BRAND"
+					,"RECRNG_CHRG_FROM_DT"
+					,"RECRNG_CHRG_TO_DT"
+					,"HANDSET_FLAG"
+					,"KUNNR_SID"
+					,"NETWORK_TY"
+					,"PRT_ELMNT"
+					,"IMSI"
+					,"INSERT_TS"
+					,"MODIFIED_TS"
+					,"OFFER_ID"
+					,"CYCL_ID"
+					,"ERROR_CODE"
+					,"TECHNICAL_MESSAGE"
+					,"ERROR_CREATE_TS"
+				) VALUES
+				(
+						CUR_CHRG."SOURCE_IDENTIFIER"
+						,CUR_CHRG."CUSTOMER_ID"
+						,CUR_CHRG."GL_ACCOUNT"
+						,CUR_CHRG."CREDIT_DEBIT_FLG"
+						,CUR_CHRG."PRODUCT_ID"
+						,CUR_CHRG."SERVICE_TYPE"
+						,CUR_CHRG."START_DATE"
+						,CUR_CHRG."END_DATE"
+						,CUR_CHRG."TERM"
+						,CUR_CHRG."TERM_INDICATOR"
+						,CUR_CHRG."ORDER_ID"
+						,CUR_CHRG."INVOICE_NO"
+						,CUR_CHRG."DOCUMENT_DATE"
+						,CUR_CHRG."CURRENCY"
+						,CUR_CHRG."COMPANY_CODE"
+						,CUR_CHRG."POSTING_DATE"
+						,CUR_CHRG."FISCAL_YEAR"
+						,CUR_CHRG."POSTING_PERIOD"
+						,CUR_CHRG."AMOUNT"
+						,CUR_CHRG."TAX_JURIS_CODE"
+						,CUR_CHRG."COST_CENTER"
+						,CUR_CHRG."ALLOCATION"
+						,CUR_CHRG."TEXT_LINE_ITEM"
+						,CUR_CHRG."TRADING_PARTNER"
+						,CUR_CHRG."SERVICE_PROVIDER"
+						,CUR_CHRG."REFERENCE_FIELD"
+						,CUR_CHRG."LEGAL_ENTITY"
+						,CUR_CHRG."SUB_MARKET"
+						,CUR_CHRG."MDN"
+						,CUR_CHRG."TRANSACTION_ID"
+						,CUR_CHRG."TRANSACTION_DATE"
+						,CUR_CHRG."CROSS_REFERENCE_ORDER_ID"
+						,CUR_CHRG."ORDER_TYPE"
+						,CUR_CHRG."ADJUSTMENT_CODE"
+						,CUR_CHRG."AWARD_CREDIT"
+						,CUR_CHRG."ANNIVERSARY_DATE"
+						,CUR_CHRG."REGION"
+						,CUR_CHRG."ACCOUNT_BALANCE"
+						,CUR_CHRG."BRAND"
+						,CUR_CHRG."RECRNG_CHRG_FROM_DT"
+						,CUR_CHRG."RECRNG_CHRG_TO_DT"
+						,CUR_CHRG."HANDSET_FLAG"
+						,CUR_CHRG."KUNNR_SID"
+						,CUR_CHRG."NETWORK_TY"
+						,CUR_CHRG."PRT_ELMNT"
+						,CUR_CHRG."IMSI"
+						,LV_CUR_UTC
+						,CUR_CHRG."MODIFIED_TS"
+						,CUR_CHRG."OFFER_ID"
+						,CUR_CHRG."CYCL_ID"
+						,:CURRENT_ERROR
+						,NULL
+				  		,LV_CUR_UTC);
+		    		LV_ERROR_FLAG := 'Y';
+		    		END FOR;
+		    ELSE
+		    	/* Insert Order Details into NDB PPD Billing Table */
+				INSERT INTO "NDB_MOBILITY"."IFRS_R1.MOBILITY.NDB_MOBILITY::PPD_BILLING"
+				(
+					"SOURCE_IDENTIFIER"
+					,"CUSTOMER_ID"
+					,"GL_ACCOUNT"
+					,"CREDIT_DEBIT_FLG"
+					,"PRODUCT_ID"
+					,"SERVICE_TYPE"
+					,"START_DATE"
+					,"END_DATE"
+					,"TERM"
+					,"TERM_INDICATOR"
+					,"ORDER_ID"
+					,"INVOICE_NO"
+					,"DOCUMENT_DATE"
+					,"CURRENCY"
+					,"COMPANY_CODE"
+					,"POSTING_DATE"
+					,"FISCAL_YEAR"
+					,"POSTING_PERIOD"
+					,"AMOUNT"
+					,"TAX_JURIS_CODE"
+					,"COST_CENTER"
+					,"ALLOCATION"
+					,"TEXT_LINE_ITEM"
+					,"TRADING_PARTNER"
+					,"SERVICE_PROVIDER"
+					,"REFERENCE_FIELD"
+					,"LEGAL_ENTITY"
+					,"SUB_MARKET"
+					,"MDN"
+					,"TRANSACTION_ID"
+					,"TRANSACTION_DATE"
+					,"CROSS_REFERENCE_ORDER_ID"
+					,"ORDER_TYPE"
+					,"ADJUSTMENT_CODE"
+					,"AWARD_CREDIT"
+					,"ANNIVERSARY_DATE"
+					,"REGION"
+					,"ACCOUNT_BALANCE"
+					,"BRAND"
+					,"RECRNG_CHRG_FROM_DT"
+					,"RECRNG_CHRG_TO_DT"
+					,"HANDSET_FLAG"
+					,"KUNNR_SID"
+					,"NETWORK_TY"
+					,"PRT_ELMNT"
+					,"IMSI"
+					,"INSERT_TS"
+					,"MODIFIED_TS"
+					,"OFFER_ID"
+					,"CYCL_ID"
+				) VALUES
+				(
+						CUR_CHRG."SOURCE_IDENTIFIER"
+						,CUR_CHRG."CUSTOMER_ID"
+						,CUR_CHRG."GL_ACCOUNT"
+						,CUR_CHRG."CREDIT_DEBIT_FLG"
+						,CUR_CHRG."PRODUCT_ID"
+						,CUR_CHRG."SERVICE_TYPE"
+						,CUR_CHRG."START_DATE"
+						,CUR_CHRG."END_DATE"
+						,CUR_CHRG."TERM"
+						,CUR_CHRG."TERM_INDICATOR"
+						,CUR_CHRG."ORDER_ID"
+						,CUR_CHRG."INVOICE_NO"
+						,CUR_CHRG."DOCUMENT_DATE"
+						,CUR_CHRG."CURRENCY"
+						,CUR_CHRG."COMPANY_CODE"
+						,CUR_CHRG."POSTING_DATE"
+						,CUR_CHRG."FISCAL_YEAR"
+						,CUR_CHRG."POSTING_PERIOD"
+						,CUR_CHRG."AMOUNT"
+						,CUR_CHRG."TAX_JURIS_CODE"
+						,CUR_CHRG."COST_CENTER"
+						,CUR_CHRG."ALLOCATION"
+						,CUR_CHRG."TEXT_LINE_ITEM"
+						,CUR_CHRG."TRADING_PARTNER"
+						,CUR_CHRG."SERVICE_PROVIDER"
+						,CUR_CHRG."REFERENCE_FIELD"
+						,CUR_CHRG."LEGAL_ENTITY"
+						,CUR_CHRG."SUB_MARKET"
+						,CUR_CHRG."MDN"
+						,CUR_CHRG."TRANSACTION_ID"
+						,CUR_CHRG."TRANSACTION_DATE"
+						,CUR_CHRG."CROSS_REFERENCE_ORDER_ID"
+						,CUR_CHRG."ORDER_TYPE"
+						,CUR_CHRG."ADJUSTMENT_CODE"
+						,CUR_CHRG."AWARD_CREDIT"
+						,CUR_CHRG."ANNIVERSARY_DATE"
+						,CUR_CHRG."REGION"
+						,CUR_CHRG."ACCOUNT_BALANCE"
+						,CUR_CHRG."BRAND"
+						,CUR_CHRG."RECRNG_CHRG_FROM_DT"
+						,CUR_CHRG."RECRNG_CHRG_TO_DT"
+						,CUR_CHRG."HANDSET_FLAG"
+						,CUR_CHRG."KUNNR_SID"
+						,CUR_CHRG."NETWORK_TY"
+						,CUR_CHRG."PRT_ELMNT"
+						,CUR_CHRG."IMSI"
+						,LV_CUR_UTC
+						,CUR_CHRG."MODIFIED_TS"
+						,CUR_CHRG."OFFER_ID"
+						,CUR_CHRG."CYCL_ID");
+						
+-- Insert PK of successfully processed Records into Local Temp Tables 
+-- For Updating NDB_TS in corresponding Landing Tables records
+		    	INSERT INTO #UPDATE_NGCC_CALL_DTL 
+									(CALLCDR_PRIMARY_KEY) 
+									VALUES (
+									CUR_CHRG."CALLCDR_PRIMARY_KEY");
+									
+				INSERT INTO #UPDATE_NGCC_DATA (DATACDR_PRIMARY_KEY) 
+									VALUES (CUR_CHRG."DATACDR_PRIMARY_KEY");
+									
+				INSERT INTO #UPDATE_NGCC_RECURRING_CHRG
+									(EVNT_REC_TY,
+								 	MDN,
+								 	CUSTOMER_ID,
+								 	PRODUCT_ID,
+								 	BRAND,
+								 	IMSI,
+								 	OFFER_ID,
+								 	RECRNG_CHRG_FROM_DT,
+								 	RECRNG_CHRG_TO_DT,
+								 	CYCL_ID) 
+									VALUES (
+									CUR_CHRG."EVNT_REC_TY",
+									CUR_CHRG."MDN",
+									CUR_CHRG."CUSTOMER_ID",
+									CUR_CHRG."PRODUCT_ID",
+									CUR_CHRG."BRAND",
+									CUR_CHRG."IMSI",
+									CUR_CHRG."OFFER_ID",
+									CUR_CHRG."IS_NULL_RECRNG_CHRG_FROM_DT",
+									CUR_CHRG."RECRNG_CHRG_TO_DT",									
+									CUR_CHRG."CYCL_ID");
+									
+				INSERT INTO #UPDATE_NGCC_ADJ
+									(EVNT_REC_TY,
+									MDN,
+									CUSTOMER_ID,
+									PRODUCT_ID,
+									BRAND,
+									IMSI,
+									ADJ_RSN_DESC,
+								 	CYCL_ID) 
+									VALUES (
+									CUR_CHRG."EVNT_REC_TY",
+									CUR_CHRG."MDN",
+									CUR_CHRG."CUSTOMER_ID",
+									CUR_CHRG."PRODUCT_ID",
+									CUR_CHRG."BRAND",
+									CUR_CHRG."IMSI",
+									CUR_CHRG."ADJ_RSN_DESC",
+									CUR_CHRG."CYCL_ID");
+																		
+--         Add record to Delete the error from the error table if it exists
+					INSERT INTO #UPDATE_EH_DELETION ("CUSTOMER_ID", "INVOICE_NO", "PRODUCT_ID","POSTING_DATE","REFERENCE_FIELD") 
+			               VALUES (
+			               CUR_CHRG."CUSTOMER_ID", 
+			               CUR_CHRG."INVOICE_NO",
+			               CUR_CHRG."PRODUCT_ID",
+			               CUR_CHRG."POSTING_DATE",
+			               CUR_CHRG."REFERENCE_FIELD");
+				
+		    END IF;
+	 END FOR;
+	 
+
+	--Update NDB_TS with current_timestamp for the records that 
+	--has been processed for NGCC_CALL_DTL table  
+	UPDATE "LAND"."IFRS_R1.LAND::NGCC_CALL_DTL" A
+	FROM "LAND"."IFRS_R1.LAND::NGCC_CALL_DTL" A
+	INNER JOIN #UPDATE_NGCC_CALL_DTL B	
+	ON A."CALLCDR_PRIMARY_KEY" = B."CALLCDR_PRIMARY_KEY" 
+	SET NDB_TS=LV_CUR_UTC 
+	WHERE NDB_TS IS NULL ;
+	
+	--Update NDB_TS with current_timestamp for the records that has been processed for NGCC_DATA table 
+	UPDATE "LAND"."IFRS_R1.LAND::NGCC_DATA" A
+	FROM "LAND"."IFRS_R1.LAND::NGCC_DATA" A
+	INNER JOIN #UPDATE_NGCC_DATA B	
+	ON A."DATACDR_PRIMARY_KEY" = B."DATACDR_PRIMARY_KEY" 
+	SET NDB_TS=LV_CUR_UTC 
+	WHERE NDB_TS IS NULL ;
+	
+	--Update NDB_TS with current_timestamp for the records that has been processed 
+	--for NGCC_RECURRING_CHRG table  
+	UPDATE "LAND"."IFRS_R1.LAND::NGCC_RECURRING_CHRG" A
+	FROM "LAND"."IFRS_R1.LAND::NGCC_RECURRING_CHRG" A
+	INNER JOIN #UPDATE_NGCC_RECURRING_CHRG B	
+	ON A."MDN" = B."MDN" 
+	AND A."EVNT_REC_TY" = B."EVNT_REC_TY" 
+	AND A."RECRNG_CHRG_ID" = B."OFFER_ID"
+	AND A."USER_NUM" = B."CUSTOMER_ID"
+	AND A."SOC_CODE" = B."PRODUCT_ID"
+	AND A."BRND" = B."BRAND"
+	AND A."IMSI" = B."IMSI"
+	AND A."RECRNG_CHRG_FROM_DT" = B."RECRNG_CHRG_FROM_DT"
+	AND A."RECRNG_CHRG_TO_DT" = B."RECRNG_CHRG_TO_DT"
+	AND A."CYCL_ID" = B."CYCL_ID"
+	SET NDB_TS=LV_CUR_UTC 
+	WHERE NDB_TS IS NULL ;
+
+	
+	--Update NDB_TS with current_timestamp for the records that has been processed for NGCC_ADJ table 
+	UPDATE "LAND"."IFRS_R1.LAND::NGCC_ADJ" A
+	FROM "LAND"."IFRS_R1.LAND::NGCC_ADJ" A
+	INNER JOIN #UPDATE_NGCC_ADJ B	
+	ON A."MDN" = B."MDN" 
+	AND A."USER_NUM" = B."CUSTOMER_ID" 
+	AND A."BRND" = B."BRAND" 
+	AND A."RSN_DESC" = B."ADJ_RSN_DESC" 
+	AND A."IMSI" = B."IMSI" 
+	AND A."EVNT_REC_TY" = B."EVNT_REC_TY" 
+	AND A."RSN_CD" = B."PRODUCT_ID"
+	AND A."CYCL_ID" = B."CYCL_ID" 
+	SET NDB_TS=LV_CUR_UTC 
+	WHERE NDB_TS IS NULL ;	
+
+--------------------------------------------------------------------------------------------------
+-- Update Error Table
+--------------------------------------------------------------------------------------------------
+UPDATE "NDB_MOBILITY"."IFRS_R1.MOBILITY.NDB_MOBILITY::PPD_BILLING_EH" A
+FROM "NDB_MOBILITY"."IFRS_R1.MOBILITY.NDB_MOBILITY::PPD_BILLING_EH" A 
+INNER JOIN #UPDATE_EH_DELETION B
+ON A."CUSTOMER_ID" = B."CUSTOMER_ID"
+AND A."INVOICE_NO" = B."INVOICE_NO"
+AND A."PRODUCT_ID"    = B."PRODUCT_ID"
+AND A."POSTING_DATE"    = B."POSTING_DATE"
+AND A."REFERENCE_FIELD"    = B."REFERENCE_FIELD"
+SET (DELETE_DATE, DELETED) = (CURRENT_DATE, 1);
+
+--------------------------------------------------------------------------------------------------
+	-- Set Overall Status
+-------------------------------------------------------------------------------------------------- 
+	--  STATUS 0: Send the success message to scheduling tool to confirm this procedure has been
+	--  executed successfully
+    IF(LV_ERROR_FLAG = 'Y') THEN
+    	OP_STATUS := LC_ERROR_TEXT; 			
+    ELSE
+  		OP_STATUS := LC_SUCCESS_TEXT;				
+	END IF;
+	
+END;

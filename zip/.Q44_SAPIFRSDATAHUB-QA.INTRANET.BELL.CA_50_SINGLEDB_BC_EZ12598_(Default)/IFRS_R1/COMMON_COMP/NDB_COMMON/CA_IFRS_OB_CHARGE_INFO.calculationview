@@ -1,0 +1,508 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:AccessControl="http://www.sap.com/ndb/SQLCoreModelAccessControl.ecore" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" xmlns:Variable="http://www.sap.com/ndb/BiModelVariable.ecore" schemaVersion="2.3" id="CA_IFRS_OB_CHARGE_INFO" applyPrivilegeType="NONE" checkAnalyticPrivileges="false" defaultClient="$$client$$" defaultLanguage="$$language$$" hierarchiesSQLEnabled="false" historyEnabled="false" translationRelevant="true" visibility="internal" calculationScenarioType="TREE_BASED" dataCategory="DIMENSION" enforceSqlExecution="false" executionSemantic="UNDEFINED" outputViewType="Projection">
+  <descriptions defaultDescription="CA_IFRS_OB_CHARGE_INFO"/>
+  <localVariables>
+    <variable id="IP_EFF_DT" parameter="true">
+      <descriptions defaultDescription="IP_EFF_DT"/>
+      <variableProperties datatype="DATE" defaultValue="99991231" mandatory="false">
+        <valueDomain type="Date"/>
+        <selection multiLine="false" type="SingleValue"/>
+      </variableProperties>
+    </variable>
+  </localVariables>
+  <variableMappings>
+    <mapping xsi:type="Variable:VariableMapping" dataSource="#CA_IFRS_OB_CHARGE_INFO">
+      <targetVariable name="IP_EFF_DT" resourceUri="/IFRS_R1.COMMON_COMP.LAND_COMMON/calculationviews/CA_IFRS_OB_CHARGE_INFO"/>
+      <localVariable>#IP_EFF_DT</localVariable>
+    </mapping>
+  </variableMappings>
+  <informationModelLayout relativeWidthScenario="59"/>
+  <dataSources>
+    <DataSource id="CA_IFRS_OB_CHARGE_INFO" type="CALCULATION_VIEW">
+      <viewAttributes allViewAttributes="true"/>
+      <resourceUri>/IFRS_R1.COMMON_COMP.LAND_COMMON/calculationviews/CA_IFRS_OB_CHARGE_INFO</resourceUri>
+    </DataSource>
+    <DataSource id="IFRS_R1.COMMON_COMP.NDB_COMMON::OB_CHARGE_INFO" type="DATA_BASE_TABLE">
+      <viewAttributes allViewAttributes="true"/>
+      <columnObject schemaName="NDB_COMMON" columnObjectName="IFRS_R1.COMMON_COMP.NDB_COMMON::OB_CHARGE_INFO"/>
+    </DataSource>
+    <DataSource id="IFRS_R1.COMMON_COMP.NDB_COMMON::OB_CHARGE_INFO_EH" type="DATA_BASE_TABLE">
+      <viewAttributes allViewAttributes="true"/>
+      <columnObject schemaName="NDB_COMMON" columnObjectName="IFRS_R1.COMMON_COMP.NDB_COMMON::OB_CHARGE_INFO_EH"/>
+    </DataSource>
+  </dataSources>
+  <calculationViews>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_PVT_VW">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="FEATURE_CODE"/>
+        <viewAttribute id="CHARGE_TYPE"/>
+        <viewAttribute id="FTR_REVENUE_CODE"/>
+        <viewAttribute id="GL_CHARGE_TYPE"/>
+        <viewAttribute id="INVOICE_TYPE"/>
+        <viewAttribute id="GL_CLASSIF_CODE"/>
+        <viewAttribute id="PROFIT_CENTER"/>
+        <viewAttribute id="EFF_DT"/>
+        <viewAttribute id="EXPY_DT"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#CA_IFRS_OB_CHARGE_INFO">
+        <mapping xsi:type="Calculation:AttributeMapping" target="FEATURE_CODE" source="FEATURE_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CHARGE_TYPE" source="CHARGE_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FTR_REVENUE_CODE" source="FTR_REVENUE_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GL_CHARGE_TYPE" source="GL_CHARGE_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INVOICE_TYPE" source="INVOICE_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GL_CLASSIF_CODE" source="GL_CLASSIF_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROFIT_CENTER" source="PROFIT_CENTER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFF_DT" source="EFF_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXPY_DT" source="EXPY_DT"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_NDB" filterExpressionLanguage="COLUMN_ENGINE">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="CHARGE_TYPE"/>
+        <viewAttribute id="FEATURE_CODE"/>
+        <viewAttribute id="FTR_REVENUE_CODE"/>
+        <viewAttribute id="REFERENCE_EXPIRY_DT"/>
+        <viewAttribute id="REFERENCE_EFFECTIVE_DT"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#IFRS_R1.COMMON_COMP.NDB_COMMON::OB_CHARGE_INFO">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CHARGE_TYPE" source="CHARGE_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FEATURE_CODE" source="FEATURE_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FTR_REVENUE_CODE" source="FTR_REVENUE_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_EXPIRY_DT" source="REFERENCE_EXPIRY_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_EFFECTIVE_DT" source="REFERENCE_EFFECTIVE_DT"/>
+      </input>
+      <filter>(&quot;REFERENCE_EXPIRY_DT&quot; ='9999-12-31')</filter>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_EH">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="CHARGE_TYPE_EH"/>
+        <viewAttribute id="FEATURE_CODE_EH"/>
+        <viewAttribute id="FTR_REVENUE_CODE_EH"/>
+        <viewAttribute id="DELETED">
+          <filter xsi:type="AccessControl:SingleValueFilter" operator="NL" including="true"/>
+        </viewAttribute>
+        <viewAttribute id="REFERENCE_EFFECTIVE_DT"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="DATE" id="CC_REFERENCE_EFFECTIVE_DT_EH" expressionLanguage="COLUMN_ENGINE">
+          <formula>date(&quot;REFERENCE_EFFECTIVE_DT&quot;)</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#IFRS_R1.COMMON_COMP.NDB_COMMON::OB_CHARGE_INFO_EH">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CHARGE_TYPE_EH" source="CHARGE_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FEATURE_CODE_EH" source="FEATURE_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FTR_REVENUE_CODE_EH" source="FTR_REVENUE_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DELETED" source="DELETED"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_EFFECTIVE_DT" source="REFERENCE_EFFECTIVE_DT"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="JOIN_INCOMIN_EH" cardinality="C1_1" joinOrder="OUTSIDE_IN" joinType="leftOuter">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="CHARGE_TYPE_EH"/>
+        <viewAttribute id="REFERENCE_EFFECTIVE_DT_EH"/>
+        <viewAttribute id="FEATURE_CODE_EH"/>
+        <viewAttribute id="FTR_REVENUE_CODE_EH"/>
+        <viewAttribute id="FEATURE_CODE_LAND"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#PROJ_EH">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CHARGE_TYPE_EH" source="CHARGE_TYPE_EH"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_EFFECTIVE_DT_EH" source="CC_REFERENCE_EFFECTIVE_DT_EH"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FEATURE_CODE_EH" source="FEATURE_CODE_EH"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FTR_REVENUE_CODE_EH" source="FTR_REVENUE_CODE_EH"/>
+      </input>
+      <input node="#PROJ_PVT_VW">
+        <mapping xsi:type="Calculation:AttributeMapping" target="FEATURE_CODE_LAND" source="FEATURE_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CHARGE_TYPE_EH" source="CHARGE_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FEATURE_CODE_EH" source="FEATURE_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FTR_REVENUE_CODE_EH" source="FTR_REVENUE_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_EFFECTIVE_DT_EH" source="EFF_DT"/>
+      </input>
+      <joinAttribute name="CHARGE_TYPE_EH"/>
+      <joinAttribute name="FEATURE_CODE_EH"/>
+      <joinAttribute name="FTR_REVENUE_CODE_EH"/>
+      <joinAttribute name="REFERENCE_EFFECTIVE_DT_EH"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_FILTER_EH">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="REFERENCE_EFFECTIVE_DT_EH"/>
+        <viewAttribute id="CHARGE_TYPE_EH"/>
+        <viewAttribute id="FEATURE_CODE_EH"/>
+        <viewAttribute id="FTR_REVENUE_CODE_EH"/>
+        <viewAttribute id="FEATURE_CODE_LAND">
+          <filter xsi:type="AccessControl:SingleValueFilter" operator="NL" including="true"/>
+        </viewAttribute>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#JOIN_INCOMIN_EH">
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_EFFECTIVE_DT_EH" source="REFERENCE_EFFECTIVE_DT_EH"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CHARGE_TYPE_EH" source="CHARGE_TYPE_EH"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FEATURE_CODE_EH" source="FEATURE_CODE_EH"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FTR_REVENUE_CODE_EH" source="FTR_REVENUE_CODE_EH"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FEATURE_CODE_LAND" source="FEATURE_CODE_LAND"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:AggregationView" id="AGGR_EH">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="CHARGE_TYPE_EH"/>
+        <viewAttribute id="FEATURE_CODE_EH"/>
+        <viewAttribute id="FTR_REVENUE_CODE_EH"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#PROJ_FILTER_EH">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CHARGE_TYPE_EH" source="CHARGE_TYPE_EH"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FEATURE_CODE_EH" source="FEATURE_CODE_EH"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FTR_REVENUE_CODE_EH" source="FTR_REVENUE_CODE_EH"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="JOIN_EH" cardinality="C1_1" joinOrder="OUTSIDE_IN" joinType="leftOuter">
+      <descriptions>
+        <comment text="Version error will be raised as IS_20600501 if previous version of that set of PK's exist in the OB_CHARGE_INFO EH table"/>
+      </descriptions>
+      <viewAttributes>
+        <viewAttribute id="FEATURE_CODE"/>
+        <viewAttribute id="CHARGE_TYPE"/>
+        <viewAttribute id="FTR_REVENUE_CODE"/>
+        <viewAttribute id="GL_CHARGE_TYPE"/>
+        <viewAttribute id="INVOICE_TYPE"/>
+        <viewAttribute id="GL_CLASSIF_CODE"/>
+        <viewAttribute id="PROFIT_CENTER"/>
+        <viewAttribute id="EFF_DT"/>
+        <viewAttribute id="EXPY_DT"/>
+        <viewAttribute id="CHARGE_TYPE_EH"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="IS_20600501" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isNull(&quot;CHARGE_TYPE_EH&quot;),'0','1')</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#PROJ_PVT_VW">
+        <mapping xsi:type="Calculation:AttributeMapping" target="FEATURE_CODE" source="FEATURE_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CHARGE_TYPE" source="CHARGE_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FTR_REVENUE_CODE" source="FTR_REVENUE_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GL_CHARGE_TYPE" source="GL_CHARGE_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INVOICE_TYPE" source="INVOICE_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GL_CLASSIF_CODE" source="GL_CLASSIF_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROFIT_CENTER" source="PROFIT_CENTER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFF_DT" source="EFF_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXPY_DT" source="EXPY_DT"/>
+      </input>
+      <input node="#AGGR_EH">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CHARGE_TYPE_EH" source="CHARGE_TYPE_EH"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CHARGE_TYPE" source="CHARGE_TYPE_EH"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FEATURE_CODE" source="FEATURE_CODE_EH"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FTR_REVENUE_CODE" source="FTR_REVENUE_CODE_EH"/>
+      </input>
+      <joinAttribute name="CHARGE_TYPE"/>
+      <joinAttribute name="FEATURE_CODE"/>
+      <joinAttribute name="FTR_REVENUE_CODE"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="JOIN" joinOrder="OUTSIDE_IN" joinType="leftOuter">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="CHARGE_TYPE_RIGHT"/>
+        <viewAttribute id="FEATURE_CODE"/>
+        <viewAttribute id="CHARGE_TYPE"/>
+        <viewAttribute id="FTR_REVENUE_CODE"/>
+        <viewAttribute id="GL_CHARGE_TYPE"/>
+        <viewAttribute id="INVOICE_TYPE"/>
+        <viewAttribute id="GL_CLASSIF_CODE"/>
+        <viewAttribute id="PROFIT_CENTER"/>
+        <viewAttribute id="EFF_DT"/>
+        <viewAttribute id="EXPY_DT"/>
+        <viewAttribute id="IS_20600501"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#JOIN_EH">
+        <mapping xsi:type="Calculation:AttributeMapping" target="FEATURE_CODE" source="FEATURE_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CHARGE_TYPE" source="CHARGE_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FTR_REVENUE_CODE" source="FTR_REVENUE_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GL_CHARGE_TYPE" source="GL_CHARGE_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INVOICE_TYPE" source="INVOICE_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GL_CLASSIF_CODE" source="GL_CLASSIF_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROFIT_CENTER" source="PROFIT_CENTER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFF_DT" source="EFF_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXPY_DT" source="EXPY_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20600501" source="IS_20600501"/>
+      </input>
+      <input node="#PROJ_NDB">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CHARGE_TYPE_RIGHT" source="CHARGE_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CHARGE_TYPE" source="CHARGE_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FEATURE_CODE" source="FEATURE_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FTR_REVENUE_CODE" source="FTR_REVENUE_CODE"/>
+      </input>
+      <joinAttribute name="CHARGE_TYPE"/>
+      <joinAttribute name="FEATURE_CODE"/>
+      <joinAttribute name="FTR_REVENUE_CODE"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:RankView" id="RANK_CHARGE_INFO">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="FEATURE_CODE"/>
+        <viewAttribute id="CHARGE_TYPE"/>
+        <viewAttribute id="FTR_REVENUE_CODE"/>
+        <viewAttribute id="GL_CHARGE_TYPE"/>
+        <viewAttribute id="EFF_DT"/>
+        <viewAttribute id="PROFIT_CENTER"/>
+        <viewAttribute id="GL_CLASSIF_CODE"/>
+        <viewAttribute id="INVOICE_TYPE"/>
+        <viewAttribute id="EXPY_DT"/>
+        <viewAttribute id="CHARGE_TYPE_RIGHT"/>
+        <viewAttribute id="IS_20600501"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#JOIN">
+        <mapping xsi:type="Calculation:AttributeMapping" target="FEATURE_CODE" source="FEATURE_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CHARGE_TYPE" source="CHARGE_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FTR_REVENUE_CODE" source="FTR_REVENUE_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GL_CHARGE_TYPE" source="GL_CHARGE_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFF_DT" source="EFF_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROFIT_CENTER" source="PROFIT_CENTER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GL_CLASSIF_CODE" source="GL_CLASSIF_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INVOICE_TYPE" source="INVOICE_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXPY_DT" source="EXPY_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CHARGE_TYPE_RIGHT" source="CHARGE_TYPE_RIGHT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20600501" source="IS_20600501"/>
+      </input>
+      <windowFunction>
+        <partitionViewAttributeName>CHARGE_TYPE</partitionViewAttributeName>
+        <partitionViewAttributeName>FEATURE_CODE</partitionViewAttributeName>
+        <partitionViewAttributeName>FTR_REVENUE_CODE</partitionViewAttributeName>
+        <order byViewAttributeName="EFF_DT" direction="ASC"/>
+        <rankThreshold>
+          <value>1000</value>
+        </rankThreshold>
+        <rankViewAttributeName>RANK_SEQ</rankViewAttributeName>
+      </windowFunction>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_INSERT_UPDATE">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="FEATURE_CODE"/>
+        <viewAttribute id="CHARGE_TYPE"/>
+        <viewAttribute id="FTR_REVENUE_CODE"/>
+        <viewAttribute id="GL_CHARGE_TYPE"/>
+        <viewAttribute id="PROFIT_CENTER"/>
+        <viewAttribute id="GL_CLASSIF_CODE"/>
+        <viewAttribute id="INVOICE_TYPE"/>
+        <viewAttribute id="EXPY_DT"/>
+        <viewAttribute id="CHARGE_TYPE_RIGHT"/>
+        <viewAttribute id="EFF_DT"/>
+        <viewAttribute id="RANK_SEQ"/>
+        <viewAttribute id="IS_20600501"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CC_EXISTING_RECORD" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>if((isNull(&quot;CHARGE_TYPE_RIGHT&quot;) and &quot;RANK_SEQ&quot; = 1),'I','U')</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="DATE" id="CC_EFFECTIVE_DATE_PREV_DAY" expressionLanguage="COLUMN_ENGINE">
+          <formula>adddays(&quot;EFF_DT&quot;,-1)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CC_CONCAT_PK" length="100" expressionLanguage="COLUMN_ENGINE">
+          <formula>&quot;FEATURE_CODE&quot;+'|'+&quot;CHARGE_TYPE&quot;+'|'+&quot;FTR_REVENUE_CODE&quot;</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="DATE" id="CC_REFERENCE_EFFECTIVE_DT" expressionLanguage="COLUMN_ENGINE">
+          <formula>if((&quot;CC_EXISTING_RECORD&quot; = 'I'),date('19000101'),date(&quot;EFF_DT&quot;))</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#RANK_CHARGE_INFO">
+        <mapping xsi:type="Calculation:AttributeMapping" target="FEATURE_CODE" source="FEATURE_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CHARGE_TYPE" source="CHARGE_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FTR_REVENUE_CODE" source="FTR_REVENUE_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GL_CHARGE_TYPE" source="GL_CHARGE_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROFIT_CENTER" source="PROFIT_CENTER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GL_CLASSIF_CODE" source="GL_CLASSIF_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INVOICE_TYPE" source="INVOICE_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXPY_DT" source="EXPY_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CHARGE_TYPE_RIGHT" source="CHARGE_TYPE_RIGHT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFF_DT" source="EFF_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RANK_SEQ" source="RANK_SEQ"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20600501" source="IS_20600501"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="ERROR_SEMANTICS">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="FLAG_EXISTING_RECORD"/>
+        <viewAttribute id="EFFECTIVE_DATE_PREV_DAY"/>
+        <viewAttribute id="FEATURE_CODE"/>
+        <viewAttribute id="CHARGE_TYPE"/>
+        <viewAttribute id="FTR_REVENUE_CODE"/>
+        <viewAttribute id="GL_CHARGE_TYPE"/>
+        <viewAttribute id="PROFIT_CENTER"/>
+        <viewAttribute id="GL_CLASSIF_CODE"/>
+        <viewAttribute id="INVOICE_TYPE"/>
+        <viewAttribute id="REFERENCE_EXPIRY_DT"/>
+        <viewAttribute id="EFF_DT"/>
+        <viewAttribute id="IS_20600501"/>
+        <viewAttribute id="REFERENCE_EFFECTIVE_DT"/>
+        <viewAttribute id="CONCAT_PK"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="ERROR_STATUS" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>if((&quot;IS_20600501&quot;='1') ,'1','0')</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="ERROR_CODE" length="500" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(&quot;IS_20600501&quot;='1','20600501||','')</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#PROJ_INSERT_UPDATE">
+        <mapping xsi:type="Calculation:AttributeMapping" target="FLAG_EXISTING_RECORD" source="CC_EXISTING_RECORD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFFECTIVE_DATE_PREV_DAY" source="CC_EFFECTIVE_DATE_PREV_DAY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FEATURE_CODE" source="FEATURE_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CHARGE_TYPE" source="CHARGE_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FTR_REVENUE_CODE" source="FTR_REVENUE_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GL_CHARGE_TYPE" source="GL_CHARGE_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROFIT_CENTER" source="PROFIT_CENTER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GL_CLASSIF_CODE" source="GL_CLASSIF_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INVOICE_TYPE" source="INVOICE_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_EXPIRY_DT" source="EXPY_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFF_DT" source="EFF_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20600501" source="IS_20600501"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_EFFECTIVE_DT" source="CC_REFERENCE_EFFECTIVE_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONCAT_PK" source="CC_CONCAT_PK"/>
+      </input>
+    </calculationView>
+  </calculationViews>
+  <logicalModel id="ERROR_SEMANTICS">
+    <descriptions/>
+    <attributes>
+      <attribute id="FLAG_EXISTING_RECORD" order="1" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="FLAG_EXISTING_RECORD"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="FLAG_EXISTING_RECORD"/>
+      </attribute>
+      <attribute id="EFFECTIVE_DATE_PREV_DAY" order="2" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="EFFECTIVE_DATE_PREV_DAY"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="EFFECTIVE_DATE_PREV_DAY"/>
+      </attribute>
+      <attribute id="FEATURE_CODE" order="3" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="FEATURE_CODE"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="FEATURE_CODE"/>
+      </attribute>
+      <attribute id="CHARGE_TYPE" order="4" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CHARGE_TYPE"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="CHARGE_TYPE"/>
+      </attribute>
+      <attribute id="FTR_REVENUE_CODE" order="5" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="FTR_REVENUE_CODE"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="FTR_REVENUE_CODE"/>
+      </attribute>
+      <attribute id="GL_CHARGE_TYPE" order="6" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="GL_CHARGE_TYPE"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="GL_CHARGE_TYPE"/>
+      </attribute>
+      <attribute id="PROFIT_CENTER" order="7" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="PROFIT_CENTER"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="PROFIT_CENTER"/>
+      </attribute>
+      <attribute id="GL_CLASSIF_CODE" order="8" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="GL_CLASSIF_CODE"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="GL_CLASSIF_CODE"/>
+      </attribute>
+      <attribute id="INVOICE_TYPE" order="9" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="INVOICE_TYPE"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="INVOICE_TYPE"/>
+      </attribute>
+      <attribute id="REFERENCE_EXPIRY_DT" order="10" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="REFERENCE_EXPIRY_DT"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="REFERENCE_EXPIRY_DT"/>
+      </attribute>
+      <attribute id="EFF_DT" order="11" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="EFF_DT"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="EFF_DT"/>
+      </attribute>
+      <attribute id="REFERENCE_EFFECTIVE_DT" order="12" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="REFERENCE_EFFECTIVE_DT"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="REFERENCE_EFFECTIVE_DT"/>
+      </attribute>
+      <attribute id="IS_20600501" hidden="false" order="13" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="IS_20600501"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="IS_20600501"/>
+      </attribute>
+      <attribute id="ERROR_STATUS" order="14" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ERROR_STATUS"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="ERROR_STATUS"/>
+      </attribute>
+      <attribute id="ERROR_CODE" order="15" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ERROR_CODE"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="ERROR_CODE"/>
+      </attribute>
+      <attribute id="CONCAT_PK" order="16" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CONCAT_PK"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="CONCAT_PK"/>
+      </attribute>
+    </attributes>
+    <calculatedAttributes/>
+    <privateDataFoundation>
+      <tableProxies/>
+      <joins/>
+      <layout>
+        <shapes/>
+      </layout>
+    </privateDataFoundation>
+    <baseMeasures/>
+    <calculatedMeasures/>
+    <restrictedMeasures/>
+    <localDimensions/>
+  </logicalModel>
+  <layout>
+    <shapes>
+      <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+        <upperLeftCorner x="253" y="87"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_PVT_VW" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="176" y="843"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_NDB" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="330" y="495"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_EH" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="22" y="843"/>
+        <rectangleSize height="78" width="140"/>
+      </shape>
+      <shape expanded="true" modelObjectName="JOIN_INCOMIN_EH" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="89" y="747"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_FILTER_EH" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="89" y="669"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+      <shape expanded="true" modelObjectName="AGGR_EH" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="89" y="591"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+      <shape expanded="true" modelObjectName="JOIN_EH" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="176" y="495"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+      <shape expanded="true" modelObjectName="JOIN" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="253" y="399"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="RANK_CHARGE_INFO" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="253" y="321"/>
+        <rectangleSize height="54" width="140"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_INSERT_UPDATE" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="253" y="243"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="ERROR_SEMANTICS" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="253" y="165"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+    </shapes>
+  </layout>
+</Calculation:scenario>

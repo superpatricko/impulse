@@ -1,0 +1,281 @@
+PROCEDURE "NDB_HP"."IFRS_R1.HP.NDB_HP::SP_BCRIS_MODTN_EVENT_ON"
+(IN IP_CYCL_ID NVARCHAR(3),
+OUT OP_STATUS  NVARCHAR(100)) 
+	LANGUAGE SQLSCRIPT
+	SQL SECURITY INVOKER
+	AS
+
+BEGIN
+--------------------------------------------------------------------------------------------------
+-- Procedure Title : SP_BCRIS_MODTN_EVENT_ON
+-- Created By      : BC_EZ08929 (Shivam Prakash)       
+-- Create Date     : 03-17-2017
+-- Description     : Data Inserted using Calculation View - CA_BCRIS_MODTN_EVNT_ON
+--                   To NDB Table - HP_EVENT Using this stored procedure.
+-- Project         : Bell Canada
+-- Release         : R1 / IFRS
+--------------------------------------------------------------------------------------------------
+--   M O D I F I C A T I O N   H I S T O R Y
+--------------------------------------------------------------------------------------------------
+-- Date        | User ID          | Modification History/Release
+--------------------------------------------------------------------------------------------------
+--             |                  | 
+--------------------------------------------------------------------------------------------------
+-- Description Of the changes 
+--------------------------------------------------------------------------------------------------
+-- Modification Number          : <Assign Some Number> 
+-- Description of Changes Made> : <Description of Changes>       
+--------------------------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------------------------
+-- Global Variables Declaration
+--------------------------------------------------------------------------------------------------
+
+DECLARE LC_ERROR_TEXT 		NVARCHAR(70) DEFAULT 'OUT STATUS IS 1 : INSERT/UPDATE FOR ONE OR MORE RECORD FAILED';
+DECLARE LC_SUCCESS_TEXT 	NVARCHAR(70) DEFAULT 'OUT STATUS IS 0 : INSERT/UPDATE EXECUTION SUCCESSFUL';
+DECLARE LV_ERROR_FLAG 		NVARCHAR(1) := 'N';
+DECLARE LV_CUR_UTC 			TIMESTAMP := CURRENT_TIMESTAMP;
+DECLARE LV_PREV_DAY         DATE;
+-- New variables for version sequence check
+DECLARE i					INTEGER;
+DECLARE CURRENT_ERROR		NVARCHAR(100);
+DECLARE RECORD_COUNT		INTEGER;
+DECLARE ERROR_TAB 			TABLE (ERROR_CODE NVARCHAR(100));
+DECLARE LV_LOOP_ERROR_FLAG  INTEGER := 0;
+DECLARE LV_PREV_UNIQUE_IDENTIFIER  NVARCHAR(65) := NULL;
+  
+--------------------------------------------------------------------------------------------------
+-- Cursors Declaration
+--------------------------------------------------------------------------------------------------
+DECLARE CURSOR C_MOD_EV FOR 
+   SELECT "CONTRACT_UNIQUE_IDENTIFIER",
+	      "EVENT_ID",
+	      "EVENT_TYPE_CODE",
+	      "EVENT_EFFECTIVE_DATE",
+	      "TEMPORARY_SEASONAL_SUSPENSION",
+	      "CYCL_ID",
+	      "FLAG_EXISTING_RECORD",
+	      "SEQ_ID",
+	      "MOD_ON_PRIMARY_KEY",
+	      "ERROR_STATUS",
+		  "ERROR_CODE",
+	      "CC_CONCAT_PK" 
+    FROM "_SYS_BIC"."IFRS_R1.HP.NDB_HP/CA_BCRIS_MODTN_EVNT_ON"
+          (PLACEHOLDER."$$IP_CYCL_ID$$" => :IP_CYCL_ID)
+          ORDER BY CONTRACT_UNIQUE_IDENTIFIER,EVENT_ID,EVENT_EFFECTIVE_DATE, CYCL_ID, SEQ_ID;
+                   
+--------------------------------------------------------------------------------------------------
+-- Local Temporary Tables Declaration
+-------------------------------------------------------------------------------------------------- 
+
+CREATE LOCAL TEMPORARY TABLE #UPDATE_BCRIS_MODTN_EVENT_ON (MOD_ON_PRIMARY_KEY  NVARCHAR(65));
+CREATE LOCAL TEMPORARY TABLE #UPDATE_EH_DELETION (CONTRACT_UNIQUE_IDENTIFIER NVARCHAR(16), EVENT_ID NVARCHAR(9));
+        	  
+--------------------------------------------------------------------------------------------------
+-- Cursors Loop
+-------------------------------------------------------------------------------------------------- 
+
+FOR CUR_MOD_EV AS C_MOD_EV DO
+
+--  Define Exit Handler
+	DECLARE EXIT HANDLER FOR SQLEXCEPTION 
+	BEGIN AUTONOMOUS TRANSACTION 
+	
+--    Define Exit Handler
+	  DECLARE EXIT HANDLER FOR SQLEXCEPTION 
+	  BEGIN AUTONOMOUS TRANSACTION 
+	
+      -- Do Nothing. Exception Handled to ensure SP does not get terminated	
+	  END;
+			
+   -- Insert record into error table
+   	  INSERT INTO "NDB_HP"."IFRS_R1.HP.NDB_HP::HP_EVENT_EH"(
+		   	      "CONTRACT_UNIQUE_IDENTIFIER",
+	              "EVENT_ID",
+	              "EVENT_TYPE_CODE",
+	              "EVENT_EFFECTIVE_DATE",
+	              "TEMPORARY_SEASONAL_SUSPENSION",
+				  "ERROR_CODE",
+				  "TECHNICAL_MESSAGE",
+			      "ERROR_CREATE_TS") 
+		   VALUES (CUR_MOD_EV."CONTRACT_UNIQUE_IDENTIFIER",
+	               CUR_MOD_EV."EVENT_ID",
+	               CUR_MOD_EV."EVENT_TYPE_CODE",
+	               CUR_MOD_EV."EVENT_EFFECTIVE_DATE",
+	               CUR_MOD_EV."TEMPORARY_SEASONAL_SUSPENSION",
+				   ::SQL_ERROR_CODE,
+		           ::SQL_ERROR_MESSAGE,
+		           LV_CUR_UTC);   
+   
+	  	LV_ERROR_FLAG := 'Y';
+	 	LV_LOOP_ERROR_FLAG := 1;
+  END ;  
+
+--------------------------------------------------------------------------------------------------------	
+	-- FOR CLEARING THE VARIABLES
+	IF (LV_PREV_UNIQUE_IDENTIFIER IS NULL OR CUR_MOD_EV."CC_CONCAT_PK" != LV_PREV_UNIQUE_IDENTIFIER) 
+	  THEN
+		LV_LOOP_ERROR_FLAG := 0;
+		LV_PREV_UNIQUE_IDENTIFIER := CUR_MOD_EV."CC_CONCAT_PK";			 	   
+    END IF;    
+--------------------------------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------------------------------
+    -- Check the Error Status of the Record. If Record is with Error, then send to Error Table
+    IF CUR_MOD_EV.ERROR_STATUS = '1' THEN
+    
+       -- Call the Stored Procedure to split the concatenated Error Messages into Error Rows
+       CALL "NDB_COMMON"."IFRS_R1.COMMON_COMP.EH::SP_EH_SPLIT_ERRORS"(CUR_MOD_EV."ERROR_CODE", ERROR_TAB, RECORD_COUNT);
+
+      FOR i IN 1 .. :RECORD_COUNT DO
+	                CURRENT_ERROR = :ERROR_TAB."ERROR_CODE"[:i];
+		    	
+		  --Insert record into error table
+ 	      INSERT INTO "NDB_HP"."IFRS_R1.HP.NDB_HP::HP_EVENT_EH"(
+		   	      "CONTRACT_UNIQUE_IDENTIFIER",
+	              "EVENT_ID",
+	              "EVENT_TYPE_CODE",
+	              "EVENT_EFFECTIVE_DATE",
+	              "TEMPORARY_SEASONAL_SUSPENSION",
+				  "ERROR_CODE",
+			      "ERROR_CREATE_TS") 
+		   VALUES (CUR_MOD_EV."CONTRACT_UNIQUE_IDENTIFIER",
+	               CUR_MOD_EV."EVENT_ID",
+	               CUR_MOD_EV."EVENT_TYPE_CODE",
+	               CUR_MOD_EV."EVENT_EFFECTIVE_DATE",
+	               CUR_MOD_EV."TEMPORARY_SEASONAL_SUSPENSION",
+				   :CURRENT_ERROR,
+		           LV_CUR_UTC); 	
+       -- End for inner for loop.     
+       END FOR;
+       
+       -- Set Error Flag				        
+			LV_ERROR_FLAG := 'Y';
+		    LV_LOOP_ERROR_FLAG := 1;
+		    	
+-- Processing for Successful Records
+   ELSE 
+         IF CUR_MOD_EV.ERROR_STATUS = '0' THEN
+	    
+	        IF LV_LOOP_ERROR_FLAG = 1 THEN
+	        
+	        INSERT INTO "NDB_HP"."IFRS_R1.HP.NDB_HP::HP_EVENT_EH"(
+		   	      "CONTRACT_UNIQUE_IDENTIFIER",
+	              "EVENT_ID",
+	              "EVENT_TYPE_CODE",
+	              "EVENT_EFFECTIVE_DATE",
+	              "TEMPORARY_SEASONAL_SUSPENSION",
+				  "ERROR_CODE",
+			      "ERROR_CREATE_TS") 
+		   VALUES (CUR_MOD_EV."CONTRACT_UNIQUE_IDENTIFIER",
+	               CUR_MOD_EV."EVENT_ID",
+	               CUR_MOD_EV."EVENT_TYPE_CODE",
+	               CUR_MOD_EV."EVENT_EFFECTIVE_DATE",
+	               CUR_MOD_EV."TEMPORARY_SEASONAL_SUSPENSION",
+				   :CURRENT_ERROR,
+		           LV_CUR_UTC);        
+      
+    ELSEIF (CUR_MOD_EV.FLAG_EXISTING_RECORD = 'U') THEN          
+------    Update the target NDB table
+   	      UPDATE  "NDB_HP"."IFRS_R1.HP.NDB_HP::HP_EVENT" NDB
+   	      SET     ("CONTRACT_UNIQUE_IDENTIFIER",
+	               "EVENT_ID",
+	               "EVENT_TYPE_CODE",
+	               "EVENT_EFFECTIVE_DATE",
+	               "TEMPORARY_SEASONAL_SUSPENSION",
+			       "MODIFIED_TS")
+		   =       (CUR_MOD_EV."CONTRACT_UNIQUE_IDENTIFIER",
+	                CUR_MOD_EV."EVENT_ID",
+	                CUR_MOD_EV."EVENT_TYPE_CODE",
+	                CUR_MOD_EV."EVENT_EFFECTIVE_DATE",
+	                CUR_MOD_EV."TEMPORARY_SEASONAL_SUSPENSION",
+			        LV_CUR_UTC)
+		  WHERE NDB.CONTRACT_UNIQUE_IDENTIFIER  = CUR_MOD_EV."CONTRACT_UNIQUE_IDENTIFIER"
+		  AND   NDB.EVENT_ID                    = CUR_MOD_EV."EVENT_ID";  
+       			   
+--         Insert PK of successfully processed Records into Local Temp Tables 
+--         for Updating NDB_TS in corresponding Landing Tables records
+		   INSERT INTO #UPDATE_BCRIS_MODTN_EVENT_ON
+		   			   (MOD_ON_PRIMARY_KEY) 
+		   		VALUES (CUR_MOD_EV."MOD_ON_PRIMARY_KEY");
+		   					   	    		
+		   INSERT INTO #UPDATE_EH_DELETION
+		   			   (CONTRACT_UNIQUE_IDENTIFIER, 
+		   				EVENT_ID) 
+		   		VALUES (CUR_MOD_EV."CONTRACT_UNIQUE_IDENTIFIER", 
+		   			    CUR_MOD_EV."EVENT_ID"); 
+						 	
+    ELSEIF (CUR_MOD_EV.FLAG_EXISTING_RECORD = 'I') THEN
+    BEGIN AUTONOMOUS TRANSACTION
+--    Insert Records into the target NDB table     
+   	  INSERT INTO "NDB_HP"."IFRS_R1.HP.NDB_HP::HP_EVENT"(
+		   	      "CONTRACT_UNIQUE_IDENTIFIER",
+	              "EVENT_ID",
+	              "EVENT_TYPE_CODE",
+	              "EVENT_EFFECTIVE_DATE",
+	              "TEMPORARY_SEASONAL_SUSPENSION",
+			      "INSERT_TS") 
+		   VALUES  (CUR_MOD_EV."CONTRACT_UNIQUE_IDENTIFIER",
+	                CUR_MOD_EV."EVENT_ID",
+	                CUR_MOD_EV."EVENT_TYPE_CODE",
+	                CUR_MOD_EV."EVENT_EFFECTIVE_DATE",
+	                CUR_MOD_EV."TEMPORARY_SEASONAL_SUSPENSION",
+			        LV_CUR_UTC);    
+		END;
+--         Insert PK of successfully processed Records into Local Temp Tables 
+--         for Updating NDB_TS in corresponding Landing Tables records
+		   INSERT INTO #UPDATE_BCRIS_MODTN_EVENT_ON
+		   			   (MOD_ON_PRIMARY_KEY) 
+		   		VALUES (CUR_MOD_EV."MOD_ON_PRIMARY_KEY");
+		   					   	    		
+		   INSERT INTO #UPDATE_EH_DELETION
+		   			   (CONTRACT_UNIQUE_IDENTIFIER, 
+		   				EVENT_ID) 
+		   		VALUES (CUR_MOD_EV."CONTRACT_UNIQUE_IDENTIFIER", 
+		   			    CUR_MOD_EV."EVENT_ID");  
+						 
+			END IF;
+		END IF;
+    END IF;
+END FOR;  
+
+--------------------------------------------------------------------------------------------------
+-- Update Landing Tables
+-------------------------------------------------------------------------------------------------- 
+
+-- Update Landing Table IFRS_R1.LAND::BCRIS_MODTN_EVNT_ON
+UPDATE "LAND"."IFRS_R1.LAND::BCRIS_MODTN_EVNT_ON" A
+  FROM "LAND"."IFRS_R1.LAND::BCRIS_MODTN_EVNT_ON" A 
+ INNER JOIN #UPDATE_BCRIS_MODTN_EVENT_ON B 
+    ON A."MOD_ON_PRIMARY_KEY"    = B."MOD_ON_PRIMARY_KEY"
+   SET NDB_TS = LV_CUR_UTC
+ WHERE A.NDB_TS IS NULL;
+
+--------------------------------------------------------------------------------------------------
+-- Update Error Table
+--------------------------------------------------------------------------------------------------
+
+UPDATE "NDB_HP"."IFRS_R1.HP.NDB_HP::HP_EVENT_EH" A
+  FROM "NDB_HP"."IFRS_R1.HP.NDB_HP::HP_EVENT_EH" A 
+ INNER JOIN #UPDATE_EH_DELETION B
+    ON A."CONTRACT_UNIQUE_IDENTIFIER"    = B."CONTRACT_UNIQUE_IDENTIFIER"
+   AND A."EVENT_ID"                      = B."EVENT_ID"
+   SET (DELETE_DATE, DELETED) = (CURRENT_DATE, 1);
+
+--------------------------------------------------------------------------------------------------
+-- Set Overall Status
+-------------------------------------------------------------------------------------------------- 
+
+--  STATUS 0: Send the success message to scheduling tool to confirm this procedure has been
+--  executed successfully
+    IF(LV_ERROR_FLAG = 'Y') THEN		
+
+     OP_STATUS := LC_ERROR_TEXT; 
+			
+    ELSE
+
+  	 OP_STATUS := LC_SUCCESS_TEXT; 	
+				
+	END IF;
+		
+END;

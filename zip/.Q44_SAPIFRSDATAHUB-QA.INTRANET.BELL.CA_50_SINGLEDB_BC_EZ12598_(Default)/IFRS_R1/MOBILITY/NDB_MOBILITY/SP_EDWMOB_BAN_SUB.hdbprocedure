@@ -1,0 +1,1581 @@
+PROCEDURE "NDB_MOBILITY"."IFRS_R1.MOBILITY.NDB_MOBILITY::SP_EDWMOB_BAN_SUB"
+(IN IP_EFF_DT DATE,
+OUT OP_STATUS NVARCHAR(100))
+	LANGUAGE SQLSCRIPT
+	SQL SECURITY INVOKER
+	--DEFAULT SCHEMA "CPIC_D22"
+	--READS SQL DATA 
+	AS
+BEGIN 
+----------------------------------------------------------------------
+-- Procedure Title : SP_EDWMOB_BAN_SUB
+--
+-- Created By      : BC_EZ18762(Atul Nagpal)          Date : 13/06/2017
+-- 
+-- Procedure Description : It is used to Upsert data in NDB Table.
+--                         NDB_TS is updated in Landing Table         
+--                         after data is loaded in NDB.
+--Project :Bell Canada
+-- 
+--
+----------------------------------------------------------------------
+--   M O D I F I C A T I O N   H I S T O R Y
+----------------------------------------------------------------------
+-- Date        | User ID          | Modification History/Release
+----------------------------------------------------------------------
+
+---------------|------------------|-----------------------------------
+-- Description Of the changes 
+----------------------------------------------------------------------
+-- Modification Number          :<Assign Some Number> 
+-- Description of Changes Made> :<Description of Changes>       
+----------------------------------------------------------------------
+  
+ 	DECLARE LC_ERROR_TEXT 		NVARCHAR(70) DEFAULT 'OUT STATUS IS 1 : INSERT/UPDATE FOR ONE OR MORE RECORD FAILED';
+	DECLARE LC_SUCCESS_TEXT 	NVARCHAR(70) DEFAULT 'OUT STATUS IS 0 : INSERT/UPDATE EXECUTION SUCCESSFUL';
+	DECLARE LV_ERROR_FLAG 		NVARCHAR(1) := 'N';
+	DECLARE LV_CUR_UTC 			TIMESTAMP := CURRENT_TIMESTAMP;
+	DECLARE ERROR_TAB 			TABLE (ERROR_CODE NVARCHAR(100));
+	DECLARE i					INTEGER;
+	DECLARE RECORD_COUNT		INTEGER;
+	DECLARE CURRENT_ERROR		NVARCHAR(100);
+	DECLARE SUB_MOBL_CUST_COUNT	INTEGER;
+	DECLARE DUPLICATE_BAN	    INTEGER;
+	
+	-- New variables for version sequence check
+	DECLARE LV_LOOP_ERROR_FLAG  INTEGER := 0;
+	DECLARE LV_PREV_BAN_SUBS    NVARCHAR(100) := NULL;
+	
+	
+	
+	DECLARE CURSOR CA_BAN_SUB FOR
+	SELECT
+	 "ERROR_CODE",
+	 "ERROR_STATUS",
+	 "ACCT_GRP",
+	 "ACCT_SUB_TY",
+	 "ACCT_TY",
+	 "ADR_PROV",
+	 "ADR_PSTL",
+	 "BAN",
+	 "BAN_ST",
+	 "BILL_CYCL",
+	 "BL_BILL_METH",
+	 "BL_NX_CYCL",
+	 "BL_NX_CYC_EFF_DT",
+	 "BRND",
+	 "BUS_ENTT",
+	 "CONSO_BAN_ID",
+	 "CONSO_END_DT",
+	 "CONSO_ST",
+	 "CONSO_STRT_DT",
+	 "CORP_ID",
+	 "CRNCY_CD",
+	 "CS_CORP_TY",
+	 "HIER_ID",
+	 "LGL_ENTT",
+	 "MKT_SEG",
+	 "ONE_BILL_IND",
+	 "PREPD_IND",
+	 "PRM_SUBMKT",
+	 "RTL_WHLSL_IND",
+	 "SAP_CUST_ID",
+	 "SI_OWN",
+	 "SL_DIV",
+	 "STRT_SERV_DT",
+	 "ST_ACTV_CD",
+	 "ST_ACTV_RSN_CD",
+	 "ST_LAST_DT",
+	 "TOP_UP_METH",
+	 "TRDG_PTNR",
+	 "NDB_MART",
+	 "SEQ_ID",
+	 "PROCESS_ID",
+	 "NAG_ID",
+	 "EFF_DT",
+	 "FRST_NM",
+	 "LAST_BUS_NM",
+	 "NTWK_TY_CD",
+	 "PREV_BAN",
+	 "PREV_CTN",
+	 "PREV_SUBS",
+	 "PROD_TYPE",
+	 "SUBS_NO",
+	 "SUBS_REF_NO",
+	 "SUBS_ST_RSN_CD",
+	 "SUB_ST",
+	 "SUB_ST_LAST_ACT",
+	 "WCOC_IND",
+	 "EXPY_DT",
+	 "CUST_ID",
+	 "ADDR_PROV_STATE_CD",
+	 "ADDR_PSTL_ZIP",
+	 "FLAG_BAN_SUB",
+	 "CUSTOMER_EFFECTIVE_DT",
+	 "CUSTOMER_EXPIRY_DT",
+	 "CONT_TREAT_CODE",
+	 "CC_CONCAT_PK",
+	 "MDN"
+	 FROM "_SYS_BIC"."IFRS_R1.MOBILITY.NDB_MOBILITY/CA_EDWMOB_BAN_SUB"
+	 (PLACEHOLDER."$$IP_EFF_DT$$"=> :IP_EFF_DT)
+	 ORDER BY "BAN", "SUBS_NO", "CUSTOMER_EFFECTIVE_DT", "EFF_DT"; 
+	
+--------------------------------------------------------------------------------------------------
+-- Local Temporary Tables Declaration
+--------------------------------------------------------------------------------------------------
+
+	CREATE LOCAL TEMPORARY TABLE #UPDATE_NM1_EDW_BAN(BAN NVARCHAR(9), EFF_DT DATE);
+	CREATE LOCAL TEMPORARY TABLE #UPDATE_NM1_EDW_SUB(SUBS_NO NVARCHAR(30), CUST_ID NVARCHAR(9), TRANS_DT DATE);
+	CREATE LOCAL TEMPORARY TABLE #UPDATE_EH_DELETION_BAN(BAN NVARCHAR(31), EFF_DT date);	
+	CREATE LOCAL TEMPORARY TABLE #UPDATE_EH_DELETION_SUB(BAN NVARCHAR(31), SUBSCR_NO NVARCHAR(30), EFF_DT DATE);
+	
+	/*TEMP table to fetch SUB Records for BAN only records*/
+	
+	CREATE LOCAL TEMPORARY TABLE #MOBL_CUST_SUB_RECORDS(
+	"BAN" NVARCHAR(31),
+	SUBSCR_NO NVARCHAR(30),
+	FRST_NM NVARCHAR(32),
+	LAST_BUS_NM NVARCHAR(60),
+	NTWK_TY_CD NVARCHAR(1),
+	PREV_BAN NVARCHAR(9),
+	PREV_CTN NVARCHAR(30),
+	PREV_SUBS NVARCHAR(30),
+	PRODUCT_TYPE NVARCHAR(3),
+	SUBSCR_REF_NO NVARCHAR(20),
+	SUBSCR_ST_RSN_CD NVARCHAR(4),
+	SUBSCR_ST NVARCHAR(1),
+	SUBSCR_ST_LAST_ACT NVARCHAR(3),
+	WCOC_IND NVARCHAR(1),
+	CUSTOMER_EFFECTIVE_DT DATE,
+	CUSTOMER_EXPIRY_DT DATE,
+	SUBSCR_PROV_CD NVARCHAR(2),
+	ADR_POSTAL NVARCHAR(50),
+	CONT_TREAT_CODE NVARCHAR(10),
+	MDN NVARCHAR(30));
+	
+	CREATE LOCAL TEMPORARY TABLE #MOBL_CUST_BAN_RECORDS(
+	EFF_DT DATE,
+	EXPY_DT DATE,
+	BAN NVARCHAR(9),
+	STRT_SERV_DT DATE ,
+	BAN_ST NVARCHAR(1),
+	ST_LAST_DT DATE ,
+	SAP_CUST_ID NVARCHAR(11),
+	HIER_ID NVARCHAR(10),
+	NAG_ID NVARCHAR(10),
+	CORP_ID NVARCHAR(10),
+	FRST_NM NVARCHAR(32),
+	LAST_BUS_NM NVARCHAR(60),
+	ADR_PROV NVARCHAR(2),
+	ADR_PSTL NVARCHAR(15),
+	ACCT_TY NVARCHAR(1),
+	ACCT_SUB_TY NVARCHAR(1),
+	SI_OWN NVARCHAR(4),
+	PRM_SUBMKT NVARCHAR(3),
+	PREPD_IND NVARCHAR(1),
+	TOP_UP_METH NVARCHAR(1),
+	ONE_BILL_IND NVARCHAR(1),
+	CONSO_ST NVARCHAR(1),
+	CONSO_STRT_DT DATE ,
+	CONSO_END_DT DATE ,
+	BILL_CYCL INTEGER,
+	BL_NX_CYCL INTEGER ,
+	BL_NX_CYC_EFF_DT DATE ,
+	CRNCY_CD NVARCHAR(3),
+	ST_ACTV_CD NVARCHAR(3),
+	ST_ACTV_RSN_CD NVARCHAR(4),
+	BL_BILL_METH NVARCHAR(1),
+	CONSO_BAN_ID INTEGER ,
+	BUS_ENTT NVARCHAR(3),
+	LGL_ENTT NVARCHAR(3),
+	BRND NVARCHAR(50),
+	MKT_SEG NVARCHAR(3),
+	TRDG_PTNR NVARCHAR(6),
+	RTL_WHLSL_IND NVARCHAR(1),
+	CS_CORP_TY NVARCHAR(1),
+	ACCT_GRP NVARCHAR(2),
+	SL_DIV NVARCHAR(3));
+	
+--------------------------------------------------------------------------------------------------
+-- Cursors Loop
+-------------------------------------------------------------------------------------------------- 	
+
+	FOR CUR_MOB AS CA_BAN_SUB DO	
+		-- Define Exit Handler
+		DECLARE EXIT HANDLER FOR SQLEXCEPTION 
+		BEGIN AUTONOMOUS TRANSACTION
+			-- Define Exit Handler
+			DECLARE EXIT HANDLER FOR SQLEXCEPTION 
+			BEGIN AUTONOMOUS TRANSACTION 
+			END;
+			-- Insert Into NDB table: MOBL_CUST
+			 INSERT INTO "NDB_MOBILITY"."IFRS_R1.MOBILITY.NDB_MOBILITY::MOBL_CUST_EH"(
+			     ACCT_SUB_TY
+				,ACCT_TY
+				,BAN
+				,BAN_PROV_CD
+				,BAN_SERV_STRT_DT
+				,BAN_ST
+				,BAN_ST_ACTV_CD
+				,BAN_ST_ACTV_RSN_CD
+				,BRND
+				,BUS_ENTT
+				,BILL_CYCL
+				,CRNCY_CD
+				,LGL_ENTT
+				,MKT_SEG
+				,PREPD_IND
+				,PREV_BAN
+				,PREV_CTN
+				,PREV_SUBS
+				,PRM_SUBMKT
+				,SL_DIV
+				,SUBSCR_NO
+				,SUBSCR_PROV_CD
+				,SUBSCR_REF_NO
+				,SUBSCR_ST
+				,SUBSCR_ST_LAST_ACT
+				,SUBSCR_ST_RSN_CD
+				,TRDG_PTNR
+				,WCOC_IND				
+			    ,NTWK_TY_CD
+			    ,FRST_NM
+			    ,LAST_BUS_NM
+			    ,ADR_POSTAL
+			    ,ONE_BILL_IND
+			    ,CONSO_ST
+			    ,CONSO_STRT_DT
+			    ,CONSO_END_DT
+			    ,CONSO_BAN_ID
+			    ,INSERT_TS
+			    ,CUSTOMER_EFFECTIVE_DT
+			    ,CUSTOMER_EXPIRY_DT
+			    ,PRODUCT_TYPE
+			    ,CONT_TREAT_CODE
+			    ,MDN
+			    ,"ERROR_CODE"
+				,"TECHNICAL_MESSAGE"
+				,"ERROR_CREATE_TS"   
+			    ) VALUES (
+			     CUR_MOB."ACCT_SUB_TY"
+				,CUR_MOB."ACCT_TY"
+				,CUR_MOB."BAN"
+				,CUR_MOB."ADR_PROV"
+				,CUR_MOB."STRT_SERV_DT"
+				,CUR_MOB."BAN_ST"
+				,CUR_MOB."ST_ACTV_CD"
+				,CUR_MOB."ST_ACTV_RSN_CD"
+				,CUR_MOB."BRND"
+				,CUR_MOB."BUS_ENTT"
+				,CUR_MOB."BILL_CYCL"
+				,CUR_MOB."CRNCY_CD"
+				,CUR_MOB."LGL_ENTT"
+				,CUR_MOB."MKT_SEG"
+				,CUR_MOB."PREPD_IND"
+				,CUR_MOB."PREV_BAN"
+				,CUR_MOB."PREV_CTN"
+				,CUR_MOB."PREV_SUBS"
+				,CUR_MOB."PRM_SUBMKT"
+				,CUR_MOB."SL_DIV"
+				,CUR_MOB."SUBS_NO"
+				,CUR_MOB."ADDR_PROV_STATE_CD"
+				,CUR_MOB."SUBS_REF_NO"
+				,CUR_MOB."SUB_ST"
+				,CUR_MOB."SUB_ST_LAST_ACT"
+				,CUR_MOB."SUBS_ST_RSN_CD"
+				,CUR_MOB."TRDG_PTNR"
+				,CUR_MOB."WCOC_IND"				
+			    ,CUR_MOB."NTWK_TY_CD"
+			    ,CUR_MOB."FRST_NM"
+			    ,CUR_MOB."LAST_BUS_NM"
+			    ,CUR_MOB."ADDR_PSTL_ZIP"
+			    ,CUR_MOB."ONE_BILL_IND"
+			    ,CUR_MOB."CONSO_ST"
+			    ,CUR_MOB."CONSO_STRT_DT"
+			    ,CUR_MOB."CONSO_END_DT"
+			    ,CUR_MOB."CONSO_BAN_ID"
+			    ,LV_CUR_UTC
+			    ,CUR_MOB."EFF_DT"
+			    ,CUR_MOB."CUSTOMER_EXPIRY_DT"
+			    ,CUR_MOB."PROD_TYPE" 
+			    ,CUR_MOB."CONT_TREAT_CODE"	
+			    ,CUR_MOB."MDN"		    		   
+			    ,::SQL_ERROR_CODE
+				,::SQL_ERROR_MESSAGE
+		  		,LV_CUR_UTC
+		  		);
+				LV_ERROR_FLAG := 'Y';
+				LV_LOOP_ERROR_FLAG := 1;			
+				
+				/*Only Insert Into BAN REF error table, when record is BAN only*/
+				IF (CUR_MOB.FLAG_BAN_SUB = 'B') THEN
+					INSERT INTO "NDB_MOBILITY"."IFRS_R1.MOBILITY.NDB_MOBILITY::MOBL_NM1_BAN_REF_EH"(
+				    "EFF_DT",
+					"EXPY_DT",
+					"BAN",
+					"STRT_SERV_DT",
+					"BAN_ST",
+					"ST_LAST_DT",
+					"SAP_CUST_ID",
+					"HIER_ID",
+					"NAG_ID",
+					"CORP_ID",
+					"FRST_NM",
+					"LAST_BUSN_NM",
+					"ADR_PROV",
+					"ADR_PSTL",
+					"ACCT_TY",
+					"ACCT_SUB_TY",
+					"SI_OWN",
+					"PRM_SUBMKT",
+					"PREPD_IND",
+					"TOP_UP_METH",
+					"ONE_BILL_IND",
+					"CONSO_ST",
+					"CONSO_STRT_DT",
+					"CONSO_END_DT",
+					"BILL_CYCL",
+					"BL_NX_CYCL",
+					"BL_NX_CYC_EFF_DT",
+					"CRNCY_CD",
+					"ST_ACTV_CD",
+					"ST_ACTV_RSN_CD",
+					"BL_BILL_METH",
+					"CONSO_BAN_ID",
+					"BUS_ENTT",
+					"LGL_ENTT",
+					"BRND",
+					"MKT_SEG",
+					"TRDG_PTNR",
+					"RTL_WHLSL_IND",
+					"CS_CORP_TY",
+					"ACCT_GRP",
+					"SL_DIV",
+					"NDB_MART",
+					"SEQ_ID",
+					"PROCESS_ID",
+					"INSERT_TS",
+					"ERROR_CODE",
+					"TECHNICAL_MESSAGE",
+					"ERROR_CREATE_TS",
+					"DELETE_DATE",
+					"DELETED"
+					)
+				   VALUES (
+				    CUR_MOB."EFF_DT",
+					CUR_MOB."EXPY_DT",
+					CUR_MOB."BAN",
+					CUR_MOB."STRT_SERV_DT",
+					CUR_MOB."BAN_ST",
+					CUR_MOB."ST_LAST_DT",
+					CUR_MOB."SAP_CUST_ID",
+					CUR_MOB."HIER_ID",
+					CUR_MOB."NAG_ID",
+					CUR_MOB."CORP_ID",
+					CUR_MOB."FRST_NM",
+					CUR_MOB."LAST_BUS_NM",
+					CUR_MOB."ADR_PROV",
+					CUR_MOB."ADR_PSTL",
+					CUR_MOB."ACCT_TY",
+					CUR_MOB."ACCT_SUB_TY",
+					CUR_MOB."SI_OWN",
+					CUR_MOB."PRM_SUBMKT",
+					CUR_MOB."PREPD_IND",
+					CUR_MOB."TOP_UP_METH",
+					CUR_MOB."ONE_BILL_IND",
+					CUR_MOB."CONSO_ST",
+					CUR_MOB."CONSO_STRT_DT",
+					CUR_MOB."CONSO_END_DT",
+					CUR_MOB."BILL_CYCL",
+					CUR_MOB."BL_NX_CYCL",
+					CUR_MOB."BL_NX_CYC_EFF_DT",
+					CUR_MOB."CRNCY_CD",
+					CUR_MOB."ST_ACTV_CD",
+					CUR_MOB."ST_ACTV_RSN_CD",
+					CUR_MOB."BL_BILL_METH",
+					CUR_MOB."CONSO_BAN_ID",
+					CUR_MOB."BUS_ENTT",
+					CUR_MOB."LGL_ENTT",
+					CUR_MOB."BRND",
+					CUR_MOB."MKT_SEG",
+					CUR_MOB."TRDG_PTNR",
+					CUR_MOB."RTL_WHLSL_IND",
+					CUR_MOB."CS_CORP_TY",
+					CUR_MOB."ACCT_GRP",
+					CUR_MOB."SL_DIV",
+					CUR_MOB."NDB_MART",
+					CUR_MOB."SEQ_ID",
+					CUR_MOB."PROCESS_ID",
+					LV_CUR_UTC,
+					::SQL_ERROR_CODE,
+					::SQL_ERROR_MESSAGE,
+				  	LV_CUR_UTC,
+				  	NULL,
+				  	NULL); 
+				   LV_ERROR_FLAG := 'Y';
+				   LV_LOOP_ERROR_FLAG := 1;
+				END IF;
+		END;
+		-- FOR CLEARING THE VARIABLES
+
+	    IF (LV_PREV_BAN_SUBS IS NULL OR CUR_MOB."CC_CONCAT_PK" != LV_PREV_BAN_SUBS) THEN
+
+		   LV_LOOP_ERROR_FLAG := 0;
+		   LV_PREV_BAN_SUBS := CUR_MOB."CC_CONCAT_PK";
+		   				
+		   -- Set previous BAN variable  
+	       LV_PREV_BAN_SUBS    :=   "CUR_MOB"."CC_CONCAT_PK";
+			 	   
+        END IF;
+		
+		
+		IF CUR_MOB.ERROR_STATUS = '1' THEN
+			--  Call the Stored Procedure to split the concatenated Error Messages into Error Rows
+		    CALL "NDB_COMMON"."IFRS_R1.COMMON_COMP.EH::SP_EH_SPLIT_ERRORS"(CUR_MOB."ERROR_CODE", ERROR_TAB, RECORD_COUNT);
+		    FOR i IN 1 .. :RECORD_COUNT DO
+		    	CURRENT_ERROR = :ERROR_TAB."ERROR_CODE"[:i];
+		    		-- Insert Into NDB table: MOBL_CUST
+		    	-- Insert Into NDB table: MOBL_CUST EH
+		    	INSERT INTO "NDB_MOBILITY"."IFRS_R1.MOBILITY.NDB_MOBILITY::MOBL_CUST_EH"(
+			     ACCT_SUB_TY
+				,ACCT_TY
+				,BAN
+				,BAN_PROV_CD
+				,BAN_SERV_STRT_DT
+				,BAN_ST
+				,BAN_ST_ACTV_CD
+				,BAN_ST_ACTV_RSN_CD
+				,BRND
+				,BUS_ENTT
+				,BILL_CYCL
+				,CRNCY_CD
+				,LGL_ENTT
+				,MKT_SEG
+				,PREPD_IND
+				,PREV_BAN
+				,PREV_CTN
+				,PREV_SUBS
+				,PRM_SUBMKT
+				,SL_DIV
+				,SUBSCR_NO
+				,SUBSCR_PROV_CD
+				,SUBSCR_REF_NO
+				,SUBSCR_ST
+				,SUBSCR_ST_LAST_ACT
+				,SUBSCR_ST_RSN_CD
+				,TRDG_PTNR
+				,WCOC_IND
+			    ,NTWK_TY_CD
+			    ,FRST_NM
+			    ,LAST_BUS_NM
+			    ,ADR_POSTAL
+			    ,ONE_BILL_IND
+			    ,CONSO_ST
+			    ,CONSO_STRT_DT
+			    ,CONSO_END_DT
+			    ,CONSO_BAN_ID
+			    ,INSERT_TS
+			    ,CUSTOMER_EFFECTIVE_DT
+			    ,CUSTOMER_EXPIRY_DT
+			    ,PRODUCT_TYPE
+			    ,CONT_TREAT_CODE
+			    ,MDN
+			    ,"ERROR_CODE"				
+				,"ERROR_CREATE_TS"   
+			    ) VALUES (
+			     CUR_MOB."ACCT_SUB_TY"
+				,CUR_MOB."ACCT_TY"
+				,CUR_MOB."BAN"
+				,CUR_MOB."ADR_PROV"
+				,CUR_MOB."STRT_SERV_DT"
+				,CUR_MOB."BAN_ST"
+				,CUR_MOB."ST_ACTV_CD"
+				,CUR_MOB."ST_ACTV_RSN_CD"
+				,CUR_MOB."BRND"
+				,CUR_MOB."BUS_ENTT"
+				,CUR_MOB."BILL_CYCL"
+				,CUR_MOB."CRNCY_CD"
+				,CUR_MOB."LGL_ENTT"
+				,CUR_MOB."MKT_SEG"
+				,CUR_MOB."PREPD_IND"
+				,CUR_MOB."PREV_BAN"
+				,CUR_MOB."PREV_CTN"
+				,CUR_MOB."PREV_SUBS"
+				,CUR_MOB."PRM_SUBMKT"
+				,CUR_MOB."SL_DIV"
+				,CUR_MOB."SUBS_NO"
+				,CUR_MOB."ADDR_PROV_STATE_CD"
+				,CUR_MOB."SUBS_REF_NO"
+				,CUR_MOB."SUB_ST"
+				,CUR_MOB."SUB_ST_LAST_ACT"
+				,CUR_MOB."SUBS_ST_RSN_CD"
+				,CUR_MOB."TRDG_PTNR"
+				,CUR_MOB."WCOC_IND"
+			    ,CUR_MOB."NTWK_TY_CD"
+			    ,CUR_MOB."FRST_NM"
+			    ,CUR_MOB."LAST_BUS_NM"
+			    ,CUR_MOB."ADDR_PSTL_ZIP"
+			    ,CUR_MOB."ONE_BILL_IND"
+			    ,CUR_MOB."CONSO_ST"
+			    ,CUR_MOB."CONSO_STRT_DT"
+			    ,CUR_MOB."CONSO_END_DT"
+			    ,CUR_MOB."CONSO_BAN_ID"
+			    ,LV_CUR_UTC
+			    ,CUR_MOB."EFF_DT"
+			    ,CUR_MOB."CUSTOMER_EXPIRY_DT"
+			    ,CUR_MOB."PROD_TYPE" 		
+			    ,CUR_MOB."CONT_TREAT_CODE"	
+			    ,CUR_MOB."MDN"    		   
+			    ,:CURRENT_ERROR
+			  	,LV_CUR_UTC
+		  		);
+		  		
+				LV_ERROR_FLAG := 'Y';
+				LV_LOOP_ERROR_FLAG := 1;
+				
+		    END FOR; 
+		    
+		ELSE
+		
+		    IF CUR_MOB.ERROR_STATUS = '0' THEN
+		    
+	        --  Check Previous version ERROR Flag
+	        
+	        IF LV_LOOP_ERROR_FLAG = 1 THEN
+	        
+		    -- Insert Into NDB table: MOBL_CUST_EH
+		    
+		    	INSERT INTO "NDB_MOBILITY"."IFRS_R1.MOBILITY.NDB_MOBILITY::MOBL_CUST_EH"(
+			     ACCT_SUB_TY
+				,ACCT_TY
+				,BAN
+				,BAN_PROV_CD
+				,BAN_SERV_STRT_DT
+				,BAN_ST
+				,BAN_ST_ACTV_CD
+				,BAN_ST_ACTV_RSN_CD
+				,BRND
+				,BUS_ENTT
+				,BILL_CYCL
+				,CRNCY_CD
+				,LGL_ENTT
+				,MKT_SEG
+				,PREPD_IND
+				,PREV_BAN
+				,PREV_CTN
+				,PREV_SUBS
+				,PRM_SUBMKT
+				,SL_DIV
+				,SUBSCR_NO
+				,SUBSCR_PROV_CD
+				,SUBSCR_REF_NO
+				,SUBSCR_ST
+				,SUBSCR_ST_LAST_ACT
+				,SUBSCR_ST_RSN_CD
+				,TRDG_PTNR
+				,WCOC_IND
+			    ,NTWK_TY_CD
+			    ,FRST_NM
+			    ,LAST_BUS_NM
+			    ,ADR_POSTAL
+			    ,ONE_BILL_IND
+			    ,CONSO_ST
+			    ,CONSO_STRT_DT
+			    ,CONSO_END_DT
+			    ,CONSO_BAN_ID
+			    ,INSERT_TS
+			    ,CUSTOMER_EFFECTIVE_DT
+			    ,CUSTOMER_EXPIRY_DT
+			    ,PRODUCT_TYPE
+			    ,CONT_TREAT_CODE
+			    ,MDN
+			    ,"ERROR_CODE"				
+				,"ERROR_CREATE_TS"   
+			    ) VALUES (
+			     CUR_MOB."ACCT_SUB_TY"
+				,CUR_MOB."ACCT_TY"
+				,CUR_MOB."BAN"
+				,CUR_MOB."ADR_PROV"
+				,CUR_MOB."STRT_SERV_DT"
+				,CUR_MOB."BAN_ST"
+				,CUR_MOB."ST_ACTV_CD"
+				,CUR_MOB."ST_ACTV_RSN_CD"
+				,CUR_MOB."BRND"
+				,CUR_MOB."BUS_ENTT"
+				,CUR_MOB."BILL_CYCL"
+				,CUR_MOB."CRNCY_CD"
+				,CUR_MOB."LGL_ENTT"
+				,CUR_MOB."MKT_SEG"
+				,CUR_MOB."PREPD_IND"
+				,CUR_MOB."PREV_BAN"
+				,CUR_MOB."PREV_CTN"
+				,CUR_MOB."PREV_SUBS"
+				,CUR_MOB."PRM_SUBMKT"
+				,CUR_MOB."SL_DIV"
+				,CUR_MOB."SUBS_NO"
+				,CUR_MOB."ADDR_PROV_STATE_CD"
+				,CUR_MOB."SUBS_REF_NO"
+				,CUR_MOB."SUB_ST"
+				,CUR_MOB."SUB_ST_LAST_ACT"
+				,CUR_MOB."SUBS_ST_RSN_CD"
+				,CUR_MOB."TRDG_PTNR"
+				,CUR_MOB."WCOC_IND"
+			    ,CUR_MOB."NTWK_TY_CD"
+			    ,CUR_MOB."FRST_NM"
+			    ,CUR_MOB."LAST_BUS_NM"
+			    ,CUR_MOB."ADDR_PSTL_ZIP"
+			    ,CUR_MOB."ONE_BILL_IND"
+			    ,CUR_MOB."CONSO_ST"
+			    ,CUR_MOB."CONSO_STRT_DT"
+			    ,CUR_MOB."CONSO_END_DT"
+			    ,CUR_MOB."CONSO_BAN_ID"
+			    ,LV_CUR_UTC
+			    ,CUR_MOB."EFF_DT"
+			    ,CUR_MOB."CUSTOMER_EXPIRY_DT"
+			    ,CUR_MOB."PROD_TYPE" 		
+			    ,CUR_MOB."CONT_TREAT_CODE"	
+			    ,CUR_MOB."MDN"    		   
+			    ,'PREVIOUS VERSION IN ERROR'
+			  	,LV_CUR_UTC
+		  		);
+		  		
+				LV_ERROR_FLAG := 'Y';
+			    LV_LOOP_ERROR_FLAG := 1;
+		        
+		    /*Only Insert Into BAN REF error table, when record is BAN only*/
+				IF (CUR_MOB.FLAG_BAN_SUB = 'B') THEN
+					INSERT INTO "NDB_MOBILITY"."IFRS_R1.MOBILITY.NDB_MOBILITY::MOBL_NM1_BAN_REF_EH"(
+				    "EFF_DT",
+					"EXPY_DT",
+					"BAN",
+					"STRT_SERV_DT",
+					"BAN_ST",
+					"ST_LAST_DT",
+					"SAP_CUST_ID",
+					"HIER_ID",
+					"NAG_ID",
+					"CORP_ID",
+					"FRST_NM",
+					"LAST_BUSN_NM",
+					"ADR_PROV",
+					"ADR_PSTL",
+					"ACCT_TY",
+					"ACCT_SUB_TY",
+					"SI_OWN",
+					"PRM_SUBMKT",
+					"PREPD_IND",
+					"TOP_UP_METH",
+					"ONE_BILL_IND",
+					"CONSO_ST",
+					"CONSO_STRT_DT",
+					"CONSO_END_DT",
+					"BILL_CYCL",
+					"BL_NX_CYCL",
+					"BL_NX_CYC_EFF_DT",
+					"CRNCY_CD",
+					"ST_ACTV_CD",
+					"ST_ACTV_RSN_CD",
+					"BL_BILL_METH",
+					"CONSO_BAN_ID",
+					"BUS_ENTT",
+					"LGL_ENTT",
+					"BRND",
+					"MKT_SEG",
+					"TRDG_PTNR",
+					"RTL_WHLSL_IND",
+					"CS_CORP_TY",
+					"ACCT_GRP",
+					"SL_DIV",
+					"NDB_MART",
+					"SEQ_ID",
+					"PROCESS_ID",
+					"INSERT_TS",
+					"ERROR_CODE",
+					"ERROR_CREATE_TS"
+					)
+				   VALUES (
+				    CUR_MOB."EFF_DT",
+					CUR_MOB."EXPY_DT",
+					CUR_MOB."BAN",
+					CUR_MOB."STRT_SERV_DT",
+					CUR_MOB."BAN_ST",
+					CUR_MOB."ST_LAST_DT",
+					CUR_MOB."SAP_CUST_ID",
+					CUR_MOB."HIER_ID",
+					CUR_MOB."NAG_ID",
+					CUR_MOB."CORP_ID",
+					CUR_MOB."FRST_NM",
+					CUR_MOB."LAST_BUS_NM",
+					CUR_MOB."ADR_PROV",
+					CUR_MOB."ADR_PSTL",
+					CUR_MOB."ACCT_TY",
+					CUR_MOB."ACCT_SUB_TY",
+					CUR_MOB."SI_OWN",
+					CUR_MOB."PRM_SUBMKT",
+					CUR_MOB."PREPD_IND",
+					CUR_MOB."TOP_UP_METH",
+					CUR_MOB."ONE_BILL_IND",
+					CUR_MOB."CONSO_ST",
+					CUR_MOB."CONSO_STRT_DT",
+					CUR_MOB."CONSO_END_DT",
+					CUR_MOB."BILL_CYCL",
+					CUR_MOB."BL_NX_CYCL",
+					CUR_MOB."BL_NX_CYC_EFF_DT",
+					CUR_MOB."CRNCY_CD",
+					CUR_MOB."ST_ACTV_CD",
+					CUR_MOB."ST_ACTV_RSN_CD",
+					CUR_MOB."BL_BILL_METH",
+					CUR_MOB."CONSO_BAN_ID",
+					CUR_MOB."BUS_ENTT",
+					CUR_MOB."LGL_ENTT",
+					CUR_MOB."BRND",
+					CUR_MOB."MKT_SEG",
+					CUR_MOB."TRDG_PTNR",
+					CUR_MOB."RTL_WHLSL_IND",
+					CUR_MOB."CS_CORP_TY",
+					CUR_MOB."ACCT_GRP",
+					CUR_MOB."SL_DIV",
+					CUR_MOB."NDB_MART",
+					CUR_MOB."SEQ_ID",
+					CUR_MOB."PROCESS_ID",
+					LV_CUR_UTC,
+					'PREVIOUS VERSION IN ERROR',
+			  	    LV_CUR_UTC); 
+			  	    
+			  END IF;
+			  	    
+				    LV_ERROR_FLAG := 'Y';
+				    LV_LOOP_ERROR_FLAG := 1;
+		    
+		    ELSE
+				
+			/*
+			 * X - Means , records came in BAN Landing and SUb Landing
+			 * This can be a new BAN, New SUB with New BAN or updated BAN
+			 * UPDATE BAN_REF
+			 * UPDATE MOBL_CUST
+			 */
+			 ---------------------------------------------------------------------------
+			 --CHECK FOR SUSPENDED CUSTOMERS
+			 ---------------------------------------------------------------------------
+			IF (CUR_MOB.CONT_TREAT_CODE = 'SUS' or CUR_MOB.CONT_TREAT_CODE = 'RSP') THEN
+				CALL "NDB_MOBILITY"."IFRS_R1.MOBILITY.NDB_MOBILITY::SP_SUSPENDED_CUSTOMERS"(
+				CUR_MOB."BAN",
+				CUR_MOB."SUBS_NO",
+				CUR_MOB."SUB_ST",
+				CUR_MOB."SUB_ST_LAST_ACT",
+			    CUR_MOB."SUBS_ST_RSN_CD",
+				CUR_MOB."CONT_TREAT_CODE",
+				CUR_MOB."EFF_DT");
+			END IF;
+			
+				IF (CUR_MOB.CONT_TREAT_CODE = 'SUS') THEN
+				CALL "NDB_MOBILITY"."IFRS_R1.MOBILITY.NDB_MOBILITY::SP_SUSPENDED_CUSTOMER_ZERO_DOLLAR_INVC"(
+				CUR_MOB."BAN",
+				CUR_MOB."SUBS_NO",
+				CUR_MOB."EFF_DT");
+				
+			END IF;
+			
+			IF CUR_MOB.FLAG_BAN_SUB = 'X' THEN
+		    	BEGIN AUTONOMOUS TRANSACTION
+		    	
+		    	DUPLICATE_BAN := 0 ;		    	
+		    	SELECT COUNT(*) INTO DUPLICATE_BAN FROM 
+		        "NDB_MOBILITY"."IFRS_R1.MOBILITY.NDB_MOBILITY::MOBL_NM1_BAN_REF"
+		    	WHERE EFF_DT = CUR_MOB.EFF_DT and BAN = CUR_MOB.BAN;		
+		        --CHECK FOR DUPLICATE BAN - AS 2 SUBSCRIBER CAN HAVE SAME BAN come in SAME DAY
+		        IF (DUPLICATE_BAN < 1) THEN 
+			    	--------------------------------------------------------------------
+			    	--EXPIRE BAN REF
+			    	--------------------------------------------------------------------			    	
+		    		UPDATE "NDB_MOBILITY"."IFRS_R1.MOBILITY.NDB_MOBILITY::MOBL_NM1_BAN_REF" C
+					SET C.MODIFIED_TS = :LV_CUR_UTC,
+					C.EXPY_DT = ADD_DAYS(CUR_MOB.EFF_DT,-1)
+					WHERE C.BAN = CUR_MOB.BAN		
+					AND C.EXPY_DT = '99991231';
+					--------------------------------------------------------------------
+			    	--INSERT ACTIVE BAN RECORD INTO BAN_REF
+			    	--------------------------------------------------------------------
+					INSERT INTO "NDB_MOBILITY"."IFRS_R1.MOBILITY.NDB_MOBILITY::MOBL_NM1_BAN_REF"(
+				    "EFF_DT",
+					"EXPY_DT",
+					"BAN",
+					"STRT_SERV_DT",
+					"BAN_ST",
+					"ST_LAST_DT",
+					"SAP_CUST_ID",
+					"HIER_ID",
+					"NAG_ID",
+					"CORP_ID",
+					"FRST_NM",
+					"LAST_BUSN_NM",
+					"ADR_PROV",
+					"ADR_PSTL",
+					"ACCT_TY",
+					"ACCT_SUB_TY",
+					"SI_OWN",
+					"PRM_SUBMKT",
+					"PREPD_IND",
+					"TOP_UP_METH",
+					"ONE_BILL_IND",
+					"CONSO_ST",
+					"CONSO_STRT_DT",
+					"CONSO_END_DT",
+					"BILL_CYCL",
+					"BL_NX_CYCL",
+					"BL_NX_CYC_EFF_DT",
+					"CRNCY_CD",
+					"ST_ACTV_CD",
+					"ST_ACTV_RSN_CD",
+					"BL_BILL_METH",
+					"CONSO_BAN_ID",
+					"BUS_ENTT",
+					"LGL_ENTT",
+					"BRND",
+					"MKT_SEG",
+					"TRDG_PTNR",
+					"RTL_WHLSL_IND",
+					"CS_CORP_TY",
+					"ACCT_GRP",
+					"SL_DIV",
+					"NDB_MART",
+					"SEQ_ID",
+					"PROCESS_ID",
+					"INSERT_TS"					
+					)
+				   VALUES (
+				    CUR_MOB."EFF_DT",
+					'99991231',
+					CUR_MOB."BAN",
+					CUR_MOB."STRT_SERV_DT",
+					CUR_MOB."BAN_ST",
+					CUR_MOB."ST_LAST_DT",
+					CUR_MOB."SAP_CUST_ID",
+					CUR_MOB."HIER_ID",
+					CUR_MOB."NAG_ID",
+					CUR_MOB."CORP_ID",
+					CUR_MOB."FRST_NM",
+					CUR_MOB."LAST_BUS_NM",
+					CUR_MOB."ADR_PROV",
+					CUR_MOB."ADR_PSTL",
+					CUR_MOB."ACCT_TY",
+					CUR_MOB."ACCT_SUB_TY",
+					CUR_MOB."SI_OWN",
+					CUR_MOB."PRM_SUBMKT",
+					CUR_MOB."PREPD_IND",
+					CUR_MOB."TOP_UP_METH",
+					CUR_MOB."ONE_BILL_IND",
+					CUR_MOB."CONSO_ST",
+					CUR_MOB."CONSO_STRT_DT",
+					CUR_MOB."CONSO_END_DT",
+					CUR_MOB."BILL_CYCL",
+					CUR_MOB."BL_NX_CYCL",
+					CUR_MOB."BL_NX_CYC_EFF_DT",
+					CUR_MOB."CRNCY_CD",
+					CUR_MOB."ST_ACTV_CD",
+					CUR_MOB."ST_ACTV_RSN_CD",
+					CUR_MOB."BL_BILL_METH",
+					CUR_MOB."CONSO_BAN_ID",
+					CUR_MOB."BUS_ENTT",
+					CUR_MOB."LGL_ENTT",
+					CUR_MOB."BRND",
+					CUR_MOB."MKT_SEG",
+					CUR_MOB."TRDG_PTNR",
+					CUR_MOB."RTL_WHLSL_IND",
+					CUR_MOB."CS_CORP_TY",
+					CUR_MOB."ACCT_GRP",
+					CUR_MOB."SL_DIV",
+					CUR_MOB."NDB_MART",
+					CUR_MOB."SEQ_ID",
+					CUR_MOB."PROCESS_ID",
+					LV_CUR_UTC); 
+				END IF;	
+					--------------------------------------------------------------------
+		    		--EXPIRE MOBL CUST, expire active MOBL CUST RECORD for this BAN and
+		    		-- SUB combination
+		    		--------------------------------------------------------------------
+		    		UPDATE "NDB_MOBILITY"."IFRS_R1.MOBILITY.NDB_MOBILITY::MOBL_CUST" 
+					SET MODIFIED_TS = :LV_CUR_UTC,
+					CUSTOMER_EXPIRY_DT = ADD_DAYS(CUR_MOB.CUSTOMER_EFFECTIVE_DT,-1)
+					WHERE BAN = CUR_MOB.BAN
+					AND SUBSCR_NO= CUR_MOB.SUBS_NO
+					AND CUSTOMER_EXPIRY_DT = '99991231';
+					--------------------------------------------------------------------
+		    		--INSERT ACTIVE RECORD INTO MOBL_CUST
+		    		--------------------------------------------------------------------	    		
+		    		INSERT INTO "NDB_MOBILITY"."IFRS_R1.MOBILITY.NDB_MOBILITY::MOBL_CUST"(
+					ACCT_SUB_TY
+					,ACCT_TY
+					,BAN
+					,BAN_PROV_CD
+					,BAN_SERV_STRT_DT
+					,BAN_ST
+					,BAN_ST_ACTV_CD
+					,BAN_ST_ACTV_RSN_CD
+					,BRND
+					,BUS_ENTT
+					,BILL_CYCL
+					,CRNCY_CD
+					,LGL_ENTT
+					,MKT_SEG
+					,PREPD_IND
+					,PREV_BAN
+					,PREV_CTN
+					,PREV_SUBS
+					,PRM_SUBMKT
+					,SL_DIV
+					,SUBSCR_NO
+					,SUBSCR_PROV_CD
+					,SUBSCR_REF_NO
+					,SUBSCR_ST
+					,SUBSCR_ST_LAST_ACT
+					,SUBSCR_ST_RSN_CD
+					,TRDG_PTNR
+					,WCOC_IND
+					,NTWK_TY_CD
+					,FRST_NM
+					,LAST_BUS_NM
+					,ADR_POSTAL
+					,ONE_BILL_IND
+					,CONSO_ST
+					,CONSO_STRT_DT
+					,CONSO_END_DT
+					,CONSO_BAN_ID
+					,INSERT_TS
+					,CUSTOMER_EFFECTIVE_DT
+					,CUSTOMER_EXPIRY_DT
+					,PRODUCT_TYPE 
+					,CONT_TREAT_CODE
+					,MDN 
+					) VALUES (
+					CUR_MOB."ACCT_SUB_TY"
+					,CUR_MOB."ACCT_TY"
+					,CUR_MOB."BAN"
+					,CUR_MOB."ADR_PROV"
+					,CUR_MOB."STRT_SERV_DT"
+					,CUR_MOB."BAN_ST"
+					,CUR_MOB."ST_ACTV_CD"
+					,CUR_MOB."ST_ACTV_RSN_CD"
+					,CUR_MOB."BRND"
+					,CUR_MOB."BUS_ENTT"
+					,CUR_MOB."BILL_CYCL"
+					,CUR_MOB."CRNCY_CD"
+					,CUR_MOB."LGL_ENTT"
+					,CUR_MOB."MKT_SEG"
+					,CUR_MOB."PREPD_IND"
+					,CUR_MOB."PREV_BAN"
+					,CUR_MOB."PREV_CTN"
+					,CUR_MOB."PREV_SUBS"
+					,CUR_MOB."PRM_SUBMKT"
+					,CUR_MOB."SL_DIV"
+					,CUR_MOB."SUBS_NO"
+					,CUR_MOB."ADDR_PROV_STATE_CD"
+					,CUR_MOB."SUBS_REF_NO"
+					,CUR_MOB."SUB_ST"
+					,CUR_MOB."SUB_ST_LAST_ACT"
+					,CUR_MOB."SUBS_ST_RSN_CD"
+					,CUR_MOB."TRDG_PTNR"
+					,CUR_MOB."WCOC_IND"
+					,CUR_MOB."NTWK_TY_CD"
+					,CUR_MOB."FRST_NM"
+					,CUR_MOB."LAST_BUS_NM"
+					,CUR_MOB."ADDR_PSTL_ZIP"
+					,CUR_MOB."ONE_BILL_IND"
+					,CUR_MOB."CONSO_ST"
+					,CUR_MOB."CONSO_STRT_DT"
+					,CUR_MOB."CONSO_END_DT"
+					,CUR_MOB."CONSO_BAN_ID"
+					,LV_CUR_UTC
+					,CUR_MOB."CUSTOMER_EFFECTIVE_DT"
+					,CUR_MOB."CUSTOMER_EXPIRY_DT"
+					,CUR_MOB."PROD_TYPE"
+					,CUR_MOB."CONT_TREAT_CODE"
+					,CUR_MOB."MDN");
+				END;
+								
+				 -- Insert PK of successfully processed Records into Local Temp Tables 
+		       	 -- for Updating NDB_TS in corresponding Landing Tables records
+			     -- Insert PK of successfully processed Records into Local Temp Tables 
+				 -- for Updating NDB_TS in corresponding Landing Tables records
+
+		   		INSERT INTO #UPDATE_NM1_EDW_SUB 
+								(SUBS_NO,
+							 	CUST_ID,
+							 	TRANS_DT) 
+								VALUES (
+								CUR_MOB."SUBS_NO",
+								CUR_MOB."BAN",
+								CUR_MOB."EFF_DT");
+				   
+			   	INSERT INTO #UPDATE_NM1_EDW_BAN
+			   			   (BAN,
+			   			    EFF_DT)
+			   		VALUES (CUR_MOB."BAN",
+			   			 	CUR_MOB."EFF_DT");
+			     -- Add record to Delete the error from the error table if it exists
+				INSERT INTO	#UPDATE_EH_DELETION_BAN
+		   			   (BAN,
+		   			    EFF_DT)
+		   		VALUES (CUR_MOB.BAN,
+		   			 	CUR_MOB.EFF_DT);
+		   			 	
+		   		INSERT INTO	#UPDATE_EH_DELETION_SUB
+		   			   (BAN,
+		   			    SUBSCR_NO,
+		   			    EFF_DT)
+		   		VALUES (CUR_MOB.BAN,
+		   				CUR_MOB."SUBS_NO",
+		   			 	CUR_MOB.CUSTOMER_EFFECTIVE_DT);
+		   			 	
+		   			 	
+			ELSE
+				-------------------------------------------------------------------------
+				--NEW SUB but Older BAN - IN BAN REF
+				-------------------------------------------------------------------------
+				IF CUR_MOB.FLAG_BAN_SUB = 'S' THEN
+					
+					--------------------------------------------------------------------
+		    		--EXPIRE MOBL CUST, expire active MOBL CUST RECORD for this BAN and
+		    		-- SUB combination
+		    		--------------------------------------------------------------------
+		    		
+					UPDATE "NDB_MOBILITY"."IFRS_R1.MOBILITY.NDB_MOBILITY::MOBL_CUST" 
+					SET MODIFIED_TS = :LV_CUR_UTC,
+					CUSTOMER_EXPIRY_DT = ADD_DAYS(CUR_MOB.CUSTOMER_EFFECTIVE_DT,-1)
+					WHERE BAN = CUR_MOB.CUST_ID
+					AND SUBSCR_NO= CUR_MOB.SUBS_NO
+					AND CUSTOMER_EXPIRY_DT = '99991231';
+					
+					INSERT INTO "NDB_MOBILITY"."IFRS_R1.MOBILITY.NDB_MOBILITY::MOBL_CUST"(
+					 ACCT_SUB_TY
+					,ACCT_TY
+					,BAN
+					,BAN_PROV_CD
+					,BAN_SERV_STRT_DT
+					,BAN_ST
+					,BAN_ST_ACTV_CD
+					,BAN_ST_ACTV_RSN_CD
+					,BRND
+					,BUS_ENTT
+					,BILL_CYCL
+					,CRNCY_CD
+					,LGL_ENTT
+					,MKT_SEG
+					,PREPD_IND
+					,PREV_BAN
+					,PREV_CTN
+					,PREV_SUBS
+					,PRM_SUBMKT
+					,SL_DIV
+					,SUBSCR_NO
+					,SUBSCR_PROV_CD
+					,SUBSCR_REF_NO
+					,SUBSCR_ST
+					,SUBSCR_ST_LAST_ACT
+					,SUBSCR_ST_RSN_CD
+					,TRDG_PTNR
+					,WCOC_IND
+					,NTWK_TY_CD
+					,FRST_NM
+					,LAST_BUS_NM
+					,ADR_POSTAL
+					,ONE_BILL_IND
+					,CONSO_ST
+					,CONSO_STRT_DT
+					,CONSO_END_DT
+					,CONSO_BAN_ID
+					,INSERT_TS
+					,CUSTOMER_EFFECTIVE_DT
+					,CUSTOMER_EXPIRY_DT
+					,PRODUCT_TYPE 
+					,CONT_TREAT_CODE 
+					,MDN
+					) VALUES (
+					 CUR_MOB."ACCT_SUB_TY"
+					,CUR_MOB."ACCT_TY"
+					,CUR_MOB."BAN"
+					,CUR_MOB."ADR_PROV"
+					,CUR_MOB."STRT_SERV_DT"
+					,CUR_MOB."BAN_ST"
+					,CUR_MOB."ST_ACTV_CD"
+					,CUR_MOB."ST_ACTV_RSN_CD"
+					,CUR_MOB."BRND"
+					,CUR_MOB."BUS_ENTT"
+					,CUR_MOB."BILL_CYCL"
+					,CUR_MOB."CRNCY_CD"
+					,CUR_MOB."LGL_ENTT"
+					,CUR_MOB."MKT_SEG"
+					,CUR_MOB."PREPD_IND"
+					,CUR_MOB."PREV_BAN"
+					,CUR_MOB."PREV_CTN"
+					,CUR_MOB."PREV_SUBS"
+					,CUR_MOB."PRM_SUBMKT"
+					,CUR_MOB."SL_DIV"
+					,CUR_MOB."SUBS_NO"
+					,CUR_MOB."ADDR_PROV_STATE_CD"
+					,CUR_MOB."SUBS_REF_NO"
+					,CUR_MOB."SUB_ST"
+					,CUR_MOB."SUB_ST_LAST_ACT"
+					,CUR_MOB."SUBS_ST_RSN_CD"
+					,CUR_MOB."TRDG_PTNR"
+					,CUR_MOB."WCOC_IND"
+					,CUR_MOB."NTWK_TY_CD"
+					,CUR_MOB."FRST_NM"
+					,CUR_MOB."LAST_BUS_NM"
+					,CUR_MOB."ADDR_PSTL_ZIP"
+					,CUR_MOB."ONE_BILL_IND"
+					,CUR_MOB."CONSO_ST"
+					,CUR_MOB."CONSO_STRT_DT"
+					,CUR_MOB."CONSO_END_DT"
+					,CUR_MOB."CONSO_BAN_ID"
+					,LV_CUR_UTC
+					,CUR_MOB."CUSTOMER_EFFECTIVE_DT"
+					,CUR_MOB."CUSTOMER_EXPIRY_DT"
+					,CUR_MOB."PROD_TYPE"
+					,CUR_MOB."CONT_TREAT_CODE"
+					,CUR_MOB."MDN");
+					
+					INSERT INTO #UPDATE_NM1_EDW_SUB 
+					(SUBS_NO,
+					CUST_ID,
+					TRANS_DT) 
+					VALUES (
+					CUR_MOB."SUBS_NO",
+					CUR_MOB."CUST_ID",
+					CUR_MOB."EFF_DT");						
+			     
+					INSERT INTO	#UPDATE_EH_DELETION_BAN
+		   			   (BAN,
+		   			    EFF_DT)
+		   			VALUES (CUR_MOB.BAN,
+		   			 	CUR_MOB.EFF_DT);
+		   			 	
+		   			INSERT INTO	#UPDATE_EH_DELETION_SUB
+		   			   (BAN,
+		   			    SUBSCR_NO,
+		   			    EFF_DT)
+		   			VALUES (CUR_MOB."CUST_ID",
+		   				CUR_MOB."SUBS_NO",
+		   			 	CUR_MOB.CUSTOMER_EFFECTIVE_DT);
+				ELSE
+				
+				---BAN-----------------------------
+		    	--------------------------------------------------------------------
+		    	--EXPIRE BAN REF
+		    	--------------------------------------------------------------------
+					UPDATE "NDB_MOBILITY"."IFRS_R1.MOBILITY.NDB_MOBILITY::MOBL_NM1_BAN_REF" C
+					SET C.MODIFIED_TS = :LV_CUR_UTC,
+					C.EXPY_DT = ADD_DAYS(CUR_MOB.EFF_DT,-1)
+					WHERE C.BAN = CUR_MOB.BAN		
+					AND C.EXPY_DT = '99991231';	
+					
+					INSERT INTO "NDB_MOBILITY"."IFRS_R1.MOBILITY.NDB_MOBILITY::MOBL_NM1_BAN_REF"(
+				    "EFF_DT",
+					"EXPY_DT",
+					"BAN",
+					"STRT_SERV_DT",
+					"BAN_ST",
+					"ST_LAST_DT",
+					"SAP_CUST_ID",
+					"HIER_ID",
+					"NAG_ID",
+					"CORP_ID",
+					"FRST_NM",
+					"LAST_BUSN_NM",
+					"ADR_PROV",
+					"ADR_PSTL",
+					"ACCT_TY",
+					"ACCT_SUB_TY",
+					"SI_OWN",
+					"PRM_SUBMKT",
+					"PREPD_IND",
+					"TOP_UP_METH",
+					"ONE_BILL_IND",
+					"CONSO_ST",
+					"CONSO_STRT_DT",
+					"CONSO_END_DT",
+					"BILL_CYCL",
+					"BL_NX_CYCL",
+					"BL_NX_CYC_EFF_DT",
+					"CRNCY_CD",
+					"ST_ACTV_CD",
+					"ST_ACTV_RSN_CD",
+					"BL_BILL_METH",
+					"CONSO_BAN_ID",
+					"BUS_ENTT",
+					"LGL_ENTT",
+					"BRND",
+					"MKT_SEG",
+					"TRDG_PTNR",
+					"RTL_WHLSL_IND",
+					"CS_CORP_TY",
+					"ACCT_GRP",
+					"SL_DIV",
+					"NDB_MART",
+					"SEQ_ID",
+					"PROCESS_ID",
+					"INSERT_TS"					
+					)
+				   VALUES (
+				    CUR_MOB."EFF_DT",
+					'99991231',
+					CUR_MOB."BAN",
+					CUR_MOB."STRT_SERV_DT",
+					CUR_MOB."BAN_ST",
+					CUR_MOB."ST_LAST_DT",
+					CUR_MOB."SAP_CUST_ID",
+					CUR_MOB."HIER_ID",
+					CUR_MOB."NAG_ID",
+					CUR_MOB."CORP_ID",
+					CUR_MOB."FRST_NM",
+					CUR_MOB."LAST_BUS_NM",
+					CUR_MOB."ADR_PROV",
+					CUR_MOB."ADR_PSTL",
+					CUR_MOB."ACCT_TY",
+					CUR_MOB."ACCT_SUB_TY",
+					CUR_MOB."SI_OWN",
+					CUR_MOB."PRM_SUBMKT",
+					CUR_MOB."PREPD_IND",
+					CUR_MOB."TOP_UP_METH",
+					CUR_MOB."ONE_BILL_IND",
+					CUR_MOB."CONSO_ST",
+					CUR_MOB."CONSO_STRT_DT",
+					CUR_MOB."CONSO_END_DT",
+					CUR_MOB."BILL_CYCL",
+					CUR_MOB."BL_NX_CYCL",
+					CUR_MOB."BL_NX_CYC_EFF_DT",
+					CUR_MOB."CRNCY_CD",
+					CUR_MOB."ST_ACTV_CD",
+					CUR_MOB."ST_ACTV_RSN_CD",
+					CUR_MOB."BL_BILL_METH",
+					CUR_MOB."CONSO_BAN_ID",
+					CUR_MOB."BUS_ENTT",
+					CUR_MOB."LGL_ENTT",
+					CUR_MOB."BRND",
+					CUR_MOB."MKT_SEG",
+					CUR_MOB."TRDG_PTNR",
+					CUR_MOB."RTL_WHLSL_IND",
+					CUR_MOB."CS_CORP_TY",
+					CUR_MOB."ACCT_GRP",
+					CUR_MOB."SL_DIV",
+					CUR_MOB."NDB_MART",
+					CUR_MOB."SEQ_ID",
+					CUR_MOB."PROCESS_ID",
+					LV_CUR_UTC); 
+					
+					-----------------------------------------------------------------------------
+					--GET LATEST SUB FROM MOBL_CUST
+					-----------------------------------------------------------------------------
+					TRUNCATE TABLE #MOBL_CUST_SUB_RECORDS;
+					
+					INSERT INTO #MOBL_CUST_SUB_RECORDS(
+					BAN,
+					SUBSCR_NO,
+					FRST_NM,
+					LAST_BUS_NM,
+					NTWK_TY_CD,
+					PREV_BAN,
+					PREV_CTN,
+					PREV_SUBS,
+					PRODUCT_TYPE,
+					SUBSCR_REF_NO,
+					SUBSCR_ST_RSN_CD,
+					SUBSCR_ST,
+					SUBSCR_ST_LAST_ACT,
+					WCOC_IND,
+					CUSTOMER_EFFECTIVE_DT,
+					CUSTOMER_EXPIRY_DT,
+					SUBSCR_PROV_CD,
+					ADR_POSTAL,
+					CONT_TREAT_CODE,
+					MDN)
+					SELECT  
+					BAN,
+					SUBSCR_NO,
+					FRST_NM,
+					LAST_BUS_NM,
+					NTWK_TY_CD,
+					PREV_BAN,
+					PREV_CTN,
+					PREV_SUBS,
+					PRODUCT_TYPE,
+					SUBSCR_REF_NO,
+					SUBSCR_ST_RSN_CD,
+					SUBSCR_ST,
+					SUBSCR_ST_LAST_ACT,
+					WCOC_IND,
+					CUSTOMER_EFFECTIVE_DT,
+					CUSTOMER_EXPIRY_DT,
+					SUBSCR_PROV_CD,
+					ADR_POSTAL,
+					CONT_TREAT_CODE,
+					MDN 
+					FROM "NDB_MOBILITY"."IFRS_R1.MOBILITY.NDB_MOBILITY::MOBL_CUST"
+					WHERE BAN = CUR_MOB."BAN"					
+					AND CUSTOMER_EXPIRY_DT = '99991231';
+					
+					SELECT COUNT(*) INTO SUB_MOBL_CUST_COUNT FROM #MOBL_CUST_SUB_RECORDS;
+					
+					IF (SUB_MOBL_CUST_COUNT >= 1) THEN
+						UPDATE "NDB_MOBILITY"."IFRS_R1.MOBILITY.NDB_MOBILITY::MOBL_CUST" 
+						SET MODIFIED_TS = :LV_CUR_UTC,
+						CUSTOMER_EXPIRY_DT = ADD_DAYS(CUR_MOB.EFF_DT,-1)
+						WHERE BAN = CUR_MOB.BAN					
+						AND CUSTOMER_EXPIRY_DT = '99991231';
+							
+						TRUNCATE TABLE #MOBL_CUST_BAN_RECORDS;
+						
+						INSERT INTO #MOBL_CUST_BAN_RECORDS(
+						EFF_DT,
+						EXPY_DT,
+						BAN,
+						STRT_SERV_DT,
+						BAN_ST,
+						ST_LAST_DT,
+						SAP_CUST_ID,
+						HIER_ID,
+						NAG_ID,
+						CORP_ID,
+						FRST_NM,
+						LAST_BUS_NM,
+						ADR_PROV,
+						ADR_PSTL,
+						ACCT_TY,
+						ACCT_SUB_TY,
+						SI_OWN,
+						PRM_SUBMKT,
+						PREPD_IND,
+						TOP_UP_METH,
+						ONE_BILL_IND,
+						CONSO_ST,
+						CONSO_STRT_DT,
+						CONSO_END_DT,
+						BILL_CYCL,
+						BL_NX_CYCL,
+						BL_NX_CYC_EFF_DT,
+						CRNCY_CD,
+						ST_ACTV_CD,
+						ST_ACTV_RSN_CD,
+						BL_BILL_METH,
+						CONSO_BAN_ID,
+						BUS_ENTT,
+						LGL_ENTT,
+						BRND,
+						MKT_SEG,
+						TRDG_PTNR,
+						RTL_WHLSL_IND,
+						CS_CORP_TY,
+						ACCT_GRP,
+						SL_DIV
+						) VALUES(
+						CUR_MOB.EFF_DT,
+						CUR_MOB.EXPY_DT,
+						CUR_MOB.BAN,
+						CUR_MOB.STRT_SERV_DT,
+						CUR_MOB.BAN_ST,
+						CUR_MOB.ST_LAST_DT,
+						CUR_MOB.SAP_CUST_ID,
+						CUR_MOB.HIER_ID,
+						CUR_MOB.NAG_ID,
+						CUR_MOB.CORP_ID,
+						CUR_MOB.FRST_NM,
+						CUR_MOB.LAST_BUS_NM,
+						CUR_MOB.ADR_PROV,
+						CUR_MOB.ADR_PSTL,
+						CUR_MOB.ACCT_TY,
+						CUR_MOB.ACCT_SUB_TY,
+						CUR_MOB.SI_OWN,
+						CUR_MOB.PRM_SUBMKT,
+						CUR_MOB.PREPD_IND,
+						CUR_MOB.TOP_UP_METH,
+						CUR_MOB.ONE_BILL_IND,
+						CUR_MOB.CONSO_ST,
+						CUR_MOB.CONSO_STRT_DT,
+						CUR_MOB.CONSO_END_DT,
+						CUR_MOB.BILL_CYCL,
+						CUR_MOB.BL_NX_CYCL,
+						CUR_MOB.BL_NX_CYC_EFF_DT,
+						CUR_MOB.CRNCY_CD,
+						CUR_MOB.ST_ACTV_CD,
+						CUR_MOB.ST_ACTV_RSN_CD,
+						CUR_MOB.BL_BILL_METH,
+						CUR_MOB.CONSO_BAN_ID,
+						CUR_MOB.BUS_ENTT,
+						CUR_MOB.LGL_ENTT,
+						CUR_MOB.BRND,
+						CUR_MOB.MKT_SEG,
+						CUR_MOB.TRDG_PTNR,
+						CUR_MOB.RTL_WHLSL_IND,
+						CUR_MOB.CS_CORP_TY,
+						CUR_MOB.ACCT_GRP,
+						CUR_MOB.SL_DIV);
+						
+						-----------------------------------------------------
+						-- JOIN BOTH NEW BAN and SUB and INSERT INTO MOBL CUST
+						------------------------------------------------------
+						INSERT INTO "NDB_MOBILITY"."IFRS_R1.MOBILITY.NDB_MOBILITY::MOBL_CUST"(
+						ACCT_SUB_TY
+						,ACCT_TY
+						,BAN
+						,BAN_PROV_CD
+						,BAN_SERV_STRT_DT
+						,BAN_ST
+						,BAN_ST_ACTV_CD
+						,BAN_ST_ACTV_RSN_CD
+						,BRND
+						,BUS_ENTT
+						,BILL_CYCL
+						,CRNCY_CD
+						,LGL_ENTT
+						,MKT_SEG
+						,PREPD_IND
+						,PREV_BAN
+						,PREV_CTN
+						,PREV_SUBS
+						,PRM_SUBMKT
+						,SL_DIV
+						,SUBSCR_NO
+						,SUBSCR_PROV_CD
+						,SUBSCR_REF_NO
+						,SUBSCR_ST
+						,SUBSCR_ST_LAST_ACT
+						,SUBSCR_ST_RSN_CD
+						,TRDG_PTNR
+						,WCOC_IND
+						,NTWK_TY_CD
+						,FRST_NM
+						,LAST_BUS_NM
+						,ADR_POSTAL
+						,ONE_BILL_IND
+						,CONSO_ST
+						,CONSO_STRT_DT
+						,CONSO_END_DT
+						,CONSO_BAN_ID
+						,INSERT_TS
+						,CUSTOMER_EFFECTIVE_DT
+						,CUSTOMER_EXPIRY_DT
+						,PRODUCT_TYPE
+						,CONT_TREAT_CODE
+						,MDN)
+						
+						SELECT
+						B.ACCT_SUB_TY,
+						B.ACCT_TY,
+	                    B.BAN,
+						B.ADR_PROV,
+	                    B.STRT_SERV_DT,
+	                    B.BAN_ST,
+	                    B.ST_ACTV_CD,
+	                    B.ST_ACTV_RSN_CD,
+	                    B.BRND,
+	                    B.BUS_ENTT,
+	                    B.BILL_CYCL,
+	                    B.CRNCY_CD,
+	                    B.LGL_ENTT,
+	                    B.MKT_SEG,
+	                    PREPD_IND,
+	                    S.PREV_BAN,
+	                    S.PREV_CTN,
+	                    S.PREV_SUBS,
+	                    B.PRM_SUBMKT,
+	                    B.SL_DIV,
+	                    S.SUBSCR_NO,
+	                    S.SUBSCR_PROV_CD,
+	                    S.SUBSCR_REF_NO,
+						S.SUBSCR_ST,
+	                    S.SUBSCR_ST_LAST_ACT,
+	                    S.SUBSCR_ST_RSN_CD,
+	                    B.TRDG_PTNR,
+	                    S.WCOC_IND,
+	                    S.NTWK_TY_CD,
+	                    S.FRST_NM,
+	                    S.LAST_BUS_NM,
+	                    S.ADR_POSTAL,
+	                    B.ONE_BILL_IND,
+	                    B.CONSO_ST,
+	                    B.CONSO_STRT_DT,
+	                    B.CONSO_END_DT,
+	                    B.CONSO_BAN_ID,
+	                    LV_CUR_UTC,
+	                    B.EFF_DT,
+	                    B.EXPY_DT,
+	                    S.PRODUCT_TYPE, 
+	                    S.CONT_TREAT_CODE,
+	                    S.MDN
+						FROM #MOBL_CUST_BAN_RECORDS B
+						INNER JOIN #MOBL_CUST_SUB_RECORDS S
+						ON B.BAN = S.BAN;
+					END IF;
+						INSERT INTO #UPDATE_NM1_EDW_BAN
+					   			   (BAN,
+					   			    EFF_DT)
+					   		VALUES (CUR_MOB."BAN",
+					   			 	CUR_MOB."EFF_DT");
+					     -- Add record to Delete the error from the error table if it exists
+						INSERT INTO	#UPDATE_EH_DELETION_BAN
+		   			   (BAN,
+		   			    EFF_DT)
+		   				VALUES (CUR_MOB.BAN,
+		   			 	CUR_MOB.EFF_DT);	
+				END IF;			
+			END IF;	
+			END IF;
+			END IF;	
+		
+		END IF;
+	END FOR;	
+	
+--------------------------------------------------------------------------------------------------
+-- Update Landing Tables
+-------------------------------------------------------------------------------------------------- 
+
+-- Update Landing Table IFRS_R1.LAND::NM1_EDW_BAN
+	UPDATE "LAND"."IFRS_R1.LAND::NM1_EDW_BAN"  A
+ 	FROM "LAND"."IFRS_R1.LAND::NM1_EDW_BAN"  A 
+ 	INNER JOIN #UPDATE_NM1_EDW_BAN B
+    ON A.BAN             = B.BAN 
+    AND A.EFF_DT          = B.EFF_DT
+   	SET SP_EDWMOB_BAN_TS  = LV_CUR_UTC
+ 	WHERE A.SP_EDWMOB_BAN_TS IS NULL;
+
+-- Update Landing NDB_TS: NM1_EDW_SUB
+	UPDATE "LAND"."IFRS_R1.LAND::NM1_EDW_SUB" A
+	FROM "LAND"."IFRS_R1.LAND::NM1_EDW_SUB" A
+	INNER JOIN #UPDATE_NM1_EDW_SUB B	
+	ON A.SUBS_NO = B.SUBS_NO
+	AND A.CUST_ID = B.CUST_ID
+	AND A.TRANS_DT = B.TRANS_DT
+	SET A.SP_EDWMOB_SUB_TS = LV_CUR_UTC 
+	WHERE SP_EDWMOB_SUB_TS IS NULL;	
+	
+--------------------------------------------------------------------------------------------------
+-- Update Error Tables
+--------------------------------------------------------------------------------------------------
+	UPDATE "NDB_MOBILITY"."IFRS_R1.MOBILITY.NDB_MOBILITY::MOBL_NM1_BAN_REF_EH" A
+    FROM "NDB_MOBILITY"."IFRS_R1.MOBILITY.NDB_MOBILITY::MOBL_NM1_BAN_REF_EH" A 
+    INNER JOIN #UPDATE_EH_DELETION_BAN B 
+    ON A.BAN            = B.BAN 
+    AND A.EFF_DT       = B.EFF_DT
+    SET (DELETE_DATE, DELETED) = (CURRENT_DATE, 1);
+    
+    UPDATE "NDB_MOBILITY"."IFRS_R1.MOBILITY.NDB_MOBILITY::MOBL_CUST_EH" A
+    FROM "NDB_MOBILITY"."IFRS_R1.MOBILITY.NDB_MOBILITY::MOBL_CUST_EH" A 
+    INNER JOIN #UPDATE_EH_DELETION_SUB B       
+    ON A."BAN" = B."BAN"
+    AND A."SUBSCR_NO" = B."SUBSCR_NO"    
+    AND A."CUSTOMER_EFFECTIVE_DT" = B."EFF_DT"   
+    SET (DELETE_DATE, DELETED) = (CURRENT_DATE, 1);
+    
+--------------------------------------------------------------------------------------------------
+	-- Set Overall Status
+-------------------------------------------------------------------------------------------------- 
+	--  STATUS 0: Send the success message to scheduling tool to confirm this procedure has been
+	--  executed successfully
+    IF(LV_ERROR_FLAG = 'Y') THEN
+    	OP_STATUS := LC_ERROR_TEXT; 			
+    ELSE
+  		OP_STATUS := LC_SUCCESS_TEXT;				
+	END IF;	
+
+END;

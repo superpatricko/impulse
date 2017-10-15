@@ -1,0 +1,827 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:AccessControl="http://www.sap.com/ndb/SQLCoreModelAccessControl.ecore" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" xmlns:Variable="http://www.sap.com/ndb/BiModelVariable.ecore" schemaVersion="2.3" id="CA_EDWMOB_CONTR" applyPrivilegeType="NONE" checkAnalyticPrivileges="false" defaultClient="$$client$$" defaultLanguage="$$language$$" hierarchiesSQLEnabled="false" historyEnabled="false" translationRelevant="true" visibility="internal" calculationScenarioType="TREE_BASED" dataCategory="DIMENSION" enforceSqlExecution="false" executionSemantic="UNDEFINED" outputViewType="Projection">
+  <descriptions defaultDescription="CA_EDWMOB_CONTR">
+    <comment text="To select only new/modified records which have not yet been processed in NDB from the EDW Contract landing table"/>
+  </descriptions>
+  <localVariables>
+    <variable id="IP_EFF_DT" parameter="true">
+      <descriptions defaultDescription="IP_EFF_DT"/>
+      <variableProperties datatype="DATE" defaultValue="99991231" mandatory="false">
+        <valueDomain type="Date"/>
+        <selection multiLine="false" type="SingleValue"/>
+      </variableProperties>
+    </variable>
+  </localVariables>
+  <variableMappings>
+    <mapping xsi:type="Variable:VariableMapping" dataSource="#CA_NM1_EDW_CONTR">
+      <targetVariable name="IP_EFF_DT" resourceUri="/IFRS_R1.MOBILITY.LAND_MOBILITY/calculationviews/CA_NM1_EDW_CONTR"/>
+      <localVariable>#IP_EFF_DT</localVariable>
+    </mapping>
+  </variableMappings>
+  <informationModelLayout relativeWidthScenario="64"/>
+  <dataSources>
+    <DataSource id="CA_NM1_EDW_CONTR" type="CALCULATION_VIEW">
+      <viewAttributes allViewAttributes="true"/>
+      <resourceUri>/IFRS_R1.MOBILITY.LAND_MOBILITY/calculationviews/CA_NM1_EDW_CONTR</resourceUri>
+    </DataSource>
+  </dataSources>
+  <calculationViews>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_EARLY_HUG_ELIGIBILITY_OVERRIDE">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="EI_GRP_SEQ_NO"/>
+        <viewAttribute id="CYCL_ID"/>
+        <viewAttribute id="INSRT_TS"/>
+        <viewAttribute id="NDB_MART"/>
+        <viewAttribute id="SEQ_ID"/>
+        <viewAttribute id="SRC_TS"/>
+        <viewAttribute id="PROCESS_ID"/>
+        <viewAttribute id="TRX_SEQ_NO"/>
+        <viewAttribute id="BAN"/>
+        <viewAttribute id="ODS_SYST_CD"/>
+        <viewAttribute id="EXPY_DT"/>
+        <viewAttribute id="ACTIVITY_CODE"/>
+        <viewAttribute id="ACTIVITY_REASON_CODE"/>
+        <viewAttribute id="BUYERS_REMORSE"/>
+        <viewAttribute id="CONTRACT_END_DATE"/>
+        <viewAttribute id="CONTRACT_START_DATE"/>
+        <viewAttribute id="CONTRACT_TERM"/>
+        <viewAttribute id="CONTRACT_TIER"/>
+        <viewAttribute id="CONTRACT_TYPE"/>
+        <viewAttribute id="CURRENT_IMEI"/>
+        <viewAttribute id="DSAPA_EXEMPT_IND"/>
+        <viewAttribute id="HUG_ELIGIBILITY_OVERRIDE"/>
+        <viewAttribute id="INSTAL_PLAN_ID"/>
+        <viewAttribute id="SUBSCRIBER_NO"/>
+        <viewAttribute id="DEALER_CODE"/>
+        <viewAttribute id="TRANSACTION_GROUP_ID"/>
+        <viewAttribute id="EFF_DT"/>
+        <viewAttribute id="SP_ORDER_BYOD_CONTR_TS"/>
+        <viewAttribute id="SP_ORDER_COAM_CONTR_TS"/>
+        <viewAttribute id="SP_ORDER_SUBSIDY_CONTR_TS"/>
+        <viewAttribute id="SP_ORDER_AGREE_CONTR_TS"/>
+        <viewAttribute id="SP_ORDER_CONTR_TS"/>
+        <viewAttribute id="EHUG_ELIGIBILITY_OVERRIDE"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CC_EFF_DT" length="20" expressionLanguage="COLUMN_ENGINE">
+          <formula>&quot;EFF_DT&quot;</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#CA_NM1_EDW_CONTR">
+        <mapping xsi:type="Calculation:AttributeMapping" target="EI_GRP_SEQ_NO" source="EI_GRP_SEQ_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INSRT_TS" source="INSRT_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NDB_MART" source="NDB_MART"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SEQ_ID" source="SEQ_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SRC_TS" source="SRC_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROCESS_ID" source="PROCESS_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRX_SEQ_NO" source="TRX_SEQ_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BAN" source="BAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ODS_SYST_CD" source="ODS_SYST_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXPY_DT" source="EXPY_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACTIVITY_CODE" source="ACTIVITY_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACTIVITY_REASON_CODE" source="ACTIVITY_REASON_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUYERS_REMORSE" source="BUYERS_REMORSE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTRACT_END_DATE" source="CONTRACT_END_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTRACT_START_DATE" source="CONTRACT_START_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTRACT_TERM" source="CONTRACT_TERM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTRACT_TIER" source="CONTRACT_TIER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTRACT_TYPE" source="CONTRACT_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CURRENT_IMEI" source="CURRENT_IMEI"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DSAPA_EXEMPT_IND" source="DSAPA_EXEMPT_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="HUG_ELIGIBILITY_OVERRIDE" source="HUG_ELIGIBILITY_OVERRIDE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INSTAL_PLAN_ID" source="INSTAL_PLAN_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBSCRIBER_NO" source="SUBSCRIBER_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DEALER_CODE" source="DEALER_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRANSACTION_GROUP_ID" source="TRANSACTION_GROUP_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFF_DT" source="EFF_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SP_ORDER_BYOD_CONTR_TS" source="SP_ORDER_BYOD_CONTR_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SP_ORDER_COAM_CONTR_TS" source="SP_ORDER_COAM_CONTR_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SP_ORDER_SUBSIDY_CONTR_TS" source="SP_ORDER_SUBSIDY_CONTR_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SP_ORDER_AGREE_CONTR_TS" source="SP_ORDER_AGREE_CONTR_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SP_ORDER_CONTR_TS" source="SP_ORDER_CONTR_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EHUG_ELIGIBILITY_OVERRIDE" source="EHUG_ELIGIBILITY_OVERRIDE"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:RankView" id="RANK_BUYER_RMS_NOT_NULL_RANK">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="EI_GRP_SEQ_NO"/>
+        <viewAttribute id="CYCL_ID"/>
+        <viewAttribute id="INSRT_TS"/>
+        <viewAttribute id="NDB_MART"/>
+        <viewAttribute id="SEQ_ID"/>
+        <viewAttribute id="SRC_TS"/>
+        <viewAttribute id="PROCESS_ID"/>
+        <viewAttribute id="TRX_SEQ_NO"/>
+        <viewAttribute id="BAN"/>
+        <viewAttribute id="ODS_SYST_CD"/>
+        <viewAttribute id="EXPY_DT"/>
+        <viewAttribute id="ACTV_CD"/>
+        <viewAttribute id="ACTV_RSN_CD"/>
+        <viewAttribute id="BYRS_RMRS"/>
+        <viewAttribute id="CONTR_END_DT"/>
+        <viewAttribute id="CONTR_STRT_DT"/>
+        <viewAttribute id="CONTR_TERM"/>
+        <viewAttribute id="CONTR_TIER"/>
+        <viewAttribute id="CONTR_TY"/>
+        <viewAttribute id="CURR_IMEI"/>
+        <viewAttribute id="DSAPA_EXMT_IND"/>
+        <viewAttribute id="HUG_ELIG_OVRD"/>
+        <viewAttribute id="INSTAL_PLN_ID"/>
+        <viewAttribute id="SUBCR_NO"/>
+        <viewAttribute id="DLR_CD"/>
+        <viewAttribute id="TRANS_GRP_ID"/>
+        <viewAttribute id="EFF_DT"/>
+        <viewAttribute id="SP_ORDER_BYOD_CONTR_TS"/>
+        <viewAttribute id="SP_ORDER_COAM_CONTR_TS"/>
+        <viewAttribute id="SP_ORDER_SUBSIDY_CONTR_TS"/>
+        <viewAttribute id="SP_ORDER_AGREE_CONTR_TS"/>
+        <viewAttribute id="SP_ORDER_CONTR_TS"/>
+        <viewAttribute id="EHUG_ELIGIBILITY_OVERRIDE"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#PROJ_EARLY_HUG_ELIGIBILITY_OVERRIDE">
+        <mapping xsi:type="Calculation:AttributeMapping" target="EI_GRP_SEQ_NO" source="EI_GRP_SEQ_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INSRT_TS" source="INSRT_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NDB_MART" source="NDB_MART"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SEQ_ID" source="SEQ_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SRC_TS" source="SRC_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROCESS_ID" source="PROCESS_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRX_SEQ_NO" source="TRX_SEQ_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BAN" source="BAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ODS_SYST_CD" source="ODS_SYST_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXPY_DT" source="EXPY_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACTV_CD" source="ACTIVITY_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACTV_RSN_CD" source="ACTIVITY_REASON_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BYRS_RMRS" source="BUYERS_REMORSE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTR_END_DT" source="CONTRACT_END_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTR_STRT_DT" source="CONTRACT_START_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTR_TERM" source="CONTRACT_TERM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTR_TIER" source="CONTRACT_TIER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTR_TY" source="CONTRACT_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CURR_IMEI" source="CURRENT_IMEI"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DSAPA_EXMT_IND" source="DSAPA_EXEMPT_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="HUG_ELIG_OVRD" source="HUG_ELIGIBILITY_OVERRIDE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INSTAL_PLN_ID" source="INSTAL_PLAN_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBCR_NO" source="SUBSCRIBER_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DLR_CD" source="DEALER_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRANS_GRP_ID" source="TRANSACTION_GROUP_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFF_DT" source="EFF_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SP_ORDER_BYOD_CONTR_TS" source="SP_ORDER_BYOD_CONTR_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SP_ORDER_COAM_CONTR_TS" source="SP_ORDER_COAM_CONTR_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SP_ORDER_SUBSIDY_CONTR_TS" source="SP_ORDER_SUBSIDY_CONTR_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SP_ORDER_AGREE_CONTR_TS" source="SP_ORDER_AGREE_CONTR_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SP_ORDER_CONTR_TS" source="SP_ORDER_CONTR_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EHUG_ELIGIBILITY_OVERRIDE" source="EHUG_ELIGIBILITY_OVERRIDE"/>
+      </input>
+      <windowFunction dynamicPartitionAttributes="true">
+        <partitionViewAttributeName>BAN</partitionViewAttributeName>
+        <partitionViewAttributeName>SUBCR_NO</partitionViewAttributeName>
+        <partitionViewAttributeName>EFF_DT</partitionViewAttributeName>
+        <order byViewAttributeName="TRX_SEQ_NO" direction="DESC"/>
+        <rankThreshold>
+          <value>1</value>
+        </rankThreshold>
+      </windowFunction>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_BYRS_RMRS">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="SP_ORDER_CONTR_TS"/>
+        <viewAttribute id="SP_ORDER_AGREE_CONTR_TS"/>
+        <viewAttribute id="SP_ORDER_SUBSIDY_CONTR_TS"/>
+        <viewAttribute id="SP_ORDER_COAM_CONTR_TS"/>
+        <viewAttribute id="SP_ORDER_BYOD_CONTR_TS"/>
+        <viewAttribute id="EFF_DT"/>
+        <viewAttribute id="TRANS_GRP_ID"/>
+        <viewAttribute id="DLR_CD"/>
+        <viewAttribute id="SUBCR_NO"/>
+        <viewAttribute id="INSTAL_PLN_ID"/>
+        <viewAttribute id="HUG_ELIG_OVRD"/>
+        <viewAttribute id="DSAPA_EXMT_IND"/>
+        <viewAttribute id="CURR_IMEI"/>
+        <viewAttribute id="CONTR_TY"/>
+        <viewAttribute id="CONTR_TIER"/>
+        <viewAttribute id="CONTR_TERM"/>
+        <viewAttribute id="CONTR_STRT_DT"/>
+        <viewAttribute id="CONTR_END_DT"/>
+        <viewAttribute id="BYRS_RMRS">
+          <filter xsi:type="AccessControl:SingleValueFilter" operator="NL" including="false"/>
+        </viewAttribute>
+        <viewAttribute id="ACTV_RSN_CD"/>
+        <viewAttribute id="ACTV_CD"/>
+        <viewAttribute id="EXPY_DT"/>
+        <viewAttribute id="ODS_SYST_CD"/>
+        <viewAttribute id="BAN"/>
+        <viewAttribute id="TRX_SEQ_NO"/>
+        <viewAttribute id="PROCESS_ID"/>
+        <viewAttribute id="SRC_TS"/>
+        <viewAttribute id="SEQ_ID"/>
+        <viewAttribute id="NDB_MART"/>
+        <viewAttribute id="INSRT_TS"/>
+        <viewAttribute id="CYCL_ID"/>
+        <viewAttribute id="EI_GRP_SEQ_NO"/>
+        <viewAttribute id="EHUG_ELIGIBILITY_OVERRIDE"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CC_EFF_DT_BUYRS_RMS_NOT_NULL" length="20" expressionLanguage="COLUMN_ENGINE">
+          <formula>&quot;EFF_DT&quot;</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#RANK_BUYER_RMS_NOT_NULL_RANK">
+        <mapping xsi:type="Calculation:AttributeMapping" target="SP_ORDER_CONTR_TS" source="SP_ORDER_CONTR_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SP_ORDER_AGREE_CONTR_TS" source="SP_ORDER_AGREE_CONTR_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SP_ORDER_SUBSIDY_CONTR_TS" source="SP_ORDER_SUBSIDY_CONTR_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SP_ORDER_COAM_CONTR_TS" source="SP_ORDER_COAM_CONTR_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SP_ORDER_BYOD_CONTR_TS" source="SP_ORDER_BYOD_CONTR_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFF_DT" source="EFF_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRANS_GRP_ID" source="TRANS_GRP_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DLR_CD" source="DLR_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBCR_NO" source="SUBCR_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INSTAL_PLN_ID" source="INSTAL_PLN_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="HUG_ELIG_OVRD" source="HUG_ELIG_OVRD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DSAPA_EXMT_IND" source="DSAPA_EXMT_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CURR_IMEI" source="CURR_IMEI"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTR_TY" source="CONTR_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTR_TIER" source="CONTR_TIER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTR_TERM" source="CONTR_TERM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTR_STRT_DT" source="CONTR_STRT_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTR_END_DT" source="CONTR_END_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BYRS_RMRS" source="BYRS_RMRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACTV_RSN_CD" source="ACTV_RSN_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACTV_CD" source="ACTV_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXPY_DT" source="EXPY_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ODS_SYST_CD" source="ODS_SYST_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BAN" source="BAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRX_SEQ_NO" source="TRX_SEQ_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROCESS_ID" source="PROCESS_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SRC_TS" source="SRC_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SEQ_ID" source="SEQ_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NDB_MART" source="NDB_MART"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INSRT_TS" source="INSRT_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EI_GRP_SEQ_NO" source="EI_GRP_SEQ_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EHUG_ELIGIBILITY_OVERRIDE" source="EHUG_ELIGIBILITY_OVERRIDE"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:RankView" id="RANK_ALL_BAN_SUB_EFF">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="EI_GRP_SEQ_NO"/>
+        <viewAttribute id="CYCL_ID"/>
+        <viewAttribute id="INSRT_TS"/>
+        <viewAttribute id="NDB_MART"/>
+        <viewAttribute id="SEQ_ID"/>
+        <viewAttribute id="SRC_TS"/>
+        <viewAttribute id="PROCESS_ID"/>
+        <viewAttribute id="TRX_SEQ_NO"/>
+        <viewAttribute id="BAN"/>
+        <viewAttribute id="ODS_SYST_CD"/>
+        <viewAttribute id="EXPY_DT"/>
+        <viewAttribute id="ACTIVITY_CODE"/>
+        <viewAttribute id="ACTIVITY_REASON_CODE"/>
+        <viewAttribute id="BUYERS_REMORSE"/>
+        <viewAttribute id="CONTRACT_END_DATE"/>
+        <viewAttribute id="CONTRACT_START_DATE"/>
+        <viewAttribute id="CONTRACT_TERM"/>
+        <viewAttribute id="CONTRACT_TIER"/>
+        <viewAttribute id="CONTRACT_TYPE"/>
+        <viewAttribute id="CURRENT_IMEI"/>
+        <viewAttribute id="DSAPA_EXEMPT_IND"/>
+        <viewAttribute id="HUG_ELIGIBILITY_OVERRIDE"/>
+        <viewAttribute id="INSTAL_PLAN_ID"/>
+        <viewAttribute id="SUBSCRIBER_NO"/>
+        <viewAttribute id="DEALER_CODE"/>
+        <viewAttribute id="TRANSACTION_GROUP_ID"/>
+        <viewAttribute id="EFF_DT"/>
+        <viewAttribute id="SP_ORDER_BYOD_CONTR_TS"/>
+        <viewAttribute id="SP_ORDER_COAM_CONTR_TS"/>
+        <viewAttribute id="SP_ORDER_SUBSIDY_CONTR_TS"/>
+        <viewAttribute id="SP_ORDER_AGREE_CONTR_TS"/>
+        <viewAttribute id="SP_ORDER_CONTR_TS"/>
+        <viewAttribute id="CC_EFF_DT"/>
+        <viewAttribute id="EHUG_ELIGIBILITY_OVERRIDE"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#PROJ_EARLY_HUG_ELIGIBILITY_OVERRIDE">
+        <mapping xsi:type="Calculation:AttributeMapping" target="EI_GRP_SEQ_NO" source="EI_GRP_SEQ_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INSRT_TS" source="INSRT_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NDB_MART" source="NDB_MART"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SEQ_ID" source="SEQ_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SRC_TS" source="SRC_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROCESS_ID" source="PROCESS_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRX_SEQ_NO" source="TRX_SEQ_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BAN" source="BAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ODS_SYST_CD" source="ODS_SYST_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXPY_DT" source="EXPY_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACTIVITY_CODE" source="ACTIVITY_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACTIVITY_REASON_CODE" source="ACTIVITY_REASON_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUYERS_REMORSE" source="BUYERS_REMORSE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTRACT_END_DATE" source="CONTRACT_END_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTRACT_START_DATE" source="CONTRACT_START_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTRACT_TERM" source="CONTRACT_TERM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTRACT_TIER" source="CONTRACT_TIER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTRACT_TYPE" source="CONTRACT_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CURRENT_IMEI" source="CURRENT_IMEI"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DSAPA_EXEMPT_IND" source="DSAPA_EXEMPT_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="HUG_ELIGIBILITY_OVERRIDE" source="HUG_ELIGIBILITY_OVERRIDE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INSTAL_PLAN_ID" source="INSTAL_PLAN_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBSCRIBER_NO" source="SUBSCRIBER_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DEALER_CODE" source="DEALER_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRANSACTION_GROUP_ID" source="TRANSACTION_GROUP_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFF_DT" source="EFF_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SP_ORDER_BYOD_CONTR_TS" source="SP_ORDER_BYOD_CONTR_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SP_ORDER_COAM_CONTR_TS" source="SP_ORDER_COAM_CONTR_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SP_ORDER_SUBSIDY_CONTR_TS" source="SP_ORDER_SUBSIDY_CONTR_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SP_ORDER_AGREE_CONTR_TS" source="SP_ORDER_AGREE_CONTR_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SP_ORDER_CONTR_TS" source="SP_ORDER_CONTR_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_EFF_DT" source="CC_EFF_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EHUG_ELIGIBILITY_OVERRIDE" source="EHUG_ELIGIBILITY_OVERRIDE"/>
+      </input>
+      <windowFunction dynamicPartitionAttributes="false">
+        <partitionViewAttributeName>BAN</partitionViewAttributeName>
+        <partitionViewAttributeName>SUBSCRIBER_NO</partitionViewAttributeName>
+        <partitionViewAttributeName>EFF_DT</partitionViewAttributeName>
+        <order byViewAttributeName="TRX_SEQ_NO" direction="DESC"/>
+        <rankThreshold>
+          <value>1</value>
+        </rankThreshold>
+      </windowFunction>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="JOIN" joinOrder="OUTSIDE_IN" joinType="leftOuter">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="EI_GRP_SEQ_NO"/>
+        <viewAttribute id="CYCL_ID"/>
+        <viewAttribute id="INSRT_TS"/>
+        <viewAttribute id="NDB_MART"/>
+        <viewAttribute id="SEQ_ID"/>
+        <viewAttribute id="SRC_TS"/>
+        <viewAttribute id="PROCESS_ID"/>
+        <viewAttribute id="TRX_SEQ_NO"/>
+        <viewAttribute id="BAN"/>
+        <viewAttribute id="ODS_SYST_CD"/>
+        <viewAttribute id="EXPY_DT"/>
+        <viewAttribute id="ACTIVITY_CODE"/>
+        <viewAttribute id="ACTIVITY_REASON_CODE"/>
+        <viewAttribute id="BUYERS_REMORSE"/>
+        <viewAttribute id="CONTRACT_END_DATE"/>
+        <viewAttribute id="CONTRACT_START_DATE"/>
+        <viewAttribute id="CONTRACT_TERM"/>
+        <viewAttribute id="CONTRACT_TIER"/>
+        <viewAttribute id="CONTRACT_TYPE"/>
+        <viewAttribute id="CURRENT_IMEI"/>
+        <viewAttribute id="DSAPA_EXEMPT_IND"/>
+        <viewAttribute id="HUG_ELIGIBILITY_OVERRIDE"/>
+        <viewAttribute id="INSTAL_PLAN_ID"/>
+        <viewAttribute id="SUBSCRIBER_NO"/>
+        <viewAttribute id="DEALER_CODE"/>
+        <viewAttribute id="TRANSACTION_GROUP_ID"/>
+        <viewAttribute id="EFF_DT"/>
+        <viewAttribute id="SP_ORDER_BYOD_CONTR_TS"/>
+        <viewAttribute id="SP_ORDER_COAM_CONTR_TS"/>
+        <viewAttribute id="SP_ORDER_SUBSIDY_CONTR_TS"/>
+        <viewAttribute id="SP_ORDER_AGREE_CONTR_TS"/>
+        <viewAttribute id="SP_ORDER_CONTR_TS"/>
+        <viewAttribute id="EFF_DT_BUYR_RMS_NOT_NULL"/>
+        <viewAttribute id="BAN_BUYR_RMS_NOT_NULL"/>
+        <viewAttribute id="SUBCR_NO_BUYR_RMS_NOT_NULL"/>
+        <viewAttribute id="CC_EFF_DT"/>
+        <viewAttribute id="CC_EFF_DT_BUYRS_RMS_NOT_NULL"/>
+        <viewAttribute id="EHUG_ELIGIBILITY_OVERRIDE"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CC_EXCLUDE_BUYERS_RMS_NOT_NULL" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(&quot;BAN&quot;=if(isnull(&quot;BAN_BUYR_RMS_NOT_NULL&quot;),'X',&quot;BAN_BUYR_RMS_NOT_NULL&quot;),if(&quot;SUBSCRIBER_NO&quot;=if(isnull(&quot;SUBCR_NO_BUYR_RMS_NOT_NULL&quot;),'X',&quot;SUBCR_NO_BUYR_RMS_NOT_NULL&quot;),if(&quot;CC_EFF_DT&quot;=if(isnull(&quot;CC_EFF_DT_BUYRS_RMS_NOT_NULL&quot;),'X',&quot;CC_EFF_DT_BUYRS_RMS_NOT_NULL&quot;),'Y','N'),'N'),'N')&#xD;
+&#xD;
+&#xD;
+</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#RANK_ALL_BAN_SUB_EFF">
+        <mapping xsi:type="Calculation:AttributeMapping" target="EI_GRP_SEQ_NO" source="EI_GRP_SEQ_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INSRT_TS" source="INSRT_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NDB_MART" source="NDB_MART"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SEQ_ID" source="SEQ_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SRC_TS" source="SRC_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROCESS_ID" source="PROCESS_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRX_SEQ_NO" source="TRX_SEQ_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BAN" source="BAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ODS_SYST_CD" source="ODS_SYST_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXPY_DT" source="EXPY_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACTIVITY_CODE" source="ACTIVITY_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACTIVITY_REASON_CODE" source="ACTIVITY_REASON_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUYERS_REMORSE" source="BUYERS_REMORSE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTRACT_END_DATE" source="CONTRACT_END_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTRACT_START_DATE" source="CONTRACT_START_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTRACT_TERM" source="CONTRACT_TERM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTRACT_TIER" source="CONTRACT_TIER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTRACT_TYPE" source="CONTRACT_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CURRENT_IMEI" source="CURRENT_IMEI"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DSAPA_EXEMPT_IND" source="DSAPA_EXEMPT_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="HUG_ELIGIBILITY_OVERRIDE" source="HUG_ELIGIBILITY_OVERRIDE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INSTAL_PLAN_ID" source="INSTAL_PLAN_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBSCRIBER_NO" source="SUBSCRIBER_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DEALER_CODE" source="DEALER_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRANSACTION_GROUP_ID" source="TRANSACTION_GROUP_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFF_DT" source="EFF_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SP_ORDER_BYOD_CONTR_TS" source="SP_ORDER_BYOD_CONTR_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SP_ORDER_COAM_CONTR_TS" source="SP_ORDER_COAM_CONTR_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SP_ORDER_SUBSIDY_CONTR_TS" source="SP_ORDER_SUBSIDY_CONTR_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SP_ORDER_AGREE_CONTR_TS" source="SP_ORDER_AGREE_CONTR_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SP_ORDER_CONTR_TS" source="SP_ORDER_CONTR_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_EFF_DT" source="CC_EFF_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EHUG_ELIGIBILITY_OVERRIDE" source="EHUG_ELIGIBILITY_OVERRIDE"/>
+      </input>
+      <input node="#PROJ_BYRS_RMRS">
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFF_DT_BUYR_RMS_NOT_NULL" source="EFF_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BAN_BUYR_RMS_NOT_NULL" source="BAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBCR_NO_BUYR_RMS_NOT_NULL" source="SUBCR_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_EFF_DT_BUYRS_RMS_NOT_NULL" source="CC_EFF_DT_BUYRS_RMS_NOT_NULL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFF_DT" source="EFF_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBSCRIBER_NO" source="SUBCR_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BAN" source="BAN"/>
+      </input>
+      <joinAttribute name="EFF_DT"/>
+      <joinAttribute name="SUBSCRIBER_NO"/>
+      <joinAttribute name="BAN"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_EXCLUDE_BYRS_RMRS">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="CC_EXCLUDE_BUYERS_RMS_NOT_NULL">
+          <filter xsi:type="AccessControl:SingleValueFilter" including="true" value="N"/>
+        </viewAttribute>
+        <viewAttribute id="EI_GRP_SEQ_NO"/>
+        <viewAttribute id="CYCL_ID"/>
+        <viewAttribute id="INSRT_TS"/>
+        <viewAttribute id="NDB_MART"/>
+        <viewAttribute id="SEQ_ID"/>
+        <viewAttribute id="SRC_TS"/>
+        <viewAttribute id="PROCESS_ID"/>
+        <viewAttribute id="TRX_SEQ_NO"/>
+        <viewAttribute id="BAN"/>
+        <viewAttribute id="ODS_SYST_CD"/>
+        <viewAttribute id="EXPY_DT"/>
+        <viewAttribute id="ACTIVITY_CODE"/>
+        <viewAttribute id="ACTIVITY_REASON_CODE"/>
+        <viewAttribute id="BUYERS_REMORSE"/>
+        <viewAttribute id="CONTRACT_END_DATE"/>
+        <viewAttribute id="CONTRACT_START_DATE"/>
+        <viewAttribute id="CONTRACT_TERM"/>
+        <viewAttribute id="CONTRACT_TIER"/>
+        <viewAttribute id="CONTRACT_TYPE"/>
+        <viewAttribute id="CURRENT_IMEI"/>
+        <viewAttribute id="DSAPA_EXEMPT_IND"/>
+        <viewAttribute id="HUG_ELIGIBILITY_OVERRIDE"/>
+        <viewAttribute id="INSTAL_PLAN_ID"/>
+        <viewAttribute id="SUBSCRIBER_NO"/>
+        <viewAttribute id="DEALER_CODE"/>
+        <viewAttribute id="TRANSACTION_GROUP_ID"/>
+        <viewAttribute id="EFF_DT"/>
+        <viewAttribute id="SP_ORDER_BYOD_CONTR_TS"/>
+        <viewAttribute id="SP_ORDER_COAM_CONTR_TS"/>
+        <viewAttribute id="SP_ORDER_SUBSIDY_CONTR_TS"/>
+        <viewAttribute id="SP_ORDER_AGREE_CONTR_TS"/>
+        <viewAttribute id="SP_ORDER_CONTR_TS"/>
+        <viewAttribute id="EHUG_ELIGIBILITY_OVERRIDE"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#JOIN">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_EXCLUDE_BUYERS_RMS_NOT_NULL" source="CC_EXCLUDE_BUYERS_RMS_NOT_NULL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EI_GRP_SEQ_NO" source="EI_GRP_SEQ_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INSRT_TS" source="INSRT_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NDB_MART" source="NDB_MART"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SEQ_ID" source="SEQ_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SRC_TS" source="SRC_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROCESS_ID" source="PROCESS_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRX_SEQ_NO" source="TRX_SEQ_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BAN" source="BAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ODS_SYST_CD" source="ODS_SYST_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXPY_DT" source="EXPY_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACTIVITY_CODE" source="ACTIVITY_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACTIVITY_REASON_CODE" source="ACTIVITY_REASON_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUYERS_REMORSE" source="BUYERS_REMORSE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTRACT_END_DATE" source="CONTRACT_END_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTRACT_START_DATE" source="CONTRACT_START_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTRACT_TERM" source="CONTRACT_TERM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTRACT_TIER" source="CONTRACT_TIER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTRACT_TYPE" source="CONTRACT_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CURRENT_IMEI" source="CURRENT_IMEI"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DSAPA_EXEMPT_IND" source="DSAPA_EXEMPT_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="HUG_ELIGIBILITY_OVERRIDE" source="HUG_ELIGIBILITY_OVERRIDE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INSTAL_PLAN_ID" source="INSTAL_PLAN_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBSCRIBER_NO" source="SUBSCRIBER_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DEALER_CODE" source="DEALER_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRANSACTION_GROUP_ID" source="TRANSACTION_GROUP_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFF_DT" source="EFF_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SP_ORDER_BYOD_CONTR_TS" source="SP_ORDER_BYOD_CONTR_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SP_ORDER_COAM_CONTR_TS" source="SP_ORDER_COAM_CONTR_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SP_ORDER_SUBSIDY_CONTR_TS" source="SP_ORDER_SUBSIDY_CONTR_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SP_ORDER_AGREE_CONTR_TS" source="SP_ORDER_AGREE_CONTR_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SP_ORDER_CONTR_TS" source="SP_ORDER_CONTR_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EHUG_ELIGIBILITY_OVERRIDE" source="EHUG_ELIGIBILITY_OVERRIDE"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:UnionView" id="UNION">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="SP_ORDER_CONTR_TS"/>
+        <viewAttribute id="SP_ORDER_AGREE_CONTR_TS"/>
+        <viewAttribute id="SP_ORDER_SUBSIDY_CONTR_TS"/>
+        <viewAttribute id="SP_ORDER_COAM_CONTR_TS"/>
+        <viewAttribute id="SP_ORDER_BYOD_CONTR_TS"/>
+        <viewAttribute id="EFF_DT"/>
+        <viewAttribute id="TRANS_GRP_ID"/>
+        <viewAttribute id="DLR_CD"/>
+        <viewAttribute id="SUBCR_NO"/>
+        <viewAttribute id="INSTAL_PLN_ID"/>
+        <viewAttribute id="HUG_ELIG_OVRD"/>
+        <viewAttribute id="DSAPA_EXMT_IND"/>
+        <viewAttribute id="CURR_IMEI"/>
+        <viewAttribute id="CONTR_TY"/>
+        <viewAttribute id="CONTR_TIER"/>
+        <viewAttribute id="CONTR_TERM"/>
+        <viewAttribute id="CONTR_STRT_DT"/>
+        <viewAttribute id="CONTR_END_DT"/>
+        <viewAttribute id="BYRS_RMRS"/>
+        <viewAttribute id="ACTV_RSN_CD"/>
+        <viewAttribute id="ACTV_CD"/>
+        <viewAttribute id="EXPY_DT"/>
+        <viewAttribute id="ODS_SYST_CD"/>
+        <viewAttribute id="BAN"/>
+        <viewAttribute id="TRX_SEQ_NO"/>
+        <viewAttribute id="PROCESS_ID"/>
+        <viewAttribute id="SRC_TS"/>
+        <viewAttribute id="SEQ_ID"/>
+        <viewAttribute id="NDB_MART"/>
+        <viewAttribute id="INSRT_TS"/>
+        <viewAttribute id="CYCL_ID"/>
+        <viewAttribute id="EI_GRP_SEQ_NO"/>
+        <viewAttribute id="EHUG_ELIGIBILITY_OVERRIDE"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input emptyUnionBehavior="NO_ROW" node="#PROJ_EXCLUDE_BYRS_RMRS">
+        <mapping xsi:type="Calculation:AttributeMapping" target="SP_ORDER_CONTR_TS" source="SP_ORDER_CONTR_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SP_ORDER_AGREE_CONTR_TS" source="SP_ORDER_AGREE_CONTR_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SP_ORDER_SUBSIDY_CONTR_TS" source="SP_ORDER_SUBSIDY_CONTR_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SP_ORDER_COAM_CONTR_TS" source="SP_ORDER_COAM_CONTR_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SP_ORDER_BYOD_CONTR_TS" source="SP_ORDER_BYOD_CONTR_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFF_DT" source="EFF_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRANS_GRP_ID" source="TRANSACTION_GROUP_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DLR_CD" source="DEALER_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBCR_NO" source="SUBSCRIBER_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INSTAL_PLN_ID" source="INSTAL_PLAN_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="HUG_ELIG_OVRD" source="HUG_ELIGIBILITY_OVERRIDE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DSAPA_EXMT_IND" source="DSAPA_EXEMPT_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CURR_IMEI" source="CURRENT_IMEI"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTR_TY" source="CONTRACT_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTR_TIER" source="CONTRACT_TIER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTR_TERM" source="CONTRACT_TERM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTR_STRT_DT" source="CONTRACT_START_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTR_END_DT" source="CONTRACT_END_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BYRS_RMRS" source="BUYERS_REMORSE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACTV_RSN_CD" source="ACTIVITY_REASON_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACTV_CD" source="ACTIVITY_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXPY_DT" source="EXPY_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ODS_SYST_CD" source="ODS_SYST_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BAN" source="BAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRX_SEQ_NO" source="TRX_SEQ_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROCESS_ID" source="PROCESS_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SRC_TS" source="SRC_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SEQ_ID" source="SEQ_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NDB_MART" source="NDB_MART"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INSRT_TS" source="INSRT_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EI_GRP_SEQ_NO" source="EI_GRP_SEQ_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EHUG_ELIGIBILITY_OVERRIDE" source="EHUG_ELIGIBILITY_OVERRIDE"/>
+      </input>
+      <input emptyUnionBehavior="NO_ROW" node="#PROJ_BYRS_RMRS">
+        <mapping xsi:type="Calculation:AttributeMapping" target="SP_ORDER_CONTR_TS" source="SP_ORDER_CONTR_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SP_ORDER_AGREE_CONTR_TS" source="SP_ORDER_AGREE_CONTR_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SP_ORDER_SUBSIDY_CONTR_TS" source="SP_ORDER_SUBSIDY_CONTR_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SP_ORDER_COAM_CONTR_TS" source="SP_ORDER_COAM_CONTR_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SP_ORDER_BYOD_CONTR_TS" source="SP_ORDER_BYOD_CONTR_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFF_DT" source="EFF_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRANS_GRP_ID" source="TRANS_GRP_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DLR_CD" source="DLR_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBCR_NO" source="SUBCR_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INSTAL_PLN_ID" source="INSTAL_PLN_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="HUG_ELIG_OVRD" source="HUG_ELIG_OVRD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DSAPA_EXMT_IND" source="DSAPA_EXMT_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CURR_IMEI" source="CURR_IMEI"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTR_TY" source="CONTR_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTR_TIER" source="CONTR_TIER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTR_TERM" source="CONTR_TERM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTR_STRT_DT" source="CONTR_STRT_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTR_END_DT" source="CONTR_END_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BYRS_RMRS" source="BYRS_RMRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACTV_RSN_CD" source="ACTV_RSN_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACTV_CD" source="ACTV_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXPY_DT" source="EXPY_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ODS_SYST_CD" source="ODS_SYST_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BAN" source="BAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRX_SEQ_NO" source="TRX_SEQ_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROCESS_ID" source="PROCESS_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SRC_TS" source="SRC_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SEQ_ID" source="SEQ_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NDB_MART" source="NDB_MART"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INSRT_TS" source="INSRT_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EI_GRP_SEQ_NO" source="EI_GRP_SEQ_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EHUG_ELIGIBILITY_OVERRIDE" source="EHUG_ELIGIBILITY_OVERRIDE"/>
+      </input>
+    </calculationView>
+  </calculationViews>
+  <logicalModel id="UNION">
+    <descriptions/>
+    <attributes>
+      <attribute id="SP_ORDER_CONTR_TS" order="1" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SP_ORDER_CONTR_TS"/>
+        <keyMapping columnObjectName="UNION" columnName="SP_ORDER_CONTR_TS"/>
+      </attribute>
+      <attribute id="SP_ORDER_AGREE_CONTR_TS" order="2" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SP_ORDER_AGREE_CONTR_TS"/>
+        <keyMapping columnObjectName="UNION" columnName="SP_ORDER_AGREE_CONTR_TS"/>
+      </attribute>
+      <attribute id="SP_ORDER_SUBSIDY_CONTR_TS" order="3" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SP_ORDER_SUBSIDY_CONTR_TS"/>
+        <keyMapping columnObjectName="UNION" columnName="SP_ORDER_SUBSIDY_CONTR_TS"/>
+      </attribute>
+      <attribute id="SP_ORDER_COAM_CONTR_TS" order="4" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SP_ORDER_COAM_CONTR_TS"/>
+        <keyMapping columnObjectName="UNION" columnName="SP_ORDER_COAM_CONTR_TS"/>
+      </attribute>
+      <attribute id="SP_ORDER_BYOD_CONTR_TS" order="5" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SP_ORDER_BYOD_CONTR_TS"/>
+        <keyMapping columnObjectName="UNION" columnName="SP_ORDER_BYOD_CONTR_TS"/>
+      </attribute>
+      <attribute id="EFF_DT" order="6" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="EFF_DT"/>
+        <keyMapping columnObjectName="UNION" columnName="EFF_DT"/>
+      </attribute>
+      <attribute id="TRANS_GRP_ID" order="7" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="TRANS_GRP_ID"/>
+        <keyMapping columnObjectName="UNION" columnName="TRANS_GRP_ID"/>
+      </attribute>
+      <attribute id="DLR_CD" order="8" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="DLR_CD"/>
+        <keyMapping columnObjectName="UNION" columnName="DLR_CD"/>
+      </attribute>
+      <attribute id="SUBCR_NO" order="9" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SUBCR_NO"/>
+        <keyMapping columnObjectName="UNION" columnName="SUBCR_NO"/>
+      </attribute>
+      <attribute id="INSTAL_PLN_ID" order="10" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="INSTAL_PLN_ID"/>
+        <keyMapping columnObjectName="UNION" columnName="INSTAL_PLN_ID"/>
+      </attribute>
+      <attribute id="HUG_ELIG_OVRD" order="11" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="HUG_ELIG_OVRD"/>
+        <keyMapping columnObjectName="UNION" columnName="HUG_ELIG_OVRD"/>
+      </attribute>
+      <attribute id="DSAPA_EXMT_IND" order="12" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="DSAPA_EXMT_IND"/>
+        <keyMapping columnObjectName="UNION" columnName="DSAPA_EXMT_IND"/>
+      </attribute>
+      <attribute id="CURR_IMEI" order="13" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CURR_IMEI"/>
+        <keyMapping columnObjectName="UNION" columnName="CURR_IMEI"/>
+      </attribute>
+      <attribute id="CONTR_TY" order="14" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CONTR_TY"/>
+        <keyMapping columnObjectName="UNION" columnName="CONTR_TY"/>
+      </attribute>
+      <attribute id="CONTR_TIER" order="15" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CONTR_TIER"/>
+        <keyMapping columnObjectName="UNION" columnName="CONTR_TIER"/>
+      </attribute>
+      <attribute id="CONTR_TERM" order="16" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CONTR_TERM"/>
+        <keyMapping columnObjectName="UNION" columnName="CONTR_TERM"/>
+      </attribute>
+      <attribute id="CONTR_STRT_DT" order="17" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CONTR_STRT_DT"/>
+        <keyMapping columnObjectName="UNION" columnName="CONTR_STRT_DT"/>
+      </attribute>
+      <attribute id="CONTR_END_DT" order="18" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CONTR_END_DT"/>
+        <keyMapping columnObjectName="UNION" columnName="CONTR_END_DT"/>
+      </attribute>
+      <attribute id="BYRS_RMRS" order="19" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="BYRS_RMRS"/>
+        <keyMapping columnObjectName="UNION" columnName="BYRS_RMRS"/>
+      </attribute>
+      <attribute id="ACTV_RSN_CD" order="20" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ACTV_RSN_CD"/>
+        <keyMapping columnObjectName="UNION" columnName="ACTV_RSN_CD"/>
+      </attribute>
+      <attribute id="ACTV_CD" order="21" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ACTV_CD"/>
+        <keyMapping columnObjectName="UNION" columnName="ACTV_CD"/>
+      </attribute>
+      <attribute id="EXPY_DT" order="22" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="EXPY_DT"/>
+        <keyMapping columnObjectName="UNION" columnName="EXPY_DT"/>
+      </attribute>
+      <attribute id="ODS_SYST_CD" order="23" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ODS_SYST_CD"/>
+        <keyMapping columnObjectName="UNION" columnName="ODS_SYST_CD"/>
+      </attribute>
+      <attribute id="BAN" order="24" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="BAN"/>
+        <keyMapping columnObjectName="UNION" columnName="BAN"/>
+      </attribute>
+      <attribute id="TRX_SEQ_NO" order="25" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="TRANS_GRP_ID"/>
+        <keyMapping columnObjectName="UNION" columnName="TRX_SEQ_NO"/>
+      </attribute>
+      <attribute id="PROCESS_ID" order="26" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="PROCESS_ID"/>
+        <keyMapping columnObjectName="UNION" columnName="PROCESS_ID"/>
+      </attribute>
+      <attribute id="SRC_TS" order="27" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SRC_TS"/>
+        <keyMapping columnObjectName="UNION" columnName="SRC_TS"/>
+      </attribute>
+      <attribute id="SEQ_ID" order="28" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SEQ_ID"/>
+        <keyMapping columnObjectName="UNION" columnName="SEQ_ID"/>
+      </attribute>
+      <attribute id="NDB_MART" order="29" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="NDB_MART"/>
+        <keyMapping columnObjectName="UNION" columnName="NDB_MART"/>
+      </attribute>
+      <attribute id="INSRT_TS" order="30" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="INSRT_TS"/>
+        <keyMapping columnObjectName="UNION" columnName="INSRT_TS"/>
+      </attribute>
+      <attribute id="CYCL_ID" order="31" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CYCL_ID"/>
+        <keyMapping columnObjectName="UNION" columnName="CYCL_ID"/>
+      </attribute>
+      <attribute id="EI_GRP_SEQ_NO" order="32" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="EI_GRP_SEQ_NO"/>
+        <keyMapping columnObjectName="UNION" columnName="EI_GRP_SEQ_NO"/>
+      </attribute>
+      <attribute id="EHUG_ELIGIBILITY_OVERRIDE" order="33" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="EHUG_ELIGIBILITY_OVERRIDE"/>
+        <keyMapping columnObjectName="UNION" columnName="EHUG_ELIGIBILITY_OVERRIDE"/>
+      </attribute>
+    </attributes>
+    <calculatedAttributes/>
+    <privateDataFoundation>
+      <tableProxies/>
+      <joins/>
+      <layout>
+        <shapes/>
+      </layout>
+    </privateDataFoundation>
+    <baseMeasures/>
+    <calculatedMeasures/>
+    <restrictedMeasures/>
+    <localDimensions/>
+  </logicalModel>
+  <layout>
+    <shapes>
+      <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+        <upperLeftCorner x="312" y="87"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_EARLY_HUG_ELIGIBILITY_OVERRIDE" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="22" y="611"/>
+        <rectangleSize height="64" width="349"/>
+      </shape>
+      <shape expanded="true" modelObjectName="RANK_BUYER_RMS_NOT_NULL_RANK" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="214" y="533"/>
+        <rectangleSize height="64" width="231"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_BYRS_RMRS" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="280" y="455"/>
+        <rectangleSize height="64" width="205"/>
+      </shape>
+      <shape expanded="true" modelObjectName="RANK_ALL_BAN_SUB_EFF" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="126" y="455"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="JOIN" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="225" y="359"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_EXCLUDE_BYRS_RMRS" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="225" y="281"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+      <shape expanded="true" modelObjectName="UNION" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="312" y="165"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+    </shapes>
+  </layout>
+</Calculation:scenario>
