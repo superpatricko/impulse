@@ -55,7 +55,7 @@ exports.index = function(req, res) {
 							return;
 						}
 
-						totaldiff += jsdiff.createTwoFilesPatch(sPath, sPath.replace(/DEV/g, 'QA'), results.DEV, results.QA) + "\n";
+						totaldiff += jsdiff.createTwoFilesPatch(sPath.replace(/zip\\DEV/, ''), sPath.replace(/zip\\DEV/, ''), results.DEV, results.QA) + "\n";
 						pathsCb();
 					})
 				} else {
