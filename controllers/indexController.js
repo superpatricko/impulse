@@ -5,12 +5,13 @@ var exec = require('child_process').exec;
 
 
 exports.index = function(req, res) {
+	// res.render('index', { title: 'Local Library Home' });
+
 	// res.set('Content-Type', 'text/plain');
-	exec("diff -aru zip\\DEVtest zip\\QAtest", function (err, stdout, stderr) {
-		if (err) {
-			console.log(err);
-		}
-		res.json(diff2html.getJsonFromDiff(stdout));
+	// 1024 = 1KB
+	exec("diff -aru zip\\DEVtest zip\\QAtest", {maxBuffer: 1024 * 100000}, function (err, stdout, stderr) {
+		// res.send(diff2html.getPrettyHtml(stdout));
+		res.render('index', { title: 'diffoo', content: diff2html.getPrettyHtml(stdout)})
 	});
 
 
