@@ -1,15 +1,24 @@
 var fs = require('fs');
 var exec = require('child_process').exec;
 
+var AdmZip = require('adm-zip');
+var Git = require("nodegit");
 
 
 exports.index = function(req, res) {
+	var QAzip = new AdmZip("./zip/QA.zip");
+	var DEVzip = new AdmZip("./zip/DEV.zip");
+
+	QAzip.extractAllTo(/*target path*/"./zip/QA", /*overwrite*/true)
+	DEVzip.extractAllTo(/*target path*/"./zip/DEV", /*overwrite*/true)
+
 
 	res.set('Content-Type', 'text/plain');
+	res.send("woo");
 	// 1024 = 1KB
-	exec("diff -aru zip\\DEV zip\\QA", {maxBuffer: 1024 * 100000}, function (err, stdout, stderr) {
-		stdout.toString();
-	});
+	// exec("diff -aru zip\\DEV zip\\QA", {maxBuffer: 1024 * 100000}, function (err, stdout, stderr) {
+	// 	stdout.toString();
+	// });
 
 	// 1. unzip DEV and QA into git folder
 
