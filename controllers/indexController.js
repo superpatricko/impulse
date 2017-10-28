@@ -12,10 +12,12 @@ const remote = `https://${USER}:${PASS}@${REPO}`;
 exports.index = function(req, res) {
 	var DEVzip = new AdmZip("./zip/DEV.zip");
 	var QAzip = new AdmZip("./zip/QA.zip");
-	console.log(DEVzip);
-	res.send('foo');
 
-	// DEVzip.extractAllTo(/*target path*/"./zip/content", /*overwrite*/true)
+	console.log(DEVzip.getEntry('.DRV_SAPIFRSDATAHUB-DEV.INTRANET.BELL.CA_00_D44_BC_EZ12598_(Default)/IFRS_R1/SP_TAB_COUNT.hdbprocedure').isDirectory);
+	mv content/.DRV_SAPIFRSDATAHUB-DEV.INTRANET.BELL.CA_00_D44_BC_EZ12598_(Default) content/foo
+
+
+	res.send('foo');
 	async.series({
 		zero: function(cb) {
 			// git.raw([
@@ -39,11 +41,12 @@ exports.index = function(req, res) {
 			});
 		},
 		oneandhalf: function(cb) {
-			var devZipPath = './zip/.DRV_SAPIFRSDATAHUB-DEV.INTRANET.BELL.CA_00_D44_BC_EZ12598_(Default)/IFRS_R1'
-			// DEVzip.extractAllTo( /*target path*/ "./zip/content", /*overwrite*/ true)
-			DEVzip.extractEntryTo(devZipPath, "./zip/content", false, true);
-			console.log(1.5);
-			cb();
+			DEVzip.extractAllTo( /*target path*/ "./zip/content", /*overwrite*/ true)
+			exec("mv content/.DRV_SAPIFRSDATAHUB-DEV.INTRANET.BELL.CA_00_D44_BC_EZ12598_(Default) content/foo", function (err, stdout, stderr) {
+				console.log(1.5);
+				cb();
+			});
+			
 		},
 		two: function(cb) {
 			git.raw([
@@ -95,10 +98,11 @@ exports.index = function(req, res) {
 			});
 		},
 		sixandhalf: function(cb) {
-			var QAzipPath = './zip/.Q44_SAPIFRSDATAHUB-QA.INTRANET.BELL.CA_50_SINGLEDB_BC_EZ12598_(Default)/IFRS_R1'
-			QAzip.extractEntryTo(QAzipPath, "./zip/content", false, true);
-			console.log(6.5);
-			cb();
+			QAzip.extractAllTo( /*target path*/ "./zip/content", /*overwrite*/ true)
+			exec("mv content/..Q44_SAPIFRSDATAHUB-QA.INTRANET.BELL.CA_50_SINGLEDB_BC_EZ12598_(Default) content/foo", function (err, stdout, stderr) {
+				console.log(6.5);
+				cb();
+			});
 		},
 		seven: function(cb) {
 			git.raw([
