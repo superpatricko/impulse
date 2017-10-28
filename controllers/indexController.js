@@ -1,5 +1,5 @@
 var fs = require('fs');
-var exec = require('child_process').exec;
+var exec = require('child_process').execSync;
 var async = require('async');
 
 var AdmZip = require('adm-zip');
@@ -19,10 +19,10 @@ exports.index = function(req, res) {
 	// TODO check and and `git add remote origin`
 	async.series({
 		zero: function(cb) {
-			exec('rm -rf zip/content', function () {
-				console.log('0. Remove old content folder')
-				cb();
-			});
+			exec('rm -rf zip/content');
+			console.log('0. Remove old content folder')
+			cb();
+
 		},
 		one: function(cb) {
 			git.raw([
@@ -35,13 +35,9 @@ exports.index = function(req, res) {
 		},
 		two: function(cb) {
 			DEVzip.extractAllTo( /*target path*/ "./zip/content", /*overwrite*/ true);
-			setTimeout(function () {
-				exec('mv zip/content/.DRV_SAPIFRSDATAHUB-DEV.INTRANET.BELL.CA_00_D44_BC_EZ12598_(Default) zip/content/main', function () {
-					console.log('2. Extract and rename folder');
-					cb()
-				})
-			}, 10000)
-			
+			exec('mv zip/content/.DRV_SAPIFRSDATAHUB-DEV.INTRANET.BELL.CA_00_D44_BC_EZ12598_(Default) zip/content/main');
+			console.log('2. Extract and rename folder');
+			cb()
 		},
 		three: function(cb) {
 			git.raw([
@@ -85,13 +81,11 @@ exports.index = function(req, res) {
 		},
 		seven: function(cb) {
 			QAzip.extractAllTo( /*target path*/ "./zip/content", /*overwrite*/ true);
-			exec('rm -rf zip/content/main', function () { console.log ('7.1. Extract and remove old content folder')});
-			setTimeout(function () {
-				exec('mv zip/content/.Q44_SAPIFRSDATAHUB-QA.INTRANET.BELL.CA_50_SINGLEDB_BC_EZ12598_(Default) zip/content/main', function () {
-					console.log('7.2. Move extract files to main');
-					cb()
-				})
-			}, 10000);
+			exec('rm -rf zip/content/main');
+			console.log('7.1. Extract and remove old content folder')
+			exec('mv zip/content/.Q44_SAPIFRSDATAHUB-QA.INTRANET.BELL.CA_50_SINGLEDB_BC_EZ12598_(Default) zip/content/main');
+			console.log('7.2. Move extract files to main');
+			cb();
 		},
 		eight: function(cb) {
 			git.raw([
@@ -134,11 +128,12 @@ exports.index = function(req, res) {
 			});
 		}
 	}, function(err, results) {
-		exec('cd zip && git diff --name-only --diff-filter=M DEV..QA ', {maxBuffer: 1024 * 1000000}, function (err, stdout) {
-			setTimeout(function () {
-				console.log('Finished: render final result');
-				res.render('index', { data: stdout.toString().replace(/content\/main\//g, '/') });
-			}, 10000)
+		var result = exec('cd zip && git diff --name-only --diff-filter=M DEV..QA ', {
+			maxBuffer: 1024 * 1000000
+		});
+		console.log('Finished: render final result');
+		res.render('index', {
+			data: result.toString().replace(/content\/main\//g, '/')
 		});
 	});
 };
