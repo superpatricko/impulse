@@ -8,6 +8,7 @@ var USER = 'superpatricko@gmail.com';
 var PASS = 'b)*^7edW==zp?ZZ}tJkEcyDU';
 var REPO = 'gitlab.com/superpatricko/foobar'
 const remote = `https://${USER}:${PASS}@${REPO}`;
+//https://serverfault.com/questions/157461/set-permissions-recursively-on-windows-7
 
 exports.index = function(req, res) {
 	var DEVzip = new AdmZip("./zip/DEV.zip");
@@ -37,10 +38,15 @@ exports.index = function(req, res) {
 		},
 		oneandhalf: function(cb) {
 			DEVzip.extractAllTo( /*target path*/ "./zip/content", /*overwrite*/ true);
-			fs.renameSync('zip/content/.DRV_SAPIFRSDATAHUB-DEV.INTRANET.BELL.CA_00_D44_BC_EZ12598_(Default)', 'zip/content/foo')
-			console.log(1.5);
-			console.log('renamed complete');
-			cb()
+			// fs.renameSync('zip/content/.DRV_SAPIFRSDATAHUB-DEV.INTRANET.BELL.CA_00_D44_BC_EZ12598_(Default)', 'zip/content/foo')
+			setTimeout(function () {
+				exec('mv zip/content/.DRV_SAPIFRSDATAHUB-DEV.INTRANET.BELL.CA_00_D44_BC_EZ12598_(Default) zip/content/foo', function () {
+					console.log(1.5);
+					console.log('1.5 renamed complete');
+					cb()
+				})
+			}, 10000)
+			
 		},
 		two: function(cb) {
 			git.raw([
@@ -93,10 +99,19 @@ exports.index = function(req, res) {
 		},
 		sixandhalf: function(cb) {
 			QAzip.extractAllTo( /*target path*/ "./zip/content", /*overwrite*/ true);
-			fs.renameSync('zip/content/.Q44_SAPIFRSDATAHUB-QA.INTRANET.BELL.CA_50_SINGLEDB_BC_EZ12598_(Default)', 'zip/content/foo')
-			console.log(6.5);
-			console.log('renamed complete');
-			cb()
+			exec('rm -rf zip/content/foo', function () {
+				// hahahahahahah
+			});
+			// fs.renameSync('zip/content/.Q44_SAPIFRSDATAHUB-QA.INTRANET.BELL.CA_50_SINGLEDB_BC_EZ12598_(Default)', 'zip/content/foo')
+			setTimeout(function () {
+				exec('mv zip/content/.Q44_SAPIFRSDATAHUB-QA.INTRANET.BELL.CA_50_SINGLEDB_BC_EZ12598_(Default) zip/content/foo', function () {
+					console.log(6.5);
+					console.log('6.5 renamed complete');
+					cb()
+				})
+			}, 20000);
+
+			
 		},
 		seven: function(cb) {
 			git.raw([
