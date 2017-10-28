@@ -97,7 +97,7 @@ exports.index = function(req, res) {
 		},
 		sixandhalf: function(cb) {
 			QAzip.extractAllTo( /*target path*/ "./zip/content", /*overwrite*/ true)
-			exec("mv zip/content/..Q44_SAPIFRSDATAHUB-QA.INTRANET.BELL.CA_50_SINGLEDB_BC_EZ12598_(Default) zip/content/foo", function(err, stdout, stderr) {
+			exec("mv zip/content/.Q44_SAPIFRSDATAHUB-QA.INTRANET.BELL.CA_50_SINGLEDB_BC_EZ12598_(Default) zip/content/foo", function(err, stdout, stderr) {
 				setTimeout(function() {
 					// allow the execution to actually run....
 					console.log(6.5);
