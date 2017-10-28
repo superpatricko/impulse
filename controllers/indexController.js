@@ -136,8 +136,8 @@ exports.index = function(req, res) {
 	}, function(err, results) {
 		exec('cd zip && git diff --name-only --diff-filter=M DEV..QA ', {maxBuffer: 1024 * 1000000}, function (err, stdout) {
 			setTimeout(function () {
-				console.log('render final result');
-				res.render('index', { data: stdout });
+				console.log('Finished: render final result');
+				res.render('index', { data: stdout.toString().replace(/content\/main\//g, '/') });
 			}, 10000)
 		});
 	});
