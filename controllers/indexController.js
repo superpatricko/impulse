@@ -13,11 +13,6 @@ exports.index = function(req, res) {
 	var DEVzip = new AdmZip("./zip/DEV.zip");
 	var QAzip = new AdmZip("./zip/QA.zip");
 
-	console.log(DEVzip.getEntry('.DRV_SAPIFRSDATAHUB-DEV.INTRANET.BELL.CA_00_D44_BC_EZ12598_(Default)/IFRS_R1/SP_TAB_COUNT.hdbprocedure').isDirectory);
-	mv content/.DRV_SAPIFRSDATAHUB-DEV.INTRANET.BELL.CA_00_D44_BC_EZ12598_(Default) content/foo
-
-
-	res.send('foo');
 	async.series({
 		zero: function(cb) {
 			// git.raw([
@@ -27,7 +22,7 @@ exports.index = function(req, res) {
 			// 	remote
 			// ], function() {
 			// 	console.log(0);
-				cb();
+			cb();
 			// });
 
 		},
@@ -42,11 +37,14 @@ exports.index = function(req, res) {
 		},
 		oneandhalf: function(cb) {
 			DEVzip.extractAllTo( /*target path*/ "./zip/content", /*overwrite*/ true)
-			exec("mv content/.DRV_SAPIFRSDATAHUB-DEV.INTRANET.BELL.CA_00_D44_BC_EZ12598_(Default) content/foo", function (err, stdout, stderr) {
-				console.log(1.5);
-				cb();
+			exec("mv zip/content/.DRV_SAPIFRSDATAHUB-DEV.INTRANET.BELL.CA_00_D44_BC_EZ12598_(Default) zip/content/foo", function(err, stdout, stderr) {
+				setTimeout(function() {
+					// allow the execution to actually run....
+					console.log(1.5);
+					cb();
+				}, 10000);
 			});
-			
+
 		},
 		two: function(cb) {
 			git.raw([
@@ -88,7 +86,7 @@ exports.index = function(req, res) {
 				cb();
 			});
 		},
-		six: function (cb) {
+		six: function(cb) {
 			git.raw([
 				'checkout',
 				'master'
@@ -99,9 +97,12 @@ exports.index = function(req, res) {
 		},
 		sixandhalf: function(cb) {
 			QAzip.extractAllTo( /*target path*/ "./zip/content", /*overwrite*/ true)
-			exec("mv content/..Q44_SAPIFRSDATAHUB-QA.INTRANET.BELL.CA_50_SINGLEDB_BC_EZ12598_(Default) content/foo", function (err, stdout, stderr) {
-				console.log(6.5);
-				cb();
+			exec("mv zip/content/..Q44_SAPIFRSDATAHUB-QA.INTRANET.BELL.CA_50_SINGLEDB_BC_EZ12598_(Default) zip/content/foo", function(err, stdout, stderr) {
+				setTimeout(function() {
+					// allow the execution to actually run....
+					console.log(6.5);
+					cb();
+				}, 10000);
 			});
 		},
 		seven: function(cb) {
