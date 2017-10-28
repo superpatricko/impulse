@@ -5,155 +5,140 @@ var async = require('async');
 var AdmZip = require('adm-zip');
 const git = require('simple-git')('./zip');
 var USER = 'superpatricko@gmail.com';
-var PASS = 'b)*^7edW==zp?ZZ}tJkEcyDU';
-var REPO = 'gitlab.com/superpatricko/foobar'
+var PASS = 'RGHRX9gXbrcnNjuhDuWtFTzK';
+var REPO = 'github.com/superpatricko/impulse'
 const remote = `https://${USER}:${PASS}@${REPO}`;
-//https://serverfault.com/questions/157461/set-permissions-recursively-on-windows-7
+// https://github.com/superpatricko/impulse.git
 
 exports.index = function(req, res) {
 	var DEVzip = new AdmZip("./zip/DEV.zip");
 	var QAzip = new AdmZip("./zip/QA.zip");
 
+
+
+	// TODO check and and `git add remote origin`
 	async.series({
 		zero: function(cb) {
-			// git.raw([
-			// 	'remote',
-			// 	'add',
-			// 	'origin',
-			// 	remote
-			// ], function() {
-			// 	console.log(0);
-			cb();
-			// });
-
+			exec('rm -rf zip/content', function () {
+				console.log('0. Remove old content folder')
+				cb();
+			});
 		},
 		one: function(cb) {
 			git.raw([
 				'checkout',
 				'master'
 			], function() {
-				console.log(1);
+				console.log('1. Checkout to master branch');
 				cb();
 			});
 		},
-		oneandhalf: function(cb) {
+		two: function(cb) {
 			DEVzip.extractAllTo( /*target path*/ "./zip/content", /*overwrite*/ true);
-			// fs.renameSync('zip/content/.DRV_SAPIFRSDATAHUB-DEV.INTRANET.BELL.CA_00_D44_BC_EZ12598_(Default)', 'zip/content/foo')
 			setTimeout(function () {
-				exec('mv zip/content/.DRV_SAPIFRSDATAHUB-DEV.INTRANET.BELL.CA_00_D44_BC_EZ12598_(Default) zip/content/foo', function () {
-					console.log(1.5);
-					console.log('1.5 renamed complete');
+				exec('mv zip/content/.DRV_SAPIFRSDATAHUB-DEV.INTRANET.BELL.CA_00_D44_BC_EZ12598_(Default) zip/content/main', function () {
+					console.log('2. Extract and rename folder');
 					cb()
 				})
 			}, 10000)
 			
 		},
-		two: function(cb) {
+		three: function(cb) {
 			git.raw([
 				'checkout',
 				'-B',
 				'DEV'
 			], function() {
-				console.log(2);
-				cb();
-			});
-		},
-		three: function(cb) {
-			git.raw([
-				'add',
-				'content'
-			], function() {
-				console.log(3);
+				console.log('3. Checkout to DEV branch (with -B flag)');
 				cb();
 			});
 		},
 		four: function(cb) {
 			git.raw([
-				'commit',
-				'-m',
-				'DEV'
+				'add',
+				'content'
 			], function() {
-				console.log(4);
+				console.log('4. Add content to git');
 				cb();
 			});
 		},
 		five: function(cb) {
 			git.raw([
-				'push',
-				'-uf',
-				'origin',
+				'commit',
+				'-m',
 				'DEV'
 			], function() {
-				console.log(5);
+				console.log('5. Commit DEV content');
 				cb();
 			});
 		},
 		six: function(cb) {
 			git.raw([
-				'checkout',
-				'master'
+				'push',
+				'-uf',
+				'origin',
+				'DEV'
 			], function() {
-				console.log(6);
+				console.log('6. Push DEV to origin');
 				cb();
 			});
 		},
-		sixandhalf: function(cb) {
+		seven: function(cb) {
 			QAzip.extractAllTo( /*target path*/ "./zip/content", /*overwrite*/ true);
-			exec('rm -rf zip/content/foo', function () {
-				// hahahahahahah
-			});
-			// fs.renameSync('zip/content/.Q44_SAPIFRSDATAHUB-QA.INTRANET.BELL.CA_50_SINGLEDB_BC_EZ12598_(Default)', 'zip/content/foo')
+			exec('rm -rf zip/content/main', function () { console.log ('7.1. Extract and remove old content folder')});
 			setTimeout(function () {
-				exec('mv zip/content/.Q44_SAPIFRSDATAHUB-QA.INTRANET.BELL.CA_50_SINGLEDB_BC_EZ12598_(Default) zip/content/foo', function () {
-					console.log(6.5);
-					console.log('6.5 renamed complete');
+				exec('mv zip/content/.Q44_SAPIFRSDATAHUB-QA.INTRANET.BELL.CA_50_SINGLEDB_BC_EZ12598_(Default) zip/content/main', function () {
+					console.log('7.2. Move extract files to main');
 					cb()
 				})
-			}, 20000);
-
-			
+			}, 10000);
 		},
-		seven: function(cb) {
+		eight: function(cb) {
 			git.raw([
 				'checkout',
 				'-B',
 				'QA'
 			], function() {
-				console.log(7);
-				cb();
-			});
-		},
-		eight: function(cb) {
-			git.raw([
-				'add',
-				'content'
-			], function() {
-				console.log(8);
+				console.log('8. Checkout to QA (with -B flag) from the DEV branch');
 				cb();
 			});
 		},
 		nine: function(cb) {
 			git.raw([
-				'commit',
-				'-m',
-				'QA'
+				'add',
+				'content'
 			], function() {
-				console.log(9);
+				console.log('9. Add content to git');
 				cb();
 			});
 		},
 		ten: function(cb) {
+			git.raw([
+				'commit',
+				'-m',
+				'QA'
+			], function() {
+				console.log('10. Commit QA content');
+				cb();
+			});
+		},
+		eleven: function(cb) {
 			git.raw([
 				'push',
 				'-uf',
 				'origin',
 				'QA'
 			], function() {
-				console.log(10);
+				console.log('11. Push QA to origin');
 				cb();
 			});
 		}
 	}, function(err, results) {
-		res.render('index')
+		exec('cd zip && git diff --name-only --diff-filter=M DEV..QA ', {maxBuffer: 1024 * 1000000}, function (err, stdout) {
+			setTimeout(function () {
+				console.log('render final result');
+				res.render('index', { data: stdout });
+			}, 10000)
+		});
 	});
 };
