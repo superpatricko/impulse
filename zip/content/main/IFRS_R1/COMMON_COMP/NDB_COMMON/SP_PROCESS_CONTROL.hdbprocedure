@@ -1,0 +1,54 @@
+PROCEDURE "NDB_COMMON"."IFRS_R1.COMMON_COMP.NDB_COMMON::SP_PROCESS_CONTROL"     
+    (IN IP_EVENT           NVARCHAR(30),
+     IN IP_PROC_ID         NVARCHAR(500),
+     IN IP_START_END_TIME  TIMESTAMP,
+     IN IP_START_END_TEXT  NVARCHAR(30),
+     IN IP_USER            NVARCHAR(30) ) 
+	LANGUAGE SQLSCRIPT
+	--SQL SECURITY INVOKER 
+	--DEFAULT SCHEMA <default_schema_name>
+	--READS SQL DATA 
+	AS
+BEGIN
+-----------------------------------------------------------------------------------------------
+-- Procedure Title : IFRS_R1.COMMON_COMP.NDB_COMMON::SP_PROCESS_CONTROL
+-----------------------------------------------------------------------------------------------
+-- Created By      : BC_EY44387(Gunjan Joshi)          Date :10/09/2016
+-----------------------------------------------------------------------------------------------
+-- Procedure Description : 
+--		The purpose of the procedure is to modularize the process the updating the database table
+--		PROCESS_CONTROL with the input parameter values which helps in track the Start/End time.
+
+----------------------------------------------------------------------------------------------
+-- Release :R1/IFRS
+----------------------------------------------------------------------------------------------
+--   M O D I F I C A T I O N   H I S T O R Y
+----------------------------------------------------------------------------------------------
+-- Date        | User ID          | Modification History/Release
+----------------------------------------------------------------------------------------------
+
+----------------------------------------------------------------------------------------------
+-- Description Of the changes   : 
+ ----------------------------------------------------------------------------------------------
+-- Modification Number          : 
+-- Description of Changes Made> :       
+ ----------------------------------------------------------------------------------------------
+
+/* Inserting the input paramter values of the store procedure into datbase table PROCESS_CONTROL*/
+INSERT INTO "NDB_COMMON"."IFRS_R1.COMMON_COMP.NDB_COMMON::PROCESS_CONTROL"
+	( 
+	  EVENT,
+	  PROC_ID,
+	  START_END_TIME,
+	  START_END_TIME_TEXT,
+	  USER_ID 
+	 )
+    VALUES
+	( 
+	  IP_EVENT,
+	  IP_PROC_ID,
+	  IP_START_END_TIME,
+	  IP_START_END_TEXT,
+	  IP_USER
+	 );
+END;

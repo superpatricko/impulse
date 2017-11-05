@@ -1,0 +1,111 @@
+PROCEDURE "NDB_MOBILITY"."IFRS_R1.MOBILITY.NDB_MOBILITY::SP_MOBL_POST_EQP" 
+   ( IN IP_EFF_DT DATE,
+	OUT OP_STATUS  NVARCHAR(100)) 
+	LANGUAGE SQLSCRIPT
+	SQL SECURITY INVOKER 
+	--DEFAULT SCHEMA <default_schema_name>
+	--READS SQL DATA 
+	AS
+BEGIN 
+ 
+-- Procedure Title : IFRS_R1.MOBILITY.NDB_MOBILITY::SP_MOBL_POST_EQP
+--
+-- Created By      : Kishan Purohit (BC_EZ10152)           Date :21/08/2017
+-- 
+-- Procedure Description : DATA INSERTED FROM CALCULATION VIEW (CA_NM1_EDW_EQP)
+--						   TO NDB TABLE (MOBL_POST_EQP) USING THIS PROCEDURE.
+-- Project :Bell Canada
+-- 
+-- Release :R1/IFRS
+--------------------------------------------------------------------------------
+--   M O D I F I C A T I O N   H I S T O R Y
+--------------------------------------------------------------------------------
+-- Date        | User ID          | Modification History/Release
+--------------------------------------------------------------------------------
+--             |                  | 
+--------------------------------------------------------------------------------
+-- Description Of the changes 
+--------------------------------------------------------------------------------
+-- Modification Number          :<Assign Some Number> 
+-- Description of Changes Made> :<Description of Changes>       
+--------------------------------------------------------------------------------
+ 
+DECLARE LC_ERROR_TEXT 		NVARCHAR(70) DEFAULT 'OUT STATUS IS 1 : INSERT/UPDATE FOR ONE OR MORE RECORD FAILED';
+DECLARE LC_SUCCESS_TEXT 	NVARCHAR(70) DEFAULT 'OUT STATUS IS 0 : INSERT/UPDATE EXECUTION SUCCESSFUL';
+DECLARE LV_CUR_UTC 			TIMESTAMP := CURRENT_TIMESTAMP;
+
+--------------------------------------------------------------------------------------------------
+-- Cursors Declaration
+-------------------------------------------------------------------------------------------------- 
+
+DECLARE CURSOR C_EQUIPMENT FOR
+        SELECT 
+              SUBCR_NO,
+              ESN_IMEI
+        FROM "_SYS_BIC"."IFRS_R1.MOBILITY.LAND_MOBILITY/CA_NM1_EDW_EQP"
+        (PLACEHOLDER."$$IP_EFF_DT$$"=> :IP_EFF_DT);
+ 
+ 
+FOR C_EQP AS C_EQUIPMENT DO
+ 
+ 
+--  Define Exit Handler
+	DECLARE EXIT HANDLER FOR SQLEXCEPTION 
+	BEGIN AUTONOMOUS TRANSACTION 
+	
+            --    Define Exit Handler
+	       DECLARE EXIT HANDLER FOR SQLEXCEPTION 
+	       BEGIN AUTONOMOUS TRANSACTION 	
+	   
+	       -- Do Nothing. Exception Handled to ensure SP does not get terminated 
+	
+           END; 
+  
+  
+	INSERT INTO "NDB_MOBILITY"."IFRS_R1.MOBILITY.NDB_MOBILITY::MOBL_POST_EQP_EH"(
+		         SUBSCR_NO,
+                 CURR_IMEI,
+				 ERROR_CODE,
+				 TECHNICAL_MESSAGE,
+				 ERROR_CREATE_TS
+				 )VALUES(
+				 C_EQP."SUBCR_NO",
+                  C_EQP.ESN_IMEI,
+				 ::SQL_ERROR_CODE, 
+				 ::SQL_ERROR_MESSAGE,
+		  		 :LV_CUR_UTC);
+		  		 
+		/* STATUS 1: Send the Error message to scheduling tool to confirm whether procedure is 
+   	       successful or not */
+	       OP_STATUS := LC_ERROR_TEXT;
+	
+	END;
+	
+
+  INSERT INTO "NDB_MOBILITY"."IFRS_R1.MOBILITY.NDB_MOBILITY::MOBL_POST_EQP"(
+              SUBSCR_NO,
+              CURR_IMEI,
+              CONTRACT_TRANSFER )
+              VALUES
+              (C_EQP."SUBCR_NO",
+               C_EQP.ESN_IMEI,
+               'N');
+        
+END FOR;
+               
+UPDATE "LAND"."IFRS_R1.LAND::NM1_EDW_EQP" A 
+	FROM "LAND"."IFRS_R1.LAND::NM1_EDW_EQP" A
+	INNER JOIN "NDB_MOBILITY"."IFRS_R1.MOBILITY.NDB_MOBILITY::MOBL_POST_EQP" B 
+	ON A.SUBCR_NO = B.SUBSCR_NO
+	AND A.ESN_IMEI = B.CURR_IMEI
+	SET A.NDB_TS = LV_CUR_UTC 
+	WHERE A.NDB_TS IS NULL;
+     
+	                         
+
+/* STATUS 0: Send the success message to scheduling tool to confirm whether this procedure has been
+executed successfully. */
+		OP_STATUS := LC_SUCCESS_TEXT;        
+ 
+ 
+END;

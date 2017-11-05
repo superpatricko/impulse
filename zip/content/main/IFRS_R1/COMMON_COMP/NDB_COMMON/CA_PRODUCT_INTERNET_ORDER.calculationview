@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" schemaVersion="2.3" id="CA_PRODUCT_INTERNET_ORDER" applyPrivilegeType="NONE" checkAnalyticPrivileges="false" defaultClient="$$client$$" defaultLanguage="$$language$$" hierarchiesSQLEnabled="false" historyEnabled="false" translationRelevant="true" visibility="reportingEnabled" calculationScenarioType="TREE_BASED" dataCategory="CUBE" enforceSqlExecution="false" executionSemantic="UNDEFINED" outputViewType="Aggregation">
+  <origin/>
+  <descriptions defaultDescription="CA_PRODUCT_INTERNET_ORDER&#xD;&#xA;"/>
+  <metadata changedAt="2017-08-18 20:01:40.564"/>
+  <localVariables/>
+  <variableMappings/>
+  <informationModelLayout relativeWidthScenario="24"/>
+  <dataSources>
+    <DataSource id="IFRS_R1.INTERNET.NDB_INTERNET::INT_ORDER" type="DATA_BASE_TABLE">
+      <viewAttributes allViewAttributes="true"/>
+      <columnObject schemaName="NDB_INTERNET" columnObjectName="IFRS_R1.INTERNET.NDB_INTERNET::INT_ORDER"/>
+    </DataSource>
+  </dataSources>
+  <calculationViews>
+    <calculationView xsi:type="Calculation:ProjectionView" id="ORDER_I" filterExpressionLanguage="COLUMN_ENGINE">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="HW_CLASS"/>
+        <viewAttribute id="OPT_SRVC"/>
+        <viewAttribute id="SOC"/>
+        <viewAttribute id="REC_IND"/>
+        <viewAttribute id="ALTN_CONTR_NUM"/>
+        <viewAttribute id="PRM_CONTR_CUST"/>
+        <viewAttribute id="PMP_TS"/>
+        <viewAttribute id="FEATURE_CD"/>
+        <viewAttribute id="REFERENCE_EFFECTIVE_DT"/>
+        <viewAttribute id="REFERENCE_EXPIRY_DT"/>
+        <viewAttribute id="SVRC_TYPE"/>
+        <viewAttribute id="EFFECTIVE_DATE"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CHARGE_TYPE" length="9" expressionLanguage="SQL">
+          <formula>CASE &#xD;
+WHEN &quot;SVRC_TYPE&quot; = 'P'THEN 'BASE_SRVC'&#xD;
+ WHEN &quot;SVRC_TYPE&quot; != 'P'THEN 'OPT'&#xD;
+ WHEN  &quot;SVRC_TYPE&quot; = NULL THEN 'OPT'&#xD;
+END</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="LOB" length="3" expressionLanguage="COLUMN_ENGINE">
+          <formula>'INT'</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CODE_TYPE" length="18" expressionLanguage="COLUMN_ENGINE">
+          <formula>&quot;SOC&quot;</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CODE" length="18" expressionLanguage="COLUMN_ENGINE">
+          <formula>&quot;SOC&quot;</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CODE_DESCRIPTION" length="250" expressionLanguage="COLUMN_ENGINE">
+          <formula>''</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="SOURCE_SYSTEM" length="20" expressionLanguage="COLUMN_ENGINE">
+          <formula>'Bell Internet'</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="DATE" id="VALID_FROM" expressionLanguage="COLUMN_ENGINE">
+          <formula>&quot;EFFECTIVE_DATE&quot;</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CODE_ORDERING" length="18" expressionLanguage="COLUMN_ENGINE">
+          <formula>&quot;SOC&quot;</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="SOURCE_SYSTEM_ORDERING" length="18" expressionLanguage="COLUMN_ENGINE">
+          <formula>NULL</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CODE_BILLING" length="37" expressionLanguage="COLUMN_ENGINE">
+          <formula>NULL</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="SOURCE_SYSTEM_BILLING" length="18" expressionLanguage="COLUMN_ENGINE">
+          <formula>'INTERNET'</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="FEATURE_CODE" length="18" expressionLanguage="COLUMN_ENGINE">
+          <formula>''</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="TABLE_FLAG" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>'O'</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#IFRS_R1.INTERNET.NDB_INTERNET::INT_ORDER">
+        <mapping xsi:type="Calculation:AttributeMapping" target="HW_CLASS" source="HW_CLASS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OPT_SRVC" source="OPT_SRVC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SOC" source="SOC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REC_IND" source="REC_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ALTN_CONTR_NUM" source="ALTN_CONTR_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRM_CONTR_CUST" source="PRM_CONTR_CUST"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PMP_TS" source="PMP_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FEATURE_CD" source="FEATURE_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_EFFECTIVE_DT" source="REFERENCE_EFFECTIVE_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_EXPIRY_DT" source="REFERENCE_EXPIRY_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SVRC_TYPE" source="SVRC_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFFECTIVE_DATE" source="EFFECTIVE_DATE"/>
+      </input>
+      <filter>(not isNull(&quot;HW_CLASS&quot;)) AND (&quot;REC_IND&quot; ='I') AND (isNull(&quot;PMP_TS&quot;))</filter>
+    </calculationView>
+  </calculationViews>
+  <logicalModel id="ORDER_I">
+    <descriptions/>
+    <attributes>
+      <attribute id="CHARGE_TYPE" order="1" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CHARGE_TYPE"/>
+        <keyMapping columnObjectName="ORDER_I" columnName="CHARGE_TYPE"/>
+      </attribute>
+      <attribute id="LOB" order="2" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="LOB"/>
+        <keyMapping columnObjectName="ORDER_I" columnName="LOB"/>
+      </attribute>
+      <attribute id="CODE_TYPE" order="3" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CODE_TYPE"/>
+        <keyMapping columnObjectName="ORDER_I" columnName="CODE_TYPE"/>
+      </attribute>
+      <attribute id="CODE" key="true" order="4" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CODE"/>
+        <keyMapping columnObjectName="ORDER_I" columnName="CODE"/>
+      </attribute>
+      <attribute id="CODE_DESCRIPTION" order="5" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CODE_DESCRIPTION"/>
+        <keyMapping columnObjectName="ORDER_I" columnName="CODE_DESCRIPTION"/>
+      </attribute>
+      <attribute id="SOURCE_SYSTEM" key="true" order="6" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SOURCE_SYSTEM"/>
+        <keyMapping columnObjectName="ORDER_I" columnName="SOURCE_SYSTEM"/>
+      </attribute>
+      <attribute id="CODE_ORDERING" order="8" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CODE_ORDERING"/>
+        <keyMapping columnObjectName="ORDER_I" columnName="CODE_ORDERING"/>
+      </attribute>
+      <attribute id="SOURCE_SYSTEM_ORDERING" order="9" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SOURCE_SYSTEM_ORDERING"/>
+        <keyMapping columnObjectName="ORDER_I" columnName="SOURCE_SYSTEM_ORDERING"/>
+      </attribute>
+      <attribute id="CODE_BILLING" order="10" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CODE_BILLING"/>
+        <keyMapping columnObjectName="ORDER_I" columnName="CODE_BILLING"/>
+      </attribute>
+      <attribute id="SOURCE_SYSTEM_BILLING" order="11" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SOURCE_SYSTEM_BILLING"/>
+        <keyMapping columnObjectName="ORDER_I" columnName="SOURCE_SYSTEM_BILLING"/>
+      </attribute>
+      <attribute id="FEATURE_CODE" hidden="false" key="true" order="12" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="FEATURE_CODE"/>
+        <keyMapping columnObjectName="ORDER_I" columnName="FEATURE_CODE"/>
+      </attribute>
+      <attribute id="TABLE_FLAG" key="true" order="13" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="TABLE_FLAG"/>
+        <keyMapping columnObjectName="ORDER_I" columnName="TABLE_FLAG"/>
+      </attribute>
+      <attribute id="FEATURE_CD" hidden="true" order="14" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="FEATURE_CD"/>
+        <keyMapping columnObjectName="ORDER_I" columnName="FEATURE_CD"/>
+      </attribute>
+      <attribute id="REFERENCE_EFFECTIVE_DT" hidden="true" order="15" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="REFERENCE_EFFECTIVE_DATE"/>
+        <keyMapping columnObjectName="ORDER_I" columnName="REFERENCE_EFFECTIVE_DT"/>
+      </attribute>
+      <attribute id="REFERENCE_EXPIRY_DT" hidden="true" order="16" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="REFERENCE_EXPIRY_DATE"/>
+        <keyMapping columnObjectName="ORDER_I" columnName="REFERENCE_EXPIRY_DT"/>
+      </attribute>
+    </attributes>
+    <calculatedAttributes/>
+    <privateDataFoundation>
+      <tableProxies/>
+      <joins/>
+      <layout>
+        <shapes/>
+      </layout>
+    </privateDataFoundation>
+    <baseMeasures>
+      <measure id="VALID_FROM" order="7" aggregationType="min" measureType="simple">
+        <descriptions defaultDescription="VALID_FROM"/>
+        <measureMapping columnObjectName="ORDER_I" columnName="VALID_FROM"/>
+      </measure>
+    </baseMeasures>
+    <calculatedMeasures/>
+    <restrictedMeasures/>
+    <localDimensions/>
+  </logicalModel>
+  <layout>
+    <shapes>
+      <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+        <upperLeftCorner x="22" y="87"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+      <shape expanded="true" modelObjectName="ORDER_I" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="22" y="165"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+    </shapes>
+  </layout>
+</Calculation:scenario>

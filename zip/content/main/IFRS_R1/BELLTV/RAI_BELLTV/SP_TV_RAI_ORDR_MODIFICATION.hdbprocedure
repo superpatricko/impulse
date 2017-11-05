@@ -1,0 +1,585 @@
+ 
+PROCEDURE "RAI_TV"."IFRS_R1.BELLTV.RAI_BELLTV::SP_TV_RAI_ORDR_MODIFICATION" (IN IP_EXTR_DT DATE, OUT OP_STATUS NVARCHAR(1000)) 
+       LANGUAGE SQLSCRIPT
+       SQL SECURITY INVOKER 
+       --READS SQL DATA 
+       AS 
+BEGIN
+ 
+ 
+----------------------------------------------------------------------------------------------------
+-- Procedure Title : IFRS_R1.BELLTV.RAI_BELLTV::SP_TV_RAI_ORDR_MODIFICATION
+----------------------------------------------------------------------------------------------------
+-- Created By      : BC_EZ23095(Munmun Sharma)          Date :25/09/2017
+----------------------------------------------------------------------------------------------------
+-- Procedure Description : 
+--   This procedure will create RAI Order Main and Condition Items based on NDB BELL TV Order data.
+--   The Order RAI Items will be created:
+--            1. Every month in case of M2M contracts.
+--            2. Once for Term contracts.
+--            3. In case of Modification events which are:
+--                  a. Account Disconnect
+--                  b. Term Disqualification
+    
+ 
+--   For Term contract, SSP and TP will be calcualted for the entire contract period
+                           
+--   This Procedure has two parameters:
+--            1. The date parameter 'IP_DATE': Using this date parameter,
+--               RAI item  can be created for past records(if it is required).
+--            2. The  OT_STATUS parametere : This parameter give the status of the Procedure whether
+--               it is success or failure
+ 
+-- ERROR_LOG Table : Will be used to trace the system error like transaction failed.
+ 
+-- FREQUENCY OF PROCEDURE EXECUTION: Daily
+ 
+-- Track Error/Process Control Table: This table will be used to tract the start and end
+-- time of the execution
+----------------------------------------------------------------------------------------------------
+-- Release :R1/IFRS
+ 
+----------------------------------------------------------------------------------------------------
+-- M O D I F I C A T I O N   H I S T O R Y
+----------------------------------------------------------------------------------------------------
+-- Date        | User ID          | Modification History/Release
+----------------------------------------------------------------------------------------------------
+ 
+----------------------------------------------------------------------------------------------------
+-- Description Of the changes 
+----------------------------------------------------------------------------------------------------
+-- Modification Number          :<Assign Some Number> 
+-- Description of Changes Made> :<Updated the logic of NDB_TS write back>       
+----------------------------------------------------------------------------------------------------
+ 
+ 
+/* Declaring Local Variables */
+ 
+DECLARE LV_BATCH_ID             INTEGER;
+DECLARE LV_COUNT                INTEGER;
+DECLARE LV_ERROR_FLAG           NVARCHAR(1) := 'N';
+DECLARE LV_CUR_UTC              TIMESTAMP := CURRENT_TIMESTAMP;
+DECLARE LV_CUR_UTC_TIME         DECIMAL(15,2) 
+                                := TO_DECIMAL(TO_CHAR(CURRENT_UTCTIMESTAMP,'YYYYMMDDHHMISS'),15,2);
+DECLARE LC_SQL_ERROR            NVARCHAR(40) DEFAULT 'SQL_EXCEPTION : SIBLING ERROR';                                
+DECLARE LC_ERROR_TEXT           NVARCHAR(70) DEFAULT 'OUT STATUS IS 1 : INSERT/UPDATE FOR ONE OR MORE RECORD FAILED';
+DECLARE LC_SUCCESS_TEXT         NVARCHAR(70) DEFAULT 'OUT STATUS IS 0 : INSERT/UPDATE EXECUTION SUCCESSFUL';
+DECLARE i                       INTEGER;
+ 
+DECLARE CURRENT_ERROR           NVARCHAR(100);
+DECLARE ERROR_TAB               TABLE (ERROR_CODE NVARCHAR(100));
+DECLARE RECORD_COUNT            INTEGER;
+DECLARE LC_SET                  NVARCHAR (1) DEFAULT 'X';
+ 
+--------------------------------------------------------------------------------------------------
+-- Temporary table/Variable/Node Declaration to hold data from the final CVs
+--------------------------------------------------------------------------------------------------
+
+DECLARE CURSOR C_RAI_ORDR FOR
+              SELECT
+		       "ACCT_NUM",
+		       "PRODUCT_TYPE",
+		       "TERM_IND",
+		     --  "SERVICE_CD",
+		       "RULE_PATH",
+		       "VALUE_RELEVANT",
+		       "ZZ_MATNR_GRP",
+		       "VTG_ROW_ID",
+		       "EXTR_DT",
+		       "XNEGATIVE_ITEM",
+		       "RECEIV_ACCOUNT",
+		       "WAERS",
+		       "REFERENCE_TYPE",
+		       "SRCDOC_TYPE",
+		       "SRCDOC_LOGSYS",
+		       "SRCDOC_COMP",
+		        "SRCDOC_ID",
+		        "PRIN_NUM",
+		       "AGNT_NUM",
+		       "CONTR_END_DT",
+		       "CONTR_STRT_DT",
+		       "CONTR_TERM",
+		       "AMT",
+		       "TERM_DISQUALF_IND",
+		       "CONTR_TERM_DT",
+		       "CYCL_ID",
+		       "DUO_TRIO_IND",
+		        to_decimal("TIMESTAMP_UTC",15,0) "TIMESTAMP_UTC",
+		        "HEADER_ID",
+		       "REFERENCE_ID",
+		       "ITEM_ID",
+		       "MODIFIED_TS",
+		       "RAI_TS_ORD",
+		       "INSERT_TS",
+		       "KUNNR_SID",
+		       "REVENUE_CD",
+		       "CUST_ST",
+		       "BATCH_ID_ORD",
+		       "BUKRS",
+		       "ZOLDACCT",
+		       "PL_ACCOUNT",
+	           "SAP_ACCT_NO",
+		       "ZZ_LEGACY",
+		       "ZZ_AUFNR",
+		       "KOSTL",
+		       "TXJCD",
+		       "ZZ_TXJCD",
+		       "ZZ_KOSTL",
+		       "MWSKZ",
+		       "ZZ_MWSKZ",
+		        "OLDACCT",
+		       "ZZ_SGTXT",
+		       "ZZ_ZUONR_INV",
+		       "ZZ_ZUONR_ORD", 
+		       "ZZ_BUDAT",
+		       "ZZ_BLDAT",
+		       "ZZ_BKTXT",
+		       "ZZ_CONVERSION",
+		       "ZZ_ADJ_RSN_CD",
+		       "ZZ_BU_VIEW",
+		       "ZZ_BILLER",
+		       "ZZ_MINPRICE",
+		       "ZZ_XBLNR",
+		       "ZZ_MATNR",
+		       "TP",
+		       "SSP",
+		       "START_DT",
+		       "END_DT",
+		        "KUNNR",
+		       "QUANTITY",
+		       "QUANTITY_UNIT",
+		       "BILREL",
+		       "INCEPTION_DT",
+		       "CONDITION_TYPE_SSP",
+		       "CONDITION_TYPE_TP",
+		       "CATEGORY",
+		       "MAIN_CONDITION_TYPE",  
+		       "ERROR_CODE",
+		       "ERROR_STATUS" 
+		       FROM "_SYS_BIC"."IFRS_R1.BELLTV.RAI_BELLTV/CA_TV_CONTRACT_MODIFICATION"
+		       (PLACEHOLDER."$$IP_BILL_DAY$$" => IFNULL(:IP_EXTR_DT,'99991231'));
+		  
+  --------------------------------------------------------------------------------------------------
+       -- Batch ID creation for RAI processing
+  --------------------------------------------------------------------------------------------------                    
+       
+       SELECT "RAI_COMMON"."IFRS_R1.COMMON_COMP.RAI_COMMON::RAI_BATCH_ID".NEXTVAL 
+         INTO LV_BATCH_ID 
+         FROM DUMMY; 
+         
+  --------------------------------------------------------------------------------------------------
+      -- Local Temporary Tables Declaration
+  --------------------------------------------------------------------------------------------------                                    
+       
+       CREATE LOCAL TEMPORARY TABLE #UPDATE_TV_ORDER(
+              ACCT_NUM                    NVARCHAR(16), 
+              ITEM_ID                     NVARCHAR(20),
+              SRCDOC_ID                   NVARCHAR(35),
+              REFERENCE_ID                NVARCHAR(30),
+              RAI_ITEM_ID                 NVARCHAR(15),
+              EXTR_DT                     DATE,
+              AGNT_NUM                    NVARCHAR(4),
+              PRIN_NUM                    NVARCHAR(4),
+              BATCH_ID                    INTEGER,
+              VTG_ROW_ID                  NVARCHAR(18));
+           
+      CREATE LOCAL TEMPORARY TABLE #UPDATE_EH_DELETION_MAIN_TV (SRCDOC_ID NVARCHAR(35));
+       
+      CREATE LOCAL TEMPORARY TABLE #UPDATE_EH_DELETION_COND_TV (SRCDOC_ID NVARCHAR(35));
+         
+         
+--------------------------------------------------------------------------------------------------
+      -- Cursors Loop
+-------------------------------------------------------------------------------------------------- 
+              FOR CUR_ORDER AS C_RAI_ORDR DO
+       
+  --  Check the Error Status of the Record. 
+       
+              IF CUR_ORDER.ERROR_STATUS = '1' 
+              THEN
+              
+  --  Call the Stored Procedure to split the concatenated Error Messages into Error Rows
+              CALL "NDB_COMMON"."IFRS_R1.COMMON_COMP.EH::SP_EH_SPLIT_ERRORS"(CUR_ORDER."ERROR_CODE",ERROR_TAB,RECORD_COUNT);
+       
+  --  Loop through the Error Records
+                     FOR i IN 1 .. :RECORD_COUNT DO
+                           
+  --  Fetch the Error Code
+                           CURRENT_ERROR = :ERROR_TAB."ERROR_CODE"[:i];
+                           
+                                  
+  --  All erroneous records are inserted into Order Main EH table 
+                INSERT INTO "RAI_TV"."IFRS_R1.BELLTV.RAI_BELLTV::BELLTV_ORDR_MAIN_EH"(
+							"SRCDOC_COMP",			
+							"SRCDOC_LOGSYS",
+							"SRCDOC_TYPE",
+							"SRCDOC_ID",
+							"TIMESTAMP_UTC",
+							"HEADER_ID",
+							"ITEM_ID",
+							"REFERENCE_TYPE",
+							"REFERENCE_ID",
+							"KUNNR",
+							"BUKRS",
+							"WAERS",
+							"QUANTITY",
+							"QUANTITY_UNIT",
+							"BILREL",
+							"START_DATE",
+						    "END_DATE",
+							"XNEGATIVE_ITEM",
+							"RECEIV_ACCOUNT",
+							"INCEPTION_DATE",
+							"ZZ_AUFNR",
+							"ZZ_BATCH_ID",
+							"ZZ_BILLER",
+							"ZZ_BKTXT",
+							"ZZ_BU_VIEW",
+							"ZZ_KOSTL",
+							"ZZ_LEGACY",
+							"ZZ_MATNR",
+							"ZZ_MATNR_GRP",
+							"ZZ_MINPRICE",
+							"ZZ_MWSKZ",
+							"ZZ_SGTXT",
+							"ZZ_TXJCD",
+							"ZZ_XBLNR",
+							"ZZ_ZUONR",
+							"VALUE_RELEVANT",
+							"ERROR_CODE",
+						    "ERROR_CREATE_TS")
+					VALUES (CUR_ORDER."SRCDOC_COMP",
+							CUR_ORDER."SRCDOC_LOGSYS",
+							CUR_ORDER."SRCDOC_TYPE",
+							CUR_ORDER."SRCDOC_ID",
+							CUR_ORDER."TIMESTAMP_UTC",
+							CUR_ORDER."HEADER_ID",
+							CUR_ORDER."ITEM_ID",
+							CUR_ORDER."REFERENCE_TYPE",
+							CUR_ORDER."REFERENCE_ID",
+							CUR_ORDER."KUNNR",
+							CUR_ORDER."BUKRS",
+							CUR_ORDER."WAERS",
+							CUR_ORDER."QUANTITY",
+							CUR_ORDER."QUANTITY_UNIT",
+							CUR_ORDER."BILREL",
+							CUR_ORDER."START_DT",
+							CUR_ORDER."END_DT",
+							CUR_ORDER."XNEGATIVE_ITEM",
+							CUR_ORDER."RECEIV_ACCOUNT",
+							CUR_ORDER."INCEPTION_DT",
+							CUR_ORDER."ZZ_AUFNR",
+							:LV_BATCH_ID,
+							CUR_ORDER."ZZ_BILLER",
+							CUR_ORDER."ZZ_BKTXT",
+							CUR_ORDER."ZZ_BU_VIEW",
+							CUR_ORDER."ZZ_KOSTL",
+							CUR_ORDER."ZZ_LEGACY",
+							CUR_ORDER."ZZ_MATNR",
+							CUR_ORDER."ZZ_MATNR_GRP",
+							CUR_ORDER."ZZ_MINPRICE",
+							CUR_ORDER."ZZ_MWSKZ",
+							CUR_ORDER."ZZ_SGTXT",
+							CUR_ORDER."ZZ_TXJCD",
+							CUR_ORDER."ZZ_XBLNR",
+							CUR_ORDER."ZZ_ZUONR_ORD",
+							CUR_ORDER."VALUE_RELEVANT",
+						    :CURRENT_ERROR,
+							LV_CUR_UTC);
+							
+-- All erroneous records are inserted into Order Condition EH Table for SSP(Standalone Selling Price)
+               INSERT INTO "RAI_TV"."IFRS_R1.BELLTV.RAI_BELLTV::BELLTV_ORDR_COND_EH"(
+                            "SRCDOC_COMP",
+                            "SRCDOC_LOGSYS",
+                            "SRCDOC_TYPE",
+                            "SRCDOC_ID",
+                            "TIMESTAMP_UTC",
+                            "CONDITION_TYPE",
+                             "PL_ACCOUNT",              
+                            "BETRW",
+                            "WAERS",
+                            "CATEGORY",
+                            "MAIN_COND_TYPE",
+                            "ERROR_CODE",
+                            "ERROR_CREATE_TS")
+                     VALUES(CUR_ORDER."SRCDOC_COMP",
+                            CUR_ORDER."SRCDOC_LOGSYS",              
+                            CUR_ORDER."SRCDOC_TYPE",
+                            CUR_ORDER."SRCDOC_ID",
+                            CUR_ORDER."TIMESTAMP_UTC",
+                            CUR_ORDER."CONDITION_TYPE_SSP",
+                            CUR_ORDER."PL_ACCOUNT",
+                            CUR_ORDER."SSP",
+                            CUR_ORDER."WAERS",
+                            CUR_ORDER."CATEGORY",
+                            CUR_ORDER."MAIN_CONDITION_TYPE",
+                            :CURRENT_ERROR,
+                            LV_CUR_UTC);           
+                     
+-- All erroneous records are inserted into Order Condition EH Table for TP(Transaction Price)
+              INSERT INTO "RAI_TV"."IFRS_R1.BELLTV.RAI_BELLTV::BELLTV_ORDR_COND_EH"(
+                            "SRCDOC_COMP",
+                            "SRCDOC_LOGSYS",
+                            "SRCDOC_TYPE",
+                            "SRCDOC_ID",
+                            "TIMESTAMP_UTC",
+                            "CONDITION_TYPE",
+                            "PL_ACCOUNT",              
+                            "BETRW",
+                            "WAERS",
+                            "CATEGORY",
+                            "MAIN_COND_TYPE",
+                            "ERROR_CODE",
+                            "ERROR_CREATE_TS")
+                      VALUES (CUR_ORDER."SRCDOC_COMP",
+                            CUR_ORDER."SRCDOC_LOGSYS",              
+                            CUR_ORDER."SRCDOC_TYPE",
+                            CUR_ORDER."SRCDOC_ID",
+                            CUR_ORDER."TIMESTAMP_UTC",
+                            CUR_ORDER."CONDITION_TYPE_TP",
+                            CUR_ORDER."PL_ACCOUNT",
+                            CUR_ORDER."TP",
+                            CUR_ORDER."WAERS",
+                            CUR_ORDER."CATEGORY",
+                            CUR_ORDER."MAIN_CONDITION_TYPE",
+                            :CURRENT_ERROR,
+                            LV_CUR_UTC);
+  
+--Set Error Flag                                  
+       LV_ERROR_FLAG := 'Y';
+                           
+                     END FOR;
+       
+-- Processing of successful records
+              ELSE
+              
+                     BEGIN AUTONOMOUS TRANSACTION
+                     
+                     
+-- All valid records are inserted into Order Main table 
+             INSERT INTO "RAI_TV"."IFRS_R1.BELLTV.RAI_BELLTV::BELLTV_ORDR_MAIN"(
+                         "SRCDOC_COMP",                    
+                         "SRCDOC_LOGSYS",
+                         "SRCDOC_TYPE",
+                         "SRCDOC_ID",
+                         "TIMESTAMP_UTC",
+                         "HEADER_ID",
+                         "ITEM_ID",
+                         "REFERENCE_TYPE",
+                         "REFERENCE_ID",
+                         "KUNNR",
+                         "BUKRS",
+                         "WAERS",
+                         "QUANTITY",
+                         "QUANTITY_UNIT",
+                         "BILREL",
+                         "START_DATE",
+		                 "END_DATE",
+                         "XNEGATIVE_ITEM",
+                         "RECEIV_ACCOUNT",
+                         "INCEPTION_DATE",
+                         "ZZ_AUFNR",
+                         "ZZ_BATCH_ID",
+                         "ZZ_BILLER",
+                         "ZZ_BKTXT",
+                         "ZZ_BU_VIEW",
+                         "ZZ_KOSTL",
+                         "ZZ_LEGACY",
+                         "ZZ_MATNR",
+                         "ZZ_MATNR_GRP",
+                         "ZZ_MINPRICE",
+                         "ZZ_MWSKZ",
+                         "ZZ_SGTXT",
+                         "ZZ_TXJCD",
+                         "ZZ_XBLNR",
+                         "ZZ_ZUONR",
+                         "VALUE_RELEVANT")
+                   VALUES(CUR_ORDER."SRCDOC_COMP",
+                         CUR_ORDER."SRCDOC_LOGSYS",
+                         CUR_ORDER."SRCDOC_TYPE",
+                         CUR_ORDER."SRCDOC_ID",
+                       CUR_ORDER."TIMESTAMP_UTC",
+                         CUR_ORDER."HEADER_ID",
+                         CUR_ORDER."ITEM_ID",
+                         CUR_ORDER."REFERENCE_TYPE",
+                         CUR_ORDER."REFERENCE_ID",
+                         CUR_ORDER."KUNNR",
+                         CUR_ORDER."BUKRS",
+                         CUR_ORDER."WAERS",
+                         CUR_ORDER."QUANTITY",
+                         CUR_ORDER."QUANTITY_UNIT",
+                         CUR_ORDER."BILREL",
+                         CUR_ORDER."START_DT",
+                         CUR_ORDER."END_DT",
+	                     CUR_ORDER."XNEGATIVE_ITEM",
+	                     CUR_ORDER."RECEIV_ACCOUNT",
+	                     CUR_ORDER."INCEPTION_DT",
+	                     CUR_ORDER."ZZ_AUFNR",
+	                     :LV_BATCH_ID,
+	                     CUR_ORDER."ZZ_BILLER",
+	                     CUR_ORDER."ZZ_BKTXT",
+	                     CUR_ORDER."ZZ_BU_VIEW",
+	                     CUR_ORDER."ZZ_KOSTL",
+	                     CUR_ORDER."ZZ_LEGACY",
+	                     CUR_ORDER."ZZ_MATNR",
+	                     CUR_ORDER."ZZ_MATNR_GRP",
+	                     CUR_ORDER."ZZ_MINPRICE",
+	                     CUR_ORDER."ZZ_MWSKZ",
+	                     CUR_ORDER."ZZ_SGTXT",
+                         CUR_ORDER."ZZ_TXJCD",
+                         CUR_ORDER."ZZ_XBLNR",
+                         CUR_ORDER."ZZ_ZUONR_ORD",
+                         CUR_ORDER."VALUE_RELEVANT");
+ 
+-- All valid records are inserted ORDER Condition table for SSP(Standalone Selling Price)         
+            INSERT INTO "RAI_TV"."IFRS_R1.BELLTV.RAI_BELLTV::BELLTV_ORDR_COND"(
+                        "SRCDOC_COMP",
+                        "SRCDOC_LOGSYS",
+                        "SRCDOC_TYPE",
+                        "SRCDOC_ID",
+                        "TIMESTAMP_UTC",
+                        "CONDITION_TYPE",
+                        "PL_ACCOUNT",              
+                        "BETRW",
+                        "WAERS",
+                        "CATEGORY",
+                        "MAIN_COND_TYPE")
+                 VALUES (CUR_ORDER."SRCDOC_COMP",
+                        CUR_ORDER."SRCDOC_LOGSYS",              
+                        CUR_ORDER."SRCDOC_TYPE",
+                        CUR_ORDER."SRCDOC_ID",
+                        CUR_ORDER."TIMESTAMP_UTC",
+                        CUR_ORDER."CONDITION_TYPE_SSP",
+                        CUR_ORDER."PL_ACCOUNT",
+                        CUR_ORDER."SSP",
+                        CUR_ORDER."WAERS",
+                        CUR_ORDER."CATEGORY",
+                        CUR_ORDER."MAIN_CONDITION_TYPE");
+ 
+-- All valid records are inserted ORDER Condition table for TP(Transaction Price)
+          INSERT INTO "RAI_TV"."IFRS_R1.BELLTV.RAI_BELLTV::BELLTV_ORDR_COND"(
+	                    "SRCDOC_COMP",
+	                    "SRCDOC_LOGSYS",
+	                    "SRCDOC_TYPE",
+	                    "SRCDOC_ID",
+	                    "TIMESTAMP_UTC",
+	                    "CONDITION_TYPE",
+	                    "PL_ACCOUNT",              
+	                    "BETRW",
+	                    "WAERS",
+	                    "CATEGORY",
+	                    "MAIN_COND_TYPE")
+                VALUES (CUR_ORDER."SRCDOC_COMP",
+                        CUR_ORDER."SRCDOC_LOGSYS",              
+                        CUR_ORDER."SRCDOC_TYPE",
+                        CUR_ORDER."SRCDOC_ID",
+                        CUR_ORDER."TIMESTAMP_UTC",
+                        CUR_ORDER."CONDITION_TYPE_TP",
+                        CUR_ORDER."PL_ACCOUNT",
+                        CUR_ORDER."TP",
+                        CUR_ORDER."WAERS",
+                        CUR_ORDER."CATEGORY",
+                        CUR_ORDER."MAIN_CONDITION_TYPE");                                               
+                   END;
+   
+   
+-- Insert PK of successfully processed Records into Local Temp Tables 
+-- For Updating NDB_TS in corresponding Landing Tables records
+             INSERT INTO #UPDATE_TV_ORDER(
+	                     ACCT_NUM, 
+	                     RAI_ITEM_ID, 
+	                     SRCDOC_ID,
+	                     REFERENCE_ID,
+	                     ITEM_ID,
+	                     EXTR_DT,
+	                     PRIN_NUM,
+	                     AGNT_NUM,
+	                     VTG_ROW_ID,
+	                     BATCH_ID)
+                  VALUES(CUR_ORDER."ACCT_NUM",
+                        CUR_ORDER."ITEM_ID",
+                        CUR_ORDER."SRCDOC_ID",
+                        CUR_ORDER."REFERENCE_ID",
+                       CUR_ORDER."ITEM_ID",
+                        CUR_ORDER."EXTR_DT",
+                        CUR_ORDER."PRIN_NUM",
+                        CUR_ORDER."AGNT_NUM",
+                        CUR_ORDER."VTG_ROW_ID",
+                        :LV_BATCH_ID); 
+ 
+                                           
+                                           
+           INSERT INTO #UPDATE_EH_DELETION_MAIN_TV (SRCDOC_ID) 
+                SELECT "SRCDOC_ID" 
+                  FROM "RAI_TV"."IFRS_R1.BELLTV.RAI_BELLTV::BELLTV_ORDR_MAIN"
+                 WHERE "REFERENCE_ID"   = CUR_ORDER."REFERENCE_ID"
+                   AND "ZZ_BATCH_ID"    = LV_BATCH_ID;
+                                   
+           INSERT INTO #UPDATE_EH_DELETION_COND_TV (SRCDOC_ID) 
+                SELECT COND."SRCDOC_ID" 
+                  FROM "RAI_TV"."IFRS_R1.BELLTV.RAI_BELLTV::BELLTV_ORDR_COND" COND,
+               (SELECT "SRCDOC_ID" 
+                  FROM "RAI_TV"."IFRS_R1.BELLTV.RAI_BELLTV::BELLTV_ORDR_MAIN"
+                 WHERE "REFERENCE_ID"       = CUR_ORDER."REFERENCE_ID"
+                   AND "ZZ_BATCH_ID"        = LV_BATCH_ID) MAIN 
+                 WHERE COND."SRCDOC_ID"     = MAIN."SRCDOC_ID";
+                                                                                                                                                                                                   
+              END IF;
+       
+       END FOR;
+                                                                                                                                                                                                                 
+--------------------------------------------------------------------------------------------------
+  -- Update NDB Tables
+-------------------------------------------------------------------------------------------------- 
+                     
+--  Updating the Source document Id, Reference Id, Header Id, Time indicator, RAI Item ID,Batch id 
+--  and RAI Timestamp in in NDB order table for Term Contracts 
+                       
+               UPDATE "NDB_TV"."IFRS_R1.BELLTV.NDB_BELLTV::TV_TRANSACTIONS" A
+                 FROM "NDB_TV"."IFRS_R1.BELLTV.NDB_BELLTV::TV_TRANSACTIONS" A
+           INNER JOIN #UPDATE_TV_ORDER B
+                   ON A.ACCT_NUM           = B.ACCT_NUM
+                  AND A.SERVICE_CD         = B.ITEM_ID 
+                  AND A.EXTR_DT            = B.EXTR_DT
+                  AND A.VTG_ROW_ID         = B.VTG_ROW_ID
+                  AND A.PRIN_NUM           = B.PRIN_NUM 
+                  AND A.AGNT_NUM           = B.AGNT_NUM 
+                  SET A."SRCDOC_ID"        = B."SRCDOC_ID",
+                        "REFERENCE_ID"     = B."REFERENCE_ID",               
+                        "HEADER_ID"        = B."ACCT_NUM",      
+                        "BATCH_ID_ORD"     = B."BATCH_ID",
+                        "RAI_TS_ORD"       = LV_CUR_UTC;
+                                                       
+-- Update Order Main Error Table
+              UPDATE "RAI_TV"."IFRS_R1.BELLTV.RAI_BELLTV::BELLTV_ORDR_MAIN_EH" A
+                FROM "RAI_TV"."IFRS_R1.BELLTV.RAI_BELLTV::BELLTV_ORDR_MAIN_EH" A
+          INNER JOIN #UPDATE_EH_DELETION_MAIN_TV B
+                  ON A.SRCDOC_ID             = B.SRCDOC_ID
+                 SET (DELETE_DATE, DELETED)  = (CURRENT_DATE, 1); 
+              
+ -- Update Order Cond Error Table
+              UPDATE "RAI_TV"."IFRS_R1.BELLTV.RAI_BELLTV::BELLTV_ORDR_COND_EH" A
+                FROM "RAI_TV"."IFRS_R1.BELLTV.RAI_BELLTV::BELLTV_ORDR_COND_EH" A
+          INNER JOIN #UPDATE_EH_DELETION_COND_TV B
+                  ON A.SRCDOC_ID             = B.SRCDOC_ID
+                 SET (DELETE_DATE, DELETED)  = (CURRENT_DATE, 1); 
+                           
+-------------------------------------------------------------------------------------------------
+ -- Set Overall Status
+-------------------------------------------------------------------------------------------------- 
+       
+ --  STATUS 0: Send the success message to scheduling tool to confirm this procedure has been
+ --  executed successfully
+              IF(LV_ERROR_FLAG = 'Y') THEN            
+       
+            OP_STATUS := LC_ERROR_TEXT; 
+                           
+              ELSE
+       
+               OP_STATUS := LC_SUCCESS_TEXT;   
+                                  
+              END IF;
+       
+ 
+       
+END; 

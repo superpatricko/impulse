@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" schemaVersion="2.3" id="CA_NGCC_DATA" applyPrivilegeType="NONE" checkAnalyticPrivileges="false" defaultClient="$$client$$" defaultLanguage="$$language$$" hierarchiesSQLEnabled="false" historyEnabled="false" translationRelevant="true" visibility="internal" calculationScenarioType="TREE_BASED" dataCategory="DIMENSION" enforceSqlExecution="false" executionSemantic="UNDEFINED" outputViewType="Projection">
+  <origin/>
+  <descriptions defaultDescription="Landing View - Table  NGCC_DATA"/>
+  <localVariables>
+    <variable id="IP_SRC_TS" parameter="true">
+      <descriptions defaultDescription="IP_SRC_TS"/>
+      <variableProperties datatype="DATE" defaultValue="9999-12-31" mandatory="false">
+        <valueDomain type="Date"/>
+        <selection multiLine="false" type="SingleValue"/>
+      </variableProperties>
+    </variable>
+  </localVariables>
+  <variableMappings/>
+  <informationModelLayout relativeWidthScenario="32"/>
+  <dataSources>
+    <DataSource id="IFRS_R1.LAND::NGCC_DATA" type="DATA_BASE_TABLE">
+      <viewAttributes allViewAttributes="true"/>
+      <columnObject schemaName="LAND" columnObjectName="IFRS_R1.LAND::NGCC_DATA"/>
+    </DataSource>
+  </dataSources>
+  <calculationViews>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_NGCC_DATA" filterExpressionLanguage="COLUMN_ENGINE">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="BRND"/>
+        <viewAttribute id="EVNT_REC_TY"/>
+        <viewAttribute id="IMSI"/>
+        <viewAttribute id="MDN"/>
+        <viewAttribute id="SOC_CD"/>
+        <viewAttribute id="TOT_COST"/>
+        <viewAttribute id="USER_NUM"/>
+        <viewAttribute id="CYCL_ID"/>
+        <viewAttribute id="SRC_TS"/>
+        <viewAttribute id="NDB_TS"/>
+        <viewAttribute id="DATACDR_PRIMARY_KEY"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#IFRS_R1.LAND::NGCC_DATA">
+        <mapping xsi:type="Calculation:AttributeMapping" target="BRND" source="BRND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EVNT_REC_TY" source="EVNT_REC_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IMSI" source="IMSI"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MDN" source="MDN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SOC_CD" source="SOC_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TOT_COST" source="TOT_COST"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="USER_NUM" source="USER_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SRC_TS" source="SRC_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NDB_TS" source="NDB_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DATACDR_PRIMARY_KEY" source="DATACDR_PRIMARY_KEY"/>
+      </input>
+      <filter>(&quot;BRND&quot; !='VirginMobile') AND (isNull(&quot;NDB_TS&quot;)) and (&quot;SRC_TS&quot; &lt;= '$$IP_SRC_TS$$')</filter>
+    </calculationView>
+  </calculationViews>
+  <logicalModel id="PROJ_NGCC_DATA">
+    <descriptions/>
+    <attributes>
+      <attribute id="BRND" order="1" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="BRND"/>
+        <keyMapping columnObjectName="PROJ_NGCC_DATA" columnName="BRND"/>
+      </attribute>
+      <attribute id="EVNT_REC_TY" order="2" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="EVNT_REC_TY"/>
+        <keyMapping columnObjectName="PROJ_NGCC_DATA" columnName="EVNT_REC_TY"/>
+      </attribute>
+      <attribute id="IMSI" order="3" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="IMSI"/>
+        <keyMapping columnObjectName="PROJ_NGCC_DATA" columnName="IMSI"/>
+      </attribute>
+      <attribute id="MDN" order="4" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="MDN"/>
+        <keyMapping columnObjectName="PROJ_NGCC_DATA" columnName="MDN"/>
+      </attribute>
+      <attribute id="SOC_CD" order="5" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SOC_CD"/>
+        <keyMapping columnObjectName="PROJ_NGCC_DATA" columnName="SOC_CD"/>
+      </attribute>
+      <attribute id="TOT_COST" order="6" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="TOT_COST"/>
+        <keyMapping columnObjectName="PROJ_NGCC_DATA" columnName="TOT_COST"/>
+      </attribute>
+      <attribute id="USER_NUM" order="7" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="USER_NUM"/>
+        <keyMapping columnObjectName="PROJ_NGCC_DATA" columnName="USER_NUM"/>
+      </attribute>
+      <attribute id="CYCL_ID" order="8" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CYCL_ID"/>
+        <keyMapping columnObjectName="PROJ_NGCC_DATA" columnName="CYCL_ID"/>
+      </attribute>
+      <attribute id="SRC_TS" order="9" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SRC_TS"/>
+        <keyMapping columnObjectName="PROJ_NGCC_DATA" columnName="SRC_TS"/>
+      </attribute>
+      <attribute id="DATACDR_PRIMARY_KEY" order="10" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="DATACDR_PRIMARY_KEY"/>
+        <keyMapping columnObjectName="PROJ_NGCC_DATA" columnName="DATACDR_PRIMARY_KEY"/>
+      </attribute>
+    </attributes>
+    <calculatedAttributes>
+      <calculatedAttribute id="CC_COUNT" hidden="false" order="11" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CC_COUNT"/>
+        <keyCalculation datatype="INTEGER" expressionLanguage="COLUMN_ENGINE">
+          <formula>1</formula>
+        </keyCalculation>
+      </calculatedAttribute>
+    </calculatedAttributes>
+    <privateDataFoundation>
+      <tableProxies/>
+      <joins/>
+      <layout>
+        <shapes/>
+      </layout>
+    </privateDataFoundation>
+    <baseMeasures/>
+    <calculatedMeasures/>
+    <restrictedMeasures/>
+    <localDimensions/>
+  </logicalModel>
+  <layout>
+    <shapes>
+      <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+        <upperLeftCorner x="22" y="87"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_NGCC_DATA" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="22" y="165"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+    </shapes>
+  </layout>
+</Calculation:scenario>

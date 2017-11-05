@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:AccessControl="http://www.sap.com/ndb/SQLCoreModelAccessControl.ecore" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" schemaVersion="2.3" id="CA_ACSY_KUNNR_UPDT" applyPrivilegeType="ANALYTIC_PRIVILEGE" checkAnalyticPrivileges="true" defaultClient="$$client$$" defaultLanguage="$$language$$" hierarchiesSQLEnabled="false" translationRelevant="true" visibility="internal" calculationScenarioType="TREE_BASED" dataCategory="DIMENSION" enforceSqlExecution="false" executionSemantic="UNDEFINED" outputViewType="Projection">
+  <descriptions defaultDescription="CA_ACSY_KUNNR_UPDT"/>
+  <localVariables/>
+  <variableMappings/>
+  <informationModelLayout relativeWidthScenario="54"/>
+  <dataSources>
+    <DataSource id="IFRS_R1.COMMON_COMP.NDB_COMMON::P77_ACSY_CUSTOMER" type="DATA_BASE_TABLE">
+      <viewAttributes allViewAttributes="true"/>
+      <columnObject schemaName="NDB_COMMON" columnObjectName="IFRS_R1.COMMON_COMP.NDB_COMMON::P77_ACSY_CUSTOMER"/>
+    </DataSource>
+    <DataSource id="IFRS_R1.COMMON_COMP.NDB_COMMON::COMM_CUST" type="DATA_BASE_TABLE">
+      <viewAttributes allViewAttributes="true"/>
+      <columnObject schemaName="NDB_COMMON" columnObjectName="IFRS_R1.COMMON_COMP.NDB_COMMON::COMM_CUST"/>
+    </DataSource>
+  </dataSources>
+  <calculationViews>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_P77_ACSY_CUST">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="KUNNR_SID">
+          <filter xsi:type="AccessControl:SingleValueFilter" operator="NL" including="true"/>
+        </viewAttribute>
+        <viewAttribute id="UNIQUE_ACC_NO"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#IFRS_R1.COMMON_COMP.NDB_COMMON::P77_ACSY_CUSTOMER">
+        <mapping xsi:type="Calculation:AttributeMapping" target="KUNNR_SID" source="KUNNR_SID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="UNIQUE_ACC_NO" source="UNIQUE_ACC_NO"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_COMM_CUST">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="KUNNR_SID"/>
+        <viewAttribute id="SUBSCRIBER_NUMBER"/>
+        <viewAttribute id="LOB">
+          <filter xsi:type="AccessControl:SingleValueFilter" including="true" value="ACS"/>
+        </viewAttribute>
+        <viewAttribute id="ECC_TS">
+          <filter xsi:type="AccessControl:SingleValueFilter" operator="NL" including="false"/>
+        </viewAttribute>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#IFRS_R1.COMMON_COMP.NDB_COMMON::COMM_CUST">
+        <mapping xsi:type="Calculation:AttributeMapping" target="KUNNR_SID" source="KUNNR_SID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBSCRIBER_NUMBER" source="SUBSCRIBER_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LOB" source="LOB"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ECC_TS" source="ECC_TS"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="JOIN_ACSY_COMM_CUST" joinType="inner">
+      <descriptions>
+        <comment text="Join failure means one of the following:&#xD;&#xA;1) The customer record is not in the COMM_CUST table, this should already be raised an error by the loading of the customer record into COMM_CUST table. It's not necessary to raise another error here.&#xD;&#xA;2) The KUNNR_SID for the customer hasn't been updated in COMM_CUST yet. This is not an error.&#xD;&#xA;&#xD;&#xA;Due to the reasons above, it's not necessary to do a left-outer join, an inner join would suffice."/>
+      </descriptions>
+      <viewAttributes>
+        <viewAttribute id="UNIQUE_ACC_NO"/>
+        <viewAttribute id="KUNNR_SID"/>
+        <viewAttribute id="ECC_TS"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#PROJ_P77_ACSY_CUST">
+        <mapping xsi:type="Calculation:AttributeMapping" target="UNIQUE_ACC_NO" source="UNIQUE_ACC_NO"/>
+      </input>
+      <input node="#PROJ_COMM_CUST">
+        <mapping xsi:type="Calculation:AttributeMapping" target="KUNNR_SID" source="KUNNR_SID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ECC_TS" source="ECC_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="UNIQUE_ACC_NO" source="SUBSCRIBER_NUMBER"/>
+      </input>
+      <joinAttribute name="UNIQUE_ACC_NO"/>
+    </calculationView>
+  </calculationViews>
+  <logicalModel id="JOIN_ACSY_COMM_CUST">
+    <descriptions/>
+    <attributes>
+      <attribute id="UNIQUE_ACC_NO" order="1" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="UNIQUE_ACC_NO"/>
+        <keyMapping columnObjectName="JOIN_ACSY_COMM_CUST" columnName="UNIQUE_ACC_NO"/>
+      </attribute>
+      <attribute id="KUNNR_SID" order="2" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="KUNNR_SID"/>
+        <keyMapping columnObjectName="JOIN_ACSY_COMM_CUST" columnName="KUNNR_SID"/>
+      </attribute>
+      <attribute id="ECC_TS" order="3" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ECC_TS"/>
+        <keyMapping columnObjectName="JOIN_ACSY_COMM_CUST" columnName="ECC_TS"/>
+      </attribute>
+    </attributes>
+    <calculatedAttributes/>
+    <privateDataFoundation>
+      <tableProxies/>
+      <joins/>
+      <layout>
+        <shapes/>
+      </layout>
+    </privateDataFoundation>
+    <baseMeasures/>
+    <calculatedMeasures/>
+    <restrictedMeasures/>
+    <localDimensions/>
+  </logicalModel>
+  <layout>
+    <shapes>
+      <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+        <upperLeftCorner x="99" y="87"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_P77_ACSY_CUST" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="22" y="261"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_COMM_CUST" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="176" y="261"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="JOIN_ACSY_COMM_CUST" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="99" y="165"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+    </shapes>
+  </layout>
+</Calculation:scenario>

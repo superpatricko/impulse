@@ -1,0 +1,1131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:AccessControl="http://www.sap.com/ndb/SQLCoreModelAccessControl.ecore" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" xmlns:Variable="http://www.sap.com/ndb/BiModelVariable.ecore" schemaVersion="2.3" id="CA_MOBL_ORDR_POSTPAID_PROD_MSTR" applyPrivilegeType="NONE" checkAnalyticPrivileges="false" defaultClient="$$client$$" defaultLanguage="$$language$$" hierarchiesSQLEnabled="false" translationRelevant="true" visibility="internal" calculationScenarioType="TREE_BASED" dataCategory="DIMENSION" enforceSqlExecution="false" executionSemantic="UNDEFINED" outputViewType="Projection">
+  <descriptions defaultDescription="CA_MOBL_ORDR_POSTPAID_PROD_MSTR"/>
+  <localVariables>
+    <variable id="IP_BILL_DATE" parameter="true">
+      <descriptions defaultDescription="IP_BILL_DATE"/>
+      <variableProperties datatype="DATE" defaultExpressionLanguage="COLUMN_ENGINE" mandatory="false">
+        <valueDomain type="empty"/>
+        <selection multiLine="false" type="SingleValue"/>
+        <defaultExpression>date(now())</defaultExpression>
+      </variableProperties>
+    </variable>
+  </localVariables>
+  <variableMappings>
+    <mapping xsi:type="Variable:VariableMapping" dataSource="#CA_MOBL_ORDR_PROCESS_M2M">
+      <targetVariable name="IP_BILL_DATE" resourceUri="/IFRS_R1.MOBILITY.RAI_MOBILITY/calculationviews/CA_MOBL_ORDR_PROCESS_M2M"/>
+      <localVariable>#IP_BILL_DATE</localVariable>
+    </mapping>
+    <mapping xsi:type="Variable:VariableMapping" dataSource="#PROJ_OTHER$$$$CA_MOBL_ORDR_PROCESS_M2M$$">
+      <targetVariable name="IP_BILL_DATE" resourceUri="/IFRS_R1.MOBILITY.RAI_MOBILITY/calculationviews/CA_MOBL_ORDR_PROCESS_M2M"/>
+      <localVariable>#IP_BILL_DATE</localVariable>
+    </mapping>
+  </variableMappings>
+  <informationModelLayout relativeWidthScenario="51"/>
+  <dataSources>
+    <DataSource id="CA_MOBL_ORDR_PROCESS_M2M" type="CALCULATION_VIEW">
+      <viewAttributes allViewAttributes="true"/>
+      <resourceUri>/IFRS_R1.MOBILITY.RAI_MOBILITY/calculationviews/CA_MOBL_ORDR_PROCESS_M2M</resourceUri>
+    </DataSource>
+    <DataSource id="PROJ_OTHER$$$$CA_MOBL_ORDR_PROCESS_M2M$$" type="CALCULATION_VIEW">
+      <viewAttributes allViewAttributes="true"/>
+      <resourceUri>/IFRS_R1.MOBILITY.RAI_MOBILITY/calculationviews/CA_MOBL_ORDR_PROCESS_M2M</resourceUri>
+    </DataSource>
+    <DataSource id="MARA" type="DATA_BASE_TABLE">
+      <viewAttributes allViewAttributes="true"/>
+      <columnObject schemaName="SDA" columnObjectName="MARA"/>
+    </DataSource>
+    <DataSource id="IFRS_R1.COMMON_COMP.RAI_COMMON::CHARGE_TYPE" type="DATA_BASE_TABLE">
+      <viewAttributes allViewAttributes="true"/>
+      <columnObject schemaName="RAI_COMMON" columnObjectName="IFRS_R1.COMMON_COMP.RAI_COMMON::CHARGE_TYPE"/>
+    </DataSource>
+  </dataSources>
+  <calculationViews>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_EQP_REC" filterExpressionLanguage="COLUMN_ENGINE">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="BAN"/>
+        <viewAttribute id="CONTR_TRANS_DT"/>
+        <viewAttribute id="ITEM_ID"/>
+        <viewAttribute id="ITEM_TRANS_DT"/>
+        <viewAttribute id="SUBSCR_NO"/>
+        <viewAttribute id="TRX_SEQ_NO"/>
+        <viewAttribute id="STNDLN_SELL_PRC"/>
+        <viewAttribute id="TRANS_PRC"/>
+        <viewAttribute id="CHRG_TY_CLASSIF"/>
+        <viewAttribute id="TERM_M2M"/>
+        <viewAttribute id="ITEM_SUB_ID"/>
+        <viewAttribute id="CC_SRCDOC_ID"/>
+        <viewAttribute id="CC_TERM_POB_IND"/>
+        <viewAttribute id="ACTV_CD"/>
+        <viewAttribute id="ACTV_RSN_CD"/>
+        <viewAttribute id="BASE_OPT_SERV_IND"/>
+        <viewAttribute id="TIME_IND"/>
+        <viewAttribute id="RAI_ITEM_ID"/>
+        <viewAttribute id="REFERENCE_ID"/>
+        <viewAttribute id="MIN_TIER_PRC"/>
+        <viewAttribute id="KUNNR_SID"/>
+        <viewAttribute id="ITEM_STRT_DT"/>
+        <viewAttribute id="CC_BILL_DAY"/>
+        <viewAttribute id="CC_REF_ID"/>
+        <viewAttribute id="CC_END_DT"/>
+        <viewAttribute id="CC_START_DT"/>
+        <viewAttribute id="X_NEGATIVE_ITEM"/>
+        <viewAttribute id="HEADER_ID"/>
+        <viewAttribute id="CONTR_STRT_DT"/>
+        <viewAttribute id="CC_VALUE_RELEVANT"/>
+        <viewAttribute id="RAI_TS"/>
+        <viewAttribute id="IS_30400203"/>
+        <viewAttribute id="IS_30400801"/>
+        <viewAttribute id="IS_30400802"/>
+        <viewAttribute id="IS_30400803"/>
+        <viewAttribute id="IS_30400303"/>
+        <viewAttribute id="IS_30400601"/>
+        <viewAttribute id="IS_30400501"/>
+        <viewAttribute id="IS_30400602"/>
+        <viewAttribute id="IS_30400603"/>
+        <viewAttribute id="IS_30400101"/>
+        <viewAttribute id="IS_30400102"/>
+        <viewAttribute id="CC_MODIF_IND"/>
+        <viewAttribute id="CC_TIMESTAMP"/>
+        <viewAttribute id="CC_MOD_IND_ONLY"/>
+        <viewAttribute id="IS_30400204"/>
+        <viewAttribute id="IS_30400205"/>
+        <viewAttribute id="IS_30400201"/>
+        <viewAttribute id="IS_30400202"/>
+        <viewAttribute id="CC_SRCDOC_ID_TERM"/>
+        <viewAttribute id="CC_NEW_PLAN_REC"/>
+        <viewAttribute id="POB_END_DT"/>
+        <viewAttribute id="CC_TERM_SUSP_IND"/>
+        <viewAttribute id="IS_30400804"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CC_CHARGE_TYPE" length="20" expressionLanguage="COLUMN_ENGINE">
+          <formula>'EQPT'</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#CA_MOBL_ORDR_PROCESS_M2M">
+        <mapping xsi:type="Calculation:AttributeMapping" target="BAN" source="BAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTR_TRANS_DT" source="CONTR_TRANS_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_ID" source="ITEM_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_TRANS_DT" source="ITEM_TRANS_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBSCR_NO" source="SUBSCR_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRX_SEQ_NO" source="TRX_SEQ_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="STNDLN_SELL_PRC" source="STNDLN_SELL_PRC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRANS_PRC" source="TRANS_PRC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CHRG_TY_CLASSIF" source="CHRG_TY_CLASSIF"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TERM_M2M" source="TERM_M2M"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_SUB_ID" source="ITEM_SUB_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_SRCDOC_ID" source="CC_SRCDOC_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_TERM_POB_IND" source="CC_TERM_POB_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACTV_CD" source="ACTV_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACTV_RSN_CD" source="ACTV_RSN_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BASE_OPT_SERV_IND" source="BASE_OPT_SERV_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TIME_IND" source="TIME_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RAI_ITEM_ID" source="RAI_ITEM_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_ID" source="REFERENCE_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MIN_TIER_PRC" source="MIN_TIER_PRC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KUNNR_SID" source="KUNNR_SID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_STRT_DT" source="ITEM_STRT_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_BILL_DAY" source="CC_BILL_DAY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_REF_ID" source="CC_REF_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_END_DT" source="CC_END_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_START_DT" source="CC_START_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="X_NEGATIVE_ITEM" source="X_NEGATIVE_ITEM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="HEADER_ID" source="HEADER_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTR_STRT_DT" source="CONTR_STRT_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_VALUE_RELEVANT" source="CC_VALUE_RELEVANT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RAI_TS" source="RAI_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30400203" source="IS_30400203"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30400801" source="IS_30400801"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30400802" source="IS_30400802"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30400803" source="IS_30400803"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30400303" source="IS_30400303"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30400601" source="IS_30400601"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30400501" source="IS_30400501"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30400602" source="IS_30400602"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30400603" source="IS_30400603"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30400101" source="IS_30400101"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30400102" source="IS_30400102"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_MODIF_IND" source="CC_MODIF_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_TIMESTAMP" source="CC_TIMESTAMP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_MOD_IND_ONLY" source="CC_MOD_IND_ONLY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30400204" source="IS_30400204"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30400205" source="IS_30400205"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30400201" source="IS_30400201"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30400202" source="IS_30400202"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_SRCDOC_ID_TERM" source="CC_SRCDOC_ID_TERM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_NEW_PLAN_REC" source="CC_NEW_PLAN_REC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="POB_END_DT" source="POB_END_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_TERM_SUSP_IND" source="CC_TERM_SUSP_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30400804" source="IS_30400804"/>
+      </input>
+      <filter>( in(&quot;CHRG_TY_CLASSIF&quot; ,'HANDSET','VIRGINP','APLBB'))</filter>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_OTHER" filterExpressionLanguage="COLUMN_ENGINE">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="BAN"/>
+        <viewAttribute id="CONTR_TRANS_DT"/>
+        <viewAttribute id="ITEM_ID"/>
+        <viewAttribute id="ITEM_TRANS_DT"/>
+        <viewAttribute id="SUBSCR_NO"/>
+        <viewAttribute id="TRX_SEQ_NO"/>
+        <viewAttribute id="STNDLN_SELL_PRC"/>
+        <viewAttribute id="TRANS_PRC"/>
+        <viewAttribute id="CHRG_TY_CLASSIF"/>
+        <viewAttribute id="TERM_M2M"/>
+        <viewAttribute id="ITEM_SUB_ID"/>
+        <viewAttribute id="CC_SRCDOC_ID"/>
+        <viewAttribute id="CC_TERM_POB_IND"/>
+        <viewAttribute id="ACTV_CD"/>
+        <viewAttribute id="ACTV_RSN_CD"/>
+        <viewAttribute id="BASE_OPT_SERV_IND"/>
+        <viewAttribute id="TIME_IND"/>
+        <viewAttribute id="RAI_ITEM_ID"/>
+        <viewAttribute id="REFERENCE_ID"/>
+        <viewAttribute id="MIN_TIER_PRC"/>
+        <viewAttribute id="KUNNR_SID"/>
+        <viewAttribute id="ITEM_STRT_DT"/>
+        <viewAttribute id="CC_BILL_DAY"/>
+        <viewAttribute id="CC_REF_ID"/>
+        <viewAttribute id="CC_END_DT"/>
+        <viewAttribute id="CC_START_DT"/>
+        <viewAttribute id="X_NEGATIVE_ITEM"/>
+        <viewAttribute id="HEADER_ID"/>
+        <viewAttribute id="CONTR_STRT_DT"/>
+        <viewAttribute id="CC_VALUE_RELEVANT"/>
+        <viewAttribute id="RAI_TS"/>
+        <viewAttribute id="IS_30400203"/>
+        <viewAttribute id="IS_30400801"/>
+        <viewAttribute id="IS_30400802"/>
+        <viewAttribute id="IS_30400803"/>
+        <viewAttribute id="IS_30400303"/>
+        <viewAttribute id="IS_30400601"/>
+        <viewAttribute id="IS_30400501"/>
+        <viewAttribute id="IS_30400602"/>
+        <viewAttribute id="IS_30400603"/>
+        <viewAttribute id="IS_30400101"/>
+        <viewAttribute id="IS_30400102"/>
+        <viewAttribute id="CC_MODIF_IND"/>
+        <viewAttribute id="CC_TIMESTAMP"/>
+        <viewAttribute id="CC_MOD_IND_ONLY"/>
+        <viewAttribute id="IS_30400204"/>
+        <viewAttribute id="IS_30400205"/>
+        <viewAttribute id="IS_30400201"/>
+        <viewAttribute id="IS_30400202"/>
+        <viewAttribute id="CC_SRCDOC_ID_TERM"/>
+        <viewAttribute id="CC_NEW_PLAN_REC"/>
+        <viewAttribute id="POB_END_DT"/>
+        <viewAttribute id="CC_TERM_SUSP_IND"/>
+        <viewAttribute id="IS_30400804"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#PROJ_OTHER$$$$CA_MOBL_ORDR_PROCESS_M2M$$">
+        <mapping xsi:type="Calculation:AttributeMapping" target="BAN" source="BAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTR_TRANS_DT" source="CONTR_TRANS_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_ID" source="ITEM_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_TRANS_DT" source="ITEM_TRANS_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBSCR_NO" source="SUBSCR_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRX_SEQ_NO" source="TRX_SEQ_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="STNDLN_SELL_PRC" source="STNDLN_SELL_PRC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRANS_PRC" source="TRANS_PRC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CHRG_TY_CLASSIF" source="CHRG_TY_CLASSIF"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TERM_M2M" source="TERM_M2M"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_SUB_ID" source="ITEM_SUB_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_SRCDOC_ID" source="CC_SRCDOC_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_TERM_POB_IND" source="CC_TERM_POB_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACTV_CD" source="ACTV_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACTV_RSN_CD" source="ACTV_RSN_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BASE_OPT_SERV_IND" source="BASE_OPT_SERV_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TIME_IND" source="TIME_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RAI_ITEM_ID" source="RAI_ITEM_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_ID" source="REFERENCE_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MIN_TIER_PRC" source="MIN_TIER_PRC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KUNNR_SID" source="KUNNR_SID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_STRT_DT" source="ITEM_STRT_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_BILL_DAY" source="CC_BILL_DAY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_REF_ID" source="CC_REF_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_END_DT" source="CC_END_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_START_DT" source="CC_START_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="X_NEGATIVE_ITEM" source="X_NEGATIVE_ITEM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="HEADER_ID" source="HEADER_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTR_STRT_DT" source="CONTR_STRT_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_VALUE_RELEVANT" source="CC_VALUE_RELEVANT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RAI_TS" source="RAI_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30400203" source="IS_30400203"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30400801" source="IS_30400801"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30400802" source="IS_30400802"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30400803" source="IS_30400803"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30400303" source="IS_30400303"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30400601" source="IS_30400601"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30400501" source="IS_30400501"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30400602" source="IS_30400602"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30400603" source="IS_30400603"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30400101" source="IS_30400101"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30400102" source="IS_30400102"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_MODIF_IND" source="CC_MODIF_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_TIMESTAMP" source="CC_TIMESTAMP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_MOD_IND_ONLY" source="CC_MOD_IND_ONLY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30400204" source="IS_30400204"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30400205" source="IS_30400205"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30400201" source="IS_30400201"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30400202" source="IS_30400202"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_SRCDOC_ID_TERM" source="CC_SRCDOC_ID_TERM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_NEW_PLAN_REC" source="CC_NEW_PLAN_REC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="POB_END_DT" source="POB_END_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_TERM_SUSP_IND" source="CC_TERM_SUSP_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30400804" source="IS_30400804"/>
+      </input>
+      <filter>(not in (&quot;CHRG_TY_CLASSIF&quot;,'HANDSET','VIRGINP','APLBB') or isNull(&quot;CHRG_TY_CLASSIF&quot;))</filter>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_MARA" filterExpressionLanguage="COLUMN_ENGINE">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="MATKL"/>
+        <viewAttribute id="BISMT_RIGHT"/>
+        <viewAttribute id="NORMT"/>
+        <viewAttribute id="LVORM"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#MARA">
+        <mapping xsi:type="Calculation:AttributeMapping" target="MATKL" source="MATKL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BISMT_RIGHT" source="BISMT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NORMT" source="NORMT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LVORM" source="LVORM"/>
+      </input>
+      <filter>(isNull(&quot;LVORM&quot;) or &quot;LVORM&quot;='')</filter>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="JOIN_MARA" joinOrder="OUTSIDE_IN" joinType="leftOuter">
+      <descriptions>
+        <comment text="Join error will be raised as IS_30400701.&#xD;&#xA;Null MATKL will be raised as IS_30400702."/>
+      </descriptions>
+      <viewAttributes>
+        <viewAttribute id="BAN"/>
+        <viewAttribute id="CONTR_TRANS_DT"/>
+        <viewAttribute id="ITEM_ID"/>
+        <viewAttribute id="ITEM_TRANS_DT"/>
+        <viewAttribute id="SUBSCR_NO"/>
+        <viewAttribute id="TRX_SEQ_NO"/>
+        <viewAttribute id="STNDLN_SELL_PRC"/>
+        <viewAttribute id="TRANS_PRC"/>
+        <viewAttribute id="CHRG_TY_CLASSIF"/>
+        <viewAttribute id="TERM_M2M"/>
+        <viewAttribute id="ITEM_SUB_ID"/>
+        <viewAttribute id="CC_SRCDOC_ID"/>
+        <viewAttribute id="CC_TERM_POB_IND"/>
+        <viewAttribute id="ACTV_CD"/>
+        <viewAttribute id="ACTV_RSN_CD"/>
+        <viewAttribute id="BASE_OPT_SERV_IND"/>
+        <viewAttribute id="TIME_IND"/>
+        <viewAttribute id="RAI_ITEM_ID"/>
+        <viewAttribute id="REFERENCE_ID"/>
+        <viewAttribute id="MIN_TIER_PRC"/>
+        <viewAttribute id="KUNNR_SID"/>
+        <viewAttribute id="ITEM_STRT_DT"/>
+        <viewAttribute id="CC_BILL_DAY"/>
+        <viewAttribute id="CC_REF_ID"/>
+        <viewAttribute id="CC_END_DT"/>
+        <viewAttribute id="CC_START_DT"/>
+        <viewAttribute id="X_NEGATIVE_ITEM"/>
+        <viewAttribute id="HEADER_ID"/>
+        <viewAttribute id="CONTR_STRT_DT"/>
+        <viewAttribute id="CC_VALUE_RELEVANT"/>
+        <viewAttribute id="RAI_TS"/>
+        <viewAttribute id="IS_30400203"/>
+        <viewAttribute id="IS_30400801"/>
+        <viewAttribute id="IS_30400802"/>
+        <viewAttribute id="IS_30400803"/>
+        <viewAttribute id="IS_30400303"/>
+        <viewAttribute id="IS_30400601"/>
+        <viewAttribute id="IS_30400501"/>
+        <viewAttribute id="IS_30400602"/>
+        <viewAttribute id="IS_30400603"/>
+        <viewAttribute id="IS_30400101"/>
+        <viewAttribute id="IS_30400102"/>
+        <viewAttribute id="CC_MODIF_IND"/>
+        <viewAttribute id="CC_TIMESTAMP"/>
+        <viewAttribute id="CC_MOD_IND_ONLY"/>
+        <viewAttribute id="IS_30400204"/>
+        <viewAttribute id="IS_30400205"/>
+        <viewAttribute id="IS_30400201"/>
+        <viewAttribute id="IS_30400202"/>
+        <viewAttribute id="CC_SRCDOC_ID_TERM"/>
+        <viewAttribute id="CC_NEW_PLAN_REC"/>
+        <viewAttribute id="POB_END_DT"/>
+        <viewAttribute id="CC_TERM_SUSP_IND"/>
+        <viewAttribute id="IS_30400804"/>
+        <viewAttribute id="MATKL"/>
+        <viewAttribute id="BISMT_RIGHT"/>
+        <viewAttribute id="NORMT"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="IS_30400701" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isNull(&quot;BISMT_RIGHT&quot;),'1','0')</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="IS_30400702" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isNull(&quot;MATKL&quot;),'1','0')</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#PROJ_OTHER">
+        <mapping xsi:type="Calculation:AttributeMapping" target="BAN" source="BAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTR_TRANS_DT" source="CONTR_TRANS_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_ID" source="ITEM_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_TRANS_DT" source="ITEM_TRANS_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBSCR_NO" source="SUBSCR_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRX_SEQ_NO" source="TRX_SEQ_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="STNDLN_SELL_PRC" source="STNDLN_SELL_PRC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRANS_PRC" source="TRANS_PRC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CHRG_TY_CLASSIF" source="CHRG_TY_CLASSIF"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TERM_M2M" source="TERM_M2M"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_SUB_ID" source="ITEM_SUB_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_SRCDOC_ID" source="CC_SRCDOC_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_TERM_POB_IND" source="CC_TERM_POB_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACTV_CD" source="ACTV_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACTV_RSN_CD" source="ACTV_RSN_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BASE_OPT_SERV_IND" source="BASE_OPT_SERV_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TIME_IND" source="TIME_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RAI_ITEM_ID" source="RAI_ITEM_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_ID" source="REFERENCE_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MIN_TIER_PRC" source="MIN_TIER_PRC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KUNNR_SID" source="KUNNR_SID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_STRT_DT" source="ITEM_STRT_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_BILL_DAY" source="CC_BILL_DAY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_REF_ID" source="CC_REF_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_END_DT" source="CC_END_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_START_DT" source="CC_START_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="X_NEGATIVE_ITEM" source="X_NEGATIVE_ITEM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="HEADER_ID" source="HEADER_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTR_STRT_DT" source="CONTR_STRT_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_VALUE_RELEVANT" source="CC_VALUE_RELEVANT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RAI_TS" source="RAI_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30400203" source="IS_30400203"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30400801" source="IS_30400801"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30400802" source="IS_30400802"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30400803" source="IS_30400803"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30400303" source="IS_30400303"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30400601" source="IS_30400601"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30400501" source="IS_30400501"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30400602" source="IS_30400602"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30400603" source="IS_30400603"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30400101" source="IS_30400101"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30400102" source="IS_30400102"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_MODIF_IND" source="CC_MODIF_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_TIMESTAMP" source="CC_TIMESTAMP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_MOD_IND_ONLY" source="CC_MOD_IND_ONLY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30400204" source="IS_30400204"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30400205" source="IS_30400205"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30400201" source="IS_30400201"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30400202" source="IS_30400202"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_SRCDOC_ID_TERM" source="CC_SRCDOC_ID_TERM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_NEW_PLAN_REC" source="CC_NEW_PLAN_REC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="POB_END_DT" source="POB_END_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_TERM_SUSP_IND" source="CC_TERM_SUSP_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30400804" source="IS_30400804"/>
+      </input>
+      <input node="#PROJ_MARA">
+        <mapping xsi:type="Calculation:AttributeMapping" target="MATKL" source="MATKL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BISMT_RIGHT" source="BISMT_RIGHT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NORMT" source="NORMT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_ID" source="BISMT_RIGHT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_SUB_ID" source="NORMT"/>
+      </input>
+      <joinAttribute name="ITEM_ID"/>
+      <joinAttribute name="ITEM_SUB_ID"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:UnionView" id="UNION_CHARGE_TYPE">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="BAN"/>
+        <viewAttribute id="CONTR_TRANS_DT"/>
+        <viewAttribute id="ITEM_ID"/>
+        <viewAttribute id="ITEM_TRANS_DT"/>
+        <viewAttribute id="SUBSCR_NO"/>
+        <viewAttribute id="TRX_SEQ_NO"/>
+        <viewAttribute id="ITEM_SUB_ID"/>
+        <viewAttribute id="CC_CHARGE_TYPE"/>
+        <viewAttribute id="STNDLN_SELL_PRC"/>
+        <viewAttribute id="TRANS_PRC"/>
+        <viewAttribute id="TERM_M2M"/>
+        <viewAttribute datatype="NVARCHAR" id="IS_30400701" length="1" scale="0"/>
+        <viewAttribute datatype="NVARCHAR" id="IS_30400702" length="1" scale="0"/>
+        <viewAttribute id="CC_SRCDOC_ID"/>
+        <viewAttribute id="CC_TERM_POB_IND"/>
+        <viewAttribute id="CHRG_TY_CLASSIF"/>
+        <viewAttribute id="MATKL"/>
+        <viewAttribute id="BISMT_RIGHT"/>
+        <viewAttribute id="NORMT"/>
+        <viewAttribute id="ACTV_CD"/>
+        <viewAttribute id="ACTV_RSN_CD"/>
+        <viewAttribute id="BASE_OPT_SERV_IND"/>
+        <viewAttribute id="TIME_IND"/>
+        <viewAttribute id="RAI_ITEM_ID"/>
+        <viewAttribute id="REFERENCE_ID"/>
+        <viewAttribute id="MIN_TIER_PRC"/>
+        <viewAttribute id="KUNNR_SID"/>
+        <viewAttribute id="ITEM_STRT_DT"/>
+        <viewAttribute id="CC_BILL_DAY"/>
+        <viewAttribute id="CC_REF_ID"/>
+        <viewAttribute id="CC_END_DT"/>
+        <viewAttribute id="CC_START_DT"/>
+        <viewAttribute id="X_NEGATIVE_ITEM"/>
+        <viewAttribute id="HEADER_ID"/>
+        <viewAttribute id="CONTR_STRT_DT"/>
+        <viewAttribute id="CC_VALUE_RELEVANT"/>
+        <viewAttribute id="RAI_TS"/>
+        <viewAttribute id="IS_30400203"/>
+        <viewAttribute id="IS_30400801"/>
+        <viewAttribute id="IS_30400802"/>
+        <viewAttribute id="IS_30400803"/>
+        <viewAttribute id="IS_30400303"/>
+        <viewAttribute id="IS_30400601"/>
+        <viewAttribute id="IS_30400501"/>
+        <viewAttribute id="IS_30400602"/>
+        <viewAttribute id="IS_30400603"/>
+        <viewAttribute id="IS_30400101"/>
+        <viewAttribute id="IS_30400102"/>
+        <viewAttribute id="CC_MODIF_IND"/>
+        <viewAttribute id="CC_TIMESTAMP"/>
+        <viewAttribute id="CC_MOD_IND_ONLY"/>
+        <viewAttribute id="IS_30400204"/>
+        <viewAttribute id="IS_30400205"/>
+        <viewAttribute id="IS_30400201"/>
+        <viewAttribute id="IS_30400202"/>
+        <viewAttribute id="CC_SRCDOC_ID_TERM"/>
+        <viewAttribute id="CC_NEW_PLAN_REC"/>
+        <viewAttribute id="POB_END_DT"/>
+        <viewAttribute datatype="NVARCHAR" id="CC_TERM_SUSP_IND" length="1" scale="0"/>
+        <viewAttribute datatype="NVARCHAR" id="IS_30400804" length="1" scale="0"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CC_RULE_PATH" length="2" expressionLanguage="COLUMN_ENGINE">
+          <formula>If(&quot;CC_CHARGE_TYPE&quot;='EQPT' AND &quot;CHRG_TY_CLASSIF&quot; ='APLBB','A3',&#xD;
+If(&quot;CC_CHARGE_TYPE&quot;='EQPT' AND &quot;STNDLN_SELL_PRC&quot;=&quot;TRANS_PRC&quot;,'A1',&#xD;
+If(&quot;CC_CHARGE_TYPE&quot;='EQPT' AND &quot;TRANS_PRC&quot; &lt; &quot;STNDLN_SELL_PRC&quot;,'A2', &#xD;
+If(&quot;CC_CHARGE_TYPE&quot;='BASE_SRVC' AND &quot;TERM_M2M&quot;='M2M','B1', &#xD;
+&#xD;
+if(isNull(&quot;CC_NEW_PLAN_REC&quot;) and &#xD;
+&quot;CC_CHARGE_TYPE&quot;='BASE_SRVC' and &#xD;
+&quot;TERM_M2M&quot;='TERM'and &#xD;
+(not isNull(&quot;CC_TERM_POB_IND&quot;)) ,'B2',&#xD;
+&#xD;
+if(&quot;CC_CHARGE_TYPE&quot;='BASE_SRVC' and&#xD;
+ &quot;TERM_M2M&quot;='TERM'and &#xD;
+ (isNull(&quot;CC_TERM_POB_IND&quot;) or (not isnull( &quot;CC_NEW_PLAN_REC&quot;))) ,'B1',&#xD;
+&#xD;
+If(&quot;CC_CHARGE_TYPE&quot;='OPT','C1',&#xD;
+If(&quot;CC_CHARGE_TYPE&quot;='OTC','D1',&#xD;
+If(&quot;CC_CHARGE_TYPE&quot;='ECF','E1',&#xD;
+If(&quot;CC_CHARGE_TYPE&quot;='HUG_FEE','F1',&#xD;
+If(&quot;CC_CHARGE_TYPE&quot;='ACT','G1',&#xD;
+If(&quot;CC_CHARGE_TYPE&quot;='OTHERDISC','H1',&#xD;
+If(&quot;CC_CHARGE_TYPE&quot;='OTHER','I1','')))))))))))))</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input emptyUnionBehavior="NO_ROW" node="#JOIN_MARA">
+        <mapping xsi:type="Calculation:AttributeMapping" target="BAN" source="BAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTR_TRANS_DT" source="CONTR_TRANS_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_ID" source="ITEM_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_TRANS_DT" source="ITEM_TRANS_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBSCR_NO" source="SUBSCR_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRX_SEQ_NO" source="TRX_SEQ_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_SUB_ID" source="ITEM_SUB_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_CHARGE_TYPE" source="MATKL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="STNDLN_SELL_PRC" source="STNDLN_SELL_PRC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRANS_PRC" source="TRANS_PRC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TERM_M2M" source="TERM_M2M"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30400701" source="IS_30400701"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30400702" source="IS_30400702"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_SRCDOC_ID" source="CC_SRCDOC_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_TERM_POB_IND" source="CC_TERM_POB_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CHRG_TY_CLASSIF" source="CHRG_TY_CLASSIF"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MATKL" source="MATKL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BISMT_RIGHT" source="BISMT_RIGHT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NORMT" source="NORMT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACTV_CD" source="ACTV_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACTV_RSN_CD" source="ACTV_RSN_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BASE_OPT_SERV_IND" source="BASE_OPT_SERV_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TIME_IND" source="TIME_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RAI_ITEM_ID" source="RAI_ITEM_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_ID" source="REFERENCE_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MIN_TIER_PRC" source="MIN_TIER_PRC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KUNNR_SID" source="KUNNR_SID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_STRT_DT" source="ITEM_STRT_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_BILL_DAY" source="CC_BILL_DAY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_REF_ID" source="CC_REF_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_END_DT" source="CC_END_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_START_DT" source="CC_START_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="X_NEGATIVE_ITEM" source="X_NEGATIVE_ITEM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="HEADER_ID" source="HEADER_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTR_STRT_DT" source="CONTR_STRT_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_VALUE_RELEVANT" source="CC_VALUE_RELEVANT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RAI_TS" source="RAI_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30400203" source="IS_30400203"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30400801" source="IS_30400801"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30400802" source="IS_30400802"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30400803" source="IS_30400803"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30400303" source="IS_30400303"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30400601" source="IS_30400601"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30400501" source="IS_30400501"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30400602" source="IS_30400602"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30400603" source="IS_30400603"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30400101" source="IS_30400101"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30400102" source="IS_30400102"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_MODIF_IND" source="CC_MODIF_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_TIMESTAMP" source="CC_TIMESTAMP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_MOD_IND_ONLY" source="CC_MOD_IND_ONLY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30400204" source="IS_30400204"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30400205" source="IS_30400205"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30400201" source="IS_30400201"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30400202" source="IS_30400202"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_SRCDOC_ID_TERM" source="CC_SRCDOC_ID_TERM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_NEW_PLAN_REC" source="CC_NEW_PLAN_REC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="POB_END_DT" source="POB_END_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_TERM_SUSP_IND" source="CC_TERM_SUSP_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30400804" source="IS_30400804"/>
+      </input>
+      <input emptyUnionBehavior="NO_ROW" node="#PROJ_EQP_REC">
+        <mapping xsi:type="Calculation:AttributeMapping" target="BAN" source="BAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTR_TRANS_DT" source="CONTR_TRANS_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_ID" source="ITEM_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_TRANS_DT" source="ITEM_TRANS_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBSCR_NO" source="SUBSCR_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRX_SEQ_NO" source="TRX_SEQ_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_SUB_ID" source="ITEM_SUB_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_CHARGE_TYPE" source="CC_CHARGE_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="STNDLN_SELL_PRC" source="STNDLN_SELL_PRC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRANS_PRC" source="TRANS_PRC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TERM_M2M" source="TERM_M2M"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="IS_30400701" null="false" value="0"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="IS_30400702" null="false" value="0"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_SRCDOC_ID" source="CC_SRCDOC_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_TERM_POB_IND" source="CC_TERM_POB_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CHRG_TY_CLASSIF" source="CHRG_TY_CLASSIF"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="MATKL" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="BISMT_RIGHT" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="NORMT" null="true" value=""/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACTV_CD" source="ACTV_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACTV_RSN_CD" source="ACTV_RSN_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BASE_OPT_SERV_IND" source="BASE_OPT_SERV_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TIME_IND" source="TIME_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RAI_ITEM_ID" source="RAI_ITEM_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_ID" source="REFERENCE_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MIN_TIER_PRC" source="MIN_TIER_PRC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KUNNR_SID" source="KUNNR_SID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_STRT_DT" source="ITEM_STRT_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_BILL_DAY" source="CC_BILL_DAY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_REF_ID" source="CC_REF_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_END_DT" source="CC_END_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_START_DT" source="CC_START_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="X_NEGATIVE_ITEM" source="X_NEGATIVE_ITEM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="HEADER_ID" source="HEADER_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTR_STRT_DT" source="CONTR_STRT_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_VALUE_RELEVANT" source="CC_VALUE_RELEVANT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RAI_TS" source="RAI_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30400203" source="IS_30400203"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30400801" source="IS_30400801"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30400802" source="IS_30400802"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30400803" source="IS_30400803"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30400303" source="IS_30400303"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30400601" source="IS_30400601"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30400501" source="IS_30400501"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30400602" source="IS_30400602"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30400603" source="IS_30400603"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30400101" source="IS_30400101"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30400102" source="IS_30400102"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_MODIF_IND" source="CC_MODIF_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_TIMESTAMP" source="CC_TIMESTAMP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_MOD_IND_ONLY" source="CC_MOD_IND_ONLY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30400204" source="IS_30400204"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30400205" source="IS_30400205"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30400201" source="IS_30400201"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30400202" source="IS_30400202"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_SRCDOC_ID_TERM" source="CC_SRCDOC_ID_TERM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_NEW_PLAN_REC" source="CC_NEW_PLAN_REC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="POB_END_DT" source="POB_END_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_TERM_SUSP_IND" source="CC_TERM_SUSP_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30400804" source="IS_30400804"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_CHARGE_TYPE_POB_TYPE">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="LOB">
+          <filter xsi:type="AccessControl:SingleValueFilter" including="true" value="MOBL"/>
+        </viewAttribute>
+        <viewAttribute id="CHARGE_TYPE"/>
+        <viewAttribute id="RULE_PATH"/>
+        <viewAttribute id="POB_TYPE"/>
+        <viewAttribute id="VALUE_RELEVANT"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#IFRS_R1.COMMON_COMP.RAI_COMMON::CHARGE_TYPE">
+        <mapping xsi:type="Calculation:AttributeMapping" target="LOB" source="LOB"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CHARGE_TYPE" source="CHARGE_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RULE_PATH" source="RULE_PATH"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="POB_TYPE" source="POB_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VALUE_RELEVANT" source="VALUE_RELEVANT"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="JOIN_POB_TYPE_CHRG_TYPE" joinOrder="OUTSIDE_IN" joinType="leftOuter">
+      <descriptions>
+        <comment text="Null CHARGE_TYPE error will be raised as IS_30400703.&#xD;&#xA;Null POB_TYPE will be raised as IS_30400704."/>
+      </descriptions>
+      <viewAttributes>
+        <viewAttribute id="POB_TYPE"/>
+        <viewAttribute id="VALUE_RELEVANT"/>
+        <viewAttribute id="BAN"/>
+        <viewAttribute id="CONTR_TRANS_DT"/>
+        <viewAttribute id="ITEM_ID"/>
+        <viewAttribute id="ITEM_TRANS_DT"/>
+        <viewAttribute id="SUBSCR_NO"/>
+        <viewAttribute id="TRX_SEQ_NO"/>
+        <viewAttribute id="ITEM_SUB_ID"/>
+        <viewAttribute id="CC_CHARGE_TYPE"/>
+        <viewAttribute id="CC_RULE_PATH"/>
+        <viewAttribute id="CHARGE_TYPE_RIGHT"/>
+        <viewAttribute id="IS_30400701"/>
+        <viewAttribute id="IS_30400702"/>
+        <viewAttribute id="CC_TERM_POB_IND"/>
+        <viewAttribute id="CC_SRCDOC_ID"/>
+        <viewAttribute id="STNDLN_SELL_PRC"/>
+        <viewAttribute id="TRANS_PRC"/>
+        <viewAttribute id="TERM_M2M"/>
+        <viewAttribute id="CHRG_TY_CLASSIF"/>
+        <viewAttribute id="MATKL"/>
+        <viewAttribute id="BISMT_RIGHT"/>
+        <viewAttribute id="NORMT"/>
+        <viewAttribute id="ACTV_CD"/>
+        <viewAttribute id="ACTV_RSN_CD"/>
+        <viewAttribute id="BASE_OPT_SERV_IND"/>
+        <viewAttribute id="TIME_IND"/>
+        <viewAttribute id="RAI_ITEM_ID"/>
+        <viewAttribute id="REFERENCE_ID"/>
+        <viewAttribute id="MIN_TIER_PRC"/>
+        <viewAttribute id="KUNNR_SID"/>
+        <viewAttribute id="ITEM_STRT_DT"/>
+        <viewAttribute id="CC_BILL_DAY"/>
+        <viewAttribute id="CC_REF_ID"/>
+        <viewAttribute id="CC_END_DT"/>
+        <viewAttribute id="CC_START_DT"/>
+        <viewAttribute id="X_NEGATIVE_ITEM"/>
+        <viewAttribute id="HEADER_ID"/>
+        <viewAttribute id="CONTR_STRT_DT"/>
+        <viewAttribute id="CC_VALUE_RELEVANT"/>
+        <viewAttribute id="RAI_TS"/>
+        <viewAttribute id="IS_30400203"/>
+        <viewAttribute id="IS_30400801"/>
+        <viewAttribute id="IS_30400802"/>
+        <viewAttribute id="IS_30400803"/>
+        <viewAttribute id="IS_30400303"/>
+        <viewAttribute id="IS_30400601"/>
+        <viewAttribute id="IS_30400501"/>
+        <viewAttribute id="IS_30400602"/>
+        <viewAttribute id="IS_30400603"/>
+        <viewAttribute id="IS_30400101"/>
+        <viewAttribute id="IS_30400102"/>
+        <viewAttribute id="CC_MODIF_IND"/>
+        <viewAttribute id="CC_TIMESTAMP"/>
+        <viewAttribute id="CC_MOD_IND_ONLY"/>
+        <viewAttribute id="IS_30400204"/>
+        <viewAttribute id="IS_30400205"/>
+        <viewAttribute id="IS_30400201"/>
+        <viewAttribute id="IS_30400202"/>
+        <viewAttribute id="CC_SRCDOC_ID_TERM"/>
+        <viewAttribute id="CC_NEW_PLAN_REC"/>
+        <viewAttribute id="POB_END_DT"/>
+        <viewAttribute id="CC_TERM_SUSP_IND"/>
+        <viewAttribute id="IS_30400804"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="IS_30400703" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isNull(&quot;CHARGE_TYPE_RIGHT&quot;),'1','0')</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="IS_30400704" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isNull(&quot;POB_TYPE&quot;),'1','0')</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#UNION_CHARGE_TYPE">
+        <mapping xsi:type="Calculation:AttributeMapping" target="BAN" source="BAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTR_TRANS_DT" source="CONTR_TRANS_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_ID" source="ITEM_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_TRANS_DT" source="ITEM_TRANS_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBSCR_NO" source="SUBSCR_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRX_SEQ_NO" source="TRX_SEQ_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_SUB_ID" source="ITEM_SUB_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_CHARGE_TYPE" source="CC_CHARGE_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_RULE_PATH" source="CC_RULE_PATH"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30400701" source="IS_30400701"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30400702" source="IS_30400702"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_TERM_POB_IND" source="CC_TERM_POB_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_SRCDOC_ID" source="CC_SRCDOC_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="STNDLN_SELL_PRC" source="STNDLN_SELL_PRC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRANS_PRC" source="TRANS_PRC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TERM_M2M" source="TERM_M2M"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CHRG_TY_CLASSIF" source="CHRG_TY_CLASSIF"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MATKL" source="MATKL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BISMT_RIGHT" source="BISMT_RIGHT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NORMT" source="NORMT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACTV_CD" source="ACTV_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACTV_RSN_CD" source="ACTV_RSN_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BASE_OPT_SERV_IND" source="BASE_OPT_SERV_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TIME_IND" source="TIME_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RAI_ITEM_ID" source="RAI_ITEM_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_ID" source="REFERENCE_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MIN_TIER_PRC" source="MIN_TIER_PRC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KUNNR_SID" source="KUNNR_SID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_STRT_DT" source="ITEM_STRT_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_BILL_DAY" source="CC_BILL_DAY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_REF_ID" source="CC_REF_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_END_DT" source="CC_END_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_START_DT" source="CC_START_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="X_NEGATIVE_ITEM" source="X_NEGATIVE_ITEM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="HEADER_ID" source="HEADER_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTR_STRT_DT" source="CONTR_STRT_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_VALUE_RELEVANT" source="CC_VALUE_RELEVANT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RAI_TS" source="RAI_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30400203" source="IS_30400203"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30400801" source="IS_30400801"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30400802" source="IS_30400802"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30400803" source="IS_30400803"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30400303" source="IS_30400303"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30400601" source="IS_30400601"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30400501" source="IS_30400501"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30400602" source="IS_30400602"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30400603" source="IS_30400603"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30400101" source="IS_30400101"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30400102" source="IS_30400102"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_MODIF_IND" source="CC_MODIF_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_TIMESTAMP" source="CC_TIMESTAMP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_MOD_IND_ONLY" source="CC_MOD_IND_ONLY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30400204" source="IS_30400204"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30400205" source="IS_30400205"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30400201" source="IS_30400201"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30400202" source="IS_30400202"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_SRCDOC_ID_TERM" source="CC_SRCDOC_ID_TERM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_NEW_PLAN_REC" source="CC_NEW_PLAN_REC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="POB_END_DT" source="POB_END_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_TERM_SUSP_IND" source="CC_TERM_SUSP_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30400804" source="IS_30400804"/>
+      </input>
+      <input node="#PROJ_CHARGE_TYPE_POB_TYPE">
+        <mapping xsi:type="Calculation:AttributeMapping" target="POB_TYPE" source="POB_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VALUE_RELEVANT" source="VALUE_RELEVANT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CHARGE_TYPE_RIGHT" source="CHARGE_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_CHARGE_TYPE" source="CHARGE_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_RULE_PATH" source="RULE_PATH"/>
+      </input>
+      <joinAttribute name="CC_CHARGE_TYPE"/>
+      <joinAttribute name="CC_RULE_PATH"/>
+    </calculationView>
+  </calculationViews>
+  <logicalModel id="JOIN_POB_TYPE_CHRG_TYPE">
+    <descriptions/>
+    <attributes>
+      <attribute id="POB_TYPE" order="1" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="POB_TYPE"/>
+        <keyMapping columnObjectName="JOIN_POB_TYPE_CHRG_TYPE" columnName="POB_TYPE"/>
+      </attribute>
+      <attribute id="VALUE_RELEVANT" order="2" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="VALUE_RELEVANT"/>
+        <keyMapping columnObjectName="JOIN_POB_TYPE_CHRG_TYPE" columnName="VALUE_RELEVANT"/>
+      </attribute>
+      <attribute id="BAN" order="3" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="BAN"/>
+        <keyMapping columnObjectName="JOIN_POB_TYPE_CHRG_TYPE" columnName="BAN"/>
+      </attribute>
+      <attribute id="CONTR_TRANS_DT" order="4" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CONTR_TRANS_DT"/>
+        <keyMapping columnObjectName="JOIN_POB_TYPE_CHRG_TYPE" columnName="CONTR_TRANS_DT"/>
+      </attribute>
+      <attribute id="ITEM_ID" order="5" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ITEM_ID"/>
+        <keyMapping columnObjectName="JOIN_POB_TYPE_CHRG_TYPE" columnName="ITEM_ID"/>
+      </attribute>
+      <attribute id="ITEM_TRANS_DT" order="6" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ITEM_TRANS_DT"/>
+        <keyMapping columnObjectName="JOIN_POB_TYPE_CHRG_TYPE" columnName="ITEM_TRANS_DT"/>
+      </attribute>
+      <attribute id="SUBSCR_NO" order="7" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SUBSCR_NO"/>
+        <keyMapping columnObjectName="JOIN_POB_TYPE_CHRG_TYPE" columnName="SUBSCR_NO"/>
+      </attribute>
+      <attribute id="TRX_SEQ_NO" order="8" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="TRX_SEQ_NO"/>
+        <keyMapping columnObjectName="JOIN_POB_TYPE_CHRG_TYPE" columnName="TRX_SEQ_NO"/>
+      </attribute>
+      <attribute id="ITEM_SUB_ID" order="9" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ITEM_SUB_ID"/>
+        <keyMapping columnObjectName="JOIN_POB_TYPE_CHRG_TYPE" columnName="ITEM_SUB_ID"/>
+      </attribute>
+      <attribute id="CC_CHARGE_TYPE" order="10" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CC_CHARGE_TYPE"/>
+        <keyMapping columnObjectName="JOIN_POB_TYPE_CHRG_TYPE" columnName="CC_CHARGE_TYPE"/>
+      </attribute>
+      <attribute id="IS_30400701" order="11" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="IS_30400701"/>
+        <keyMapping columnObjectName="JOIN_POB_TYPE_CHRG_TYPE" columnName="IS_30400701"/>
+      </attribute>
+      <attribute id="IS_30400702" order="12" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="IS_30400702"/>
+        <keyMapping columnObjectName="JOIN_POB_TYPE_CHRG_TYPE" columnName="IS_30400702"/>
+      </attribute>
+      <attribute id="IS_30400704" order="13" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="IS_30400704"/>
+        <keyMapping columnObjectName="JOIN_POB_TYPE_CHRG_TYPE" columnName="IS_30400704"/>
+      </attribute>
+      <attribute id="IS_30400703" order="14" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="IS_30400703"/>
+        <keyMapping columnObjectName="JOIN_POB_TYPE_CHRG_TYPE" columnName="IS_30400703"/>
+      </attribute>
+      <attribute id="CC_TERM_POB_IND" order="15" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CC_TERM_POB_IND"/>
+        <keyMapping columnObjectName="JOIN_POB_TYPE_CHRG_TYPE" columnName="CC_TERM_POB_IND"/>
+      </attribute>
+      <attribute id="CC_SRCDOC_ID" order="16" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CC_SRCDOC_ID"/>
+        <keyMapping columnObjectName="JOIN_POB_TYPE_CHRG_TYPE" columnName="CC_SRCDOC_ID"/>
+      </attribute>
+      <attribute id="STNDLN_SELL_PRC" order="17" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="STNDLN_SELL_PRC"/>
+        <keyMapping columnObjectName="JOIN_POB_TYPE_CHRG_TYPE" columnName="STNDLN_SELL_PRC"/>
+      </attribute>
+      <attribute id="TRANS_PRC" order="18" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="TRANS_PRC"/>
+        <keyMapping columnObjectName="JOIN_POB_TYPE_CHRG_TYPE" columnName="TRANS_PRC"/>
+      </attribute>
+      <attribute id="TERM_M2M" order="19" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="TERM_M2M"/>
+        <keyMapping columnObjectName="JOIN_POB_TYPE_CHRG_TYPE" columnName="TERM_M2M"/>
+      </attribute>
+      <attribute id="CHRG_TY_CLASSIF" order="20" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CHRG_TY_CLASSIF"/>
+        <keyMapping columnObjectName="JOIN_POB_TYPE_CHRG_TYPE" columnName="CHRG_TY_CLASSIF"/>
+      </attribute>
+      <attribute id="MATKL" order="21" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="MATKL"/>
+        <keyMapping columnObjectName="JOIN_POB_TYPE_CHRG_TYPE" columnName="MATKL"/>
+      </attribute>
+      <attribute id="BISMT_RIGHT" order="22" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="BISMT_RIGHT"/>
+        <keyMapping columnObjectName="JOIN_POB_TYPE_CHRG_TYPE" columnName="BISMT_RIGHT"/>
+      </attribute>
+      <attribute id="NORMT" order="23" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="NORMT"/>
+        <keyMapping columnObjectName="JOIN_POB_TYPE_CHRG_TYPE" columnName="NORMT"/>
+      </attribute>
+      <attribute id="ACTV_CD" order="24" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ACTV_CD"/>
+        <keyMapping columnObjectName="JOIN_POB_TYPE_CHRG_TYPE" columnName="ACTV_CD"/>
+      </attribute>
+      <attribute id="ACTV_RSN_CD" order="25" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ACTV_RSN_CD"/>
+        <keyMapping columnObjectName="JOIN_POB_TYPE_CHRG_TYPE" columnName="ACTV_RSN_CD"/>
+      </attribute>
+      <attribute id="BASE_OPT_SERV_IND" order="26" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="BASE_OPT_SERV_IND"/>
+        <keyMapping columnObjectName="JOIN_POB_TYPE_CHRG_TYPE" columnName="BASE_OPT_SERV_IND"/>
+      </attribute>
+      <attribute id="TIME_IND" order="27" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="TIME_IND"/>
+        <keyMapping columnObjectName="JOIN_POB_TYPE_CHRG_TYPE" columnName="TIME_IND"/>
+      </attribute>
+      <attribute id="RAI_ITEM_ID" order="28" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="RAI_ITEM_ID"/>
+        <keyMapping columnObjectName="JOIN_POB_TYPE_CHRG_TYPE" columnName="RAI_ITEM_ID"/>
+      </attribute>
+      <attribute id="REFERENCE_ID" order="29" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="REFERENCE_ID"/>
+        <keyMapping columnObjectName="JOIN_POB_TYPE_CHRG_TYPE" columnName="REFERENCE_ID"/>
+      </attribute>
+      <attribute id="MIN_TIER_PRC" order="30" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="MIN_TIER_PRC"/>
+        <keyMapping columnObjectName="JOIN_POB_TYPE_CHRG_TYPE" columnName="MIN_TIER_PRC"/>
+      </attribute>
+      <attribute id="KUNNR_SID" order="31" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="KUNNR_SID"/>
+        <keyMapping columnObjectName="JOIN_POB_TYPE_CHRG_TYPE" columnName="KUNNR_SID"/>
+      </attribute>
+      <attribute id="ITEM_STRT_DT" order="32" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ITEM_STRT_DT"/>
+        <keyMapping columnObjectName="JOIN_POB_TYPE_CHRG_TYPE" columnName="ITEM_STRT_DT"/>
+      </attribute>
+      <attribute id="CC_BILL_DAY" order="33" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CC_BILL_DAY"/>
+        <keyMapping columnObjectName="JOIN_POB_TYPE_CHRG_TYPE" columnName="CC_BILL_DAY"/>
+      </attribute>
+      <attribute id="CC_REF_ID" order="34" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CC_REF_ID"/>
+        <keyMapping columnObjectName="JOIN_POB_TYPE_CHRG_TYPE" columnName="CC_REF_ID"/>
+      </attribute>
+      <attribute id="CC_END_DT" order="35" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CC_END_DT"/>
+        <keyMapping columnObjectName="JOIN_POB_TYPE_CHRG_TYPE" columnName="CC_END_DT"/>
+      </attribute>
+      <attribute id="CC_START_DT" order="36" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CC_START_DT"/>
+        <keyMapping columnObjectName="JOIN_POB_TYPE_CHRG_TYPE" columnName="CC_START_DT"/>
+      </attribute>
+      <attribute id="X_NEGATIVE_ITEM" order="37" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="X_NEGATIVE_ITEM"/>
+        <keyMapping columnObjectName="JOIN_POB_TYPE_CHRG_TYPE" columnName="X_NEGATIVE_ITEM"/>
+      </attribute>
+      <attribute id="HEADER_ID" order="38" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="HEADER_ID"/>
+        <keyMapping columnObjectName="JOIN_POB_TYPE_CHRG_TYPE" columnName="HEADER_ID"/>
+      </attribute>
+      <attribute id="CONTR_STRT_DT" order="39" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CONTR_STRT_DT"/>
+        <keyMapping columnObjectName="JOIN_POB_TYPE_CHRG_TYPE" columnName="CONTR_STRT_DT"/>
+      </attribute>
+      <attribute id="CC_VALUE_RELEVANT" order="40" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CC_VALUE_RELEVANT"/>
+        <keyMapping columnObjectName="JOIN_POB_TYPE_CHRG_TYPE" columnName="CC_VALUE_RELEVANT"/>
+      </attribute>
+      <attribute id="RAI_TS" order="41" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="RAI_TS"/>
+        <keyMapping columnObjectName="JOIN_POB_TYPE_CHRG_TYPE" columnName="RAI_TS"/>
+      </attribute>
+      <attribute id="IS_30400203" order="42" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="IS_30400203"/>
+        <keyMapping columnObjectName="JOIN_POB_TYPE_CHRG_TYPE" columnName="IS_30400203"/>
+      </attribute>
+      <attribute id="IS_30400801" order="43" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="IS_30400801"/>
+        <keyMapping columnObjectName="JOIN_POB_TYPE_CHRG_TYPE" columnName="IS_30400801"/>
+      </attribute>
+      <attribute id="IS_30400802" order="44" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="IS_30400802"/>
+        <keyMapping columnObjectName="JOIN_POB_TYPE_CHRG_TYPE" columnName="IS_30400802"/>
+      </attribute>
+      <attribute id="IS_30400803" order="45" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="IS_30400803"/>
+        <keyMapping columnObjectName="JOIN_POB_TYPE_CHRG_TYPE" columnName="IS_30400803"/>
+      </attribute>
+      <attribute id="IS_30400303" order="46" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="IS_30400303"/>
+        <keyMapping columnObjectName="JOIN_POB_TYPE_CHRG_TYPE" columnName="IS_30400303"/>
+      </attribute>
+      <attribute id="IS_30400601" order="47" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="IS_30400601"/>
+        <keyMapping columnObjectName="JOIN_POB_TYPE_CHRG_TYPE" columnName="IS_30400601"/>
+      </attribute>
+      <attribute id="IS_30400501" order="48" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="IS_30400501"/>
+        <keyMapping columnObjectName="JOIN_POB_TYPE_CHRG_TYPE" columnName="IS_30400501"/>
+      </attribute>
+      <attribute id="IS_30400602" order="49" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="IS_30400602"/>
+        <keyMapping columnObjectName="JOIN_POB_TYPE_CHRG_TYPE" columnName="IS_30400602"/>
+      </attribute>
+      <attribute id="IS_30400603" order="50" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="IS_30400603"/>
+        <keyMapping columnObjectName="JOIN_POB_TYPE_CHRG_TYPE" columnName="IS_30400603"/>
+      </attribute>
+      <attribute id="IS_30400101" order="51" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="IS_30400101"/>
+        <keyMapping columnObjectName="JOIN_POB_TYPE_CHRG_TYPE" columnName="IS_30400101"/>
+      </attribute>
+      <attribute id="IS_30400102" order="52" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="IS_30400102"/>
+        <keyMapping columnObjectName="JOIN_POB_TYPE_CHRG_TYPE" columnName="IS_30400102"/>
+      </attribute>
+      <attribute id="CC_MODIF_IND" order="53" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CC_MODIF_IND"/>
+        <keyMapping columnObjectName="JOIN_POB_TYPE_CHRG_TYPE" columnName="CC_MODIF_IND"/>
+      </attribute>
+      <attribute id="CC_TIMESTAMP" order="54" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CC_TIMESTAMP"/>
+        <keyMapping columnObjectName="JOIN_POB_TYPE_CHRG_TYPE" columnName="CC_TIMESTAMP"/>
+      </attribute>
+      <attribute id="CC_MOD_IND_ONLY" order="55" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CC_MOD_IND_ONLY"/>
+        <keyMapping columnObjectName="JOIN_POB_TYPE_CHRG_TYPE" columnName="CC_MOD_IND_ONLY"/>
+      </attribute>
+      <attribute id="IS_30400204" order="56" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="IS_30400204"/>
+        <keyMapping columnObjectName="JOIN_POB_TYPE_CHRG_TYPE" columnName="IS_30400204"/>
+      </attribute>
+      <attribute id="IS_30400205" order="57" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="IS_30400205"/>
+        <keyMapping columnObjectName="JOIN_POB_TYPE_CHRG_TYPE" columnName="IS_30400205"/>
+      </attribute>
+      <attribute id="IS_30400201" order="58" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="IS_30400201"/>
+        <keyMapping columnObjectName="JOIN_POB_TYPE_CHRG_TYPE" columnName="IS_30400201"/>
+      </attribute>
+      <attribute id="IS_30400202" order="59" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="IS_30400202"/>
+        <keyMapping columnObjectName="JOIN_POB_TYPE_CHRG_TYPE" columnName="IS_30400202"/>
+      </attribute>
+      <attribute id="CC_SRCDOC_ID_TERM" order="60" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CC_SRCDOC_ID_TERM"/>
+        <keyMapping columnObjectName="JOIN_POB_TYPE_CHRG_TYPE" columnName="CC_SRCDOC_ID_TERM"/>
+      </attribute>
+      <attribute id="CC_NEW_PLAN_REC" order="61" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CC_NEW_PLAN_REC"/>
+        <keyMapping columnObjectName="JOIN_POB_TYPE_CHRG_TYPE" columnName="CC_NEW_PLAN_REC"/>
+      </attribute>
+      <attribute id="POB_END_DT" order="62" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="POB_END_DT"/>
+        <keyMapping columnObjectName="JOIN_POB_TYPE_CHRG_TYPE" columnName="POB_END_DT"/>
+      </attribute>
+      <attribute id="CC_TERM_SUSP_IND" order="63" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CC_TERM_SUSP_IND"/>
+        <keyMapping columnObjectName="JOIN_POB_TYPE_CHRG_TYPE" columnName="CC_TERM_SUSP_IND"/>
+      </attribute>
+      <attribute id="IS_30400804" order="64" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions/>
+        <keyMapping columnObjectName="JOIN_POB_TYPE_CHRG_TYPE" columnName="IS_30400804"/>
+      </attribute>
+    </attributes>
+    <calculatedAttributes/>
+    <privateDataFoundation>
+      <tableProxies/>
+      <joins/>
+      <layout>
+        <shapes/>
+      </layout>
+    </privateDataFoundation>
+    <baseMeasures/>
+    <calculatedMeasures/>
+    <restrictedMeasures/>
+    <localDimensions/>
+  </logicalModel>
+  <layout>
+    <shapes>
+      <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+        <upperLeftCorner x="99" y="87"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_EQP_REC" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="253" y="377"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_OTHER" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="176" y="473"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_MARA" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="22" y="479"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="JOIN_MARA" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="99" y="377"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="UNION_CHARGE_TYPE" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="176" y="261"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_CHARGE_TYPE_POB_TYPE" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="22" y="261"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="JOIN_POB_TYPE_CHRG_TYPE" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="99" y="165"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+    </shapes>
+  </layout>
+</Calculation:scenario>

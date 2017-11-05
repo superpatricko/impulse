@@ -1,0 +1,730 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:AccessControl="http://www.sap.com/ndb/SQLCoreModelAccessControl.ecore" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" xmlns:Variable="http://www.sap.com/ndb/BiModelVariable.ecore" schemaVersion="2.3" id="CA_NM1_EDW_REF_MDLNMB_HIST" applyPrivilegeType="NONE" checkAnalyticPrivileges="false" defaultClient="$$client$$" defaultLanguage="$$language$$" hierarchiesSQLEnabled="false" translationRelevant="true" visibility="internal" calculationScenarioType="TREE_BASED" dataCategory="DIMENSION" enforceSqlExecution="false" executionSemantic="UNDEFINED" outputViewType="Projection">
+  <descriptions defaultDescription="CA_NM1_EDW_REF_MDLNMB_HIST"/>
+  <localVariables>
+    <variable id="IP_EFF_DT" parameter="true">
+      <descriptions defaultDescription="IP_EFF_DT"/>
+      <variableProperties datatype="DATE" defaultValue="99991231" mandatory="false">
+        <valueDomain type="Date"/>
+        <selection multiLine="false" type="SingleValue"/>
+      </variableProperties>
+    </variable>
+  </localVariables>
+  <variableMappings>
+    <mapping xsi:type="Variable:VariableMapping" dataSource="#CA_NM1_EDW_REF_MDLNMB_HIST">
+      <targetVariable name="IP_EFF_DT" resourceUri="/IFRS_R1.MOBILITY.LAND_MOBILITY/calculationviews/CA_NM1_EDW_REF_MDLNMB_HIST"/>
+      <localVariable>#IP_EFF_DT</localVariable>
+    </mapping>
+  </variableMappings>
+  <informationModelLayout relativeWidthScenario="42"/>
+  <dataSources>
+    <DataSource id="IFRS_R1.MOBILITY.NDB_MOBILITY::MOBL_POST_MDLNMB_HIST_EH" type="DATA_BASE_TABLE">
+      <viewAttributes allViewAttributes="true"/>
+      <columnObject schemaName="NDB_MOBILITY" columnObjectName="IFRS_R1.MOBILITY.NDB_MOBILITY::MOBL_POST_MDLNMB_HIST_EH"/>
+    </DataSource>
+    <DataSource id="CA_NM1_EDW_REF_MDLNMB_HIST" type="CALCULATION_VIEW">
+      <viewAttributes allViewAttributes="true"/>
+      <resourceUri>/IFRS_R1.MOBILITY.LAND_MOBILITY/calculationviews/CA_NM1_EDW_REF_MDLNMB_HIST</resourceUri>
+    </DataSource>
+    <DataSource id="IFRS_R1.MOBILITY.NDB_MOBILITY::MOBL_POST_MDLNMB_HIST" type="DATA_BASE_TABLE">
+      <viewAttributes allViewAttributes="true"/>
+      <columnObject schemaName="NDB_MOBILITY" columnObjectName="IFRS_R1.MOBILITY.NDB_MOBILITY::MOBL_POST_MDLNMB_HIST"/>
+    </DataSource>
+  </dataSources>
+  <calculationViews>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_NDB_EH">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="EFFECTIVE_DATE"/>
+        <viewAttribute id="MODEL_NUMBER"/>
+        <viewAttribute id="DELETED">
+          <filter xsi:type="AccessControl:SingleValueFilter" operator="NL" including="true"/>
+        </viewAttribute>
+        <viewAttribute id="REFERENCE_EFFECTIVE_DT"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="DATE" id="CC_EFF_DT" expressionLanguage="COLUMN_ENGINE">
+          <formula>date(&quot;REFERENCE_EFFECTIVE_DT&quot;)</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#IFRS_R1.MOBILITY.NDB_MOBILITY::MOBL_POST_MDLNMB_HIST_EH">
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFFECTIVE_DATE" source="EFFECTIVE_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MODEL_NUMBER" source="MODEL_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DELETED" source="DELETED"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_EFFECTIVE_DT" source="REFERENCE_EFFECTIVE_DT"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_PRIVATE_VW">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="EFFECTIVE_DATE"/>
+        <viewAttribute id="EFF_DT"/>
+        <viewAttribute id="EXPY_DT"/>
+        <viewAttribute id="MODEL_NUMBER"/>
+        <viewAttribute id="CYCL_ID"/>
+        <viewAttribute id="ACT_CREDIT_TYPE"/>
+        <viewAttribute id="ALT_MODEL_DESC"/>
+        <viewAttribute id="DEVICE_GROUP_CD"/>
+        <viewAttribute id="EQUIPMENT_TYPE"/>
+        <viewAttribute id="EQUIP_DIST_TYPE"/>
+        <viewAttribute id="EXPIRATION_DATE"/>
+        <viewAttribute id="HIGH_VALUE_IND"/>
+        <viewAttribute id="INSTAL_HVU"/>
+        <viewAttribute id="IOTA_ENABL_CD"/>
+        <viewAttribute id="MANF_MODEL_NUMBER"/>
+        <viewAttribute id="MANUFACTURER_CODE"/>
+        <viewAttribute id="MODEL_BRAND_CD"/>
+        <viewAttribute id="MODEL_DESC"/>
+        <viewAttribute id="MODEL_GROUP_CD"/>
+        <viewAttribute id="MODES_SUPPORTED"/>
+        <viewAttribute id="ORIGINAL_COST"/>
+        <viewAttribute id="PRL_UPD_IND"/>
+        <viewAttribute id="PRODUCT_TYPE"/>
+        <viewAttribute id="SELF_SERV_ACT_CD"/>
+        <viewAttribute id="UPGRADE_TYPE"/>
+        <viewAttribute id="SELL_PRICE"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#CA_NM1_EDW_REF_MDLNMB_HIST">
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFFECTIVE_DATE" source="EFFECTIVE_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFF_DT" source="EFF_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXPY_DT" source="EXPY_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MODEL_NUMBER" source="MODEL_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACT_CREDIT_TYPE" source="ACT_CREDIT_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ALT_MODEL_DESC" source="ALT_MODEL_DESC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DEVICE_GROUP_CD" source="DEVICE_GROUP_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EQUIPMENT_TYPE" source="EQUIPMENT_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EQUIP_DIST_TYPE" source="EQUIP_DIST_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXPIRATION_DATE" source="EXPIRATION_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="HIGH_VALUE_IND" source="HIGH_VALUE_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INSTAL_HVU" source="INSTAL_HVU"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IOTA_ENABL_CD" source="IOTA_ENABL_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MANF_MODEL_NUMBER" source="MANF_MODEL_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MANUFACTURER_CODE" source="MANUFACTURER_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MODEL_BRAND_CD" source="MODEL_BRAND_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MODEL_DESC" source="MODEL_DESC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MODEL_GROUP_CD" source="MODEL_GROUP_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MODES_SUPPORTED" source="MODES_SUPPORTED"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ORIGINAL_COST" source="ORIGINAL_COST"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRL_UPD_IND" source="PRL_UPD_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT_TYPE" source="PRODUCT_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SELF_SERV_ACT_CD" source="SELF_SERV_ACT_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="UPGRADE_TYPE" source="UPGRADE_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SELL_PRICE" source="SELL_PRICE"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="JOIN_INCOMING_RECORDS_WITH_EH" joinOrder="OUTSIDE_IN" joinType="leftOuter">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="CC_EFF_DT"/>
+        <viewAttribute id="MODEL_NUMBER"/>
+        <viewAttribute id="EFFECTIVE_DATE"/>
+        <viewAttribute id="MODEL_NUMBER_LAND"/>
+        <viewAttribute id="CYCL_ID"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#PROJ_NDB_EH">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_EFF_DT" source="CC_EFF_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MODEL_NUMBER" source="MODEL_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFFECTIVE_DATE" source="EFFECTIVE_DATE"/>
+      </input>
+      <input node="#PROJ_PRIVATE_VW">
+        <mapping xsi:type="Calculation:AttributeMapping" target="MODEL_NUMBER_LAND" source="MODEL_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFFECTIVE_DATE" source="EFFECTIVE_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_EFF_DT" source="EFF_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MODEL_NUMBER" source="MODEL_NUMBER"/>
+      </input>
+      <joinAttribute name="EFFECTIVE_DATE"/>
+      <joinAttribute name="CC_EFF_DT"/>
+      <joinAttribute name="MODEL_NUMBER"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_FILTER_INCOMING_RECORDS">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="MODEL_NUMBER_LAND">
+          <filter xsi:type="AccessControl:SingleValueFilter" operator="NL" including="true"/>
+        </viewAttribute>
+        <viewAttribute id="MODEL_NUMBER"/>
+        <viewAttribute id="CYCL_ID"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#JOIN_INCOMING_RECORDS_WITH_EH">
+        <mapping xsi:type="Calculation:AttributeMapping" target="MODEL_NUMBER_LAND" source="MODEL_NUMBER_LAND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MODEL_NUMBER" source="MODEL_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:AggregationView" id="AGGR_DISTINCT">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="MODEL_NUMBER_RIGHT"/>
+        <viewAttribute id="CYCL_ID"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#PROJ_FILTER_INCOMING_RECORDS">
+        <mapping xsi:type="Calculation:AttributeMapping" target="MODEL_NUMBER_RIGHT" source="MODEL_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="JOIN_CA_EH" joinOrder="OUTSIDE_IN" joinType="leftOuter">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="EFFECTIVE_DATE"/>
+        <viewAttribute id="EFF_DT"/>
+        <viewAttribute id="EXPY_DT"/>
+        <viewAttribute id="MODEL_NUMBER"/>
+        <viewAttribute id="ACT_CREDIT_TYPE"/>
+        <viewAttribute id="ALT_MODEL_DESC"/>
+        <viewAttribute id="DEVICE_GROUP_CD"/>
+        <viewAttribute id="EQUIPMENT_TYPE"/>
+        <viewAttribute id="EQUIP_DIST_TYPE"/>
+        <viewAttribute id="EXPIRATION_DATE"/>
+        <viewAttribute id="HIGH_VALUE_IND"/>
+        <viewAttribute id="INSTAL_HVU"/>
+        <viewAttribute id="IOTA_ENABL_CD"/>
+        <viewAttribute id="MANF_MODEL_NUMBER"/>
+        <viewAttribute id="MANUFACTURER_CODE"/>
+        <viewAttribute id="MODEL_BRAND_CD"/>
+        <viewAttribute id="MODEL_DESC"/>
+        <viewAttribute id="MODEL_GROUP_CD"/>
+        <viewAttribute id="MODES_SUPPORTED"/>
+        <viewAttribute id="ORIGINAL_COST"/>
+        <viewAttribute id="PRL_UPD_IND"/>
+        <viewAttribute id="PRODUCT_TYPE"/>
+        <viewAttribute id="SELF_SERV_ACT_CD"/>
+        <viewAttribute id="UPGRADE_TYPE"/>
+        <viewAttribute id="SELL_PRICE"/>
+        <viewAttribute id="MODEL_NUMBER_RIGHT"/>
+        <viewAttribute id="CYCL_ID"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="IS_20403501" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isNull(&quot;MODEL_NUMBER_RIGHT&quot;),0,1)</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#PROJ_PRIVATE_VW">
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFFECTIVE_DATE" source="EFFECTIVE_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFF_DT" source="EFF_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXPY_DT" source="EXPY_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MODEL_NUMBER" source="MODEL_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACT_CREDIT_TYPE" source="ACT_CREDIT_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ALT_MODEL_DESC" source="ALT_MODEL_DESC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DEVICE_GROUP_CD" source="DEVICE_GROUP_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EQUIPMENT_TYPE" source="EQUIPMENT_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EQUIP_DIST_TYPE" source="EQUIP_DIST_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXPIRATION_DATE" source="EXPIRATION_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="HIGH_VALUE_IND" source="HIGH_VALUE_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INSTAL_HVU" source="INSTAL_HVU"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IOTA_ENABL_CD" source="IOTA_ENABL_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MANF_MODEL_NUMBER" source="MANF_MODEL_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MANUFACTURER_CODE" source="MANUFACTURER_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MODEL_BRAND_CD" source="MODEL_BRAND_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MODEL_DESC" source="MODEL_DESC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MODEL_GROUP_CD" source="MODEL_GROUP_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MODES_SUPPORTED" source="MODES_SUPPORTED"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ORIGINAL_COST" source="ORIGINAL_COST"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRL_UPD_IND" source="PRL_UPD_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT_TYPE" source="PRODUCT_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SELF_SERV_ACT_CD" source="SELF_SERV_ACT_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="UPGRADE_TYPE" source="UPGRADE_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SELL_PRICE" source="SELL_PRICE"/>
+      </input>
+      <input node="#AGGR_DISTINCT">
+        <mapping xsi:type="Calculation:AttributeMapping" target="MODEL_NUMBER_RIGHT" source="MODEL_NUMBER_RIGHT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MODEL_NUMBER" source="MODEL_NUMBER_RIGHT"/>
+      </input>
+      <joinAttribute name="MODEL_NUMBER"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_NDB">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="MODEL_NUMBER"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#IFRS_R1.MOBILITY.NDB_MOBILITY::MOBL_POST_MDLNMB_HIST">
+        <mapping xsi:type="Calculation:AttributeMapping" target="MODEL_NUMBER" source="MODEL_NUMBER"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="JOIN" joinOrder="OUTSIDE_IN" joinType="leftOuter">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="MODEL_NUMBER"/>
+        <viewAttribute id="ACT_CREDIT_TYPE"/>
+        <viewAttribute id="ALT_MODEL_DESC"/>
+        <viewAttribute id="DEVICE_GROUP_CD"/>
+        <viewAttribute id="EQUIPMENT_TYPE"/>
+        <viewAttribute id="EQUIP_DIST_TYPE"/>
+        <viewAttribute id="EXPIRATION_DATE"/>
+        <viewAttribute id="HIGH_VALUE_IND"/>
+        <viewAttribute id="INSTAL_HVU"/>
+        <viewAttribute id="IOTA_ENABL_CD"/>
+        <viewAttribute id="MANF_MODEL_NUMBER"/>
+        <viewAttribute id="MANUFACTURER_CODE"/>
+        <viewAttribute id="MODEL_BRAND_CD"/>
+        <viewAttribute id="MODEL_DESC"/>
+        <viewAttribute id="MODEL_GROUP_CD"/>
+        <viewAttribute id="MODES_SUPPORTED"/>
+        <viewAttribute id="ORIGINAL_COST"/>
+        <viewAttribute id="PRL_UPD_IND"/>
+        <viewAttribute id="PRODUCT_TYPE"/>
+        <viewAttribute id="SELF_SERV_ACT_CD"/>
+        <viewAttribute id="UPGRADE_TYPE"/>
+        <viewAttribute id="SELL_PRICE"/>
+        <viewAttribute id="EFF_DT"/>
+        <viewAttribute id="IS_20403501"/>
+        <viewAttribute id="MODEL_NUMBER_RIGHT"/>
+        <viewAttribute id="CYCL_ID"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="DATE" id="CC_EXPY_DT" expressionLanguage="COLUMN_ENGINE">
+          <formula>date('9999-12-31')</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#JOIN_CA_EH">
+        <mapping xsi:type="Calculation:AttributeMapping" target="MODEL_NUMBER" source="MODEL_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACT_CREDIT_TYPE" source="ACT_CREDIT_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ALT_MODEL_DESC" source="ALT_MODEL_DESC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DEVICE_GROUP_CD" source="DEVICE_GROUP_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EQUIPMENT_TYPE" source="EQUIPMENT_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EQUIP_DIST_TYPE" source="EQUIP_DIST_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXPIRATION_DATE" source="EXPIRATION_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="HIGH_VALUE_IND" source="HIGH_VALUE_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INSTAL_HVU" source="INSTAL_HVU"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IOTA_ENABL_CD" source="IOTA_ENABL_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MANF_MODEL_NUMBER" source="MANF_MODEL_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MANUFACTURER_CODE" source="MANUFACTURER_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MODEL_BRAND_CD" source="MODEL_BRAND_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MODEL_DESC" source="MODEL_DESC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MODEL_GROUP_CD" source="MODEL_GROUP_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MODES_SUPPORTED" source="MODES_SUPPORTED"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ORIGINAL_COST" source="ORIGINAL_COST"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRL_UPD_IND" source="PRL_UPD_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT_TYPE" source="PRODUCT_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SELF_SERV_ACT_CD" source="SELF_SERV_ACT_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="UPGRADE_TYPE" source="UPGRADE_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SELL_PRICE" source="SELL_PRICE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFF_DT" source="EFF_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20403501" source="IS_20403501"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+      </input>
+      <input node="#PROJ_NDB">
+        <mapping xsi:type="Calculation:AttributeMapping" target="MODEL_NUMBER_RIGHT" source="MODEL_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MODEL_NUMBER" source="MODEL_NUMBER"/>
+      </input>
+      <joinAttribute name="MODEL_NUMBER"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:RankView" id="RANK_SEQ">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="MODEL_NUMBER"/>
+        <viewAttribute id="ACT_CREDIT_TYPE"/>
+        <viewAttribute id="ALT_MODEL_DESC"/>
+        <viewAttribute id="DEVICE_GROUP_CD"/>
+        <viewAttribute id="EQUIPMENT_TYPE"/>
+        <viewAttribute id="EQUIP_DIST_TYPE"/>
+        <viewAttribute id="EXPIRATION_DATE"/>
+        <viewAttribute id="HIGH_VALUE_IND"/>
+        <viewAttribute id="INSTAL_HVU"/>
+        <viewAttribute id="IOTA_ENABL_CD"/>
+        <viewAttribute id="MANF_MODEL_NUMBER"/>
+        <viewAttribute id="MANUFACTURER_CODE"/>
+        <viewAttribute id="MODEL_BRAND_CD"/>
+        <viewAttribute id="MODEL_DESC"/>
+        <viewAttribute id="MODEL_GROUP_CD"/>
+        <viewAttribute id="MODES_SUPPORTED"/>
+        <viewAttribute id="ORIGINAL_COST"/>
+        <viewAttribute id="PRL_UPD_IND"/>
+        <viewAttribute id="PRODUCT_TYPE"/>
+        <viewAttribute id="SELF_SERV_ACT_CD"/>
+        <viewAttribute id="UPGRADE_TYPE"/>
+        <viewAttribute id="SELL_PRICE"/>
+        <viewAttribute id="EFF_DT"/>
+        <viewAttribute id="IS_20403501"/>
+        <viewAttribute id="MODEL_NUMBER_RIGHT"/>
+        <viewAttribute id="EXPY_DT"/>
+        <viewAttribute id="CYCL_ID"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#JOIN">
+        <mapping xsi:type="Calculation:AttributeMapping" target="MODEL_NUMBER" source="MODEL_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACT_CREDIT_TYPE" source="ACT_CREDIT_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ALT_MODEL_DESC" source="ALT_MODEL_DESC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DEVICE_GROUP_CD" source="DEVICE_GROUP_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EQUIPMENT_TYPE" source="EQUIPMENT_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EQUIP_DIST_TYPE" source="EQUIP_DIST_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXPIRATION_DATE" source="EXPIRATION_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="HIGH_VALUE_IND" source="HIGH_VALUE_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INSTAL_HVU" source="INSTAL_HVU"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IOTA_ENABL_CD" source="IOTA_ENABL_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MANF_MODEL_NUMBER" source="MANF_MODEL_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MANUFACTURER_CODE" source="MANUFACTURER_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MODEL_BRAND_CD" source="MODEL_BRAND_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MODEL_DESC" source="MODEL_DESC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MODEL_GROUP_CD" source="MODEL_GROUP_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MODES_SUPPORTED" source="MODES_SUPPORTED"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ORIGINAL_COST" source="ORIGINAL_COST"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRL_UPD_IND" source="PRL_UPD_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT_TYPE" source="PRODUCT_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SELF_SERV_ACT_CD" source="SELF_SERV_ACT_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="UPGRADE_TYPE" source="UPGRADE_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SELL_PRICE" source="SELL_PRICE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFF_DT" source="EFF_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20403501" source="IS_20403501"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MODEL_NUMBER_RIGHT" source="MODEL_NUMBER_RIGHT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXPY_DT" source="CC_EXPY_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+      </input>
+      <windowFunction>
+        <partitionViewAttributeName>MODEL_NUMBER</partitionViewAttributeName>
+        <order byViewAttributeName="EFF_DT" direction="ASC"/>
+        <rankThreshold>
+          <value>100</value>
+        </rankThreshold>
+        <rankViewAttributeName>RANK_SEQ</rankViewAttributeName>
+      </windowFunction>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_INSERT_UPDATE">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="RANK_SEQ"/>
+        <viewAttribute id="MODEL_NUMBER"/>
+        <viewAttribute id="ACT_CREDIT_TYPE"/>
+        <viewAttribute id="ALT_MODEL_DESC"/>
+        <viewAttribute id="DEVICE_GROUP_CD"/>
+        <viewAttribute id="EQUIPMENT_TYPE"/>
+        <viewAttribute id="EQUIP_DIST_TYPE"/>
+        <viewAttribute id="EXPIRATION_DATE"/>
+        <viewAttribute id="HIGH_VALUE_IND"/>
+        <viewAttribute id="INSTAL_HVU"/>
+        <viewAttribute id="IOTA_ENABL_CD"/>
+        <viewAttribute id="MANF_MODEL_NUMBER"/>
+        <viewAttribute id="MANUFACTURER_CODE"/>
+        <viewAttribute id="MODEL_BRAND_CD"/>
+        <viewAttribute id="MODEL_DESC"/>
+        <viewAttribute id="MODEL_GROUP_CD"/>
+        <viewAttribute id="MODES_SUPPORTED"/>
+        <viewAttribute id="ORIGINAL_COST"/>
+        <viewAttribute id="PRL_UPD_IND"/>
+        <viewAttribute id="PRODUCT_TYPE"/>
+        <viewAttribute id="SELF_SERV_ACT_CD"/>
+        <viewAttribute id="UPGRADE_TYPE"/>
+        <viewAttribute id="SELL_PRICE"/>
+        <viewAttribute id="EFF_DT"/>
+        <viewAttribute id="IS_20403501"/>
+        <viewAttribute id="MODEL_NUMBER_RIGHT"/>
+        <viewAttribute id="EXPY_DT"/>
+        <viewAttribute id="CYCL_ID"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CC_EXISTING_RECORD" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isNULL(&quot;MODEL_NUMBER_RIGHT&quot;) and (&quot;RANK_SEQ&quot; = 1), 'I', 'U')</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="DATE" id="CC_EFFECTIVE_DATE_PREV_DAY" expressionLanguage="COLUMN_ENGINE">
+          <formula>adddays(&quot;EFF_DT&quot;,-1)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="DATE" id="CC_EFFECTIVE_DT" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(&quot;CC_EXISTING_RECORD&quot;='I',date('19000101'),&quot;EFF_DT&quot;)</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#RANK_SEQ">
+        <mapping xsi:type="Calculation:AttributeMapping" target="RANK_SEQ" source="RANK_SEQ"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MODEL_NUMBER" source="MODEL_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACT_CREDIT_TYPE" source="ACT_CREDIT_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ALT_MODEL_DESC" source="ALT_MODEL_DESC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DEVICE_GROUP_CD" source="DEVICE_GROUP_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EQUIPMENT_TYPE" source="EQUIPMENT_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EQUIP_DIST_TYPE" source="EQUIP_DIST_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXPIRATION_DATE" source="EXPIRATION_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="HIGH_VALUE_IND" source="HIGH_VALUE_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INSTAL_HVU" source="INSTAL_HVU"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IOTA_ENABL_CD" source="IOTA_ENABL_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MANF_MODEL_NUMBER" source="MANF_MODEL_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MANUFACTURER_CODE" source="MANUFACTURER_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MODEL_BRAND_CD" source="MODEL_BRAND_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MODEL_DESC" source="MODEL_DESC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MODEL_GROUP_CD" source="MODEL_GROUP_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MODES_SUPPORTED" source="MODES_SUPPORTED"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ORIGINAL_COST" source="ORIGINAL_COST"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRL_UPD_IND" source="PRL_UPD_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT_TYPE" source="PRODUCT_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SELF_SERV_ACT_CD" source="SELF_SERV_ACT_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="UPGRADE_TYPE" source="UPGRADE_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SELL_PRICE" source="SELL_PRICE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFF_DT" source="EFF_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20403501" source="IS_20403501"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MODEL_NUMBER_RIGHT" source="MODEL_NUMBER_RIGHT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXPY_DT" source="EXPY_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="ERROR_SEMANTICS">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="EXISTING_RECORD"/>
+        <viewAttribute id="EFFECTIVE_DATE_PREV_DAY"/>
+        <viewAttribute id="EFFECTIVE_DT"/>
+        <viewAttribute id="MODEL_NUMBER"/>
+        <viewAttribute id="ACT_CREDIT_TYPE"/>
+        <viewAttribute id="ALT_MODEL_DESC"/>
+        <viewAttribute id="DEVICE_GROUP_CD"/>
+        <viewAttribute id="EQUIPMENT_TYPE"/>
+        <viewAttribute id="EQUIP_DIST_TYPE"/>
+        <viewAttribute id="EXPIRATION_DATE"/>
+        <viewAttribute id="HIGH_VALUE_IND"/>
+        <viewAttribute id="INSTAL_HVU"/>
+        <viewAttribute id="IOTA_ENABL_CD"/>
+        <viewAttribute id="MANF_MODEL_NUMBER"/>
+        <viewAttribute id="MANUFACTURER_CODE"/>
+        <viewAttribute id="MODEL_BRAND_CD"/>
+        <viewAttribute id="MODEL_DESC"/>
+        <viewAttribute id="MODEL_GROUP_CD"/>
+        <viewAttribute id="MODES_SUPPORTED"/>
+        <viewAttribute id="ORIGINAL_COST"/>
+        <viewAttribute id="PRL_UPD_IND"/>
+        <viewAttribute id="PRODUCT_TYPE"/>
+        <viewAttribute id="SELF_SERV_ACT_CD"/>
+        <viewAttribute id="UPGRADE_TYPE"/>
+        <viewAttribute id="SELL_PRICE"/>
+        <viewAttribute id="EFF_DT"/>
+        <viewAttribute id="IS_20403501"/>
+        <viewAttribute id="EXPY_DT"/>
+        <viewAttribute id="CYCL_ID"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="ERROR_CODE" length="500" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(&quot;IS_20403501&quot;='1', '20403501||','')</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="ERROR_STATUS" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>if((&quot;IS_20403501&quot;='1'),'1','0')</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#PROJ_INSERT_UPDATE">
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXISTING_RECORD" source="CC_EXISTING_RECORD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFFECTIVE_DATE_PREV_DAY" source="CC_EFFECTIVE_DATE_PREV_DAY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFFECTIVE_DT" source="CC_EFFECTIVE_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MODEL_NUMBER" source="MODEL_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACT_CREDIT_TYPE" source="ACT_CREDIT_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ALT_MODEL_DESC" source="ALT_MODEL_DESC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DEVICE_GROUP_CD" source="DEVICE_GROUP_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EQUIPMENT_TYPE" source="EQUIPMENT_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EQUIP_DIST_TYPE" source="EQUIP_DIST_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXPIRATION_DATE" source="EXPIRATION_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="HIGH_VALUE_IND" source="HIGH_VALUE_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INSTAL_HVU" source="INSTAL_HVU"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IOTA_ENABL_CD" source="IOTA_ENABL_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MANF_MODEL_NUMBER" source="MANF_MODEL_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MANUFACTURER_CODE" source="MANUFACTURER_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MODEL_BRAND_CD" source="MODEL_BRAND_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MODEL_DESC" source="MODEL_DESC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MODEL_GROUP_CD" source="MODEL_GROUP_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MODES_SUPPORTED" source="MODES_SUPPORTED"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ORIGINAL_COST" source="ORIGINAL_COST"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRL_UPD_IND" source="PRL_UPD_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT_TYPE" source="PRODUCT_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SELF_SERV_ACT_CD" source="SELF_SERV_ACT_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="UPGRADE_TYPE" source="UPGRADE_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SELL_PRICE" source="SELL_PRICE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFF_DT" source="EFF_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20403501" source="IS_20403501"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXPY_DT" source="EXPY_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+      </input>
+    </calculationView>
+  </calculationViews>
+  <logicalModel id="ERROR_SEMANTICS">
+    <descriptions/>
+    <attributes>
+      <attribute id="ERROR_CODE" order="1" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ERROR_CODE"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="ERROR_CODE"/>
+      </attribute>
+      <attribute id="ERROR_STATUS" order="2" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ERROR_STATUS"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="ERROR_STATUS"/>
+      </attribute>
+      <attribute id="EXISTING_RECORD" order="3" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="EXISTING_RECORD"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="EXISTING_RECORD"/>
+      </attribute>
+      <attribute id="EFFECTIVE_DATE_PREV_DAY" order="4" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="EFFECTIVE_DATE_PREV_DAY"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="EFFECTIVE_DATE_PREV_DAY"/>
+      </attribute>
+      <attribute id="EFFECTIVE_DT" order="5" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="EFFECTIVE_DT"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="EFFECTIVE_DT"/>
+      </attribute>
+      <attribute id="MODEL_NUMBER" order="6" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="MODEL_NUMBER"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="MODEL_NUMBER"/>
+      </attribute>
+      <attribute id="ACT_CREDIT_TYPE" order="7" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ACT_CREDIT_TYPE"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="ACT_CREDIT_TYPE"/>
+      </attribute>
+      <attribute id="ALT_MODEL_DESC" order="8" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ALT_MODEL_DESC"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="ALT_MODEL_DESC"/>
+      </attribute>
+      <attribute id="DEVICE_GROUP_CD" order="9" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="DEVICE_GROUP_CD"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="DEVICE_GROUP_CD"/>
+      </attribute>
+      <attribute id="EQUIPMENT_TYPE" order="10" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="EQUIPMENT_TYPE"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="EQUIPMENT_TYPE"/>
+      </attribute>
+      <attribute id="EQUIP_DIST_TYPE" order="11" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="EQUIP_DIST_TYPE"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="EQUIP_DIST_TYPE"/>
+      </attribute>
+      <attribute id="EXPIRATION_DATE" order="12" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="EXPIRATION_DATE"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="EXPIRATION_DATE"/>
+      </attribute>
+      <attribute id="HIGH_VALUE_IND" order="13" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="HIGH_VALUE_IND"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="HIGH_VALUE_IND"/>
+      </attribute>
+      <attribute id="INSTAL_HVU" order="14" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="INSTAL_HVU"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="INSTAL_HVU"/>
+      </attribute>
+      <attribute id="IOTA_ENABL_CD" order="15" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="IOTA_ENABL_CD"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="IOTA_ENABL_CD"/>
+      </attribute>
+      <attribute id="MANF_MODEL_NUMBER" order="16" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="MANF_MODEL_NUMBER"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="MANF_MODEL_NUMBER"/>
+      </attribute>
+      <attribute id="MANUFACTURER_CODE" order="17" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="MANUFACTURER_CODE"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="MANUFACTURER_CODE"/>
+      </attribute>
+      <attribute id="MODEL_BRAND_CD" order="18" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="MODEL_BRAND_CD"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="MODEL_BRAND_CD"/>
+      </attribute>
+      <attribute id="MODEL_DESC" order="19" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="MODEL_DESC"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="MODEL_DESC"/>
+      </attribute>
+      <attribute id="MODEL_GROUP_CD" order="20" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="MODEL_GROUP_CD"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="MODEL_GROUP_CD"/>
+      </attribute>
+      <attribute id="MODES_SUPPORTED" order="21" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="MODES_SUPPORTED"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="MODES_SUPPORTED"/>
+      </attribute>
+      <attribute id="ORIGINAL_COST" order="22" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ORIGINAL_COST"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="ORIGINAL_COST"/>
+      </attribute>
+      <attribute id="PRL_UPD_IND" order="23" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="PRL_UPD_IND"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="PRL_UPD_IND"/>
+      </attribute>
+      <attribute id="PRODUCT_TYPE" order="24" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="PRODUCT_TYPE"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="PRODUCT_TYPE"/>
+      </attribute>
+      <attribute id="SELF_SERV_ACT_CD" order="25" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SELF_SERV_ACT_CD"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="SELF_SERV_ACT_CD"/>
+      </attribute>
+      <attribute id="UPGRADE_TYPE" order="26" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="UPGRADE_TYPE"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="UPGRADE_TYPE"/>
+      </attribute>
+      <attribute id="SELL_PRICE" order="27" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SELL_PRICE"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="SELL_PRICE"/>
+      </attribute>
+      <attribute id="REFERENCE_EFFECTIVE_DT" order="28" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="REFERENCE_EFFECTIVE_DT"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="EFF_DT"/>
+      </attribute>
+      <attribute id="IS_20403501" order="29" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="IS_20403501"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="IS_20403501"/>
+      </attribute>
+      <attribute id="REFERENCE_EXPIRY_DT" order="30" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="REFERENCE_EXPIRY_DT"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="EXPY_DT"/>
+      </attribute>
+      <attribute id="CYCL_ID" order="31" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CYCL_ID"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="CYCL_ID"/>
+      </attribute>
+    </attributes>
+    <calculatedAttributes/>
+    <privateDataFoundation>
+      <tableProxies/>
+      <joins/>
+      <layout>
+        <shapes/>
+      </layout>
+    </privateDataFoundation>
+    <baseMeasures/>
+    <calculatedMeasures/>
+    <restrictedMeasures/>
+    <localDimensions/>
+  </logicalModel>
+  <layout>
+    <shapes>
+      <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+        <upperLeftCorner x="253" y="87"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_NDB_EH" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="22" y="843"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_PRIVATE_VW" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="176" y="843"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="JOIN_INCOMING_RECORDS_WITH_EH" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="89" y="747"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_FILTER_INCOMING_RECORDS" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="89" y="669"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="AGGR_DISTINCT" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="89" y="591"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="JOIN_CA_EH" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="176" y="495"/>
+        <rectangleSize height="75" width="140"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_NDB" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="330" y="495"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="JOIN" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="253" y="399"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="RANK_SEQ" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="253" y="321"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_INSERT_UPDATE" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="253" y="243"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="ERROR_SEMANTICS" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="253" y="165"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+    </shapes>
+  </layout>
+</Calculation:scenario>

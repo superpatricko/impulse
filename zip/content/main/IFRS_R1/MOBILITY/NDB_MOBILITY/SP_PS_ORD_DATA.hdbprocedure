@@ -1,0 +1,394 @@
+PROCEDURE "NDB_MOBILITY"."IFRS_R1.MOBILITY.NDB_MOBILITY::SP_PS_ORD_DATA" 
+(IN IP_TRANSACTION_DATE DATE, OUT OP_STATUS NVARCHAR(1000)) 
+	LANGUAGE SQLSCRIPT
+	SQL SECURITY INVOKER 
+	
+	--DEFAULT SCHEMA <default_schema_name>
+	--READS SQL DATA
+	 
+	AS
+BEGIN
+
+--------------------------------------------------------------------------------
+-- Procedure Title : IFRS_R1.MOBILITY.NDB_MOBILITY::SP_PS_ORD_DATA
+--
+-- Created By      : BC_EZ07674(Suresh Konidal)          Date :12/05/2017
+-- 
+-- Procedure Description : 
+--  1.We will Insert Prepaid PeopleSoft Order Information into NDB layer
+--
+--Project :Bell Canada
+-- 
+-- Release :R1/IFRS
+--------------------------------------------------------------------------------
+--   M O D I F I C A T I O N   H I S T O R Y
+--------------------------------------------------------------------------------
+-- Date        | User ID          | Modification History/Release
+--------------------------------------------------------------------------------
+-- 06/10/2016  | BC_EZ07674       | Updated after unit testing
+-- 25/01/2017  | BC_EZ07674       | Added cursor logic
+--------------------------------------------------------------------------------
+-- Description Of the changes 
+--------------------------------------------------------------------------------
+-- Modification Number          :<Assign Some Number> 
+-- Description of Changes Made> :<Updated the logic of NDB_TS write back>       
+--------------------------------------------------------------------------------
+
+/* Local Varibale Declaration */
+
+	DECLARE LC_ERROR_TEXT 		NVARCHAR(70) DEFAULT 'OUT STATUS IS 1 : INSERT/UPDATE FOR ONE OR MORE RECORD FAILED';
+	DECLARE LC_SUCCESS_TEXT 	NVARCHAR(70) DEFAULT 'OUT STATUS IS 0 : INSERT/UPDATE EXECUTION SUCCESSFUL';
+	DECLARE LV_ERROR_FLAG 		NVARCHAR(1) := 'N';
+	DECLARE LV_CUR_UTC 			TIMESTAMP := CURRENT_TIMESTAMP;
+	DECLARE ERROR_TAB 			TABLE (ERROR_CODE NVARCHAR(100));
+	DECLARE i					INTEGER;
+	DECLARE RECORD_COUNT		INTEGER;
+	DECLARE CURRENT_ERROR		NVARCHAR(100);
+	
+	DECLARE CURSOR CA_PS_ORD_DATA FOR
+	SELECT
+	 "SOURCE_IDENTIFIER",
+	 "ORDER_ID",
+	 "ORDER_LINE_NUMBER",
+	 "ORDER_DATE",
+	 "ORDER_TYPE",
+	 "CUSTOMER_ID",
+	 "MDN",
+	 "IMSI",
+	 "SERIAL_NO",
+	 "IMEI",
+	 "SIM",
+	 "SOURCE_CODE",
+	 "DEALER_ID",
+	 "TRANSACTION_ID",
+	 "TRANSACTION_DATE",
+	 "ADJUSTMENT_CODE",
+	 "ORDER_AMOUNT",
+	 "HANDSET_SRP_PRICE",
+	 "PRODUCT_ID",
+	 "SAP_ARTICLE_NO",
+	 "VOUCHER_CD",
+	 "ANNIVERSARY_DATE",
+	 "REGION",
+	 "SHIPPING_ADDRESS",
+	 "PAYMENT_METHOD",
+	 "KUNNR_SID",
+	 "NEW_STATUS",
+	 "MAIN_BAL",
+	 "PREV_MAIN_BAL",
+	 "CONVERSION_IND",
+	 "MODIFIED_TS",
+	 "ERROR_CODE",
+	 "ERROR_STATUS",
+	 "CYCL_ID" 	  
+	FROM "_SYS_BIC"."IFRS_R1.MOBILITY.NDB_MOBILITY/CA_PS_ORD_DATA"
+	(PLACEHOLDER."$$IP_TRANSACTION_DATE$$"=> :IP_TRANSACTION_DATE)
+	ORDER BY "ORDER_DATE", "CYCL_ID";
+	
+--------------------------------------------------------------------------------------------------
+-- Local Temporary Tables Declaration
+--------------------------------------------------------------------------------------------------
+CREATE LOCAL TEMPORARY TABLE #UPDATE_PS_ORD_DATA(ORDER_ID NVARCHAR(24), ORDER_LINE_NUMBER NVARCHAR(3), CYCL_ID NVARCHAR(3));
+CREATE LOCAL TEMPORARY TABLE #UPDATE_EH_DELETION(ORDER_ID NVARCHAR(44), ORDER_LINE_NUMBER NVARCHAR(30));
+
+--------------------------------------------------------------------------------------------------
+-- Cursors Loop
+-------------------------------------------------------------------------------------------------- 	
+
+	FOR CUR_ORD AS CA_PS_ORD_DATA DO
+		
+		-- Define Exit Handler
+		DECLARE EXIT HANDLER FOR SQLEXCEPTION 
+		BEGIN AUTONOMOUS TRANSACTION
+			-- Define Exit Handler
+			DECLARE EXIT HANDLER FOR SQLEXCEPTION 
+			BEGIN AUTONOMOUS TRANSACTION 
+			END;
+			
+			-- Insert Into NDB table: PPD_ORDER_EH
+			 INSERT INTO "NDB_MOBILITY"."IFRS_R1.MOBILITY.NDB_MOBILITY::PPD_ORDER_EH"
+			 (
+			 	SOURCE_IDENTIFIER,
+				ORDER_ID,
+				ORDER_LINE_NUMBER,
+				ORDER_DATE,
+				ORDER_TYPE,
+				CUSTOMER_ID,
+				MDN,
+				IMSI,
+				SERIAL_NO,
+				IMEI,
+				SIM,
+				SOURCE_CODE,
+				DEALER_ID,
+				TRANSACTION_ID,
+				TRANSACTION_DATE,
+				ADJUSTMENT_CODE,
+				ORDER_AMOUNT,
+				HANDSET_SRP_PRICE,
+				PRODUCT_ID,
+				SAP_ARTICLE_NO,
+				VOUCHER_CD,
+				ANNIVERSARY_DATE,
+				REGION,
+				SHIPPING_ADDRESS,
+				PAYMENT_METHOD,
+				NEW_STATUS,
+				MAIN_BAL,
+				PREV_MAIN_BAL,
+				KUNNR_SID,
+				CONVERSION_IND,
+				INSERT_TS,
+				MODIFIED_TS,
+				ERROR_CODE,
+				TECHNICAL_MESSAGE,
+				ERROR_CREATE_TS
+
+			 ) VALUES (
+			 	CUR_ORD.SOURCE_IDENTIFIER,
+				CUR_ORD.ORDER_ID,
+				CUR_ORD.ORDER_LINE_NUMBER,
+				CUR_ORD.ORDER_DATE,
+				CUR_ORD.ORDER_TYPE,
+				CUR_ORD.CUSTOMER_ID,
+				CUR_ORD.MDN,
+				CUR_ORD.IMSI,
+				CUR_ORD.SERIAL_NO,
+				CUR_ORD.IMEI,
+				CUR_ORD.SIM,
+				CUR_ORD.SOURCE_CODE,
+				CUR_ORD.DEALER_ID,
+				CUR_ORD.TRANSACTION_ID,
+				CUR_ORD.TRANSACTION_DATE,
+				CUR_ORD.ADJUSTMENT_CODE,
+				CUR_ORD.ORDER_AMOUNT,
+				CUR_ORD.HANDSET_SRP_PRICE,
+				CUR_ORD.PRODUCT_ID,
+				CUR_ORD.SAP_ARTICLE_NO,
+				CUR_ORD.VOUCHER_CD,
+				CUR_ORD.ANNIVERSARY_DATE,
+				CUR_ORD.REGION,
+				CUR_ORD.SHIPPING_ADDRESS,
+				CUR_ORD.PAYMENT_METHOD,
+				CUR_ORD.NEW_STATUS,
+				CUR_ORD.MAIN_BAL,
+				CUR_ORD.PREV_MAIN_BAL,
+				CUR_ORD.KUNNR_SID,
+				CUR_ORD.CONVERSION_IND,
+				LV_CUR_UTC,
+				CUR_ORD.MODIFIED_TS,
+				::SQL_ERROR_CODE,
+				::SQL_ERROR_MESSAGE,
+				LV_CUR_UTC);
+			
+			LV_ERROR_FLAG := 'Y';		   
+			--END for AUTONOMOS	
+			END;
+			
+		--Check the Error Status of the Record. If Record is with Error, then send to Error Table
+			IF CUR_ORD.ERROR_STATUS = 1 THEN
+			--  Call the Stored Procedure to split the concatenated Error Messages into Error Rows
+		    	CALL "NDB_COMMON"."IFRS_R1.COMMON_COMP.EH::SP_EH_SPLIT_ERRORS"(CUR_ORD."ERROR_CODE", ERROR_TAB, RECORD_COUNT);
+		    	FOR i IN 1 .. :RECORD_COUNT DO
+		    		CURRENT_ERROR = :ERROR_TAB."ERROR_CODE"[:i];
+		    		-- Insert Into NDB table: PPD_ORDER_EH				)
+						 
+			  INSERT INTO "NDB_MOBILITY"."IFRS_R1.MOBILITY.NDB_MOBILITY::PPD_ORDER_EH"
+			 (
+			 	SOURCE_IDENTIFIER,
+				ORDER_ID,
+				ORDER_LINE_NUMBER,
+				ORDER_DATE,
+				ORDER_TYPE,
+				CUSTOMER_ID,
+				MDN,
+				IMSI,
+				SERIAL_NO,
+				IMEI,
+				SIM,
+				SOURCE_CODE,
+				DEALER_ID,
+				TRANSACTION_ID,
+				TRANSACTION_DATE,
+				ADJUSTMENT_CODE,
+				ORDER_AMOUNT,
+				HANDSET_SRP_PRICE,
+				PRODUCT_ID,
+				SAP_ARTICLE_NO,
+				VOUCHER_CD,
+				ANNIVERSARY_DATE,
+				REGION,
+				SHIPPING_ADDRESS,
+				PAYMENT_METHOD,
+				NEW_STATUS,
+				MAIN_BAL,
+				PREV_MAIN_BAL,
+				KUNNR_SID,
+				CONVERSION_IND,
+				INSERT_TS,
+				MODIFIED_TS,
+				ERROR_CODE,
+				TECHNICAL_MESSAGE,
+				ERROR_CREATE_TS
+			 ) VALUES (
+			 	CUR_ORD.SOURCE_IDENTIFIER,
+				CUR_ORD.ORDER_ID,
+				CUR_ORD.ORDER_LINE_NUMBER,
+				CUR_ORD.ORDER_DATE,
+				CUR_ORD.ORDER_TYPE,
+				CUR_ORD.CUSTOMER_ID,
+				CUR_ORD.MDN,
+				CUR_ORD.IMSI,
+				CUR_ORD.SERIAL_NO,
+				CUR_ORD.IMEI,
+				CUR_ORD.SIM,
+				CUR_ORD.SOURCE_CODE,
+				CUR_ORD.DEALER_ID,
+				CUR_ORD.TRANSACTION_ID,
+				CUR_ORD.TRANSACTION_DATE,
+				CUR_ORD.ADJUSTMENT_CODE,
+				CUR_ORD.ORDER_AMOUNT,
+				CUR_ORD.HANDSET_SRP_PRICE,
+				CUR_ORD.PRODUCT_ID,
+				CUR_ORD.SAP_ARTICLE_NO,
+				CUR_ORD.VOUCHER_CD,
+				CUR_ORD.ANNIVERSARY_DATE,
+				CUR_ORD.REGION,
+				CUR_ORD.SHIPPING_ADDRESS,
+				CUR_ORD.PAYMENT_METHOD,
+				CUR_ORD.NEW_STATUS,
+				CUR_ORD.MAIN_BAL,
+				CUR_ORD.PREV_MAIN_BAL,
+				CUR_ORD.KUNNR_SID,
+				CUR_ORD.CONVERSION_IND,
+				LV_CUR_UTC,
+				CUR_ORD.MODIFIED_TS,
+				:CURRENT_ERROR,
+				NULL,
+				LV_CUR_UTC);
+			
+			LV_ERROR_FLAG := 'Y';	
+	
+	END FOR;
+	
+			ELSE			
+     			
+	     		BEGIN AUTONOMOUS TRANSACTION
+	     		
+					
+					-- Insert Into NDB table: PPD_ORDER
+					 INSERT INTO "NDB_MOBILITY"."IFRS_R1.MOBILITY.NDB_MOBILITY::PPD_ORDER"
+			 (
+			 	SOURCE_IDENTIFIER,
+				ORDER_ID,
+				ORDER_LINE_NUMBER,
+				ORDER_DATE,
+				ORDER_TYPE,
+				CUSTOMER_ID,
+				MDN,
+				IMSI,
+				SERIAL_NO,
+				IMEI,
+				SIM,
+				SOURCE_CODE,
+				DEALER_ID,
+				TRANSACTION_ID,
+				TRANSACTION_DATE,
+				ADJUSTMENT_CODE,
+				ORDER_AMOUNT,
+				HANDSET_SRP_PRICE,
+				PRODUCT_ID,
+				SAP_ARTICLE_NO,
+				VOUCHER_CD,
+				ANNIVERSARY_DATE,
+				REGION,
+				SHIPPING_ADDRESS,
+				PAYMENT_METHOD,
+				NEW_STATUS,
+				MAIN_BAL,
+				PREV_MAIN_BAL,
+				KUNNR_SID,
+				CONVERSION_IND,
+				INSERT_TS,
+				MODIFIED_TS
+				
+			 ) VALUES (
+			 	CUR_ORD.SOURCE_IDENTIFIER,
+				CUR_ORD.ORDER_ID,
+				CUR_ORD.ORDER_LINE_NUMBER,
+				CUR_ORD.ORDER_DATE,
+				CUR_ORD.ORDER_TYPE,
+				CUR_ORD.CUSTOMER_ID,
+				CUR_ORD.MDN,
+				CUR_ORD.IMSI,
+				CUR_ORD.SERIAL_NO,
+				CUR_ORD.IMEI,
+				CUR_ORD.SIM,
+				CUR_ORD.SOURCE_CODE,
+				CUR_ORD.DEALER_ID,
+				CUR_ORD.TRANSACTION_ID,
+				CUR_ORD.TRANSACTION_DATE,
+				CUR_ORD.ADJUSTMENT_CODE,
+				CUR_ORD.ORDER_AMOUNT,
+				CUR_ORD.HANDSET_SRP_PRICE,
+				CUR_ORD.PRODUCT_ID,
+				CUR_ORD.SAP_ARTICLE_NO,
+				CUR_ORD.VOUCHER_CD,
+				CUR_ORD.ANNIVERSARY_DATE,
+				CUR_ORD.REGION,
+				CUR_ORD.SHIPPING_ADDRESS,
+				CUR_ORD.PAYMENT_METHOD,
+				CUR_ORD.NEW_STATUS,
+				CUR_ORD.MAIN_BAL,
+				CUR_ORD.PREV_MAIN_BAL,
+				CUR_ORD.KUNNR_SID,
+				CUR_ORD.CONVERSION_IND,
+				LV_CUR_UTC,
+				CUR_ORD.MODIFIED_TS);
+	
+	     		END;
+	     		
+	     		   INSERT INTO #UPDATE_PS_ORD_DATA (ORDER_ID, ORDER_LINE_NUMBER, CYCL_ID) 
+						VALUES (CUR_ORD."ORDER_ID",	CUR_ORD."ORDER_LINE_NUMBER", CUR_ORD."CYCL_ID");
+					
+					INSERT INTO #UPDATE_EH_DELETION (ORDER_ID, ORDER_LINE_NUMBER)     
+ 	     	  					  VALUES (CUR_ORD."ORDER_ID", CUR_ORD."ORDER_LINE_NUMBER");
+    			
+			END IF;
+	END FOR;
+			
+
+	-- Update Landing NDB_TS: PS_ORD_DATA
+	UPDATE "LAND"."IFRS_R1.LAND::PS_ORD_DATA" A
+	FROM "LAND"."IFRS_R1.LAND::PS_ORD_DATA" A
+	INNER JOIN #UPDATE_PS_ORD_DATA B	
+	ON A.ORD_ID  = B.ORDER_ID
+	AND A.ORD_LINE_NUM = B.ORDER_LINE_NUMBER
+	AND A.CYCL_ID = B.CYCL_ID
+	SET A.NDB_TS = LV_CUR_UTC 
+	WHERE A.NDB_TS IS NULL;
+	
+	--------------------------------------------------------------------------------------------------
+-- Update Error Table
+--------------------------------------------------------------------------------------------------
+
+	UPDATE "NDB_MOBILITY"."IFRS_R1.MOBILITY.NDB_MOBILITY::PPD_ORDER_EH" A
+    FROM "NDB_MOBILITY"."IFRS_R1.MOBILITY.NDB_MOBILITY::PPD_ORDER_EH" A 
+    INNER JOIN #UPDATE_EH_DELETION B       
+    ON A."ORDER_ID" = B."ORDER_ID"
+    AND A."ORDER_LINE_NUMBER" = B."ORDER_LINE_NUMBER"
+    SET (DELETE_DATE, DELETED) = (CURRENT_DATE, 1);
+    
+--------------------------------------------------------------------------------------------------
+	-- Set Overall Status
+-------------------------------------------------------------------------------------------------- 
+	--  STATUS 0: Send the success message to scheduling tool to confirm this procedure has been
+	--  executed successfully
+	
+    IF(LV_ERROR_FLAG = 'Y') THEN
+    	OP_STATUS := LC_ERROR_TEXT; 			
+    ELSE
+  		OP_STATUS := LC_SUCCESS_TEXT;				
+	END IF;
+
+END;

@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" schemaVersion="2.3" id="CA_BW_TRANS_DEVICE_VW" applyPrivilegeType="NONE" checkAnalyticPrivileges="false" defaultClient="$$client$$" defaultLanguage="$$language$$" hierarchiesSQLEnabled="false" historyEnabled="false" translationRelevant="true" visibility="internal" calculationScenarioType="TREE_BASED" dataCategory="DIMENSION" enforceSqlExecution="true" executionSemantic="UNDEFINED" outputViewType="Projection">
+  <descriptions defaultDescription="Calculation View for Transactional Devices"/>
+  <metadata changedAt="2017-07-06 13:58:06.662" createdAt="2017-07-06 13:56:07.418"/>
+  <localVariables/>
+  <variableMappings/>
+  <informationModelLayout relativeWidthScenario="33"/>
+  <dataSources>
+    <DataSource id="IFRS_R1.COMMON_COMP.NDB_COMMON::P77_TRANS_DEVICES" type="DATA_BASE_TABLE">
+      <viewAttributes allViewAttributes="true"/>
+      <columnObject schemaName="NDB_COMMON" columnObjectName="IFRS_R1.COMMON_COMP.NDB_COMMON::P77_TRANS_DEVICES"/>
+    </DataSource>
+  </dataSources>
+  <calculationViews>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PR_TRANS_DEVICES">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="TRANSACTION_ID"/>
+        <viewAttribute id="DIST_CHANNEL"/>
+        <viewAttribute id="PRIMARY_SERIAL_NUM"/>
+        <viewAttribute id="SECONDARY_SERIAL_NUM"/>
+        <viewAttribute id="ART_NUM"/>
+        <viewAttribute id="BANNER"/>
+        <viewAttribute id="STORE"/>
+        <viewAttribute id="BRND_CD"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#IFRS_R1.COMMON_COMP.NDB_COMMON::P77_TRANS_DEVICES">
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRANSACTION_ID" source="TRANSACTION_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DIST_CHANNEL" source="DIST_CHANNEL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRIMARY_SERIAL_NUM" source="PRIMARY_SERIAL_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SECONDARY_SERIAL_NUM" source="SECONDARY_SERIAL_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ART_NUM" source="ART_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BANNER" source="BANNER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="STORE" source="STORE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BRND_CD" source="BRND_CD"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:RankView" id="RANK_TRANS_DEVICES">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="TRANSACTION_ID"/>
+        <viewAttribute id="DIST_CHANNEL"/>
+        <viewAttribute id="PRIMARY_SERIAL_NUM"/>
+        <viewAttribute id="SECONDARY_SERIAL_NUM"/>
+        <viewAttribute id="ART_NUM"/>
+        <viewAttribute id="BANNER"/>
+        <viewAttribute id="STORE"/>
+        <viewAttribute id="BRND_CD"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#PR_TRANS_DEVICES">
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRANSACTION_ID" source="TRANSACTION_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DIST_CHANNEL" source="DIST_CHANNEL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRIMARY_SERIAL_NUM" source="PRIMARY_SERIAL_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SECONDARY_SERIAL_NUM" source="SECONDARY_SERIAL_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ART_NUM" source="ART_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BANNER" source="BANNER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="STORE" source="STORE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BRND_CD" source="BRND_CD"/>
+      </input>
+      <windowFunction>
+        <partitionViewAttributeName>PRIMARY_SERIAL_NUM</partitionViewAttributeName>
+        <order byViewAttributeName="TRANSACTION_ID" direction="ASC"/>
+        <rankThreshold>
+          <value>1</value>
+        </rankThreshold>
+      </windowFunction>
+    </calculationView>
+  </calculationViews>
+  <logicalModel id="RANK_TRANS_DEVICES">
+    <descriptions defaultDescription="Calculation View for Transactional Devices"/>
+    <attributes>
+      <attribute id="DIST_CHANNEL" order="1" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="DIST_CHANNEL"/>
+        <keyMapping columnObjectName="RANK_TRANS_DEVICES" columnName="DIST_CHANNEL"/>
+      </attribute>
+      <attribute id="PRIMARY_SERIAL_NUM" order="2" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="PRIMARY_SERIAL_NUM"/>
+        <keyMapping columnObjectName="RANK_TRANS_DEVICES" columnName="PRIMARY_SERIAL_NUM"/>
+      </attribute>
+      <attribute id="SECONDARY_SERIAL_NUM" order="3" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SECONDARY_SERIAL_NUM"/>
+        <keyMapping columnObjectName="RANK_TRANS_DEVICES" columnName="SECONDARY_SERIAL_NUM"/>
+      </attribute>
+      <attribute id="ART_NUM" order="4" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ART_NUM"/>
+        <keyMapping columnObjectName="RANK_TRANS_DEVICES" columnName="ART_NUM"/>
+      </attribute>
+      <attribute id="STORE" order="5" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="STORE"/>
+        <keyMapping columnObjectName="RANK_TRANS_DEVICES" columnName="STORE"/>
+      </attribute>
+      <attribute id="BRND_CD" order="6" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="BRND_CD"/>
+        <keyMapping columnObjectName="RANK_TRANS_DEVICES" columnName="BRND_CD"/>
+      </attribute>
+      <attribute id="BANNER" order="7" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="BANNER"/>
+        <keyMapping columnObjectName="RANK_TRANS_DEVICES" columnName="BANNER"/>
+      </attribute>
+    </attributes>
+    <calculatedAttributes/>
+    <privateDataFoundation>
+      <tableProxies/>
+      <joins/>
+      <layout>
+        <shapes/>
+      </layout>
+    </privateDataFoundation>
+    <baseMeasures/>
+    <calculatedMeasures/>
+    <restrictedMeasures/>
+    <localDimensions/>
+  </logicalModel>
+  <layout>
+    <shapes>
+      <shape expanded="false" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+        <upperLeftCorner x="22" y="87"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PR_TRANS_DEVICES" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="22" y="243"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="RANK_TRANS_DEVICES" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="22" y="165"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+    </shapes>
+  </layout>
+</Calculation:scenario>

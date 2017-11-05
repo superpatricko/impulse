@@ -1,0 +1,533 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:AccessControl="http://www.sap.com/ndb/SQLCoreModelAccessControl.ecore" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" xmlns:Variable="http://www.sap.com/ndb/BiModelVariable.ecore" schemaVersion="2.3" id="CA_NM1_EDW_REF_PPLAN_RC_RATE_HIST" applyPrivilegeType="NONE" checkAnalyticPrivileges="false" defaultClient="$$client$$" defaultLanguage="$$language$$" hierarchiesSQLEnabled="false" historyEnabled="false" translationRelevant="true" visibility="internal" calculationScenarioType="TREE_BASED" dataCategory="DIMENSION" enforceSqlExecution="false" executionSemantic="UNDEFINED" outputViewType="Projection">
+  <descriptions defaultDescription="CA_NM1_EDW_REF_PPLAN_RC_RATE_HIST"/>
+  <localVariables>
+    <variable id="IP_EFF_DT" parameter="true">
+      <descriptions defaultDescription="IP_EFF_DT"/>
+      <variableProperties datatype="DATE" defaultValue="99991231" mandatory="false">
+        <valueDomain type="Date"/>
+        <selection multiLine="false" type="SingleValue"/>
+      </variableProperties>
+    </variable>
+  </localVariables>
+  <variableMappings>
+    <mapping xsi:type="Variable:VariableMapping" dataSource="#CA_NM1_EDW_REF_PPLAN_RC_RATE_HIST">
+      <targetVariable name="IP_EFF_DT" resourceUri="/IFRS_R1.MOBILITY.LAND_MOBILITY/calculationviews/CA_NM1_EDW_REF_PPLAN_RC_RATE_HIST"/>
+      <localVariable>#IP_EFF_DT</localVariable>
+    </mapping>
+  </variableMappings>
+  <informationModelLayout relativeWidthScenario="58"/>
+  <dataSources>
+    <DataSource id="CA_NM1_EDW_REF_PPLAN_RC_RATE_HIST" type="CALCULATION_VIEW">
+      <viewAttributes allViewAttributes="true"/>
+      <resourceUri>/IFRS_R1.MOBILITY.LAND_MOBILITY/calculationviews/CA_NM1_EDW_REF_PPLAN_RC_RATE_HIST</resourceUri>
+    </DataSource>
+    <DataSource id="IFRS_R1.MOBILITY.NDB_MOBILITY::MOBL_PP_RC_RATE_HIST" type="DATA_BASE_TABLE">
+      <viewAttributes allViewAttributes="true"/>
+      <columnObject schemaName="NDB_MOBILITY" columnObjectName="IFRS_R1.MOBILITY.NDB_MOBILITY::MOBL_PP_RC_RATE_HIST"/>
+    </DataSource>
+    <DataSource id="IFRS_R1.MOBILITY.NDB_MOBILITY::MOBL_PP_RC_RATE_HIST_EH" type="DATA_BASE_TABLE">
+      <viewAttributes allViewAttributes="true"/>
+      <columnObject schemaName="NDB_MOBILITY" columnObjectName="IFRS_R1.MOBILITY.NDB_MOBILITY::MOBL_PP_RC_RATE_HIST_EH"/>
+    </DataSource>
+  </dataSources>
+  <calculationViews>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_NM1_EDW_REF_PPLAN_RC_RATE_HIST">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="EFFECTIVE_DATE"/>
+        <viewAttribute id="EFF_DT"/>
+        <viewAttribute id="EXPIRATION_DATE"/>
+        <viewAttribute id="EXPY_DT"/>
+        <viewAttribute id="FEATURE_CODE"/>
+        <viewAttribute id="RATE"/>
+        <viewAttribute id="SOC"/>
+        <viewAttribute id="SUSPENSION_AMOUNT"/>
+        <viewAttribute id="TIER_LEVEL_CODE"/>
+        <viewAttribute id="CYCL_ID"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#CA_NM1_EDW_REF_PPLAN_RC_RATE_HIST">
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFFECTIVE_DATE" source="EFFECTIVE_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFF_DT" source="EFF_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXPIRATION_DATE" source="EXPIRATION_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXPY_DT" source="EXPY_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FEATURE_CODE" source="FEATURE_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RATE" source="RATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SOC" source="SOC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUSPENSION_AMOUNT" source="SUSPENSION_AMOUNT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TIER_LEVEL_CODE" source="TIER_LEVEL_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_MOBL_PP_RC_RATE_HIST">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="SOC"/>
+        <viewAttribute id="EFFECTIVE_DATE"/>
+        <viewAttribute id="TIER_LEVEL_CODE"/>
+        <viewAttribute id="FEATURE_CODE"/>
+        <viewAttribute id="REFERENCE_EFFECTIVE_DT">
+          <filter xsi:type="AccessControl:SingleValueFilter" including="true" value="9999-12-31"/>
+        </viewAttribute>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#IFRS_R1.MOBILITY.NDB_MOBILITY::MOBL_PP_RC_RATE_HIST">
+        <mapping xsi:type="Calculation:AttributeMapping" target="SOC" source="SOC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFFECTIVE_DATE" source="EFFECTIVE_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TIER_LEVEL_CODE" source="TIER_LEVEL_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FEATURE_CODE" source="FEATURE_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_EFFECTIVE_DT" source="REFERENCE_EFFECTIVE_DT"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_ERROR">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="SOC"/>
+        <viewAttribute id="EFFECTIVE_DATE"/>
+        <viewAttribute id="TIER_LEVEL_CODE"/>
+        <viewAttribute id="FEATURE_CODE"/>
+        <viewAttribute id="REFERENCE_EFFECTIVE_DT"/>
+        <viewAttribute id="DELETED">
+          <filter xsi:type="AccessControl:SingleValueFilter" operator="NL" including="true"/>
+        </viewAttribute>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="DATE" id="CC_EFFECTIVE_DATE" expressionLanguage="COLUMN_ENGINE">
+          <formula>date(&quot;EFFECTIVE_DATE&quot;)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="INTEGER" id="CC_TIER_LEVEL_CODE" expressionLanguage="COLUMN_ENGINE">
+          <formula>int(&quot;TIER_LEVEL_CODE&quot;)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="DATE" id="CC_REFERENCE_EFFECTIVE_DT" expressionLanguage="COLUMN_ENGINE">
+          <formula>date(&quot;REFERENCE_EFFECTIVE_DT&quot;)</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#IFRS_R1.MOBILITY.NDB_MOBILITY::MOBL_PP_RC_RATE_HIST_EH">
+        <mapping xsi:type="Calculation:AttributeMapping" target="SOC" source="SOC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFFECTIVE_DATE" source="EFFECTIVE_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TIER_LEVEL_CODE" source="TIER_LEVEL_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FEATURE_CODE" source="FEATURE_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_EFFECTIVE_DT" source="REFERENCE_EFFECTIVE_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DELETED" source="DELETED"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="JOIN_INCOMING_RECORDS_WITH_EH" cardinality="C1_N" joinOrder="OUTSIDE_IN" joinType="leftOuter">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="SOC_RIGHT"/>
+        <viewAttribute id="FEATURE_CODE"/>
+        <viewAttribute id="SOC_LAND"/>
+        <viewAttribute id="CC_REFERENCE_EFFECTIVE_DT"/>
+        <viewAttribute hidden="true" id="JOIN$CC_TIER_LEVEL_CODE$TIER_LEVEL_CODE"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#PROJ_ERROR">
+        <mapping xsi:type="Calculation:AttributeMapping" target="SOC_RIGHT" source="SOC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FEATURE_CODE" source="FEATURE_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_REFERENCE_EFFECTIVE_DT" source="CC_REFERENCE_EFFECTIVE_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$CC_TIER_LEVEL_CODE$TIER_LEVEL_CODE" source="CC_TIER_LEVEL_CODE"/>
+      </input>
+      <input node="#PROJ_NM1_EDW_REF_PPLAN_RC_RATE_HIST">
+        <mapping xsi:type="Calculation:AttributeMapping" target="SOC_LAND" source="SOC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FEATURE_CODE" source="FEATURE_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SOC_RIGHT" source="SOC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$CC_TIER_LEVEL_CODE$TIER_LEVEL_CODE" source="TIER_LEVEL_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_REFERENCE_EFFECTIVE_DT" source="EFF_DT"/>
+      </input>
+      <joinAttribute name="FEATURE_CODE"/>
+      <joinAttribute name="SOC_RIGHT"/>
+      <joinAttribute name="JOIN$CC_TIER_LEVEL_CODE$TIER_LEVEL_CODE"/>
+      <joinAttribute name="CC_REFERENCE_EFFECTIVE_DT"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_FILTER_INCOMMING_RECORDS">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="SOC_RIGHT"/>
+        <viewAttribute id="FEATURE_CODE"/>
+        <viewAttribute id="SOC_LAND">
+          <filter xsi:type="AccessControl:SingleValueFilter" operator="NL" including="true"/>
+        </viewAttribute>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#JOIN_INCOMING_RECORDS_WITH_EH">
+        <mapping xsi:type="Calculation:AttributeMapping" target="SOC_RIGHT" source="SOC_RIGHT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FEATURE_CODE" source="FEATURE_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SOC_LAND" source="SOC_LAND"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:AggregationView" id="AGGR_DISTINCT">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="SOC_RIGHT"/>
+        <viewAttribute id="FEATURE_CODE"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#PROJ_FILTER_INCOMMING_RECORDS">
+        <mapping xsi:type="Calculation:AttributeMapping" target="SOC_RIGHT" source="SOC_RIGHT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FEATURE_CODE" source="FEATURE_CODE"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="JOIN_CA_EH" joinOrder="OUTSIDE_IN" joinType="leftOuter">
+      <descriptions>
+        <comment text="IS_20402801 will be raised as JOIN ERROR."/>
+      </descriptions>
+      <viewAttributes>
+        <viewAttribute id="EFFECTIVE_DATE"/>
+        <viewAttribute id="EFF_DT"/>
+        <viewAttribute id="EXPIRATION_DATE"/>
+        <viewAttribute id="EXPY_DT"/>
+        <viewAttribute id="FEATURE_CODE"/>
+        <viewAttribute id="RATE"/>
+        <viewAttribute id="SOC"/>
+        <viewAttribute id="SUSPENSION_AMOUNT"/>
+        <viewAttribute id="TIER_LEVEL_CODE"/>
+        <viewAttribute id="CYCL_ID"/>
+        <viewAttribute id="SOC_RIGHT"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="IS_20402801" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isNull(&quot;SOC_RIGHT&quot;),'0','1')</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#PROJ_NM1_EDW_REF_PPLAN_RC_RATE_HIST">
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFFECTIVE_DATE" source="EFFECTIVE_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFF_DT" source="EFF_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXPIRATION_DATE" source="EXPIRATION_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXPY_DT" source="EXPY_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FEATURE_CODE" source="FEATURE_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RATE" source="RATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SOC" source="SOC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUSPENSION_AMOUNT" source="SUSPENSION_AMOUNT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TIER_LEVEL_CODE" source="TIER_LEVEL_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+      </input>
+      <input node="#AGGR_DISTINCT">
+        <mapping xsi:type="Calculation:AttributeMapping" target="SOC_RIGHT" source="SOC_RIGHT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SOC" source="SOC_RIGHT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FEATURE_CODE" source="FEATURE_CODE"/>
+      </input>
+      <joinAttribute name="SOC"/>
+      <joinAttribute name="FEATURE_CODE"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="JOIN" joinOrder="OUTSIDE_IN" joinType="leftOuter">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="SOC_RIGHT"/>
+        <viewAttribute id="EFFECTIVE_DATE"/>
+        <viewAttribute id="EFF_DT"/>
+        <viewAttribute id="EXPIRATION_DATE"/>
+        <viewAttribute id="EXPY_DT"/>
+        <viewAttribute id="FEATURE_CODE"/>
+        <viewAttribute id="RATE"/>
+        <viewAttribute id="SOC"/>
+        <viewAttribute id="SUSPENSION_AMOUNT"/>
+        <viewAttribute id="TIER_LEVEL_CODE"/>
+        <viewAttribute id="CYCL_ID"/>
+        <viewAttribute id="IS_20402801"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="DATE" id="CC_REFERENCE_EXPIRY_DT" expressionLanguage="COLUMN_ENGINE">
+          <formula>'99991231'</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#JOIN_CA_EH">
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFFECTIVE_DATE" source="EFFECTIVE_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFF_DT" source="EFF_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXPIRATION_DATE" source="EXPIRATION_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXPY_DT" source="EXPY_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FEATURE_CODE" source="FEATURE_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RATE" source="RATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SOC" source="SOC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUSPENSION_AMOUNT" source="SUSPENSION_AMOUNT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TIER_LEVEL_CODE" source="TIER_LEVEL_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20402801" source="IS_20402801"/>
+      </input>
+      <input node="#PROJ_MOBL_PP_RC_RATE_HIST">
+        <mapping xsi:type="Calculation:AttributeMapping" target="SOC_RIGHT" source="SOC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SOC" source="SOC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FEATURE_CODE" source="FEATURE_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFFECTIVE_DATE" source="EFFECTIVE_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TIER_LEVEL_CODE" source="TIER_LEVEL_CODE"/>
+      </input>
+      <joinAttribute name="SOC"/>
+      <joinAttribute name="FEATURE_CODE"/>
+      <joinAttribute name="EFFECTIVE_DATE"/>
+      <joinAttribute name="TIER_LEVEL_CODE"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:RankView" id="RANK_SEQ">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="EFFECTIVE_DATE"/>
+        <viewAttribute id="EFF_DT"/>
+        <viewAttribute id="EXPIRATION_DATE"/>
+        <viewAttribute id="EXPY_DT"/>
+        <viewAttribute id="FEATURE_CODE"/>
+        <viewAttribute id="RATE"/>
+        <viewAttribute id="SOC"/>
+        <viewAttribute id="SUSPENSION_AMOUNT"/>
+        <viewAttribute id="TIER_LEVEL_CODE"/>
+        <viewAttribute id="SOC_RIGHT"/>
+        <viewAttribute id="CC_REFERENCE_EXPIRY_DT"/>
+        <viewAttribute id="CYCL_ID"/>
+        <viewAttribute id="IS_20402801"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#JOIN">
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFFECTIVE_DATE" source="EFFECTIVE_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFF_DT" source="EFF_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXPIRATION_DATE" source="EXPIRATION_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXPY_DT" source="EXPY_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FEATURE_CODE" source="FEATURE_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RATE" source="RATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SOC" source="SOC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUSPENSION_AMOUNT" source="SUSPENSION_AMOUNT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TIER_LEVEL_CODE" source="TIER_LEVEL_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SOC_RIGHT" source="SOC_RIGHT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_REFERENCE_EXPIRY_DT" source="CC_REFERENCE_EXPIRY_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20402801" source="IS_20402801"/>
+      </input>
+      <windowFunction>
+        <partitionViewAttributeName>SOC</partitionViewAttributeName>
+        <partitionViewAttributeName>EFFECTIVE_DATE</partitionViewAttributeName>
+        <partitionViewAttributeName>TIER_LEVEL_CODE</partitionViewAttributeName>
+        <partitionViewAttributeName>FEATURE_CODE</partitionViewAttributeName>
+        <order byViewAttributeName="EFF_DT" direction="ASC"/>
+        <rankThreshold>
+          <value>100</value>
+        </rankThreshold>
+        <rankViewAttributeName>RANK_SEQ</rankViewAttributeName>
+      </windowFunction>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_INSERT_UPDATE">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="EFFECTIVE_DATE"/>
+        <viewAttribute id="EFF_DT"/>
+        <viewAttribute id="EXPIRATION_DATE"/>
+        <viewAttribute id="EXPY_DT"/>
+        <viewAttribute id="FEATURE_CODE"/>
+        <viewAttribute id="RATE"/>
+        <viewAttribute id="SOC"/>
+        <viewAttribute id="SUSPENSION_AMOUNT"/>
+        <viewAttribute id="TIER_LEVEL_CODE"/>
+        <viewAttribute id="SOC_RIGHT"/>
+        <viewAttribute id="CC_REFERENCE_EXPIRY_DT"/>
+        <viewAttribute id="CYCL_ID"/>
+        <viewAttribute id="RANK_SEQ"/>
+        <viewAttribute id="IS_20402801"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CC_EXISTING_RECORD" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isNull(&quot;SOC_RIGHT&quot;)and (&quot;RANK_SEQ&quot;=1), 'I' , 'U')</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="DATE" id="CC_EFFECTIVE_DATE_PREV_DAY" expressionLanguage="COLUMN_ENGINE">
+          <formula>adddays(&quot;EFF_DT&quot;,-1)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CC_CONCAT_PK" length="33" expressionLanguage="COLUMN_ENGINE">
+          <formula>&quot;SOC&quot;+'|'+string(&quot;EFFECTIVE_DATE&quot;)+'|'+string(&quot;TIER_LEVEL_CODE&quot;)+'|'+&quot;FEATURE_CODE&quot;</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#RANK_SEQ">
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFFECTIVE_DATE" source="EFFECTIVE_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFF_DT" source="EFF_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXPIRATION_DATE" source="EXPIRATION_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXPY_DT" source="EXPY_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FEATURE_CODE" source="FEATURE_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RATE" source="RATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SOC" source="SOC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUSPENSION_AMOUNT" source="SUSPENSION_AMOUNT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TIER_LEVEL_CODE" source="TIER_LEVEL_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SOC_RIGHT" source="SOC_RIGHT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_REFERENCE_EXPIRY_DT" source="CC_REFERENCE_EXPIRY_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RANK_SEQ" source="RANK_SEQ"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20402801" source="IS_20402801"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="ERROR_SEMANTICS">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="EFFECTIVE_DATE"/>
+        <viewAttribute id="EXPIRATION_DATE"/>
+        <viewAttribute id="FEATURE_CODE"/>
+        <viewAttribute id="RATE"/>
+        <viewAttribute id="SOC"/>
+        <viewAttribute id="SUSPENSION_AMOUNT"/>
+        <viewAttribute id="TIER_LEVEL_CODE"/>
+        <viewAttribute id="FLAG_EXISTING_RECORD"/>
+        <viewAttribute id="EFFECTIVE_DATE_PREV_DAY"/>
+        <viewAttribute id="EXPY_DT"/>
+        <viewAttribute id="REFERENCE_EFFECTIVE_DT"/>
+        <viewAttribute id="REFERENCE_EXPIRY_DT"/>
+        <viewAttribute id="CYCL_ID"/>
+        <viewAttribute id="IS_20402801"/>
+        <viewAttribute id="CONCAT_PK"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="ERROR_CODE" length="500" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(&quot;IS_20402801&quot;='1', '20402801||','')</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="ERROR_STATUS" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>if((&quot;IS_20402801&quot;='1'),'1','0')</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#PROJ_INSERT_UPDATE">
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFFECTIVE_DATE" source="EFFECTIVE_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXPIRATION_DATE" source="EXPIRATION_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FEATURE_CODE" source="FEATURE_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RATE" source="RATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SOC" source="SOC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUSPENSION_AMOUNT" source="SUSPENSION_AMOUNT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TIER_LEVEL_CODE" source="TIER_LEVEL_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FLAG_EXISTING_RECORD" source="CC_EXISTING_RECORD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFFECTIVE_DATE_PREV_DAY" source="CC_EFFECTIVE_DATE_PREV_DAY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXPY_DT" source="EXPY_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_EFFECTIVE_DT" source="EFF_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_EXPIRY_DT" source="CC_REFERENCE_EXPIRY_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20402801" source="IS_20402801"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONCAT_PK" source="CC_CONCAT_PK"/>
+      </input>
+    </calculationView>
+  </calculationViews>
+  <logicalModel id="ERROR_SEMANTICS">
+    <descriptions/>
+    <attributes>
+      <attribute id="EFFECTIVE_DATE" order="1" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="EFFECTIVE_DATE"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="EFFECTIVE_DATE"/>
+      </attribute>
+      <attribute id="EXPIRATION_DATE" order="2" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="EXPIRATION_DATE"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="EXPIRATION_DATE"/>
+      </attribute>
+      <attribute id="FEATURE_CODE" order="3" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="FEATURE_CODE"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="FEATURE_CODE"/>
+      </attribute>
+      <attribute id="RATE" order="4" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="RATE"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="RATE"/>
+      </attribute>
+      <attribute id="SOC" order="5" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SOC"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="SOC"/>
+      </attribute>
+      <attribute id="SUSPENSION_AMOUNT" order="6" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SUSPENSION_AMOUNT"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="SUSPENSION_AMOUNT"/>
+      </attribute>
+      <attribute id="TIER_LEVEL_CODE" order="7" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="TIER_LEVEL_CODE"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="TIER_LEVEL_CODE"/>
+      </attribute>
+      <attribute id="FLAG_EXISTING_RECORD" order="8" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="FLAG_EXISTING_RECORD"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="FLAG_EXISTING_RECORD"/>
+      </attribute>
+      <attribute id="EFFECTIVE_DATE_PREV_DAY" order="9" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="EFFECTIVE_DATE_PREV_DAY"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="EFFECTIVE_DATE_PREV_DAY"/>
+      </attribute>
+      <attribute id="EXPY_DT" order="10" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="EXPY_DT"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="EXPY_DT"/>
+      </attribute>
+      <attribute id="REFERENCE_EFFECTIVE_DT" order="11" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="REFERENCE_EFFECTIVE_DT"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="REFERENCE_EFFECTIVE_DT"/>
+      </attribute>
+      <attribute id="REFERENCE_EXPIRY_DT" order="12" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="REFERENCE_EXPIRY_DT"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="REFERENCE_EXPIRY_DT"/>
+      </attribute>
+      <attribute id="CYCL_ID" order="13" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CYCL_ID"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="CYCL_ID"/>
+      </attribute>
+      <attribute id="IS_20402801" hidden="false" order="14" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="IS_20402801"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="IS_20402801"/>
+      </attribute>
+      <attribute id="ERROR_CODE" order="15" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ERROR_CODE"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="ERROR_CODE"/>
+      </attribute>
+      <attribute id="ERROR_STATUS" order="16" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ERROR_STATUS"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="ERROR_STATUS"/>
+      </attribute>
+      <attribute id="CONCAT_PK" order="17" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CONCAT_PK"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="CONCAT_PK"/>
+      </attribute>
+    </attributes>
+    <calculatedAttributes/>
+    <privateDataFoundation>
+      <tableProxies/>
+      <joins/>
+      <layout>
+        <shapes/>
+      </layout>
+    </privateDataFoundation>
+    <baseMeasures/>
+    <calculatedMeasures/>
+    <restrictedMeasures/>
+    <localDimensions/>
+  </logicalModel>
+  <layout>
+    <shapes>
+      <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+        <upperLeftCorner x="253" y="87"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_NM1_EDW_REF_PPLAN_RC_RATE_HIST" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="176" y="843"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_MOBL_PP_RC_RATE_HIST" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="330" y="495"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_ERROR" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="22" y="843"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="JOIN_INCOMING_RECORDS_WITH_EH" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="89" y="747"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_FILTER_INCOMMING_RECORDS" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="89" y="669"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+      <shape expanded="true" modelObjectName="AGGR_DISTINCT" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="89" y="591"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+      <shape expanded="true" modelObjectName="JOIN_CA_EH" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="176" y="495"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+      <shape expanded="true" modelObjectName="JOIN" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="253" y="399"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="RANK_SEQ" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="253" y="321"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_INSERT_UPDATE" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="253" y="243"/>
+        <rectangleSize height="55" width="140"/>
+      </shape>
+      <shape expanded="true" modelObjectName="ERROR_SEMANTICS" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="253" y="165"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+    </shapes>
+  </layout>
+</Calculation:scenario>

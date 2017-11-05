@@ -1,0 +1,453 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:AccessControl="http://www.sap.com/ndb/SQLCoreModelAccessControl.ecore" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" xmlns:Variable="http://www.sap.com/ndb/BiModelVariable.ecore" schemaVersion="2.3" id="CA_NM1_EDW_REF_FEAT_HIST" applyPrivilegeType="NONE" checkAnalyticPrivileges="false" defaultClient="$$client$$" defaultLanguage="$$language$$" hierarchiesSQLEnabled="false" historyEnabled="false" translationRelevant="true" visibility="internal" calculationScenarioType="TREE_BASED" dataCategory="DIMENSION" enforceSqlExecution="false" executionSemantic="UNDEFINED" outputViewType="Projection">
+  <descriptions defaultDescription="Landing View - Table NM1_EDW_REF_FEAT_HIST">
+    <comment text="1. This private view will contain the product reference details for features by Feature Code.&#xD;&#xA;"/>
+  </descriptions>
+  <localVariables>
+    <variable id="IP_EFF_DT" parameter="true">
+      <descriptions defaultDescription="IP_EFF_DT"/>
+      <variableProperties datatype="DATE" defaultValue="99991231" mandatory="false">
+        <valueDomain type="Date"/>
+        <selection multiLine="false" type="SingleValue"/>
+      </variableProperties>
+    </variable>
+  </localVariables>
+  <variableMappings>
+    <mapping xsi:type="Variable:ConstantVariableMapping" dataSource="#CA_EH_ERROR_TABLE" value="1214">
+      <targetVariable name="IP_JOB_ID" resourceUri="/IFRS_R1.LAND.EH/calculationviews/CA_EH_ERROR_TABLE"/>
+    </mapping>
+  </variableMappings>
+  <informationModelLayout relativeWidthScenario="36"/>
+  <dataSources>
+    <DataSource id="IFRS_R1.LAND::NM1_EDW_REF_FEAT_HIST" type="DATA_BASE_TABLE">
+      <viewAttributes allViewAttributes="true"/>
+      <columnObject schemaName="LAND" columnObjectName="IFRS_R1.LAND::NM1_EDW_REF_FEAT_HIST"/>
+    </DataSource>
+    <DataSource id="CA_EH_ERROR_TABLE" type="CALCULATION_VIEW">
+      <viewAttributes allViewAttributes="true"/>
+      <resourceUri>/IFRS_R1.LAND.EH/calculationviews/CA_EH_ERROR_TABLE</resourceUri>
+    </DataSource>
+  </dataSources>
+  <calculationViews>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_NM1_EDW_REF_FEAT_HIST" filterExpressionLanguage="COLUMN_ENGINE">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="ATTRIBUTE_GROUP"/>
+        <viewAttribute id="DUP_FTR_ALLOW_IND"/>
+        <viewAttribute id="EFF_DT"/>
+        <viewAttribute id="EXPY_DT"/>
+        <viewAttribute id="FEATURE_DESC"/>
+        <viewAttribute id="FEATURE_DESC_SEC_LANG"/>
+        <viewAttribute id="FEATURE_GROUP"/>
+        <viewAttribute id="FEATURE_QUANTITY"/>
+        <viewAttribute id="FEAT_CD"/>
+        <viewAttribute id="FM_TYPE"/>
+        <viewAttribute id="FREE_PER_MEM_IND"/>
+        <viewAttribute id="FTR_SUB_GRP_TYPE"/>
+        <viewAttribute id="FTR_UOM_TYPE"/>
+        <viewAttribute id="FUN_SUBTYPE"/>
+        <viewAttribute id="INST_CATG_IND"/>
+        <viewAttribute id="LOCAL_SCOPE_IND"/>
+        <viewAttribute id="LSA_IND"/>
+        <viewAttribute id="LTE_ELIG"/>
+        <viewAttribute id="MPS_RATING_PRIORITY"/>
+        <viewAttribute id="NETWORK_TYPE"/>
+        <viewAttribute id="PRODUCT_TYP"/>
+        <viewAttribute id="PRORATION_IND"/>
+        <viewAttribute id="RATING_ROAMING_IND"/>
+        <viewAttribute id="REVENUE_CD"/>
+        <viewAttribute id="SERVICE_LEVEL"/>
+        <viewAttribute id="USAGE_TYPE"/>
+        <viewAttribute id="CYCL_ID"/>
+        <viewAttribute id="INSRT_TS"/>
+        <viewAttribute id="NDB_TS"/>
+        <viewAttribute id="NDB_MART"/>
+        <viewAttribute id="SEQ_ID"/>
+        <viewAttribute id="SRC_TS"/>
+        <viewAttribute id="PROCESS_ID"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CC_VERSION_CHECK" length="200" expressionLanguage="COLUMN_ENGINE">
+          <formula>&quot;FEAT_CD&quot;</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#IFRS_R1.LAND::NM1_EDW_REF_FEAT_HIST">
+        <mapping xsi:type="Calculation:AttributeMapping" target="ATTRIBUTE_GROUP" source="ATTRIBUTE_GROUP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DUP_FTR_ALLOW_IND" source="DUP_FTR_ALLOW_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFF_DT" source="EFF_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXPY_DT" source="EXPY_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FEATURE_DESC" source="FEATURE_DESC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FEATURE_DESC_SEC_LANG" source="FEATURE_DESC_SEC_LANG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FEATURE_GROUP" source="FEATURE_GROUP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FEATURE_QUANTITY" source="FEATURE_QUANTITY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FEAT_CD" source="FEAT_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FM_TYPE" source="FM_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FREE_PER_MEM_IND" source="FREE_PER_MEM_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FTR_SUB_GRP_TYPE" source="FTR_SUB_GRP_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FTR_UOM_TYPE" source="FTR_UOM_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FUN_SUBTYPE" source="FUN_SUBTYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INST_CATG_IND" source="INST_CATG_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LOCAL_SCOPE_IND" source="LOCAL_SCOPE_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LSA_IND" source="LSA_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LTE_ELIG" source="LTE_ELIG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MPS_RATING_PRIORITY" source="MPS_RATING_PRIORITY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NETWORK_TYPE" source="NETWORK_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT_TYP" source="PRODUCT_TYP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRORATION_IND" source="PRORATION_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RATING_ROAMING_IND" source="RATING_ROAMING_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REVENUE_CD" source="REVENUE_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SERVICE_LEVEL" source="SERVICE_LEVEL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="USAGE_TYPE" source="USAGE_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INSRT_TS" source="INSRT_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NDB_TS" source="NDB_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NDB_MART" source="NDB_MART"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SEQ_ID" source="SEQ_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SRC_TS" source="SRC_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROCESS_ID" source="PROCESS_ID"/>
+      </input>
+      <filter>(isNull(&quot;NDB_TS&quot;)) and &quot;EFF_DT&quot; &lt;='$$IP_EFF_DT$$'</filter>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJECT_ERROR_TABLE">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="PARENT_KEY"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#CA_EH_ERROR_TABLE">
+        <mapping xsi:type="Calculation:AttributeMapping" target="PARENT_KEY" source="PARENT_KEY"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="PROJECT_NM1_EDW_REF_FEAT_HIST" joinOrder="OUTSIDE_IN" joinType="leftOuter">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="ATTRIBUTE_GROUP"/>
+        <viewAttribute id="DUP_FTR_ALLOW_IND"/>
+        <viewAttribute id="EFF_DT"/>
+        <viewAttribute id="EXPY_DT"/>
+        <viewAttribute id="FEATURE_DESC"/>
+        <viewAttribute id="FEATURE_DESC_SEC_LANG"/>
+        <viewAttribute id="FEATURE_GROUP"/>
+        <viewAttribute id="FEATURE_QUANTITY"/>
+        <viewAttribute id="FEAT_CD"/>
+        <viewAttribute id="FM_TYPE"/>
+        <viewAttribute id="FREE_PER_MEM_IND"/>
+        <viewAttribute id="FTR_SUB_GRP_TYPE"/>
+        <viewAttribute id="FTR_UOM_TYPE"/>
+        <viewAttribute id="FUN_SUBTYPE"/>
+        <viewAttribute id="INST_CATG_IND"/>
+        <viewAttribute id="LOCAL_SCOPE_IND"/>
+        <viewAttribute id="LSA_IND"/>
+        <viewAttribute id="LTE_ELIG"/>
+        <viewAttribute id="MPS_RATING_PRIORITY"/>
+        <viewAttribute id="NETWORK_TYPE"/>
+        <viewAttribute id="PRODUCT_TYP"/>
+        <viewAttribute id="PRORATION_IND"/>
+        <viewAttribute id="RATING_ROAMING_IND"/>
+        <viewAttribute id="REVENUE_CD"/>
+        <viewAttribute id="SERVICE_LEVEL"/>
+        <viewAttribute id="USAGE_TYPE"/>
+        <viewAttribute id="CYCL_ID"/>
+        <viewAttribute id="INSRT_TS"/>
+        <viewAttribute id="NDB_MART"/>
+        <viewAttribute id="SEQ_ID"/>
+        <viewAttribute id="SRC_TS"/>
+        <viewAttribute id="PROCESS_ID"/>
+        <viewAttribute id="PARENT_KEY_ERROR"/>
+        <viewAttribute id="CC_VERSION_CHECK"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#PROJ_NM1_EDW_REF_FEAT_HIST">
+        <mapping xsi:type="Calculation:AttributeMapping" target="ATTRIBUTE_GROUP" source="ATTRIBUTE_GROUP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DUP_FTR_ALLOW_IND" source="DUP_FTR_ALLOW_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFF_DT" source="EFF_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXPY_DT" source="EXPY_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FEATURE_DESC" source="FEATURE_DESC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FEATURE_DESC_SEC_LANG" source="FEATURE_DESC_SEC_LANG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FEATURE_GROUP" source="FEATURE_GROUP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FEATURE_QUANTITY" source="FEATURE_QUANTITY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FEAT_CD" source="FEAT_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FM_TYPE" source="FM_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FREE_PER_MEM_IND" source="FREE_PER_MEM_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FTR_SUB_GRP_TYPE" source="FTR_SUB_GRP_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FTR_UOM_TYPE" source="FTR_UOM_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FUN_SUBTYPE" source="FUN_SUBTYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INST_CATG_IND" source="INST_CATG_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LOCAL_SCOPE_IND" source="LOCAL_SCOPE_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LSA_IND" source="LSA_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LTE_ELIG" source="LTE_ELIG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MPS_RATING_PRIORITY" source="MPS_RATING_PRIORITY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NETWORK_TYPE" source="NETWORK_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT_TYP" source="PRODUCT_TYP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRORATION_IND" source="PRORATION_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RATING_ROAMING_IND" source="RATING_ROAMING_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REVENUE_CD" source="REVENUE_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SERVICE_LEVEL" source="SERVICE_LEVEL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="USAGE_TYPE" source="USAGE_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INSRT_TS" source="INSRT_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NDB_MART" source="NDB_MART"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SEQ_ID" source="SEQ_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SRC_TS" source="SRC_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROCESS_ID" source="PROCESS_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_VERSION_CHECK" source="CC_VERSION_CHECK"/>
+      </input>
+      <input node="#PROJECT_ERROR_TABLE">
+        <mapping xsi:type="Calculation:AttributeMapping" target="PARENT_KEY_ERROR" source="PARENT_KEY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_VERSION_CHECK" source="PARENT_KEY"/>
+      </input>
+      <joinAttribute name="CC_VERSION_CHECK"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJECT_ERROR_FILTERS">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="PROCESS_ID"/>
+        <viewAttribute id="SRC_TS"/>
+        <viewAttribute id="SEQ_ID"/>
+        <viewAttribute id="NDB_MART"/>
+        <viewAttribute id="INSRT_TS"/>
+        <viewAttribute id="CYCL_ID"/>
+        <viewAttribute id="USAGE_TYPE"/>
+        <viewAttribute id="SERVICE_LEVEL"/>
+        <viewAttribute id="REVENUE_CD"/>
+        <viewAttribute id="RATING_ROAMING_IND"/>
+        <viewAttribute id="PRORATION_IND"/>
+        <viewAttribute id="PRODUCT_TYP"/>
+        <viewAttribute id="NETWORK_TYPE"/>
+        <viewAttribute id="MPS_RATING_PRIORITY"/>
+        <viewAttribute id="LTE_ELIG"/>
+        <viewAttribute id="LSA_IND"/>
+        <viewAttribute id="LOCAL_SCOPE_IND"/>
+        <viewAttribute id="INST_CATG_IND"/>
+        <viewAttribute id="FUN_SUBTYPE"/>
+        <viewAttribute id="FTR_UOM_TYPE"/>
+        <viewAttribute id="FTR_SUB_GRP_TYPE"/>
+        <viewAttribute id="FREE_PER_MEM_IND"/>
+        <viewAttribute id="FM_TYPE"/>
+        <viewAttribute id="FEAT_CD"/>
+        <viewAttribute id="FEATURE_QUANTITY"/>
+        <viewAttribute id="FEATURE_GROUP"/>
+        <viewAttribute id="FEATURE_DESC_SEC_LANG"/>
+        <viewAttribute id="FEATURE_DESC"/>
+        <viewAttribute id="EXPY_DT"/>
+        <viewAttribute id="EFF_DT"/>
+        <viewAttribute id="DUP_FTR_ALLOW_IND"/>
+        <viewAttribute id="ATTRIBUTE_GROUP"/>
+        <viewAttribute id="PARENT_KEY_ERROR">
+          <filter xsi:type="AccessControl:SingleValueFilter" operator="NL" including="true"/>
+        </viewAttribute>
+        <viewAttribute id="CC_VERSION_CHECK"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#PROJECT_NM1_EDW_REF_FEAT_HIST">
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROCESS_ID" source="PROCESS_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SRC_TS" source="SRC_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SEQ_ID" source="SEQ_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NDB_MART" source="NDB_MART"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INSRT_TS" source="INSRT_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="USAGE_TYPE" source="USAGE_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SERVICE_LEVEL" source="SERVICE_LEVEL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REVENUE_CD" source="REVENUE_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RATING_ROAMING_IND" source="RATING_ROAMING_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRORATION_IND" source="PRORATION_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT_TYP" source="PRODUCT_TYP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NETWORK_TYPE" source="NETWORK_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MPS_RATING_PRIORITY" source="MPS_RATING_PRIORITY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LTE_ELIG" source="LTE_ELIG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LSA_IND" source="LSA_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LOCAL_SCOPE_IND" source="LOCAL_SCOPE_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INST_CATG_IND" source="INST_CATG_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FUN_SUBTYPE" source="FUN_SUBTYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FTR_UOM_TYPE" source="FTR_UOM_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FTR_SUB_GRP_TYPE" source="FTR_SUB_GRP_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FREE_PER_MEM_IND" source="FREE_PER_MEM_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FM_TYPE" source="FM_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FEAT_CD" source="FEAT_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FEATURE_QUANTITY" source="FEATURE_QUANTITY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FEATURE_GROUP" source="FEATURE_GROUP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FEATURE_DESC_SEC_LANG" source="FEATURE_DESC_SEC_LANG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FEATURE_DESC" source="FEATURE_DESC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXPY_DT" source="EXPY_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFF_DT" source="EFF_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DUP_FTR_ALLOW_IND" source="DUP_FTR_ALLOW_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ATTRIBUTE_GROUP" source="ATTRIBUTE_GROUP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PARENT_KEY_ERROR" source="PARENT_KEY_ERROR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_VERSION_CHECK" source="CC_VERSION_CHECK"/>
+      </input>
+    </calculationView>
+  </calculationViews>
+  <logicalModel id="PROJECT_ERROR_FILTERS">
+    <descriptions/>
+    <attributes>
+      <attribute id="PROCESS_ID" order="1" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="PROCESS_ID"/>
+        <keyMapping columnObjectName="PROJECT_ERROR_FILTERS" columnName="PROCESS_ID"/>
+      </attribute>
+      <attribute id="SRC_TS" order="2" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SRC_TS"/>
+        <keyMapping columnObjectName="PROJECT_ERROR_FILTERS" columnName="SRC_TS"/>
+      </attribute>
+      <attribute id="SEQ_ID" order="3" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SEQ_ID"/>
+        <keyMapping columnObjectName="PROJECT_ERROR_FILTERS" columnName="SEQ_ID"/>
+      </attribute>
+      <attribute id="NDB_MART" order="4" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="NDB_MART"/>
+        <keyMapping columnObjectName="PROJECT_ERROR_FILTERS" columnName="NDB_MART"/>
+      </attribute>
+      <attribute id="INSRT_TS" order="5" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="INSRT_TS"/>
+        <keyMapping columnObjectName="PROJECT_ERROR_FILTERS" columnName="INSRT_TS"/>
+      </attribute>
+      <attribute id="CYCL_ID" order="6" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CYCL_ID"/>
+        <keyMapping columnObjectName="PROJECT_ERROR_FILTERS" columnName="CYCL_ID"/>
+      </attribute>
+      <attribute id="USAGE_TYPE" order="7" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="USAGE_TYPE"/>
+        <keyMapping columnObjectName="PROJECT_ERROR_FILTERS" columnName="USAGE_TYPE"/>
+      </attribute>
+      <attribute id="SERVICE_LEVEL" order="8" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SERVICE_LEVEL"/>
+        <keyMapping columnObjectName="PROJECT_ERROR_FILTERS" columnName="SERVICE_LEVEL"/>
+      </attribute>
+      <attribute id="REVENUE_CD" order="9" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="REVENUE_CD"/>
+        <keyMapping columnObjectName="PROJECT_ERROR_FILTERS" columnName="REVENUE_CD"/>
+      </attribute>
+      <attribute id="RATING_ROAMING_IND" order="10" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="RATING_ROAMING_IND"/>
+        <keyMapping columnObjectName="PROJECT_ERROR_FILTERS" columnName="RATING_ROAMING_IND"/>
+      </attribute>
+      <attribute id="PRORATION_IND" order="11" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="PRORATION_IND"/>
+        <keyMapping columnObjectName="PROJECT_ERROR_FILTERS" columnName="PRORATION_IND"/>
+      </attribute>
+      <attribute id="PRODUCT_TYP" order="12" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="PRODUCT_TYP"/>
+        <keyMapping columnObjectName="PROJECT_ERROR_FILTERS" columnName="PRODUCT_TYP"/>
+      </attribute>
+      <attribute id="NETWORK_TYPE" order="13" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="NETWORK_TYPE"/>
+        <keyMapping columnObjectName="PROJECT_ERROR_FILTERS" columnName="NETWORK_TYPE"/>
+      </attribute>
+      <attribute id="MPS_RATING_PRIORITY" order="14" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="MPS_RATING_PRIORITY"/>
+        <keyMapping columnObjectName="PROJECT_ERROR_FILTERS" columnName="MPS_RATING_PRIORITY"/>
+      </attribute>
+      <attribute id="LTE_ELIG" order="15" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="LTE_ELIG"/>
+        <keyMapping columnObjectName="PROJECT_ERROR_FILTERS" columnName="LTE_ELIG"/>
+      </attribute>
+      <attribute id="LSA_IND" order="16" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="LSA_IND"/>
+        <keyMapping columnObjectName="PROJECT_ERROR_FILTERS" columnName="LSA_IND"/>
+      </attribute>
+      <attribute id="LOCAL_SCOPE_IND" order="17" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="LOCAL_SCOPE_IND"/>
+        <keyMapping columnObjectName="PROJECT_ERROR_FILTERS" columnName="LOCAL_SCOPE_IND"/>
+      </attribute>
+      <attribute id="INST_CATG_IND" order="18" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="INST_CATG_IND"/>
+        <keyMapping columnObjectName="PROJECT_ERROR_FILTERS" columnName="INST_CATG_IND"/>
+      </attribute>
+      <attribute id="FUN_SUBTYPE" order="19" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="FUN_SUBTYPE"/>
+        <keyMapping columnObjectName="PROJECT_ERROR_FILTERS" columnName="FUN_SUBTYPE"/>
+      </attribute>
+      <attribute id="FTR_UOM_TYPE" order="20" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="FTR_UOM_TYPE"/>
+        <keyMapping columnObjectName="PROJECT_ERROR_FILTERS" columnName="FTR_UOM_TYPE"/>
+      </attribute>
+      <attribute id="FTR_SUB_GRP_TYPE" order="21" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="FTR_SUB_GRP_TYPE"/>
+        <keyMapping columnObjectName="PROJECT_ERROR_FILTERS" columnName="FTR_SUB_GRP_TYPE"/>
+      </attribute>
+      <attribute id="FREE_PER_MEM_IND" order="22" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="FREE_PER_MEM_IND"/>
+        <keyMapping columnObjectName="PROJECT_ERROR_FILTERS" columnName="FREE_PER_MEM_IND"/>
+      </attribute>
+      <attribute id="FM_TYPE" order="23" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="FM_TYPE"/>
+        <keyMapping columnObjectName="PROJECT_ERROR_FILTERS" columnName="FM_TYPE"/>
+      </attribute>
+      <attribute id="FEAT_CD" order="24" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="FEAT_CD"/>
+        <keyMapping columnObjectName="PROJECT_ERROR_FILTERS" columnName="FEAT_CD"/>
+      </attribute>
+      <attribute id="FEATURE_QUANTITY" order="25" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="FEATURE_QUANTITY"/>
+        <keyMapping columnObjectName="PROJECT_ERROR_FILTERS" columnName="FEATURE_QUANTITY"/>
+      </attribute>
+      <attribute id="FEATURE_GROUP" order="26" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="FEATURE_GROUP"/>
+        <keyMapping columnObjectName="PROJECT_ERROR_FILTERS" columnName="FEATURE_GROUP"/>
+      </attribute>
+      <attribute id="FEATURE_DESC_SEC_LANG" order="27" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="FEATURE_DESC_SEC_LANG"/>
+        <keyMapping columnObjectName="PROJECT_ERROR_FILTERS" columnName="FEATURE_DESC_SEC_LANG"/>
+      </attribute>
+      <attribute id="FEATURE_DESC" order="28" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="FEATURE_DESC"/>
+        <keyMapping columnObjectName="PROJECT_ERROR_FILTERS" columnName="FEATURE_DESC"/>
+      </attribute>
+      <attribute id="EXPY_DT" order="29" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="EXPY_DT"/>
+        <keyMapping columnObjectName="PROJECT_ERROR_FILTERS" columnName="EXPY_DT"/>
+      </attribute>
+      <attribute id="EFF_DT" order="30" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="EFF_DT"/>
+        <keyMapping columnObjectName="PROJECT_ERROR_FILTERS" columnName="EFF_DT"/>
+      </attribute>
+      <attribute id="DUP_FTR_ALLOW_IND" order="31" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="DUP_FTR_ALLOW_IND"/>
+        <keyMapping columnObjectName="PROJECT_ERROR_FILTERS" columnName="DUP_FTR_ALLOW_IND"/>
+      </attribute>
+      <attribute id="ATTRIBUTE_GROUP" order="32" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ATTRIBUTE_GROUP"/>
+        <keyMapping columnObjectName="PROJECT_ERROR_FILTERS" columnName="ATTRIBUTE_GROUP"/>
+      </attribute>
+      <attribute id="CC_VERSION_CHECK" hidden="false" order="33" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CC_VERSION_CHECK"/>
+        <keyMapping columnObjectName="PROJECT_ERROR_FILTERS" columnName="CC_VERSION_CHECK"/>
+      </attribute>
+    </attributes>
+    <calculatedAttributes/>
+    <privateDataFoundation>
+      <tableProxies/>
+      <joins/>
+      <layout>
+        <shapes/>
+      </layout>
+    </privateDataFoundation>
+    <baseMeasures/>
+    <calculatedMeasures/>
+    <restrictedMeasures/>
+    <localDimensions/>
+  </logicalModel>
+  <layout>
+    <shapes>
+      <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+        <upperLeftCorner x="173" y="87"/>
+        <rectangleSize height="64" width="222"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_NM1_EDW_REF_FEAT_HIST" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="22" y="339"/>
+        <rectangleSize height="64" width="279"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJECT_ERROR_TABLE" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="315" y="339"/>
+        <rectangleSize height="64" width="185"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJECT_NM1_EDW_REF_FEAT_HIST" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="153" y="243"/>
+        <rectangleSize height="82" width="262"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJECT_ERROR_FILTERS" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="168" y="165"/>
+        <rectangleSize height="64" width="232"/>
+      </shape>
+    </shapes>
+  </layout>
+</Calculation:scenario>

@@ -1,0 +1,566 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:AccessControl="http://www.sap.com/ndb/SQLCoreModelAccessControl.ecore" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" xmlns:Variable="http://www.sap.com/ndb/BiModelVariable.ecore" schemaVersion="2.3" id="CA_TV_PROD_REF_PRIN_NUM" applyPrivilegeType="NONE" checkAnalyticPrivileges="false" defaultClient="$$client$$" defaultLanguage="$$language$$" hierarchiesSQLEnabled="false" translationRelevant="true" visibility="internal" calculationScenarioType="TREE_BASED" dataCategory="DIMENSION" enforceSqlExecution="false" executionSemantic="UNDEFINED" outputViewType="Projection">
+  <descriptions defaultDescription="CA_TV_PROD_REF_PRIN_NUM"/>
+  <localVariables>
+    <variable id="IP_CYCL_ID" parameter="true">
+      <descriptions defaultDescription="IP_CYCL_ID"/>
+      <variableProperties datatype="NVARCHAR" defaultValue="999" length="3" mandatory="false">
+        <valueDomain type="empty"/>
+        <selection multiLine="false" type="SingleValue"/>
+      </variableProperties>
+    </variable>
+  </localVariables>
+  <variableMappings>
+    <mapping xsi:type="Variable:VariableMapping" dataSource="#CA_TV_PROD_REF_PRIN_NUM">
+      <targetVariable name="IP_CYCL_ID" resourceUri="/IFRS_R1.BELLTV.LAND_BELLTV/calculationviews/CA_TV_PROD_REF_PRIN_NUM"/>
+      <localVariable>#IP_CYCL_ID</localVariable>
+    </mapping>
+  </variableMappings>
+  <informationModelLayout relativeWidthScenario="62"/>
+  <dataSources>
+    <DataSource id="CA_TV_PROD_REF_PRIN_NUM" type="CALCULATION_VIEW">
+      <viewAttributes allViewAttributes="true"/>
+      <resourceUri>/IFRS_R1.BELLTV.LAND_BELLTV/calculationviews/CA_TV_PROD_REF_PRIN_NUM</resourceUri>
+    </DataSource>
+    <DataSource id="IFRS_R1.BELLTV.NDB_BELLTV::TV_PROD_PRIN_REF" type="DATA_BASE_TABLE">
+      <viewAttributes allViewAttributes="true"/>
+      <columnObject schemaName="NDB_TV" columnObjectName="IFRS_R1.BELLTV.NDB_BELLTV::TV_PROD_PRIN_REF"/>
+    </DataSource>
+    <DataSource id="IFRS_R1.BELLTV.NDB_BELLTV::TV_PROD_PRIN_REF_EH" type="DATA_BASE_TABLE">
+      <viewAttributes allViewAttributes="true"/>
+      <columnObject schemaName="NDB_TV" columnObjectName="IFRS_R1.BELLTV.NDB_BELLTV::TV_PROD_PRIN_REF_EH"/>
+    </DataSource>
+  </dataSources>
+  <calculationViews>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_TV_PROD_REF_PRIN_NUM">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="CO_CD"/>
+        <viewAttribute id="PRIN_NUM"/>
+        <viewAttribute id="PRIN_NUM_DESC"/>
+        <viewAttribute id="PRIN_TY"/>
+        <viewAttribute id="REC_ACTN"/>
+        <viewAttribute id="REC_TY_ID"/>
+        <viewAttribute id="TEKLGY_TY"/>
+        <viewAttribute id="CYCL_ID"/>
+        <viewAttribute id="NDB_TS"/>
+        <viewAttribute id="SEQ_ID"/>
+        <viewAttribute id="SRC_TS"/>
+        <viewAttribute id="PROCESS_ID"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="DATE" id="CC_SRC_TS" expressionLanguage="COLUMN_ENGINE">
+          <formula>&quot;SRC_TS&quot;</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#CA_TV_PROD_REF_PRIN_NUM">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CO_CD" source="CO_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRIN_NUM" source="PRIN_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRIN_NUM_DESC" source="PRIN_NUM_DESC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRIN_TY" source="PRIN_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REC_ACTN" source="REC_ACTN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REC_TY_ID" source="REC_TY_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TEKLGY_TY" source="TEKLGY_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NDB_TS" source="NDB_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SEQ_ID" source="SEQ_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SRC_TS" source="SRC_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROCESS_ID" source="PROCESS_ID"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_NDB">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="PRIN_NUM"/>
+        <viewAttribute id="CO_CD_NDB"/>
+        <viewAttribute id="TEKLGY_TY_NDB"/>
+        <viewAttribute id="PRIN_TY_NDB"/>
+        <viewAttribute id="REFERENCE_EXPIRY_DT">
+          <filter xsi:type="AccessControl:SingleValueFilter" including="true" value="99991231"/>
+        </viewAttribute>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#IFRS_R1.BELLTV.NDB_BELLTV::TV_PROD_PRIN_REF">
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRIN_NUM" source="PRIN_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CO_CD_NDB" source="CO_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TEKLGY_TY_NDB" source="TEKLGY_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRIN_TY_NDB" source="PRIN_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_EXPIRY_DT" source="REFERENCE_EXPIRY_DT"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_EH" filterExpressionLanguage="COLUMN_ENGINE">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="PRIN_NUM"/>
+        <viewAttribute id="REFERENCE_EFFECTIVE_DT"/>
+        <viewAttribute id="DELETED"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="DATE" id="CC_REFERENCE_EFFECTIVE_DT" expressionLanguage="COLUMN_ENGINE">
+          <formula>date(&quot;REFERENCE_EFFECTIVE_DT&quot;)</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#IFRS_R1.BELLTV.NDB_BELLTV::TV_PROD_PRIN_REF_EH">
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRIN_NUM" source="PRIN_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_EFFECTIVE_DT" source="REFERENCE_EFFECTIVE_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DELETED" source="DELETED"/>
+      </input>
+      <filter>isNull(&quot;DELETED&quot;)</filter>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="JOIN_INCOMING_RECORDS_WITH_EH" joinOrder="OUTSIDE_IN" joinType="leftOuter">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="PRIN_NUM_EH"/>
+        <viewAttribute id="CC_REFERENCE_EFFECTIVE_DT"/>
+        <viewAttribute id="PRIN_NUM_LAND"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#PROJ_EH">
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRIN_NUM_EH" source="PRIN_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_REFERENCE_EFFECTIVE_DT" source="CC_REFERENCE_EFFECTIVE_DT"/>
+      </input>
+      <input node="#PROJ_TV_PROD_REF_PRIN_NUM">
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRIN_NUM_LAND" source="PRIN_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRIN_NUM_EH" source="PRIN_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_REFERENCE_EFFECTIVE_DT" source="CC_SRC_TS"/>
+      </input>
+      <joinAttribute name="PRIN_NUM_EH"/>
+      <joinAttribute name="CC_REFERENCE_EFFECTIVE_DT"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_FILTER_INCOMING_RECORDS" filterExpressionLanguage="COLUMN_ENGINE">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="PRIN_NUM_EH"/>
+        <viewAttribute id="PRIN_NUM_LAND"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#JOIN_INCOMING_RECORDS_WITH_EH">
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRIN_NUM_EH" source="PRIN_NUM_EH"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRIN_NUM_LAND" source="PRIN_NUM_LAND"/>
+      </input>
+      <filter>isNull(&quot;PRIN_NUM_LAND&quot;)</filter>
+    </calculationView>
+    <calculationView xsi:type="Calculation:AggregationView" id="AGGR_DISTINCT">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="PRIN_NUM_EH"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#PROJ_FILTER_INCOMING_RECORDS">
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRIN_NUM_EH" source="PRIN_NUM_EH"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="JOIN_EH" joinOrder="OUTSIDE_IN" joinType="leftOuter">
+      <descriptions>
+        <comment text="Version check error will be raised as IS_20101303"/>
+      </descriptions>
+      <viewAttributes>
+        <viewAttribute id="PRIN_NUM_EH"/>
+        <viewAttribute id="CO_CD"/>
+        <viewAttribute id="PRIN_NUM"/>
+        <viewAttribute id="PRIN_NUM_DESC"/>
+        <viewAttribute id="PRIN_TY"/>
+        <viewAttribute id="REC_ACTN"/>
+        <viewAttribute id="REC_TY_ID"/>
+        <viewAttribute id="TEKLGY_TY"/>
+        <viewAttribute id="CYCL_ID"/>
+        <viewAttribute id="NDB_TS"/>
+        <viewAttribute id="SEQ_ID"/>
+        <viewAttribute id="SRC_TS"/>
+        <viewAttribute id="PROCESS_ID"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="IS_20101503" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isNull(&quot;PRIN_NUM_EH&quot;),'0','1')</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#PROJ_TV_PROD_REF_PRIN_NUM">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CO_CD" source="CO_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRIN_NUM" source="PRIN_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRIN_NUM_DESC" source="PRIN_NUM_DESC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRIN_TY" source="PRIN_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REC_ACTN" source="REC_ACTN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REC_TY_ID" source="REC_TY_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TEKLGY_TY" source="TEKLGY_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NDB_TS" source="NDB_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SEQ_ID" source="SEQ_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SRC_TS" source="SRC_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROCESS_ID" source="PROCESS_ID"/>
+      </input>
+      <input node="#AGGR_DISTINCT">
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRIN_NUM_EH" source="PRIN_NUM_EH"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRIN_NUM" source="PRIN_NUM_EH"/>
+      </input>
+      <joinAttribute name="PRIN_NUM"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="JOIN_NDB" joinOrder="OUTSIDE_IN" joinType="leftOuter">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="CO_CD_NDB"/>
+        <viewAttribute id="PRIN_NUM_RIGHT"/>
+        <viewAttribute id="TEKLGY_TY_NDB"/>
+        <viewAttribute id="PRIN_TY_NDB"/>
+        <viewAttribute id="PRIN_NUM_EH"/>
+        <viewAttribute id="CO_CD"/>
+        <viewAttribute id="PRIN_NUM"/>
+        <viewAttribute id="PRIN_NUM_DESC"/>
+        <viewAttribute id="REC_ACTN"/>
+        <viewAttribute id="CYCL_ID"/>
+        <viewAttribute id="NDB_TS"/>
+        <viewAttribute id="SEQ_ID"/>
+        <viewAttribute id="TEKLGY_TY"/>
+        <viewAttribute id="REC_TY_ID"/>
+        <viewAttribute id="SRC_TS"/>
+        <viewAttribute id="PROCESS_ID"/>
+        <viewAttribute id="IS_20101503"/>
+        <viewAttribute id="PRIN_TY"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="DATE" id="CC_REFERENCE_EFFECTIVE_DATE_PREV_DAY" expressionLanguage="COLUMN_ENGINE">
+          <formula>adddays(&quot;SRC_TS&quot;,-1)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="DATE" id="CC_REFERENCE_EXPIRY_DT" expressionLanguage="COLUMN_ENGINE">
+          <formula>'99991231'</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CC_CO_CD" length="5" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isNull(&quot;CO_CD&quot;),&quot;CO_CD_NDB&quot;,&quot;CO_CD&quot;)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CC_TEKLGY_TY" length="5" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isNull(&quot;TEKLGY_TY&quot;),&quot;TEKLGY_TY_NDB&quot;,&quot;TEKLGY_TY&quot;)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CC_PRIN_TY" length="15" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isNull(&quot;PRIN_TY&quot;),&quot;PRIN_TY_NDB&quot;,&quot;PRIN_TY&quot;)</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#JOIN_EH">
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRIN_NUM_EH" source="PRIN_NUM_EH"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CO_CD" source="CO_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRIN_NUM" source="PRIN_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRIN_NUM_DESC" source="PRIN_NUM_DESC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REC_ACTN" source="REC_ACTN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NDB_TS" source="NDB_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SEQ_ID" source="SEQ_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TEKLGY_TY" source="TEKLGY_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REC_TY_ID" source="REC_TY_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SRC_TS" source="SRC_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROCESS_ID" source="PROCESS_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20101503" source="IS_20101503"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRIN_TY" source="PRIN_TY"/>
+      </input>
+      <input node="#PROJ_NDB">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CO_CD_NDB" source="CO_CD_NDB"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRIN_NUM_RIGHT" source="PRIN_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TEKLGY_TY_NDB" source="TEKLGY_TY_NDB"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRIN_TY_NDB" source="PRIN_TY_NDB"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRIN_NUM" source="PRIN_NUM"/>
+      </input>
+      <joinAttribute name="PRIN_NUM"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:RankView" id="RANK_EFF_DT">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="CC_REFERENCE_EFFECTIVE_DATE_PREV_DAY"/>
+        <viewAttribute id="CC_REFERENCE_EXPIRY_DT"/>
+        <viewAttribute id="CC_CO_CD"/>
+        <viewAttribute id="CC_TEKLGY_TY"/>
+        <viewAttribute id="CC_PRIN_TY"/>
+        <viewAttribute id="CO_CD_NDB"/>
+        <viewAttribute id="PRIN_NUM_RIGHT"/>
+        <viewAttribute id="TEKLGY_TY_NDB"/>
+        <viewAttribute id="PRIN_TY_NDB"/>
+        <viewAttribute id="CO_CD"/>
+        <viewAttribute id="PRIN_NUM"/>
+        <viewAttribute id="PRIN_NUM_DESC"/>
+        <viewAttribute id="REC_ACTN"/>
+        <viewAttribute id="CYCL_ID"/>
+        <viewAttribute id="NDB_TS"/>
+        <viewAttribute id="SEQ_ID"/>
+        <viewAttribute id="TEKLGY_TY"/>
+        <viewAttribute id="REC_TY_ID"/>
+        <viewAttribute id="SRC_TS"/>
+        <viewAttribute id="PROCESS_ID"/>
+        <viewAttribute id="IS_20101503"/>
+        <viewAttribute id="PRIN_TY"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#JOIN_NDB">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_REFERENCE_EFFECTIVE_DATE_PREV_DAY" source="CC_REFERENCE_EFFECTIVE_DATE_PREV_DAY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_REFERENCE_EXPIRY_DT" source="CC_REFERENCE_EXPIRY_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_CO_CD" source="CC_CO_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_TEKLGY_TY" source="CC_TEKLGY_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_PRIN_TY" source="CC_PRIN_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CO_CD_NDB" source="CO_CD_NDB"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRIN_NUM_RIGHT" source="PRIN_NUM_RIGHT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TEKLGY_TY_NDB" source="TEKLGY_TY_NDB"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRIN_TY_NDB" source="PRIN_TY_NDB"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CO_CD" source="CO_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRIN_NUM" source="PRIN_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRIN_NUM_DESC" source="PRIN_NUM_DESC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REC_ACTN" source="REC_ACTN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NDB_TS" source="NDB_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SEQ_ID" source="SEQ_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TEKLGY_TY" source="TEKLGY_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REC_TY_ID" source="REC_TY_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SRC_TS" source="SRC_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROCESS_ID" source="PROCESS_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20101503" source="IS_20101503"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRIN_TY" source="PRIN_TY"/>
+      </input>
+      <windowFunction>
+        <partitionViewAttributeName>PRIN_NUM</partitionViewAttributeName>
+        <order byViewAttributeName="SRC_TS" direction="ASC"/>
+        <rankThreshold>
+          <value>1000</value>
+        </rankThreshold>
+        <rankViewAttributeName>RANK_COLUMN</rankViewAttributeName>
+      </windowFunction>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="ERROR_SEMANTICS">
+      <descriptions>
+        <comment text="REC_ACTN ='ADD' duplicate records error will be raised as 20101501&#xD;&#xA;REC-ACTN = 'UPDATE' OR 'DELETE' with no record in the NDB table  errors will be raised as 20101502"/>
+      </descriptions>
+      <viewAttributes>
+        <viewAttribute id="CC_REFERENCE_EFFECTIVE_DATE_PREV_DAY"/>
+        <viewAttribute id="CC_REFERENCE_EXPIRY_DT"/>
+        <viewAttribute id="CC_CO_CD"/>
+        <viewAttribute id="CC_TEKLGY_TY"/>
+        <viewAttribute id="CC_PRIN_TY"/>
+        <viewAttribute id="CO_CD_NDB"/>
+        <viewAttribute id="PRIN_NUM_RIGHT"/>
+        <viewAttribute id="TEKLGY_TY_NDB"/>
+        <viewAttribute id="PRIN_TY_NDB"/>
+        <viewAttribute id="CO_CD"/>
+        <viewAttribute id="PRIN_NUM"/>
+        <viewAttribute id="PRIN_NUM_DESC"/>
+        <viewAttribute id="REC_ACTN"/>
+        <viewAttribute id="CYCL_ID"/>
+        <viewAttribute id="NDB_TS"/>
+        <viewAttribute id="SEQ_ID"/>
+        <viewAttribute id="TEKLGY_TY"/>
+        <viewAttribute id="REC_TY_ID"/>
+        <viewAttribute id="SRC_TS"/>
+        <viewAttribute id="PROCESS_ID"/>
+        <viewAttribute id="IS_20101503"/>
+        <viewAttribute id="PRIN_TY"/>
+        <viewAttribute id="RANK_COLUMN"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="ERROR_STATUS" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>if((&quot;IS_20101501&quot; = '1') OR (&quot;IS_20101502&quot; = '1') OR (&quot;IS_20101503&quot;='1'),'1','0')</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="ERROR_CODE" length="500" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(&quot;IS_20101501&quot;='1', '20101501||','')+&#xD;
+if(&quot;IS_20101502&quot;='1', '20101502||','')+&#xD;
+if(&quot;IS_20101503&quot;='1', '20101503||','') &#xD;
+</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="DATE" id="CC_REFERENCE_EFFECTIVE_DT" expressionLanguage="COLUMN_ENGINE">
+          <formula>if (isNull(&quot;PRIN_NUM_RIGHT&quot;) and &quot;RANK_COLUMN&quot; = 1,date('19000101'), &quot;SRC_TS&quot;)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="IS_20101501" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(&quot;REC_ACTN&quot;='ADD',if(  isNull(&quot;PRIN_NUM_RIGHT&quot;) and &quot;RANK_COLUMN&quot;  = 1 ,'0','1'),'0')</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="IS_20101502" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>if( (in (&quot;REC_ACTN&quot;,'UPDATE','DELETE')),if((not isNull(&quot;PRIN_NUM_RIGHT&quot;)), '0',if(&quot;RANK_COLUMN&quot; > 1,'0','1') ),'0')</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#RANK_EFF_DT">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_REFERENCE_EFFECTIVE_DATE_PREV_DAY" source="CC_REFERENCE_EFFECTIVE_DATE_PREV_DAY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_REFERENCE_EXPIRY_DT" source="CC_REFERENCE_EXPIRY_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_CO_CD" source="CC_CO_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_TEKLGY_TY" source="CC_TEKLGY_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_PRIN_TY" source="CC_PRIN_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CO_CD_NDB" source="CO_CD_NDB"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRIN_NUM_RIGHT" source="PRIN_NUM_RIGHT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TEKLGY_TY_NDB" source="TEKLGY_TY_NDB"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRIN_TY_NDB" source="PRIN_TY_NDB"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CO_CD" source="CO_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRIN_NUM" source="PRIN_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRIN_NUM_DESC" source="PRIN_NUM_DESC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REC_ACTN" source="REC_ACTN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NDB_TS" source="NDB_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SEQ_ID" source="SEQ_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TEKLGY_TY" source="TEKLGY_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REC_TY_ID" source="REC_TY_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SRC_TS" source="SRC_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROCESS_ID" source="PROCESS_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20101503" source="IS_20101503"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRIN_TY" source="PRIN_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RANK_COLUMN" source="RANK_COLUMN"/>
+      </input>
+    </calculationView>
+  </calculationViews>
+  <logicalModel id="ERROR_SEMANTICS">
+    <descriptions/>
+    <attributes>
+      <attribute id="ERROR_STATUS" order="1" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ERROR_STATUS"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="ERROR_STATUS"/>
+      </attribute>
+      <attribute id="ERROR_CODE" order="2" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ERROR_CODE"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="ERROR_CODE"/>
+      </attribute>
+      <attribute id="REFERENCE_EFFECTIVE_DATE_PREV_DAY" order="3" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="REFERENCE_EFFECTIVE_DATE_PREV_DAY"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="CC_REFERENCE_EFFECTIVE_DATE_PREV_DAY"/>
+      </attribute>
+      <attribute id="REFERENCE_EXPIRY_DT" order="4" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="REFERENCE_EXPIRY_DT"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="CC_REFERENCE_EXPIRY_DT"/>
+      </attribute>
+      <attribute id="CC_CO_CD" order="5" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CC_CO_CD"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="CC_CO_CD"/>
+      </attribute>
+      <attribute id="CC_TEKLGY_TY" order="6" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CC_TEKLGY_TY"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="CC_TEKLGY_TY"/>
+      </attribute>
+      <attribute id="CC_PRIN_TY" order="7" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CC_PRIN_TY"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="CC_PRIN_TY"/>
+      </attribute>
+      <attribute id="CO_CD_NDB" order="8" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CO_CD_NDB"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="CO_CD_NDB"/>
+      </attribute>
+      <attribute id="TEKLGY_TY_NDB" order="9" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="TEKLGY_TY_NDB"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="TEKLGY_TY_NDB"/>
+      </attribute>
+      <attribute id="PRIN_TY_NDB" order="10" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="PRIN_TY_NDB"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="PRIN_TY_NDB"/>
+      </attribute>
+      <attribute id="CO_CD" order="11" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CO_CD"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="CO_CD"/>
+      </attribute>
+      <attribute id="PRIN_NUM" order="12" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="PRIN_NUM"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="PRIN_NUM"/>
+      </attribute>
+      <attribute id="PRIN_NUM_DESC" order="13" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="PRIN_NUM_DESC"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="PRIN_NUM_DESC"/>
+      </attribute>
+      <attribute id="REC_ACTN" order="14" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="REC_ACTN"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="REC_ACTN"/>
+      </attribute>
+      <attribute id="CYCL_ID" order="15" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CYCL_ID"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="CYCL_ID"/>
+      </attribute>
+      <attribute id="NDB_TS" order="16" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="NDB_TS"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="NDB_TS"/>
+      </attribute>
+      <attribute id="SEQ_ID" order="17" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SEQ_ID"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="SEQ_ID"/>
+      </attribute>
+      <attribute id="TEKLGY_TY" order="18" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="TEKLGY_TY"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="TEKLGY_TY"/>
+      </attribute>
+      <attribute id="REC_TY_ID" order="19" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="REC_TY_ID"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="REC_TY_ID"/>
+      </attribute>
+      <attribute id="SRC_TS" order="20" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SRC_TS"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="SRC_TS"/>
+      </attribute>
+      <attribute id="PROCESS_ID" order="21" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="PROCESS_ID"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="PROCESS_ID"/>
+      </attribute>
+      <attribute id="CC_EH_CHECK" order="22" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CC_EH_CHECK"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="IS_20101503"/>
+      </attribute>
+      <attribute id="PRIN_TY" order="23" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="PRIN_TY"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="PRIN_TY"/>
+      </attribute>
+      <attribute id="REFERENCE_EFFECTIVE_DT" order="24" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="REFERENCE_EFFECTIVE_DT"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="CC_REFERENCE_EFFECTIVE_DT"/>
+      </attribute>
+      <attribute id="IS_20101501" order="25" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="IS_20101501"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="IS_20101501"/>
+      </attribute>
+      <attribute id="IS_20101502" order="26" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="IS_20101502"/>
+        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="IS_20101502"/>
+      </attribute>
+    </attributes>
+    <calculatedAttributes/>
+    <privateDataFoundation>
+      <tableProxies/>
+      <joins/>
+      <layout>
+        <shapes/>
+      </layout>
+    </privateDataFoundation>
+    <baseMeasures/>
+    <calculatedMeasures/>
+    <restrictedMeasures/>
+    <localDimensions/>
+  </logicalModel>
+  <layout>
+    <shapes>
+      <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+        <upperLeftCorner x="99" y="50"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_TV_PROD_REF_PRIN_NUM" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="176" y="687"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_NDB" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="22" y="359"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_EH" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="22" y="687"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="JOIN_INCOMING_RECORDS_WITH_EH" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="89" y="591"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_FILTER_INCOMING_RECORDS" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="89" y="513"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="AGGR_DISTINCT" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="89" y="435"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="JOIN_EH" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="176" y="350"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="JOIN_NDB" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="99" y="269"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="RANK_EFF_DT" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="99" y="200"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="ERROR_SEMANTICS" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="99" y="127"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+    </shapes>
+  </layout>
+</Calculation:scenario>

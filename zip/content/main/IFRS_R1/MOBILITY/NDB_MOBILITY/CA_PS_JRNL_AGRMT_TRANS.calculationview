@@ -1,0 +1,2339 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:AccessControl="http://www.sap.com/ndb/SQLCoreModelAccessControl.ecore" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" xmlns:Variable="http://www.sap.com/ndb/BiModelVariable.ecore" schemaVersion="2.3" id="CA_PS_JRNL_AGRMT_TRANS" applyPrivilegeType="NONE" checkAnalyticPrivileges="false" defaultClient="$$client$$" defaultLanguage="$$language$$" hierarchiesSQLEnabled="false" historyEnabled="false" translationRelevant="true" visibility="reportingEnabled" calculationScenarioType="TREE_BASED" dataCategory="CUBE" enforceSqlExecution="true" executionSemantic="UNDEFINED" outputViewType="Aggregation">
+  <origin/>
+  <descriptions defaultDescription="CA_PS_JRNL_AGRMT_TRANS_VW"/>
+  <localVariables>
+    <variable id="IP_EFF_DATE" parameter="true">
+      <descriptions defaultDescription="IP_EFF_DATE"/>
+      <variableProperties datatype="DATE" defaultValue="99991231" mandatory="false">
+        <valueDomain type="Date"/>
+        <selection multiLine="false" type="SingleValue"/>
+      </variableProperties>
+    </variable>
+  </localVariables>
+  <variableMappings>
+    <mapping xsi:type="Variable:VariableMapping" dataSource="#CA_PS_JRNL_DATA">
+      <targetVariable name="IP_POST_DT" resourceUri="/IFRS_R1.MOBILITY.LAND_MOBILITY/calculationviews/CA_PS_JRNL_DATA"/>
+      <localVariable>#IP_EFF_DATE</localVariable>
+    </mapping>
+    <mapping xsi:type="Variable:VariableMapping" dataSource="#CA_PS_AGRMT">
+      <targetVariable name="IP_STRT_DT" resourceUri="/IFRS_R1.MOBILITY.LAND_MOBILITY/calculationviews/CA_PS_AGRMT"/>
+      <localVariable>#IP_EFF_DATE</localVariable>
+    </mapping>
+    <mapping xsi:type="Variable:VariableMapping" dataSource="#CA_PS_TRANS_DATA">
+      <targetVariable name="IP_TRANS_DT" resourceUri="/IFRS_R1.MOBILITY.LAND_MOBILITY/calculationviews/CA_PS_TRANS_DATA"/>
+      <localVariable>#IP_EFF_DATE</localVariable>
+    </mapping>
+  </variableMappings>
+  <informationModelLayout relativeWidthScenario="46"/>
+  <dataSources>
+    <DataSource id="CA_PS_JRNL_DATA" type="CALCULATION_VIEW">
+      <viewAttributes allViewAttributes="true"/>
+      <resourceUri>/IFRS_R1.MOBILITY.LAND_MOBILITY/calculationviews/CA_PS_JRNL_DATA</resourceUri>
+    </DataSource>
+    <DataSource id="CA_PS_AGRMT" type="CALCULATION_VIEW">
+      <viewAttributes allViewAttributes="true"/>
+      <resourceUri>/IFRS_R1.MOBILITY.LAND_MOBILITY/calculationviews/CA_PS_AGRMT</resourceUri>
+    </DataSource>
+    <DataSource id="CA_PS_TRANS_DATA" type="CALCULATION_VIEW">
+      <viewAttributes allViewAttributes="true"/>
+      <resourceUri>/IFRS_R1.MOBILITY.LAND_MOBILITY/calculationviews/CA_PS_TRANS_DATA</resourceUri>
+    </DataSource>
+    <DataSource id="CA_PS_MOBL_CUST_NDB_EH" type="CALCULATION_VIEW">
+      <viewAttributes allViewAttributes="true"/>
+      <resourceUri>/IFRS_R1.MOBILITY.NDB_MOBILITY/calculationviews/CA_PS_MOBL_CUST_NDB_EH</resourceUri>
+    </DataSource>
+    <DataSource id="CA_PS_PPD_ORDER_NDB_EH" type="CALCULATION_VIEW">
+      <viewAttributes allViewAttributes="true"/>
+      <resourceUri>/IFRS_R1.MOBILITY.NDB_MOBILITY/calculationviews/CA_PS_PPD_ORDER_NDB_EH</resourceUri>
+    </DataSource>
+  </dataSources>
+  <calculationViews>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PS_JRNL_DATA">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="CUST_ID"/>
+        <viewAttribute id="PS_CR_GL_ACCT"/>
+        <viewAttribute id="PS_DB_GL_ACCT"/>
+        <viewAttribute id="PROD_ID"/>
+        <viewAttribute id="ORD_ID"/>
+        <viewAttribute id="INVC_NO"/>
+        <viewAttribute id="DOC_HDR_TEXT"/>
+        <viewAttribute id="DOC_DT"/>
+        <viewAttribute id="CURRN"/>
+        <viewAttribute id="CO_CD"/>
+        <viewAttribute id="POST_DT"/>
+        <viewAttribute id="FISC_YR"/>
+        <viewAttribute id="POST_PD"/>
+        <viewAttribute id="AMT"/>
+        <viewAttribute id="TAX_JURISD_CD"/>
+        <viewAttribute id="COST_CENT"/>
+        <viewAttribute id="ALLOCATION"/>
+        <viewAttribute id="TEXT_LINE_ITEM"/>
+        <viewAttribute id="TRDG_PTNR"/>
+        <viewAttribute id="SERV_PRVD"/>
+        <viewAttribute id="REF_FLD"/>
+        <viewAttribute id="LGL_ENTT"/>
+        <viewAttribute id="SUB_MKT"/>
+        <viewAttribute id="CYCL_ID"/>
+        <viewAttribute id="CC_COUNT"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="GL_ACCOUNT" length="10" expressionLanguage="COLUMN_ENGINE">
+          <filter xsi:type="AccessControl:SingleValueFilter" operator="CP" including="true" value="4*"/>
+          <formula>if(isnull(&quot;PS_CR_GL_ACCT&quot;),&quot;PS_DB_GL_ACCT&quot;,&quot;PS_CR_GL_ACCT&quot;)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CREDIT_DEBIT_FLG" length="10" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isnull(&quot;PS_CR_GL_ACCT&quot;),'DEBIT GL','CREDIT GL')</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#CA_PS_JRNL_DATA">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUST_ID" source="CUST_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PS_CR_GL_ACCT" source="PS_CR_GL_ACCT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PS_DB_GL_ACCT" source="PS_DB_GL_ACCT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROD_ID" source="PROD_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ORD_ID" source="ORD_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INVC_NO" source="INVC_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DOC_HDR_TEXT" source="DOC_HDR_TEXT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DOC_DT" source="DOC_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CURRN" source="CURRN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CO_CD" source="CO_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="POST_DT" source="POST_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FISC_YR" source="FISC_YR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="POST_PD" source="POST_PD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AMT" source="AMT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TAX_JURISD_CD" source="TAX_JURISD_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="COST_CENT" source="COST_CENT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ALLOCATION" source="ALLOCATION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TEXT_LINE_ITEM" source="TEXT_LINE_ITEM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRDG_PTNR" source="TRDG_PTNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SERV_PRVD" source="SERV_PRVD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REF_FLD" source="REF_FLD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LGL_ENTT" source="LGL_ENTT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUB_MKT" source="SUB_MKT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_COUNT" source="CC_COUNT"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PS_AGRMT">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="CUST_ID"/>
+        <viewAttribute id="PROD"/>
+        <viewAttribute id="SERV_TY"/>
+        <viewAttribute id="STRT_DT"/>
+        <viewAttribute id="END_DT"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#CA_PS_AGRMT">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUST_ID" source="CUST_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROD" source="PROD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SERV_TY" source="SERV_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="STRT_DT" source="STRT_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="END_DT" source="END_DT"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="JOIN_JRNL_DATA_AGRMY" joinOrder="OUTSIDE_IN" joinType="leftOuter">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="CUST_ID"/>
+        <viewAttribute id="PROD_ID"/>
+        <viewAttribute id="ORD_ID"/>
+        <viewAttribute id="INVC_NO"/>
+        <viewAttribute id="DOC_HDR_TEXT"/>
+        <viewAttribute id="DOC_DT"/>
+        <viewAttribute id="CURRN"/>
+        <viewAttribute id="CO_CD"/>
+        <viewAttribute id="POST_DT"/>
+        <viewAttribute id="FISC_YR"/>
+        <viewAttribute id="POST_PD"/>
+        <viewAttribute id="AMT"/>
+        <viewAttribute id="TAX_JURISD_CD"/>
+        <viewAttribute id="COST_CENT"/>
+        <viewAttribute id="ALLOCATION"/>
+        <viewAttribute id="TEXT_LINE_ITEM"/>
+        <viewAttribute id="TRDG_PTNR"/>
+        <viewAttribute id="SERV_PRVD"/>
+        <viewAttribute id="REF_FLD"/>
+        <viewAttribute id="LGL_ENTT"/>
+        <viewAttribute id="SUB_MKT"/>
+        <viewAttribute id="SERV_TY"/>
+        <viewAttribute id="STRT_DT"/>
+        <viewAttribute id="END_DT"/>
+        <viewAttribute id="GL_ACCOUNT"/>
+        <viewAttribute id="CREDIT_DEBIT_FLG"/>
+        <viewAttribute id="CYCL_ID"/>
+        <viewAttribute id="CUST_ID_RIGHT"/>
+        <viewAttribute id="CC_COUNT"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#PS_JRNL_DATA">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUST_ID" source="CUST_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROD_ID" source="PROD_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ORD_ID" source="ORD_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INVC_NO" source="INVC_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DOC_HDR_TEXT" source="DOC_HDR_TEXT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DOC_DT" source="DOC_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CURRN" source="CURRN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CO_CD" source="CO_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="POST_DT" source="POST_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FISC_YR" source="FISC_YR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="POST_PD" source="POST_PD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AMT" source="AMT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TAX_JURISD_CD" source="TAX_JURISD_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="COST_CENT" source="COST_CENT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ALLOCATION" source="ALLOCATION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TEXT_LINE_ITEM" source="TEXT_LINE_ITEM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRDG_PTNR" source="TRDG_PTNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SERV_PRVD" source="SERV_PRVD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REF_FLD" source="REF_FLD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LGL_ENTT" source="LGL_ENTT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUB_MKT" source="SUB_MKT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GL_ACCOUNT" source="GL_ACCOUNT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CREDIT_DEBIT_FLG" source="CREDIT_DEBIT_FLG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_COUNT" source="CC_COUNT"/>
+      </input>
+      <input node="#PS_AGRMT">
+        <mapping xsi:type="Calculation:AttributeMapping" target="SERV_TY" source="SERV_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="STRT_DT" source="STRT_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="END_DT" source="END_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUST_ID_RIGHT" source="CUST_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUST_ID" source="CUST_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROD_ID" source="PROD"/>
+      </input>
+      <joinAttribute name="CUST_ID"/>
+      <joinAttribute name="PROD_ID"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PS_TRANS_DATA">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="AWARD_CREDIT"/>
+        <viewAttribute id="CUST_ID"/>
+        <viewAttribute id="X_REF_ORD_ID"/>
+        <viewAttribute id="TRANSID"/>
+        <viewAttribute id="TRANS_DT"/>
+        <viewAttribute id="ADJ_CD"/>
+        <viewAttribute id="ORD_TY"/>
+        <viewAttribute id="ANNIVERSARY_DT"/>
+        <viewAttribute id="RGN"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="T_ID" length="18" expressionLanguage="SQL">
+          <formula>substr_after(&quot;TRANSID&quot;,',')</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#CA_PS_TRANS_DATA">
+        <mapping xsi:type="Calculation:AttributeMapping" target="AWARD_CREDIT" source="AWARD_CREDIT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUST_ID" source="CUST_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="X_REF_ORD_ID" source="X_REF_ORD_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRANSID" source="TRANSID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRANS_DT" source="TRANS_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ADJ_CD" source="ADJ_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ORD_TY" source="ORD_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ANNIVERSARY_DT" source="ANNIVERSARY_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RGN" source="RGN"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="JOIN_AGREMENT_TRANS_DATA" joinOrder="OUTSIDE_IN" joinType="leftOuter">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="CUST_ID"/>
+        <viewAttribute id="PROD_ID"/>
+        <viewAttribute id="ORD_ID"/>
+        <viewAttribute id="INVC_NO"/>
+        <viewAttribute id="DOC_HDR_TEXT"/>
+        <viewAttribute id="DOC_DT"/>
+        <viewAttribute id="CURRN"/>
+        <viewAttribute id="CO_CD"/>
+        <viewAttribute id="POST_DT"/>
+        <viewAttribute id="FISC_YR"/>
+        <viewAttribute id="POST_PD"/>
+        <viewAttribute id="AMT"/>
+        <viewAttribute id="TAX_JURISD_CD"/>
+        <viewAttribute id="COST_CENT"/>
+        <viewAttribute id="ALLOCATION"/>
+        <viewAttribute id="TEXT_LINE_ITEM"/>
+        <viewAttribute id="TRDG_PTNR"/>
+        <viewAttribute id="SERV_PRVD"/>
+        <viewAttribute id="REF_FLD"/>
+        <viewAttribute id="LGL_ENTT"/>
+        <viewAttribute id="SUB_MKT"/>
+        <viewAttribute id="SERV_TY"/>
+        <viewAttribute id="STRT_DT"/>
+        <viewAttribute id="END_DT"/>
+        <viewAttribute id="GL_ACCOUNT"/>
+        <viewAttribute id="CREDIT_DEBIT_FLG"/>
+        <viewAttribute id="CYCL_ID"/>
+        <viewAttribute id="AWARD_CREDIT"/>
+        <viewAttribute id="X_REF_ORD_ID"/>
+        <viewAttribute id="TRANSID"/>
+        <viewAttribute id="TRANS_DT"/>
+        <viewAttribute id="ADJ_CD"/>
+        <viewAttribute id="ORD_TY"/>
+        <viewAttribute id="ANNIVERSARY_DT"/>
+        <viewAttribute id="RGN"/>
+        <viewAttribute id="T_ID"/>
+        <viewAttribute id="CUST_ID_RIGHT"/>
+        <viewAttribute id="CC_COUNT"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#JOIN_JRNL_DATA_AGRMY">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUST_ID" source="CUST_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROD_ID" source="PROD_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ORD_ID" source="ORD_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INVC_NO" source="INVC_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DOC_HDR_TEXT" source="DOC_HDR_TEXT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DOC_DT" source="DOC_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CURRN" source="CURRN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CO_CD" source="CO_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="POST_DT" source="POST_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FISC_YR" source="FISC_YR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="POST_PD" source="POST_PD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AMT" source="AMT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TAX_JURISD_CD" source="TAX_JURISD_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="COST_CENT" source="COST_CENT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ALLOCATION" source="ALLOCATION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TEXT_LINE_ITEM" source="TEXT_LINE_ITEM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRDG_PTNR" source="TRDG_PTNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SERV_PRVD" source="SERV_PRVD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REF_FLD" source="REF_FLD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LGL_ENTT" source="LGL_ENTT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUB_MKT" source="SUB_MKT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SERV_TY" source="SERV_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="STRT_DT" source="STRT_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="END_DT" source="END_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GL_ACCOUNT" source="GL_ACCOUNT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CREDIT_DEBIT_FLG" source="CREDIT_DEBIT_FLG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_COUNT" source="CC_COUNT"/>
+      </input>
+      <input node="#PS_TRANS_DATA">
+        <mapping xsi:type="Calculation:AttributeMapping" target="AWARD_CREDIT" source="AWARD_CREDIT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="X_REF_ORD_ID" source="X_REF_ORD_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRANSID" source="TRANSID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRANS_DT" source="TRANS_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ADJ_CD" source="ADJ_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ORD_TY" source="ORD_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ANNIVERSARY_DT" source="ANNIVERSARY_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RGN" source="RGN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="T_ID" source="T_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUST_ID_RIGHT" source="CUST_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUST_ID" source="CUST_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ORD_ID" source="X_REF_ORD_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROD_ID" source="T_ID"/>
+      </input>
+      <joinAttribute name="CUST_ID"/>
+      <joinAttribute name="ORD_ID"/>
+      <joinAttribute name="PROD_ID"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_JRNL_AGRMNT_TRANS_DATA" filterExpressionLanguage="COLUMN_ENGINE">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="CUST_ID"/>
+        <viewAttribute id="PROD_ID"/>
+        <viewAttribute id="ORD_ID"/>
+        <viewAttribute id="INVC_NO"/>
+        <viewAttribute id="DOC_HDR_TEXT"/>
+        <viewAttribute id="DOC_DT"/>
+        <viewAttribute id="CURRN"/>
+        <viewAttribute id="CO_CD"/>
+        <viewAttribute id="POST_DT"/>
+        <viewAttribute id="FISC_YR"/>
+        <viewAttribute id="POST_PD"/>
+        <viewAttribute id="AMT"/>
+        <viewAttribute id="TAX_JURISD_CD"/>
+        <viewAttribute id="COST_CENT"/>
+        <viewAttribute id="ALLOCATION"/>
+        <viewAttribute id="TEXT_LINE_ITEM"/>
+        <viewAttribute id="TRDG_PTNR"/>
+        <viewAttribute id="SERV_PRVD"/>
+        <viewAttribute id="REF_FLD"/>
+        <viewAttribute id="LGL_ENTT"/>
+        <viewAttribute id="SUB_MKT"/>
+        <viewAttribute id="SERV_TY"/>
+        <viewAttribute id="STRT_DT"/>
+        <viewAttribute id="END_DT"/>
+        <viewAttribute id="GL_ACCOUNT"/>
+        <viewAttribute id="CREDIT_DEBIT_FLG"/>
+        <viewAttribute id="CYCL_ID"/>
+        <viewAttribute id="AWARD_CREDIT"/>
+        <viewAttribute id="X_REF_ORD_ID"/>
+        <viewAttribute id="TRANSID"/>
+        <viewAttribute id="TRANS_DT"/>
+        <viewAttribute id="ADJ_CD"/>
+        <viewAttribute id="ORD_TY"/>
+        <viewAttribute id="ANNIVERSARY_DT"/>
+        <viewAttribute id="RGN"/>
+        <viewAttribute id="T_ID"/>
+        <viewAttribute id="CUST_ID_RIGHT"/>
+        <viewAttribute id="CC_COUNT"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#JOIN_AGREMENT_TRANS_DATA">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUST_ID" source="CUST_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROD_ID" source="PROD_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ORD_ID" source="ORD_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INVC_NO" source="INVC_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DOC_HDR_TEXT" source="DOC_HDR_TEXT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DOC_DT" source="DOC_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CURRN" source="CURRN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CO_CD" source="CO_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="POST_DT" source="POST_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FISC_YR" source="FISC_YR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="POST_PD" source="POST_PD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AMT" source="AMT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TAX_JURISD_CD" source="TAX_JURISD_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="COST_CENT" source="COST_CENT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ALLOCATION" source="ALLOCATION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TEXT_LINE_ITEM" source="TEXT_LINE_ITEM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRDG_PTNR" source="TRDG_PTNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SERV_PRVD" source="SERV_PRVD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REF_FLD" source="REF_FLD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LGL_ENTT" source="LGL_ENTT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUB_MKT" source="SUB_MKT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SERV_TY" source="SERV_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="STRT_DT" source="STRT_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="END_DT" source="END_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GL_ACCOUNT" source="GL_ACCOUNT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CREDIT_DEBIT_FLG" source="CREDIT_DEBIT_FLG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AWARD_CREDIT" source="AWARD_CREDIT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="X_REF_ORD_ID" source="X_REF_ORD_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRANSID" source="TRANSID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRANS_DT" source="TRANS_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ADJ_CD" source="ADJ_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ORD_TY" source="ORD_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ANNIVERSARY_DT" source="ANNIVERSARY_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RGN" source="RGN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="T_ID" source="T_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUST_ID_RIGHT" source="CUST_ID_RIGHT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_COUNT" source="CC_COUNT"/>
+      </input>
+      <filter>(not (match(&quot;PROD_ID&quot;,'10-20*'))) or (&quot;PROD_ID&quot; = '10-20405')</filter>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_MOBL_CUST">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="SUBSCR_NO"/>
+        <viewAttribute id="KUNNR_SID"/>
+        <viewAttribute id="MDN"/>
+        <viewAttribute id="CUSTOMER_EFFECTIVE_DT"/>
+        <viewAttribute id="CUSTOMER_EXPIRY_DT"/>
+        <viewAttribute id="NEW_PLATFORM_BALANCE"/>
+        <viewAttribute id="CC_VERSION_CHECK"/>
+        <viewAttribute id="BAN"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#CA_PS_MOBL_CUST_NDB_EH">
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBSCR_NO" source="SUBSCR_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KUNNR_SID" source="KUNNR_SID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MDN" source="MDN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_EFFECTIVE_DT" source="CUSTOMER_EFFECTIVE_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_EXPIRY_DT" source="CUSTOMER_EXPIRY_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NEW_PLATFORM_BALANCE" source="NEW_PLATFORM_BALANCE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_VERSION_CHECK" source="CC_VERSION_CHECK"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BAN" source="BAN"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="JOIN_JRNL_AGRMNT_DATA_MOBL_CUST" joinOrder="OUTSIDE_IN" joinType="leftOuter">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="CUST_ID"/>
+        <viewAttribute id="PROD_ID"/>
+        <viewAttribute id="ORD_ID"/>
+        <viewAttribute id="INVC_NO"/>
+        <viewAttribute id="DOC_HDR_TEXT"/>
+        <viewAttribute id="DOC_DT"/>
+        <viewAttribute id="CURRN"/>
+        <viewAttribute id="CO_CD"/>
+        <viewAttribute id="POST_DT"/>
+        <viewAttribute id="FISC_YR"/>
+        <viewAttribute id="POST_PD"/>
+        <viewAttribute id="AMT"/>
+        <viewAttribute id="TAX_JURISD_CD"/>
+        <viewAttribute id="COST_CENT"/>
+        <viewAttribute id="ALLOCATION"/>
+        <viewAttribute id="TEXT_LINE_ITEM"/>
+        <viewAttribute id="TRDG_PTNR"/>
+        <viewAttribute id="SERV_PRVD"/>
+        <viewAttribute id="REF_FLD"/>
+        <viewAttribute id="LGL_ENTT"/>
+        <viewAttribute id="SUB_MKT"/>
+        <viewAttribute id="SERV_TY"/>
+        <viewAttribute id="STRT_DT"/>
+        <viewAttribute id="END_DT"/>
+        <viewAttribute id="GL_ACCOUNT"/>
+        <viewAttribute id="CREDIT_DEBIT_FLG"/>
+        <viewAttribute id="CYCL_ID"/>
+        <viewAttribute id="AWARD_CREDIT"/>
+        <viewAttribute id="X_REF_ORD_ID"/>
+        <viewAttribute id="TRANSID"/>
+        <viewAttribute id="TRANS_DT"/>
+        <viewAttribute id="ADJ_CD"/>
+        <viewAttribute id="ORD_TY"/>
+        <viewAttribute id="ANNIVERSARY_DT"/>
+        <viewAttribute id="RGN"/>
+        <viewAttribute id="T_ID"/>
+        <viewAttribute id="SUBSCR_NO_RIGHT"/>
+        <viewAttribute id="KUNNR_SID"/>
+        <viewAttribute id="MDN"/>
+        <viewAttribute id="CUSTOMER_EFFECTIVE_DT"/>
+        <viewAttribute id="CUSTOMER_EXPIRY_DT"/>
+        <viewAttribute id="NEW_PLATFORM_BALANCE"/>
+        <viewAttribute id="CC_COUNT"/>
+        <viewAttribute id="CC_VERSION_CHECK"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="DATE" id="CC_CUSTOMER_EXPIRY_DT" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isnull(&quot;CUSTOMER_EXPIRY_DT&quot;),date('99991231'),&quot;CUSTOMER_EXPIRY_DT&quot;)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="DATE" id="CC_CUSTOMER_EFFECTIVE_DT" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isnull(&quot;CUSTOMER_EFFECTIVE_DT&quot;),date('19000101'),&quot;CUSTOMER_EFFECTIVE_DT&quot;)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="IS_20401601" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isNull(&quot;SUBSCR_NO_RIGHT&quot;),'1','0')</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="IS_20401602" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isNull(&quot;CC_VERSION_CHECK&quot;),'0',if(&quot;CC_VERSION_CHECK&quot;='1','1','0'))</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#PROJ_JRNL_AGRMNT_TRANS_DATA">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUST_ID" source="CUST_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROD_ID" source="PROD_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ORD_ID" source="ORD_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INVC_NO" source="INVC_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DOC_HDR_TEXT" source="DOC_HDR_TEXT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DOC_DT" source="DOC_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CURRN" source="CURRN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CO_CD" source="CO_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="POST_DT" source="POST_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FISC_YR" source="FISC_YR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="POST_PD" source="POST_PD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AMT" source="AMT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TAX_JURISD_CD" source="TAX_JURISD_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="COST_CENT" source="COST_CENT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ALLOCATION" source="ALLOCATION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TEXT_LINE_ITEM" source="TEXT_LINE_ITEM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRDG_PTNR" source="TRDG_PTNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SERV_PRVD" source="SERV_PRVD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REF_FLD" source="REF_FLD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LGL_ENTT" source="LGL_ENTT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUB_MKT" source="SUB_MKT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SERV_TY" source="SERV_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="STRT_DT" source="STRT_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="END_DT" source="END_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GL_ACCOUNT" source="GL_ACCOUNT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CREDIT_DEBIT_FLG" source="CREDIT_DEBIT_FLG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AWARD_CREDIT" source="AWARD_CREDIT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="X_REF_ORD_ID" source="X_REF_ORD_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRANSID" source="TRANSID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRANS_DT" source="TRANS_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ADJ_CD" source="ADJ_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ORD_TY" source="ORD_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ANNIVERSARY_DT" source="ANNIVERSARY_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RGN" source="RGN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="T_ID" source="T_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_COUNT" source="CC_COUNT"/>
+      </input>
+      <input node="#PROJ_MOBL_CUST">
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBSCR_NO_RIGHT" source="SUBSCR_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KUNNR_SID" source="KUNNR_SID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MDN" source="MDN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_EFFECTIVE_DT" source="CUSTOMER_EFFECTIVE_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_EXPIRY_DT" source="CUSTOMER_EXPIRY_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NEW_PLATFORM_BALANCE" source="NEW_PLATFORM_BALANCE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_VERSION_CHECK" source="CC_VERSION_CHECK"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUST_ID" source="SUBSCR_NO"/>
+      </input>
+      <joinAttribute name="CUST_ID"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_AGRMNT_FILTER" filterExpressionLanguage="COLUMN_ENGINE">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="CUST_ID"/>
+        <viewAttribute id="PROD_ID"/>
+        <viewAttribute id="ORD_ID"/>
+        <viewAttribute id="INVC_NO"/>
+        <viewAttribute id="DOC_HDR_TEXT"/>
+        <viewAttribute id="DOC_DT"/>
+        <viewAttribute id="CURRN"/>
+        <viewAttribute id="CO_CD"/>
+        <viewAttribute id="POST_DT"/>
+        <viewAttribute id="FISC_YR"/>
+        <viewAttribute id="POST_PD"/>
+        <viewAttribute id="AMT"/>
+        <viewAttribute id="TAX_JURISD_CD"/>
+        <viewAttribute id="COST_CENT"/>
+        <viewAttribute id="ALLOCATION"/>
+        <viewAttribute id="TEXT_LINE_ITEM"/>
+        <viewAttribute id="TRDG_PTNR"/>
+        <viewAttribute id="SERV_PRVD"/>
+        <viewAttribute id="REF_FLD"/>
+        <viewAttribute id="LGL_ENTT"/>
+        <viewAttribute id="SUB_MKT"/>
+        <viewAttribute id="SERV_TY"/>
+        <viewAttribute id="STRT_DT"/>
+        <viewAttribute id="END_DT"/>
+        <viewAttribute id="GL_ACCOUNT"/>
+        <viewAttribute id="CREDIT_DEBIT_FLG"/>
+        <viewAttribute id="CYCL_ID"/>
+        <viewAttribute id="AWARD_CREDIT"/>
+        <viewAttribute id="X_REF_ORD_ID"/>
+        <viewAttribute id="TRANSID"/>
+        <viewAttribute id="TRANS_DT"/>
+        <viewAttribute id="ADJ_CD"/>
+        <viewAttribute id="ORD_TY"/>
+        <viewAttribute id="ANNIVERSARY_DT"/>
+        <viewAttribute id="RGN"/>
+        <viewAttribute id="T_ID"/>
+        <viewAttribute id="CUST_ID_RIGHT"/>
+        <viewAttribute id="CC_COUNT"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#JOIN_AGREMENT_TRANS_DATA">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUST_ID" source="CUST_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROD_ID" source="PROD_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ORD_ID" source="ORD_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INVC_NO" source="INVC_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DOC_HDR_TEXT" source="DOC_HDR_TEXT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DOC_DT" source="DOC_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CURRN" source="CURRN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CO_CD" source="CO_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="POST_DT" source="POST_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FISC_YR" source="FISC_YR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="POST_PD" source="POST_PD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AMT" source="AMT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TAX_JURISD_CD" source="TAX_JURISD_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="COST_CENT" source="COST_CENT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ALLOCATION" source="ALLOCATION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TEXT_LINE_ITEM" source="TEXT_LINE_ITEM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRDG_PTNR" source="TRDG_PTNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SERV_PRVD" source="SERV_PRVD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REF_FLD" source="REF_FLD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LGL_ENTT" source="LGL_ENTT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUB_MKT" source="SUB_MKT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SERV_TY" source="SERV_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="STRT_DT" source="STRT_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="END_DT" source="END_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GL_ACCOUNT" source="GL_ACCOUNT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CREDIT_DEBIT_FLG" source="CREDIT_DEBIT_FLG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AWARD_CREDIT" source="AWARD_CREDIT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="X_REF_ORD_ID" source="X_REF_ORD_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRANSID" source="TRANSID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRANS_DT" source="TRANS_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ADJ_CD" source="ADJ_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ORD_TY" source="ORD_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ANNIVERSARY_DT" source="ANNIVERSARY_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RGN" source="RGN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="T_ID" source="T_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUST_ID_RIGHT" source="CUST_ID_RIGHT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_COUNT" source="CC_COUNT"/>
+      </input>
+      <filter>match(&quot;PROD_ID&quot;,'10-20*') and (&quot;PROD_ID&quot; != '10-20405')</filter>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="JOIN_HANDSETFLAG_P" joinOrder="OUTSIDE_IN" joinType="leftOuter">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="CUST_ID"/>
+        <viewAttribute id="PROD_ID"/>
+        <viewAttribute id="ORD_ID"/>
+        <viewAttribute id="INVC_NO"/>
+        <viewAttribute id="DOC_HDR_TEXT"/>
+        <viewAttribute id="DOC_DT"/>
+        <viewAttribute id="CURRN"/>
+        <viewAttribute id="CO_CD"/>
+        <viewAttribute id="POST_DT"/>
+        <viewAttribute id="FISC_YR"/>
+        <viewAttribute id="POST_PD"/>
+        <viewAttribute id="AMT"/>
+        <viewAttribute id="TAX_JURISD_CD"/>
+        <viewAttribute id="COST_CENT"/>
+        <viewAttribute id="ALLOCATION"/>
+        <viewAttribute id="TEXT_LINE_ITEM"/>
+        <viewAttribute id="TRDG_PTNR"/>
+        <viewAttribute id="SERV_PRVD"/>
+        <viewAttribute id="REF_FLD"/>
+        <viewAttribute id="LGL_ENTT"/>
+        <viewAttribute id="SUB_MKT"/>
+        <viewAttribute id="SERV_TY"/>
+        <viewAttribute id="STRT_DT"/>
+        <viewAttribute id="END_DT"/>
+        <viewAttribute id="GL_ACCOUNT"/>
+        <viewAttribute id="CREDIT_DEBIT_FLG"/>
+        <viewAttribute id="CYCL_ID"/>
+        <viewAttribute id="AWARD_CREDIT"/>
+        <viewAttribute id="X_REF_ORD_ID"/>
+        <viewAttribute id="TRANSID"/>
+        <viewAttribute id="TRANS_DT"/>
+        <viewAttribute id="ADJ_CD"/>
+        <viewAttribute id="ORD_TY"/>
+        <viewAttribute id="ANNIVERSARY_DT"/>
+        <viewAttribute id="RGN"/>
+        <viewAttribute id="T_ID"/>
+        <viewAttribute id="CUST_ID_RIGHT"/>
+        <viewAttribute id="CC_COUNT"/>
+        <viewAttribute id="KUNNR_SID"/>
+        <viewAttribute id="MDN"/>
+        <viewAttribute id="CUSTOMER_EFFECTIVE_DT"/>
+        <viewAttribute id="CUSTOMER_EXPIRY_DT"/>
+        <viewAttribute id="NEW_PLATFORM_BALANCE"/>
+        <viewAttribute id="CC_VERSION_CHECK"/>
+        <viewAttribute id="BAN_RIGHT"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="IS_20401602" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isNull(&quot;CC_VERSION_CHECK&quot;),'0',if(&quot;CC_VERSION_CHECK&quot;='1','1','0'))</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CC_HANDSET_FLAG" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>'P'</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="IS_20401601" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isNull(&quot;BAN_RIGHT&quot;),'1','0')</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="DATE" id="CC_CUSTOMER_EXPIRY_DT" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isnull(&quot;CUSTOMER_EXPIRY_DT&quot;),date('99991231'),&quot;CUSTOMER_EXPIRY_DT&quot;)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="DATE" id="CC_CUSTOMER_EFFECTIVE_DT" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isnull(&quot;CUSTOMER_EFFECTIVE_DT&quot;),date('19000101'),&quot;CUSTOMER_EFFECTIVE_DT&quot;)</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#PROJ_AGRMNT_FILTER">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUST_ID" source="CUST_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROD_ID" source="PROD_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ORD_ID" source="ORD_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INVC_NO" source="INVC_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DOC_HDR_TEXT" source="DOC_HDR_TEXT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DOC_DT" source="DOC_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CURRN" source="CURRN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CO_CD" source="CO_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="POST_DT" source="POST_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FISC_YR" source="FISC_YR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="POST_PD" source="POST_PD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AMT" source="AMT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TAX_JURISD_CD" source="TAX_JURISD_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="COST_CENT" source="COST_CENT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ALLOCATION" source="ALLOCATION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TEXT_LINE_ITEM" source="TEXT_LINE_ITEM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRDG_PTNR" source="TRDG_PTNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SERV_PRVD" source="SERV_PRVD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REF_FLD" source="REF_FLD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LGL_ENTT" source="LGL_ENTT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUB_MKT" source="SUB_MKT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SERV_TY" source="SERV_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="STRT_DT" source="STRT_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="END_DT" source="END_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GL_ACCOUNT" source="GL_ACCOUNT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CREDIT_DEBIT_FLG" source="CREDIT_DEBIT_FLG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AWARD_CREDIT" source="AWARD_CREDIT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="X_REF_ORD_ID" source="X_REF_ORD_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRANSID" source="TRANSID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRANS_DT" source="TRANS_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ADJ_CD" source="ADJ_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ORD_TY" source="ORD_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ANNIVERSARY_DT" source="ANNIVERSARY_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RGN" source="RGN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="T_ID" source="T_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUST_ID_RIGHT" source="CUST_ID_RIGHT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_COUNT" source="CC_COUNT"/>
+      </input>
+      <input node="#PROJ_MOBL_CUST">
+        <mapping xsi:type="Calculation:AttributeMapping" target="KUNNR_SID" source="KUNNR_SID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MDN" source="MDN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_EFFECTIVE_DT" source="CUSTOMER_EFFECTIVE_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_EXPIRY_DT" source="CUSTOMER_EXPIRY_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NEW_PLATFORM_BALANCE" source="NEW_PLATFORM_BALANCE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_VERSION_CHECK" source="CC_VERSION_CHECK"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BAN_RIGHT" source="BAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUST_ID" source="BAN"/>
+      </input>
+      <joinAttribute name="CUST_ID"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:UnionView" id="UNION_MOBL_CUST">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="CUST_ID"/>
+        <viewAttribute id="PROD_ID"/>
+        <viewAttribute id="ORD_ID"/>
+        <viewAttribute id="INVC_NO"/>
+        <viewAttribute id="DOC_HDR_TEXT"/>
+        <viewAttribute id="DOC_DT"/>
+        <viewAttribute id="CURRN"/>
+        <viewAttribute id="CO_CD"/>
+        <viewAttribute id="POST_DT"/>
+        <viewAttribute id="FISC_YR"/>
+        <viewAttribute id="POST_PD"/>
+        <viewAttribute id="AMT"/>
+        <viewAttribute id="TAX_JURISD_CD"/>
+        <viewAttribute id="COST_CENT"/>
+        <viewAttribute id="ALLOCATION"/>
+        <viewAttribute id="TEXT_LINE_ITEM"/>
+        <viewAttribute id="TRDG_PTNR"/>
+        <viewAttribute id="SERV_PRVD"/>
+        <viewAttribute id="REF_FLD"/>
+        <viewAttribute id="LGL_ENTT"/>
+        <viewAttribute id="SUB_MKT"/>
+        <viewAttribute id="SERV_TY"/>
+        <viewAttribute id="STRT_DT"/>
+        <viewAttribute id="END_DT"/>
+        <viewAttribute id="GL_ACCOUNT"/>
+        <viewAttribute id="CREDIT_DEBIT_FLG"/>
+        <viewAttribute id="CYCL_ID"/>
+        <viewAttribute id="AWARD_CREDIT"/>
+        <viewAttribute id="X_REF_ORD_ID"/>
+        <viewAttribute id="TRANSID"/>
+        <viewAttribute id="TRANS_DT"/>
+        <viewAttribute id="ADJ_CD"/>
+        <viewAttribute id="ORD_TY"/>
+        <viewAttribute id="ANNIVERSARY_DT"/>
+        <viewAttribute id="RGN"/>
+        <viewAttribute id="T_ID"/>
+        <viewAttribute datatype="DATE" id="CC_CUSTOMER_EXPIRY_DT" length="0" scale="0"/>
+        <viewAttribute datatype="DATE" id="CC_CUSTOMER_EFFECTIVE_DT" length="0" scale="0"/>
+        <viewAttribute id="MDN"/>
+        <viewAttribute id="KUNNR_SID"/>
+        <viewAttribute id="NEW_PLATFORM_BALANCE"/>
+        <viewAttribute id="CUSTOMER_EFFECTIVE_DT"/>
+        <viewAttribute id="CUSTOMER_EXPIRY_DT"/>
+        <viewAttribute id="CC_COUNT"/>
+        <viewAttribute id="CUST_ID_RIGHT"/>
+        <viewAttribute id="CC_VERSION_CHECK"/>
+        <viewAttribute id="BAN"/>
+        <viewAttribute id="IS_20401602"/>
+        <viewAttribute id="CC_HANDSET_FLAG"/>
+        <viewAttribute id="IS_20401601" transparentFilter="false"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input emptyUnionBehavior="NO_ROW" node="#JOIN_JRNL_AGRMNT_DATA_MOBL_CUST">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUST_ID" source="CUST_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROD_ID" source="PROD_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ORD_ID" source="ORD_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INVC_NO" source="INVC_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DOC_HDR_TEXT" source="DOC_HDR_TEXT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DOC_DT" source="DOC_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CURRN" source="CURRN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CO_CD" source="CO_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="POST_DT" source="POST_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FISC_YR" source="FISC_YR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="POST_PD" source="POST_PD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AMT" source="AMT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TAX_JURISD_CD" source="TAX_JURISD_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="COST_CENT" source="COST_CENT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ALLOCATION" source="ALLOCATION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TEXT_LINE_ITEM" source="TEXT_LINE_ITEM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRDG_PTNR" source="TRDG_PTNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SERV_PRVD" source="SERV_PRVD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REF_FLD" source="REF_FLD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LGL_ENTT" source="LGL_ENTT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUB_MKT" source="SUB_MKT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SERV_TY" source="SERV_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="STRT_DT" source="STRT_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="END_DT" source="END_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GL_ACCOUNT" source="GL_ACCOUNT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CREDIT_DEBIT_FLG" source="CREDIT_DEBIT_FLG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AWARD_CREDIT" source="AWARD_CREDIT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="X_REF_ORD_ID" source="X_REF_ORD_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRANSID" source="TRANSID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRANS_DT" source="TRANS_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ADJ_CD" source="ADJ_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ORD_TY" source="ORD_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ANNIVERSARY_DT" source="ANNIVERSARY_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RGN" source="RGN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="T_ID" source="T_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_CUSTOMER_EXPIRY_DT" source="CC_CUSTOMER_EXPIRY_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_CUSTOMER_EFFECTIVE_DT" source="CC_CUSTOMER_EFFECTIVE_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MDN" source="MDN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KUNNR_SID" source="KUNNR_SID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NEW_PLATFORM_BALANCE" source="NEW_PLATFORM_BALANCE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_EFFECTIVE_DT" source="CUSTOMER_EFFECTIVE_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_EXPIRY_DT" source="CUSTOMER_EXPIRY_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_COUNT" source="CC_COUNT"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="CUST_ID_RIGHT" null="true" value=""/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_VERSION_CHECK" source="CC_VERSION_CHECK"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="BAN" null="true" value=""/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20401602" source="IS_20401602"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="CC_HANDSET_FLAG" null="true" value=""/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20401601" source="IS_20401601"/>
+      </input>
+      <input emptyUnionBehavior="NO_ROW" node="#JOIN_HANDSETFLAG_P">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUST_ID" source="CUST_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROD_ID" source="PROD_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ORD_ID" source="ORD_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INVC_NO" source="INVC_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DOC_HDR_TEXT" source="DOC_HDR_TEXT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DOC_DT" source="DOC_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CURRN" source="CURRN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CO_CD" source="CO_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="POST_DT" source="POST_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FISC_YR" source="FISC_YR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="POST_PD" source="POST_PD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AMT" source="AMT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TAX_JURISD_CD" source="TAX_JURISD_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="COST_CENT" source="COST_CENT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ALLOCATION" source="ALLOCATION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TEXT_LINE_ITEM" source="TEXT_LINE_ITEM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRDG_PTNR" source="TRDG_PTNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SERV_PRVD" source="SERV_PRVD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REF_FLD" source="REF_FLD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LGL_ENTT" source="LGL_ENTT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUB_MKT" source="SUB_MKT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SERV_TY" source="SERV_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="STRT_DT" source="STRT_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="END_DT" source="END_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GL_ACCOUNT" source="GL_ACCOUNT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CREDIT_DEBIT_FLG" source="CREDIT_DEBIT_FLG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AWARD_CREDIT" source="AWARD_CREDIT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="X_REF_ORD_ID" source="X_REF_ORD_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRANSID" source="TRANSID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRANS_DT" source="TRANS_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ADJ_CD" source="ADJ_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ORD_TY" source="ORD_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ANNIVERSARY_DT" source="ANNIVERSARY_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RGN" source="RGN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="T_ID" source="T_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_CUSTOMER_EXPIRY_DT" source="CC_CUSTOMER_EXPIRY_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_CUSTOMER_EFFECTIVE_DT" source="CC_CUSTOMER_EFFECTIVE_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MDN" source="MDN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KUNNR_SID" source="KUNNR_SID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NEW_PLATFORM_BALANCE" source="NEW_PLATFORM_BALANCE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_EFFECTIVE_DT" source="CUSTOMER_EFFECTIVE_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_EXPIRY_DT" source="CUSTOMER_EXPIRY_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_COUNT" source="CC_COUNT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUST_ID_RIGHT" source="CUST_ID_RIGHT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_VERSION_CHECK" source="CC_VERSION_CHECK"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BAN" source="BAN_RIGHT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20401602" source="IS_20401602"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_HANDSET_FLAG" source="CC_HANDSET_FLAG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20401601" source="IS_20401601"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_AGRMNT_DATA_MOBL_CUST" filterExpressionLanguage="COLUMN_ENGINE">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="CUST_ID"/>
+        <viewAttribute id="PROD_ID"/>
+        <viewAttribute id="ORD_ID"/>
+        <viewAttribute id="INVC_NO"/>
+        <viewAttribute id="DOC_HDR_TEXT"/>
+        <viewAttribute id="DOC_DT"/>
+        <viewAttribute id="CURRN"/>
+        <viewAttribute id="CO_CD"/>
+        <viewAttribute id="POST_DT"/>
+        <viewAttribute id="FISC_YR"/>
+        <viewAttribute id="POST_PD"/>
+        <viewAttribute id="AMT"/>
+        <viewAttribute id="TAX_JURISD_CD"/>
+        <viewAttribute id="COST_CENT"/>
+        <viewAttribute id="ALLOCATION"/>
+        <viewAttribute id="TEXT_LINE_ITEM"/>
+        <viewAttribute id="TRDG_PTNR"/>
+        <viewAttribute id="SERV_PRVD"/>
+        <viewAttribute id="REF_FLD"/>
+        <viewAttribute id="LGL_ENTT"/>
+        <viewAttribute id="SUB_MKT"/>
+        <viewAttribute id="SERV_TY"/>
+        <viewAttribute id="STRT_DT"/>
+        <viewAttribute id="END_DT"/>
+        <viewAttribute id="GL_ACCOUNT"/>
+        <viewAttribute id="CREDIT_DEBIT_FLG"/>
+        <viewAttribute id="CYCL_ID"/>
+        <viewAttribute id="AWARD_CREDIT"/>
+        <viewAttribute id="X_REF_ORD_ID"/>
+        <viewAttribute id="TRANSID"/>
+        <viewAttribute id="TRANS_DT"/>
+        <viewAttribute id="ADJ_CD"/>
+        <viewAttribute id="ORD_TY"/>
+        <viewAttribute id="ANNIVERSARY_DT"/>
+        <viewAttribute id="RGN"/>
+        <viewAttribute id="T_ID"/>
+        <viewAttribute id="CC_CUSTOMER_EXPIRY_DT"/>
+        <viewAttribute id="CC_CUSTOMER_EFFECTIVE_DT"/>
+        <viewAttribute id="MDN"/>
+        <viewAttribute id="KUNNR_SID"/>
+        <viewAttribute id="NEW_PLATFORM_BALANCE"/>
+        <viewAttribute id="CUSTOMER_EFFECTIVE_DT"/>
+        <viewAttribute id="CUSTOMER_EXPIRY_DT"/>
+        <viewAttribute id="CC_COUNT"/>
+        <viewAttribute id="IS_20401602"/>
+        <viewAttribute id="IS_20401601" transparentFilter="false"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#UNION_MOBL_CUST">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUST_ID" source="CUST_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROD_ID" source="PROD_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ORD_ID" source="ORD_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INVC_NO" source="INVC_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DOC_HDR_TEXT" source="DOC_HDR_TEXT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DOC_DT" source="DOC_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CURRN" source="CURRN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CO_CD" source="CO_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="POST_DT" source="POST_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FISC_YR" source="FISC_YR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="POST_PD" source="POST_PD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AMT" source="AMT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TAX_JURISD_CD" source="TAX_JURISD_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="COST_CENT" source="COST_CENT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ALLOCATION" source="ALLOCATION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TEXT_LINE_ITEM" source="TEXT_LINE_ITEM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRDG_PTNR" source="TRDG_PTNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SERV_PRVD" source="SERV_PRVD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REF_FLD" source="REF_FLD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LGL_ENTT" source="LGL_ENTT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUB_MKT" source="SUB_MKT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SERV_TY" source="SERV_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="STRT_DT" source="STRT_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="END_DT" source="END_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GL_ACCOUNT" source="GL_ACCOUNT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CREDIT_DEBIT_FLG" source="CREDIT_DEBIT_FLG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AWARD_CREDIT" source="AWARD_CREDIT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="X_REF_ORD_ID" source="X_REF_ORD_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRANSID" source="TRANSID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRANS_DT" source="TRANS_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ADJ_CD" source="ADJ_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ORD_TY" source="ORD_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ANNIVERSARY_DT" source="ANNIVERSARY_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RGN" source="RGN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="T_ID" source="T_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_CUSTOMER_EXPIRY_DT" source="CC_CUSTOMER_EXPIRY_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_CUSTOMER_EFFECTIVE_DT" source="CC_CUSTOMER_EFFECTIVE_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MDN" source="MDN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KUNNR_SID" source="KUNNR_SID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NEW_PLATFORM_BALANCE" source="NEW_PLATFORM_BALANCE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_EFFECTIVE_DT" source="CUSTOMER_EFFECTIVE_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_EXPIRY_DT" source="CUSTOMER_EXPIRY_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_COUNT" source="CC_COUNT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20401602" source="IS_20401602"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20401601" source="IS_20401601"/>
+      </input>
+      <filter>((&quot;POST_DT&quot;>=&quot;CC_CUSTOMER_EFFECTIVE_DT&quot;)  AND (&quot;POST_DT&quot;&lt;=&quot;CC_CUSTOMER_EXPIRY_DT&quot;)) AND (not isnull(&quot;KUNNR_SID&quot;))</filter>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_PPD_ORDER">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="CUSTOMER_ID"/>
+        <viewAttribute id="ORDER_ID"/>
+        <viewAttribute id="PRODUCT_ID"/>
+        <viewAttribute id="SAP_ARTICLE_NO"/>
+        <viewAttribute id="HANDSET_SRP_PRICE"/>
+        <viewAttribute id="CC_VERSION_CHECK"/>
+        <viewAttribute id="IMEI"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="IS_20401604" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>&quot;CC_VERSION_CHECK&quot;</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#CA_PS_PPD_ORDER_NDB_EH">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_ID" source="CUSTOMER_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ORDER_ID" source="ORDER_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT_ID" source="PRODUCT_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SAP_ARTICLE_NO" source="SAP_ARTICLE_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="HANDSET_SRP_PRICE" source="HANDSET_SRP_PRICE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_VERSION_CHECK" source="CC_VERSION_CHECK"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IMEI" source="IMEI"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_DATA_PRODUCT_FILTER_1" filterExpressionLanguage="COLUMN_ENGINE">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="CUST_ID"/>
+        <viewAttribute id="PROD_ID"/>
+        <viewAttribute id="ORD_ID"/>
+        <viewAttribute id="INVC_NO"/>
+        <viewAttribute id="DOC_HDR_TEXT"/>
+        <viewAttribute id="DOC_DT"/>
+        <viewAttribute id="CURRN"/>
+        <viewAttribute id="CO_CD"/>
+        <viewAttribute id="POST_DT"/>
+        <viewAttribute id="FISC_YR"/>
+        <viewAttribute id="POST_PD"/>
+        <viewAttribute id="AMT"/>
+        <viewAttribute id="TAX_JURISD_CD"/>
+        <viewAttribute id="COST_CENT"/>
+        <viewAttribute id="ALLOCATION"/>
+        <viewAttribute id="TEXT_LINE_ITEM"/>
+        <viewAttribute id="TRDG_PTNR"/>
+        <viewAttribute id="SERV_PRVD"/>
+        <viewAttribute id="REF_FLD"/>
+        <viewAttribute id="LGL_ENTT"/>
+        <viewAttribute id="SUB_MKT"/>
+        <viewAttribute id="SERV_TY"/>
+        <viewAttribute id="STRT_DT"/>
+        <viewAttribute id="END_DT"/>
+        <viewAttribute id="GL_ACCOUNT"/>
+        <viewAttribute id="CREDIT_DEBIT_FLG"/>
+        <viewAttribute id="CYCL_ID"/>
+        <viewAttribute id="AWARD_CREDIT"/>
+        <viewAttribute id="X_REF_ORD_ID"/>
+        <viewAttribute id="TRANSID"/>
+        <viewAttribute id="TRANS_DT"/>
+        <viewAttribute id="ADJ_CD"/>
+        <viewAttribute id="ORD_TY"/>
+        <viewAttribute id="ANNIVERSARY_DT"/>
+        <viewAttribute id="RGN"/>
+        <viewAttribute id="T_ID"/>
+        <viewAttribute id="MDN"/>
+        <viewAttribute id="KUNNR_SID"/>
+        <viewAttribute id="NEW_PLATFORM_BALANCE"/>
+        <viewAttribute id="CC_CUSTOMER_EXPIRY_DT"/>
+        <viewAttribute id="CC_CUSTOMER_EFFECTIVE_DT"/>
+        <viewAttribute id="CUSTOMER_EFFECTIVE_DT"/>
+        <viewAttribute id="CUSTOMER_EXPIRY_DT"/>
+        <viewAttribute id="CC_COUNT"/>
+        <viewAttribute id="IS_20401602"/>
+        <viewAttribute id="IS_20401601" transparentFilter="false"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#PROJ_AGRMNT_DATA_MOBL_CUST">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUST_ID" source="CUST_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROD_ID" source="PROD_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ORD_ID" source="ORD_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INVC_NO" source="INVC_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DOC_HDR_TEXT" source="DOC_HDR_TEXT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DOC_DT" source="DOC_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CURRN" source="CURRN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CO_CD" source="CO_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="POST_DT" source="POST_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FISC_YR" source="FISC_YR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="POST_PD" source="POST_PD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AMT" source="AMT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TAX_JURISD_CD" source="TAX_JURISD_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="COST_CENT" source="COST_CENT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ALLOCATION" source="ALLOCATION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TEXT_LINE_ITEM" source="TEXT_LINE_ITEM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRDG_PTNR" source="TRDG_PTNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SERV_PRVD" source="SERV_PRVD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REF_FLD" source="REF_FLD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LGL_ENTT" source="LGL_ENTT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUB_MKT" source="SUB_MKT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SERV_TY" source="SERV_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="STRT_DT" source="STRT_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="END_DT" source="END_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GL_ACCOUNT" source="GL_ACCOUNT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CREDIT_DEBIT_FLG" source="CREDIT_DEBIT_FLG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AWARD_CREDIT" source="AWARD_CREDIT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="X_REF_ORD_ID" source="X_REF_ORD_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRANSID" source="TRANSID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRANS_DT" source="TRANS_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ADJ_CD" source="ADJ_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ORD_TY" source="ORD_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ANNIVERSARY_DT" source="ANNIVERSARY_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RGN" source="RGN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="T_ID" source="T_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MDN" source="MDN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KUNNR_SID" source="KUNNR_SID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NEW_PLATFORM_BALANCE" source="NEW_PLATFORM_BALANCE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_CUSTOMER_EXPIRY_DT" source="CC_CUSTOMER_EXPIRY_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_CUSTOMER_EFFECTIVE_DT" source="CC_CUSTOMER_EFFECTIVE_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_EFFECTIVE_DT" source="CUSTOMER_EFFECTIVE_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_EXPIRY_DT" source="CUSTOMER_EXPIRY_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_COUNT" source="CC_COUNT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20401602" source="IS_20401602"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20401601" source="IS_20401601"/>
+      </input>
+      <filter>(match(&quot;PROD_ID&quot;,'10-29*') or &#xD;
+match(&quot;PROD_ID&quot;,'10-20405') or&#xD;
+match(&quot;PROD_ID&quot;,'10-00*') or&#xD;
+match(&quot;PROD_ID&quot;,'10-09*') or&#xD;
+match(&quot;PROD_ID&quot;,'10-S*') or&#xD;
+match(&quot;PROD_ID&quot;,'50-*') or&#xD;
+match(&quot;PROD_ID&quot;,'TEL000006') )</filter>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="JOIN_AGRMNT_DATA_PPD_ORDER" joinOrder="OUTSIDE_IN" joinType="leftOuter">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="CUSTOMER_ID_RIGHT"/>
+        <viewAttribute id="SAP_ARTICLE_NO"/>
+        <viewAttribute id="HANDSET_SRP_PRICE"/>
+        <viewAttribute id="IS_20401604"/>
+        <viewAttribute id="IMEI"/>
+        <viewAttribute id="CUST_ID"/>
+        <viewAttribute id="PROD_ID"/>
+        <viewAttribute id="ORD_ID"/>
+        <viewAttribute id="INVC_NO"/>
+        <viewAttribute id="DOC_HDR_TEXT"/>
+        <viewAttribute id="DOC_DT"/>
+        <viewAttribute id="CURRN"/>
+        <viewAttribute id="CO_CD"/>
+        <viewAttribute id="POST_DT"/>
+        <viewAttribute id="FISC_YR"/>
+        <viewAttribute id="POST_PD"/>
+        <viewAttribute id="AMT"/>
+        <viewAttribute id="TAX_JURISD_CD"/>
+        <viewAttribute id="COST_CENT"/>
+        <viewAttribute id="ALLOCATION"/>
+        <viewAttribute id="TEXT_LINE_ITEM"/>
+        <viewAttribute id="TRDG_PTNR"/>
+        <viewAttribute id="SERV_PRVD"/>
+        <viewAttribute id="REF_FLD"/>
+        <viewAttribute id="LGL_ENTT"/>
+        <viewAttribute id="SUB_MKT"/>
+        <viewAttribute id="SERV_TY"/>
+        <viewAttribute id="STRT_DT"/>
+        <viewAttribute id="END_DT"/>
+        <viewAttribute id="GL_ACCOUNT"/>
+        <viewAttribute id="CREDIT_DEBIT_FLG"/>
+        <viewAttribute id="CYCL_ID"/>
+        <viewAttribute id="AWARD_CREDIT"/>
+        <viewAttribute id="X_REF_ORD_ID"/>
+        <viewAttribute id="TRANSID"/>
+        <viewAttribute id="TRANS_DT"/>
+        <viewAttribute id="ADJ_CD"/>
+        <viewAttribute id="ORD_TY"/>
+        <viewAttribute id="ANNIVERSARY_DT"/>
+        <viewAttribute id="RGN"/>
+        <viewAttribute id="T_ID"/>
+        <viewAttribute id="MDN"/>
+        <viewAttribute id="KUNNR_SID"/>
+        <viewAttribute id="NEW_PLATFORM_BALANCE"/>
+        <viewAttribute id="CC_CUSTOMER_EXPIRY_DT"/>
+        <viewAttribute id="CC_CUSTOMER_EFFECTIVE_DT"/>
+        <viewAttribute id="CUSTOMER_EFFECTIVE_DT"/>
+        <viewAttribute id="CUSTOMER_EXPIRY_DT"/>
+        <viewAttribute id="CC_COUNT"/>
+        <viewAttribute id="IS_20401602"/>
+        <viewAttribute id="IS_20401601" transparentFilter="false"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="DATE" id="CC_END_DT" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isnull(&quot;END_DT&quot;), &quot;STRT_DT&quot;, &quot;END_DT&quot;)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="IS_20401603" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isNull(&quot;CUSTOMER_ID_RIGHT&quot;),'1','0')</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#PROJ_DATA_PRODUCT_FILTER_1">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUST_ID" source="CUST_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROD_ID" source="PROD_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ORD_ID" source="ORD_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INVC_NO" source="INVC_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DOC_HDR_TEXT" source="DOC_HDR_TEXT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DOC_DT" source="DOC_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CURRN" source="CURRN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CO_CD" source="CO_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="POST_DT" source="POST_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FISC_YR" source="FISC_YR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="POST_PD" source="POST_PD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AMT" source="AMT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TAX_JURISD_CD" source="TAX_JURISD_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="COST_CENT" source="COST_CENT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ALLOCATION" source="ALLOCATION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TEXT_LINE_ITEM" source="TEXT_LINE_ITEM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRDG_PTNR" source="TRDG_PTNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SERV_PRVD" source="SERV_PRVD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REF_FLD" source="REF_FLD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LGL_ENTT" source="LGL_ENTT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUB_MKT" source="SUB_MKT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SERV_TY" source="SERV_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="STRT_DT" source="STRT_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="END_DT" source="END_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GL_ACCOUNT" source="GL_ACCOUNT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CREDIT_DEBIT_FLG" source="CREDIT_DEBIT_FLG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AWARD_CREDIT" source="AWARD_CREDIT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="X_REF_ORD_ID" source="X_REF_ORD_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRANSID" source="TRANSID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRANS_DT" source="TRANS_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ADJ_CD" source="ADJ_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ORD_TY" source="ORD_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ANNIVERSARY_DT" source="ANNIVERSARY_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RGN" source="RGN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="T_ID" source="T_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MDN" source="MDN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KUNNR_SID" source="KUNNR_SID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NEW_PLATFORM_BALANCE" source="NEW_PLATFORM_BALANCE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_CUSTOMER_EXPIRY_DT" source="CC_CUSTOMER_EXPIRY_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_CUSTOMER_EFFECTIVE_DT" source="CC_CUSTOMER_EFFECTIVE_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_EFFECTIVE_DT" source="CUSTOMER_EFFECTIVE_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_EXPIRY_DT" source="CUSTOMER_EXPIRY_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_COUNT" source="CC_COUNT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20401602" source="IS_20401602"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20401601" source="IS_20401601"/>
+      </input>
+      <input node="#PROJ_PPD_ORDER">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_ID_RIGHT" source="CUSTOMER_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SAP_ARTICLE_NO" source="SAP_ARTICLE_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="HANDSET_SRP_PRICE" source="HANDSET_SRP_PRICE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20401604" source="IS_20401604"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IMEI" source="IMEI"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUST_ID" source="CUSTOMER_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROD_ID" source="PRODUCT_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ORD_ID" source="ORDER_ID"/>
+      </input>
+      <joinAttribute name="CUST_ID"/>
+      <joinAttribute name="PROD_ID"/>
+      <joinAttribute name="ORD_ID"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_DATA_PRODUCT_FILTER_2" filterExpressionLanguage="COLUMN_ENGINE">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="CUST_ID"/>
+        <viewAttribute id="PROD_ID"/>
+        <viewAttribute id="ORD_ID"/>
+        <viewAttribute id="INVC_NO"/>
+        <viewAttribute id="DOC_HDR_TEXT"/>
+        <viewAttribute id="DOC_DT"/>
+        <viewAttribute id="CURRN"/>
+        <viewAttribute id="CO_CD"/>
+        <viewAttribute id="POST_DT"/>
+        <viewAttribute id="FISC_YR"/>
+        <viewAttribute id="POST_PD"/>
+        <viewAttribute id="AMT"/>
+        <viewAttribute id="TAX_JURISD_CD"/>
+        <viewAttribute id="COST_CENT"/>
+        <viewAttribute id="ALLOCATION"/>
+        <viewAttribute id="TEXT_LINE_ITEM"/>
+        <viewAttribute id="TRDG_PTNR"/>
+        <viewAttribute id="SERV_PRVD"/>
+        <viewAttribute id="REF_FLD"/>
+        <viewAttribute id="LGL_ENTT"/>
+        <viewAttribute id="SUB_MKT"/>
+        <viewAttribute id="SERV_TY"/>
+        <viewAttribute id="STRT_DT"/>
+        <viewAttribute id="END_DT"/>
+        <viewAttribute id="GL_ACCOUNT"/>
+        <viewAttribute id="CREDIT_DEBIT_FLG"/>
+        <viewAttribute id="CYCL_ID"/>
+        <viewAttribute id="AWARD_CREDIT"/>
+        <viewAttribute id="X_REF_ORD_ID"/>
+        <viewAttribute id="TRANSID"/>
+        <viewAttribute id="TRANS_DT"/>
+        <viewAttribute id="ADJ_CD"/>
+        <viewAttribute id="ORD_TY"/>
+        <viewAttribute id="ANNIVERSARY_DT"/>
+        <viewAttribute id="RGN"/>
+        <viewAttribute id="T_ID"/>
+        <viewAttribute id="CC_CUSTOMER_EXPIRY_DT"/>
+        <viewAttribute id="CC_CUSTOMER_EFFECTIVE_DT"/>
+        <viewAttribute id="MDN"/>
+        <viewAttribute id="KUNNR_SID"/>
+        <viewAttribute id="NEW_PLATFORM_BALANCE"/>
+        <viewAttribute id="CUSTOMER_EFFECTIVE_DT"/>
+        <viewAttribute id="CUSTOMER_EXPIRY_DT"/>
+        <viewAttribute id="CC_COUNT"/>
+        <viewAttribute id="IS_20401602"/>
+        <viewAttribute id="IS_20401601" transparentFilter="false"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#PROJ_AGRMNT_DATA_MOBL_CUST">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUST_ID" source="CUST_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROD_ID" source="PROD_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ORD_ID" source="ORD_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INVC_NO" source="INVC_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DOC_HDR_TEXT" source="DOC_HDR_TEXT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DOC_DT" source="DOC_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CURRN" source="CURRN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CO_CD" source="CO_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="POST_DT" source="POST_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FISC_YR" source="FISC_YR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="POST_PD" source="POST_PD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AMT" source="AMT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TAX_JURISD_CD" source="TAX_JURISD_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="COST_CENT" source="COST_CENT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ALLOCATION" source="ALLOCATION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TEXT_LINE_ITEM" source="TEXT_LINE_ITEM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRDG_PTNR" source="TRDG_PTNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SERV_PRVD" source="SERV_PRVD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REF_FLD" source="REF_FLD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LGL_ENTT" source="LGL_ENTT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUB_MKT" source="SUB_MKT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SERV_TY" source="SERV_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="STRT_DT" source="STRT_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="END_DT" source="END_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GL_ACCOUNT" source="GL_ACCOUNT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CREDIT_DEBIT_FLG" source="CREDIT_DEBIT_FLG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AWARD_CREDIT" source="AWARD_CREDIT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="X_REF_ORD_ID" source="X_REF_ORD_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRANSID" source="TRANSID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRANS_DT" source="TRANS_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ADJ_CD" source="ADJ_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ORD_TY" source="ORD_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ANNIVERSARY_DT" source="ANNIVERSARY_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RGN" source="RGN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="T_ID" source="T_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_CUSTOMER_EXPIRY_DT" source="CC_CUSTOMER_EXPIRY_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_CUSTOMER_EFFECTIVE_DT" source="CC_CUSTOMER_EFFECTIVE_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MDN" source="MDN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KUNNR_SID" source="KUNNR_SID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NEW_PLATFORM_BALANCE" source="NEW_PLATFORM_BALANCE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_EFFECTIVE_DT" source="CUSTOMER_EFFECTIVE_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_EXPIRY_DT" source="CUSTOMER_EXPIRY_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_COUNT" source="CC_COUNT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20401602" source="IS_20401602"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20401601" source="IS_20401601"/>
+      </input>
+      <filter>match(&quot;PROD_ID&quot;,'10-20*') and (&quot;PROD_ID&quot; != '10-20405')</filter>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="JOIN_AGRMNT_DATA_PPD_ORDER_2" joinOrder="OUTSIDE_IN" joinType="leftOuter">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="CUST_ID"/>
+        <viewAttribute id="PROD_ID"/>
+        <viewAttribute id="ORD_ID"/>
+        <viewAttribute id="INVC_NO"/>
+        <viewAttribute id="DOC_HDR_TEXT"/>
+        <viewAttribute id="DOC_DT"/>
+        <viewAttribute id="CURRN"/>
+        <viewAttribute id="CO_CD"/>
+        <viewAttribute id="POST_DT"/>
+        <viewAttribute id="FISC_YR"/>
+        <viewAttribute id="POST_PD"/>
+        <viewAttribute id="AMT"/>
+        <viewAttribute id="TAX_JURISD_CD"/>
+        <viewAttribute id="COST_CENT"/>
+        <viewAttribute id="ALLOCATION"/>
+        <viewAttribute id="TEXT_LINE_ITEM"/>
+        <viewAttribute id="TRDG_PTNR"/>
+        <viewAttribute id="SERV_PRVD"/>
+        <viewAttribute id="REF_FLD"/>
+        <viewAttribute id="LGL_ENTT"/>
+        <viewAttribute id="SUB_MKT"/>
+        <viewAttribute id="SERV_TY"/>
+        <viewAttribute id="STRT_DT"/>
+        <viewAttribute id="END_DT"/>
+        <viewAttribute id="GL_ACCOUNT"/>
+        <viewAttribute id="CREDIT_DEBIT_FLG"/>
+        <viewAttribute id="CYCL_ID"/>
+        <viewAttribute id="AWARD_CREDIT"/>
+        <viewAttribute id="X_REF_ORD_ID"/>
+        <viewAttribute id="TRANSID"/>
+        <viewAttribute id="TRANS_DT"/>
+        <viewAttribute id="ADJ_CD"/>
+        <viewAttribute id="ORD_TY"/>
+        <viewAttribute id="ANNIVERSARY_DT"/>
+        <viewAttribute id="RGN"/>
+        <viewAttribute id="T_ID"/>
+        <viewAttribute id="CC_CUSTOMER_EXPIRY_DT"/>
+        <viewAttribute id="CC_CUSTOMER_EFFECTIVE_DT"/>
+        <viewAttribute id="MDN"/>
+        <viewAttribute id="KUNNR_SID"/>
+        <viewAttribute id="NEW_PLATFORM_BALANCE"/>
+        <viewAttribute id="CUSTOMER_EFFECTIVE_DT"/>
+        <viewAttribute id="CUSTOMER_EXPIRY_DT"/>
+        <viewAttribute id="CC_COUNT"/>
+        <viewAttribute id="IS_20401602"/>
+        <viewAttribute id="IS_20401601" transparentFilter="false"/>
+        <viewAttribute id="PRODUCT_ID_RIGHT"/>
+        <viewAttribute id="SAP_ARTICLE_NO"/>
+        <viewAttribute id="HANDSET_SRP_PRICE"/>
+        <viewAttribute id="IMEI"/>
+        <viewAttribute id="IS_20401604"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="DATE" id="CC_END_DT" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isnull(&quot;END_DT&quot;), &quot;STRT_DT&quot;, &quot;END_DT&quot;)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="IS_20401603" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isNull(&quot;PRODUCT_ID_RIGHT&quot;),'1','0')</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#PROJ_DATA_PRODUCT_FILTER_2">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUST_ID" source="CUST_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROD_ID" source="PROD_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ORD_ID" source="ORD_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INVC_NO" source="INVC_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DOC_HDR_TEXT" source="DOC_HDR_TEXT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DOC_DT" source="DOC_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CURRN" source="CURRN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CO_CD" source="CO_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="POST_DT" source="POST_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FISC_YR" source="FISC_YR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="POST_PD" source="POST_PD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AMT" source="AMT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TAX_JURISD_CD" source="TAX_JURISD_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="COST_CENT" source="COST_CENT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ALLOCATION" source="ALLOCATION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TEXT_LINE_ITEM" source="TEXT_LINE_ITEM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRDG_PTNR" source="TRDG_PTNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SERV_PRVD" source="SERV_PRVD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REF_FLD" source="REF_FLD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LGL_ENTT" source="LGL_ENTT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUB_MKT" source="SUB_MKT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SERV_TY" source="SERV_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="STRT_DT" source="STRT_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="END_DT" source="END_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GL_ACCOUNT" source="GL_ACCOUNT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CREDIT_DEBIT_FLG" source="CREDIT_DEBIT_FLG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AWARD_CREDIT" source="AWARD_CREDIT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="X_REF_ORD_ID" source="X_REF_ORD_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRANSID" source="TRANSID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRANS_DT" source="TRANS_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ADJ_CD" source="ADJ_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ORD_TY" source="ORD_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ANNIVERSARY_DT" source="ANNIVERSARY_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RGN" source="RGN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="T_ID" source="T_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_CUSTOMER_EXPIRY_DT" source="CC_CUSTOMER_EXPIRY_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_CUSTOMER_EFFECTIVE_DT" source="CC_CUSTOMER_EFFECTIVE_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MDN" source="MDN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KUNNR_SID" source="KUNNR_SID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NEW_PLATFORM_BALANCE" source="NEW_PLATFORM_BALANCE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_EFFECTIVE_DT" source="CUSTOMER_EFFECTIVE_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_EXPIRY_DT" source="CUSTOMER_EXPIRY_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_COUNT" source="CC_COUNT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20401602" source="IS_20401602"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20401601" source="IS_20401601"/>
+      </input>
+      <input node="#PROJ_PPD_ORDER">
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT_ID_RIGHT" source="PRODUCT_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SAP_ARTICLE_NO" source="SAP_ARTICLE_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="HANDSET_SRP_PRICE" source="HANDSET_SRP_PRICE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IMEI" source="IMEI"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20401604" source="IS_20401604"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ORD_ID" source="ORDER_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROD_ID" source="PRODUCT_ID"/>
+      </input>
+      <joinAttribute name="ORD_ID"/>
+      <joinAttribute name="PROD_ID"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:UnionView" id="UNION_ORDER">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="CUST_ID"/>
+        <viewAttribute id="PROD_ID"/>
+        <viewAttribute id="ORD_ID"/>
+        <viewAttribute id="INVC_NO"/>
+        <viewAttribute id="DOC_HDR_TEXT"/>
+        <viewAttribute id="DOC_DT"/>
+        <viewAttribute id="CURRN"/>
+        <viewAttribute id="CO_CD"/>
+        <viewAttribute id="POST_DT"/>
+        <viewAttribute id="FISC_YR"/>
+        <viewAttribute id="POST_PD"/>
+        <viewAttribute id="AMT"/>
+        <viewAttribute id="TAX_JURISD_CD"/>
+        <viewAttribute id="COST_CENT"/>
+        <viewAttribute id="ALLOCATION"/>
+        <viewAttribute id="TEXT_LINE_ITEM"/>
+        <viewAttribute id="TRDG_PTNR"/>
+        <viewAttribute id="SERV_PRVD"/>
+        <viewAttribute id="REF_FLD"/>
+        <viewAttribute id="LGL_ENTT"/>
+        <viewAttribute id="SUB_MKT"/>
+        <viewAttribute id="SERV_TY"/>
+        <viewAttribute id="STRT_DT"/>
+        <viewAttribute id="END_DT"/>
+        <viewAttribute id="GL_ACCOUNT"/>
+        <viewAttribute id="CREDIT_DEBIT_FLG"/>
+        <viewAttribute id="CYCL_ID"/>
+        <viewAttribute id="AWARD_CREDIT"/>
+        <viewAttribute id="X_REF_ORD_ID"/>
+        <viewAttribute id="TRANSID"/>
+        <viewAttribute id="TRANS_DT"/>
+        <viewAttribute id="ADJ_CD"/>
+        <viewAttribute id="ORD_TY"/>
+        <viewAttribute id="ANNIVERSARY_DT"/>
+        <viewAttribute id="RGN"/>
+        <viewAttribute id="T_ID"/>
+        <viewAttribute id="CC_END_DT"/>
+        <viewAttribute id="SAP_ARTICLE_NO"/>
+        <viewAttribute id="HANDSET_SRP_PRICE"/>
+        <viewAttribute id="IS_20401604"/>
+        <viewAttribute id="IS_20401603"/>
+        <viewAttribute id="MDN"/>
+        <viewAttribute id="KUNNR_SID"/>
+        <viewAttribute id="NEW_PLATFORM_BALANCE"/>
+        <viewAttribute id="CC_CUSTOMER_EXPIRY_DT"/>
+        <viewAttribute id="CC_CUSTOMER_EFFECTIVE_DT"/>
+        <viewAttribute id="CUSTOMER_EFFECTIVE_DT"/>
+        <viewAttribute id="CUSTOMER_EXPIRY_DT"/>
+        <viewAttribute id="CC_COUNT"/>
+        <viewAttribute id="IMEI"/>
+        <viewAttribute id="IS_20401602"/>
+        <viewAttribute id="IS_20401601" transparentFilter="false"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input emptyUnionBehavior="NO_ROW" node="#JOIN_AGRMNT_DATA_PPD_ORDER">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUST_ID" source="CUST_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROD_ID" source="PROD_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ORD_ID" source="ORD_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INVC_NO" source="INVC_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DOC_HDR_TEXT" source="DOC_HDR_TEXT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DOC_DT" source="DOC_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CURRN" source="CURRN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CO_CD" source="CO_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="POST_DT" source="POST_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FISC_YR" source="FISC_YR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="POST_PD" source="POST_PD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AMT" source="AMT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TAX_JURISD_CD" source="TAX_JURISD_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="COST_CENT" source="COST_CENT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ALLOCATION" source="ALLOCATION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TEXT_LINE_ITEM" source="TEXT_LINE_ITEM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRDG_PTNR" source="TRDG_PTNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SERV_PRVD" source="SERV_PRVD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REF_FLD" source="REF_FLD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LGL_ENTT" source="LGL_ENTT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUB_MKT" source="SUB_MKT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SERV_TY" source="SERV_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="STRT_DT" source="STRT_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="END_DT" source="END_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GL_ACCOUNT" source="GL_ACCOUNT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CREDIT_DEBIT_FLG" source="CREDIT_DEBIT_FLG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AWARD_CREDIT" source="AWARD_CREDIT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="X_REF_ORD_ID" source="X_REF_ORD_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRANSID" source="TRANSID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRANS_DT" source="TRANS_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ADJ_CD" source="ADJ_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ORD_TY" source="ORD_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ANNIVERSARY_DT" source="ANNIVERSARY_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RGN" source="RGN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="T_ID" source="T_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_END_DT" source="CC_END_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SAP_ARTICLE_NO" source="SAP_ARTICLE_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="HANDSET_SRP_PRICE" source="HANDSET_SRP_PRICE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20401604" source="IS_20401604"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20401603" source="IS_20401603"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MDN" source="MDN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KUNNR_SID" source="KUNNR_SID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NEW_PLATFORM_BALANCE" source="NEW_PLATFORM_BALANCE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_CUSTOMER_EXPIRY_DT" source="CC_CUSTOMER_EXPIRY_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_CUSTOMER_EFFECTIVE_DT" source="CC_CUSTOMER_EFFECTIVE_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_EFFECTIVE_DT" source="CUSTOMER_EFFECTIVE_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_EXPIRY_DT" source="CUSTOMER_EXPIRY_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_COUNT" source="CC_COUNT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IMEI" source="IMEI"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20401602" source="IS_20401602"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20401601" source="IS_20401601"/>
+      </input>
+      <input emptyUnionBehavior="NO_ROW" node="#JOIN_AGRMNT_DATA_PPD_ORDER_2">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUST_ID" source="CUST_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROD_ID" source="PROD_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ORD_ID" source="ORD_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INVC_NO" source="INVC_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DOC_HDR_TEXT" source="DOC_HDR_TEXT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DOC_DT" source="DOC_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CURRN" source="CURRN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CO_CD" source="CO_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="POST_DT" source="POST_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FISC_YR" source="FISC_YR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="POST_PD" source="POST_PD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AMT" source="AMT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TAX_JURISD_CD" source="TAX_JURISD_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="COST_CENT" source="COST_CENT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ALLOCATION" source="ALLOCATION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TEXT_LINE_ITEM" source="TEXT_LINE_ITEM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRDG_PTNR" source="TRDG_PTNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SERV_PRVD" source="SERV_PRVD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REF_FLD" source="REF_FLD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LGL_ENTT" source="LGL_ENTT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUB_MKT" source="SUB_MKT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SERV_TY" source="SERV_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="STRT_DT" source="STRT_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="END_DT" source="END_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GL_ACCOUNT" source="GL_ACCOUNT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CREDIT_DEBIT_FLG" source="CREDIT_DEBIT_FLG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AWARD_CREDIT" source="AWARD_CREDIT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="X_REF_ORD_ID" source="X_REF_ORD_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRANSID" source="TRANSID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRANS_DT" source="TRANS_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ADJ_CD" source="ADJ_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ORD_TY" source="ORD_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ANNIVERSARY_DT" source="ANNIVERSARY_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RGN" source="RGN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="T_ID" source="T_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_CUSTOMER_EXPIRY_DT" source="CC_CUSTOMER_EXPIRY_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_CUSTOMER_EFFECTIVE_DT" source="CC_CUSTOMER_EFFECTIVE_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MDN" source="MDN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KUNNR_SID" source="KUNNR_SID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NEW_PLATFORM_BALANCE" source="NEW_PLATFORM_BALANCE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_EFFECTIVE_DT" source="CUSTOMER_EFFECTIVE_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_EXPIRY_DT" source="CUSTOMER_EXPIRY_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_COUNT" source="CC_COUNT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20401602" source="IS_20401602"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20401601" source="IS_20401601"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SAP_ARTICLE_NO" source="SAP_ARTICLE_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="HANDSET_SRP_PRICE" source="HANDSET_SRP_PRICE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IMEI" source="IMEI"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20401604" source="IS_20401604"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_END_DT" source="CC_END_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20401603" source="IS_20401603"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_ERROR_AGRMNT_DATA_PPD_ORDER">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="CUST_ID"/>
+        <viewAttribute id="PROD_ID"/>
+        <viewAttribute id="ORD_ID"/>
+        <viewAttribute id="INVC_NO"/>
+        <viewAttribute id="DOC_HDR_TEXT"/>
+        <viewAttribute id="DOC_DT"/>
+        <viewAttribute id="CURRN"/>
+        <viewAttribute id="CO_CD"/>
+        <viewAttribute id="POST_DT"/>
+        <viewAttribute id="FISC_YR"/>
+        <viewAttribute id="POST_PD"/>
+        <viewAttribute id="AMT"/>
+        <viewAttribute id="TAX_JURISD_CD"/>
+        <viewAttribute id="COST_CENT"/>
+        <viewAttribute id="ALLOCATION"/>
+        <viewAttribute id="TEXT_LINE_ITEM"/>
+        <viewAttribute id="TRDG_PTNR"/>
+        <viewAttribute id="SERV_PRVD"/>
+        <viewAttribute id="REF_FLD"/>
+        <viewAttribute id="LGL_ENTT"/>
+        <viewAttribute id="SUB_MKT"/>
+        <viewAttribute id="SERV_TY"/>
+        <viewAttribute id="STRT_DT"/>
+        <viewAttribute id="END_DT"/>
+        <viewAttribute id="GL_ACCOUNT"/>
+        <viewAttribute id="CREDIT_DEBIT_FLG"/>
+        <viewAttribute id="CYCL_ID"/>
+        <viewAttribute id="AWARD_CREDIT"/>
+        <viewAttribute id="X_REF_ORD_ID"/>
+        <viewAttribute id="TRANSID"/>
+        <viewAttribute id="TRANS_DT"/>
+        <viewAttribute id="ADJ_CD"/>
+        <viewAttribute id="ORD_TY"/>
+        <viewAttribute id="ANNIVERSARY_DT"/>
+        <viewAttribute id="RGN"/>
+        <viewAttribute id="T_ID"/>
+        <viewAttribute id="CC_END_DT"/>
+        <viewAttribute id="SAP_ARTICLE_NO"/>
+        <viewAttribute id="HANDSET_SRP_PRICE"/>
+        <viewAttribute id="IS_20401604"/>
+        <viewAttribute id="IS_20401603"/>
+        <viewAttribute id="MDN"/>
+        <viewAttribute id="KUNNR_SID"/>
+        <viewAttribute id="NEW_PLATFORM_BALANCE"/>
+        <viewAttribute id="CC_CUSTOMER_EXPIRY_DT"/>
+        <viewAttribute id="CC_CUSTOMER_EFFECTIVE_DT"/>
+        <viewAttribute id="CUSTOMER_EFFECTIVE_DT"/>
+        <viewAttribute id="CUSTOMER_EXPIRY_DT"/>
+        <viewAttribute id="CC_COUNT"/>
+        <viewAttribute id="IMEI"/>
+        <viewAttribute id="IS_20401602"/>
+        <viewAttribute id="IS_20401601" transparentFilter="false"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CC_SOURCE_IDENTIFIER" length="30" expressionLanguage="COLUMN_ENGINE">
+          <formula>'VirginOrder'</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="DECIMAL" id="CC_AWARD_CREDIT" length="14" scale="2" expressionLanguage="COLUMN_ENGINE">
+          <formula>&quot;AWARD_CREDIT&quot; * (-1)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CC_BRAND" length="30" expressionLanguage="COLUMN_ENGINE">
+          <formula>'VIRGINMOBILE'</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CC_TERM_INDICATOR" length="10" expressionLanguage="COLUMN_ENGINE">
+          <formula>if((&quot;SERV_TY&quot;= 'P' OR isnull(&quot;SERV_TY&quot;)) AND  (daysbetween(&quot;STRT_DT&quot;, &quot;CC_END_DT&quot;)  > 1)  ,'MONTH' ,&#xD;
+if((&quot;SERV_TY&quot;= 'P' OR isnull(&quot;SERV_TY&quot;)) AND  (daysbetween(&quot;STRT_DT&quot;, &quot;CC_END_DT&quot;)  =0)  ,'DAILY' ,&#xD;
+if ((&quot;SERV_TY&quot; = 'U'),'PPU',string(NULL))))&#xD;
+&#xD;
+		    &#xD;
+		    &#xD;
+		 &#xD;
+&#xD;
+			&#xD;
+			</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="DATE" id="CC_RECRNG_CHRG_FROM_DT" expressionLanguage="COLUMN_ENGINE">
+          <formula>NULL</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="DATE" id="CC_RECRNG_CHRG_TO_DT" expressionLanguage="COLUMN_ENGINE">
+          <formula>NULL</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CC_OFFER_ID" length="10" expressionLanguage="COLUMN_ENGINE">
+          <formula>NULL</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CC_HANDSET_FLAG" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(not isNull(&quot;HANDSET_SRP_PRICE&quot;) AND &quot;HANDSET_SRP_PRICE&quot; > 0 AND ( leftstr(&quot;PROD_ID&quot;,3)  = '50-'   or leftstr(&quot;PROD_ID&quot;,5)  = '10-29' or leftstr(&quot;PROD_ID&quot;,5)  = '10-09')  , 'A',&#xD;
+&#xD;
+if(&#xD;
+(not isNull(&quot;HANDSET_SRP_PRICE&quot;)) AND &#xD;
+(not isNull(&quot;SAP_ARTICLE_NO&quot;) ) AND &#xD;
+(&quot;HANDSET_SRP_PRICE&quot; > 0 )AND&#xD;
+(( leftstr(&quot;PROD_ID&quot;,3)  = '10-') AND &#xD;
+( (leftstr(&quot;PROD_ID&quot;,5)  != '10-29')   or &#xD;
+(leftstr(&quot;PROD_ID&quot;,5)  != '10-09') or &#xD;
+(leftstr(&quot;PROD_ID&quot;,4)  != '10-S')&#xD;
+))  , 'H',&quot;CC_NULL_FLAG&quot;))&#xD;
+&#xD;
+&#xD;
+</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="INTEGER" id="CC_TERM" expressionLanguage="COLUMN_ENGINE">
+          <formula>daysbetween(&quot;STRT_DT&quot;, &quot;CC_END_DT&quot;) </formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CC_NULL_FLAG" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>NULL</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="TIMESTAMP" id="CC_MODIFIED_TS" expressionLanguage="COLUMN_ENGINE">
+          <formula>NULL</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CC_NETWORK_TY" length="4" expressionLanguage="COLUMN_ENGINE">
+          <formula>NULL</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CC_PRT_ELMNT" length="40" expressionLanguage="COLUMN_ENGINE">
+          <formula>NULL</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CC_IMSI" length="24" expressionLanguage="COLUMN_ENGINE">
+          <formula>NULL</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#UNION_ORDER">
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20401601" source="IS_20401601"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20401602" source="IS_20401602"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IMEI" source="IMEI"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_COUNT" source="CC_COUNT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_EXPIRY_DT" source="CUSTOMER_EXPIRY_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_EFFECTIVE_DT" source="CUSTOMER_EFFECTIVE_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_CUSTOMER_EFFECTIVE_DT" source="CC_CUSTOMER_EFFECTIVE_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_CUSTOMER_EXPIRY_DT" source="CC_CUSTOMER_EXPIRY_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NEW_PLATFORM_BALANCE" source="NEW_PLATFORM_BALANCE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KUNNR_SID" source="KUNNR_SID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MDN" source="MDN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20401603" source="IS_20401603"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20401604" source="IS_20401604"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="HANDSET_SRP_PRICE" source="HANDSET_SRP_PRICE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SAP_ARTICLE_NO" source="SAP_ARTICLE_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_END_DT" source="CC_END_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="T_ID" source="T_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RGN" source="RGN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ANNIVERSARY_DT" source="ANNIVERSARY_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ORD_TY" source="ORD_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ADJ_CD" source="ADJ_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRANS_DT" source="TRANS_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRANSID" source="TRANSID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="X_REF_ORD_ID" source="X_REF_ORD_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AWARD_CREDIT" source="AWARD_CREDIT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CREDIT_DEBIT_FLG" source="CREDIT_DEBIT_FLG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GL_ACCOUNT" source="GL_ACCOUNT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="END_DT" source="END_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="STRT_DT" source="STRT_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SERV_TY" source="SERV_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUB_MKT" source="SUB_MKT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LGL_ENTT" source="LGL_ENTT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REF_FLD" source="REF_FLD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SERV_PRVD" source="SERV_PRVD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRDG_PTNR" source="TRDG_PTNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TEXT_LINE_ITEM" source="TEXT_LINE_ITEM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ALLOCATION" source="ALLOCATION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="COST_CENT" source="COST_CENT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TAX_JURISD_CD" source="TAX_JURISD_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AMT" source="AMT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="POST_PD" source="POST_PD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FISC_YR" source="FISC_YR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="POST_DT" source="POST_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CO_CD" source="CO_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CURRN" source="CURRN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DOC_DT" source="DOC_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DOC_HDR_TEXT" source="DOC_HDR_TEXT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INVC_NO" source="INVC_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ORD_ID" source="ORD_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROD_ID" source="PROD_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUST_ID" source="CUST_ID"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_ERROR_SEMANTICS">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="CUST_ID"/>
+        <viewAttribute id="PROD_ID"/>
+        <viewAttribute id="ORD_ID"/>
+        <viewAttribute id="INVC_NO"/>
+        <viewAttribute id="DOC_HDR_TEXT"/>
+        <viewAttribute id="DOC_DT"/>
+        <viewAttribute id="CURRN"/>
+        <viewAttribute id="CO_CD"/>
+        <viewAttribute id="POST_DT"/>
+        <viewAttribute id="FISC_YR"/>
+        <viewAttribute id="POST_PD"/>
+        <viewAttribute id="AMT"/>
+        <viewAttribute id="TAX_JURISD_CD"/>
+        <viewAttribute id="COST_CENT"/>
+        <viewAttribute id="ALLOCATION"/>
+        <viewAttribute id="TEXT_LINE_ITEM"/>
+        <viewAttribute id="TRDG_PTNR"/>
+        <viewAttribute id="SERV_PRVD"/>
+        <viewAttribute id="REF_FLD"/>
+        <viewAttribute id="LGL_ENTT"/>
+        <viewAttribute id="SUB_MKT"/>
+        <viewAttribute id="SERV_TY"/>
+        <viewAttribute id="STRT_DT"/>
+        <viewAttribute id="END_DT"/>
+        <viewAttribute id="GL_ACCOUNT"/>
+        <viewAttribute id="CREDIT_DEBIT_FLG"/>
+        <viewAttribute id="CYCL_ID"/>
+        <viewAttribute id="AWARD_CREDIT"/>
+        <viewAttribute id="X_REF_ORD_ID"/>
+        <viewAttribute id="TRANSID"/>
+        <viewAttribute id="TRANS_DT"/>
+        <viewAttribute id="ADJ_CD"/>
+        <viewAttribute id="ORD_TY"/>
+        <viewAttribute id="ANNIVERSARY_DT"/>
+        <viewAttribute id="RGN"/>
+        <viewAttribute id="T_ID"/>
+        <viewAttribute id="CC_SOURCE_IDENTIFIER"/>
+        <viewAttribute id="CC_AWARD_CREDIT"/>
+        <viewAttribute id="CC_TERM_INDICATOR"/>
+        <viewAttribute id="CC_BRAND"/>
+        <viewAttribute id="CC_RECRNG_CHRG_FROM_DT"/>
+        <viewAttribute id="CC_RECRNG_CHRG_TO_DT"/>
+        <viewAttribute id="CC_OFFER_ID"/>
+        <viewAttribute id="CC_HANDSET_FLAG"/>
+        <viewAttribute id="CC_TERM"/>
+        <viewAttribute id="CC_MODIFIED_TS"/>
+        <viewAttribute id="NETWORK_TY"/>
+        <viewAttribute id="PRT_ELMNT"/>
+        <viewAttribute id="IMSI"/>
+        <viewAttribute id="SAP_ARTICLE_NO"/>
+        <viewAttribute id="HANDSET_SRP_PRICE"/>
+        <viewAttribute id="IS_20401604"/>
+        <viewAttribute id="IS_20401603"/>
+        <viewAttribute id="MDN"/>
+        <viewAttribute id="KUNNR_SID"/>
+        <viewAttribute id="NEW_PLATFORM_BALANCE"/>
+        <viewAttribute id="CC_CUSTOMER_EXPIRY_DT"/>
+        <viewAttribute id="CC_CUSTOMER_EFFECTIVE_DT"/>
+        <viewAttribute id="CUSTOMER_EFFECTIVE_DT"/>
+        <viewAttribute id="CUSTOMER_EXPIRY_DT"/>
+        <viewAttribute id="CC_COUNT"/>
+        <viewAttribute id="IMEI"/>
+        <viewAttribute id="IS_20401602"/>
+        <viewAttribute id="IS_20401601" transparentFilter="false"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="ERROR_CODE" length="500" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(&quot;IS_20401601&quot; = '1', '20401601||','') +&#xD;
+if(&quot;IS_20401602&quot; = '1', '20401602||','') +&#xD;
+if(&quot;IS_20401603&quot; = '1', '20401603||','') +&#xD;
+if(&quot;IS_20401604&quot; = '1', '20401604||','') </formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="ERROR_STATUS" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>if((&quot;IS_20401601&quot;= '1') OR  (&quot;IS_20401602&quot;= '1') OR (&quot;IS_20401603&quot;= '1') OR (&quot;IS_20401604&quot;= '1') , '1', '0')&#xD;
+</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CC_HANDSET_FLAG_P" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(leftstr(&quot;PROD_ID&quot;,5)  = '10-20' and &quot;PROD_ID&quot; != '10-20405','P',&quot;CC_HANDSET_FLAG&quot;)&#xD;
+</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#PROJ_ERROR_AGRMNT_DATA_PPD_ORDER">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUST_ID" source="CUST_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROD_ID" source="PROD_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ORD_ID" source="ORD_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INVC_NO" source="INVC_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DOC_HDR_TEXT" source="DOC_HDR_TEXT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DOC_DT" source="DOC_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CURRN" source="CURRN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CO_CD" source="CO_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="POST_DT" source="POST_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FISC_YR" source="FISC_YR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="POST_PD" source="POST_PD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AMT" source="AMT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TAX_JURISD_CD" source="TAX_JURISD_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="COST_CENT" source="COST_CENT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ALLOCATION" source="ALLOCATION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TEXT_LINE_ITEM" source="TEXT_LINE_ITEM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRDG_PTNR" source="TRDG_PTNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SERV_PRVD" source="SERV_PRVD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REF_FLD" source="REF_FLD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LGL_ENTT" source="LGL_ENTT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUB_MKT" source="SUB_MKT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SERV_TY" source="SERV_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="STRT_DT" source="STRT_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="END_DT" source="END_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="GL_ACCOUNT" source="GL_ACCOUNT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CREDIT_DEBIT_FLG" source="CREDIT_DEBIT_FLG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AWARD_CREDIT" source="AWARD_CREDIT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="X_REF_ORD_ID" source="X_REF_ORD_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRANSID" source="TRANSID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRANS_DT" source="TRANS_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ADJ_CD" source="ADJ_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ORD_TY" source="ORD_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ANNIVERSARY_DT" source="ANNIVERSARY_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RGN" source="RGN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="T_ID" source="T_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_SOURCE_IDENTIFIER" source="CC_SOURCE_IDENTIFIER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_AWARD_CREDIT" source="CC_AWARD_CREDIT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_TERM_INDICATOR" source="CC_TERM_INDICATOR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_BRAND" source="CC_BRAND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_RECRNG_CHRG_FROM_DT" source="CC_RECRNG_CHRG_FROM_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_RECRNG_CHRG_TO_DT" source="CC_RECRNG_CHRG_TO_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_OFFER_ID" source="CC_OFFER_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_HANDSET_FLAG" source="CC_HANDSET_FLAG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_TERM" source="CC_TERM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_MODIFIED_TS" source="CC_MODIFIED_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NETWORK_TY" source="CC_NETWORK_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRT_ELMNT" source="CC_PRT_ELMNT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IMSI" source="CC_IMSI"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SAP_ARTICLE_NO" source="SAP_ARTICLE_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="HANDSET_SRP_PRICE" source="HANDSET_SRP_PRICE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20401604" source="IS_20401604"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20401603" source="IS_20401603"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MDN" source="MDN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KUNNR_SID" source="KUNNR_SID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NEW_PLATFORM_BALANCE" source="NEW_PLATFORM_BALANCE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_CUSTOMER_EXPIRY_DT" source="CC_CUSTOMER_EXPIRY_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_CUSTOMER_EFFECTIVE_DT" source="CC_CUSTOMER_EFFECTIVE_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_EFFECTIVE_DT" source="CUSTOMER_EFFECTIVE_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_EXPIRY_DT" source="CUSTOMER_EXPIRY_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_COUNT" source="CC_COUNT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IMEI" source="IMEI"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20401602" source="IS_20401602"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20401601" source="IS_20401601"/>
+      </input>
+    </calculationView>
+  </calculationViews>
+  <logicalModel id="PROJ_ERROR_SEMANTICS">
+    <descriptions/>
+    <attributes>
+      <attribute id="CUSTOMER_ID" key="true" order="1" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CUSTOMER_ID"/>
+        <keyMapping columnObjectName="PROJ_ERROR_SEMANTICS" columnName="CUST_ID"/>
+      </attribute>
+      <attribute id="PRODUCT_ID" key="true" order="2" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="PRODUCT_ID"/>
+        <keyMapping columnObjectName="PROJ_ERROR_SEMANTICS" columnName="PROD_ID"/>
+      </attribute>
+      <attribute id="ORDER_ID" order="3" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ORDER_ID"/>
+        <keyMapping columnObjectName="PROJ_ERROR_SEMANTICS" columnName="ORD_ID"/>
+      </attribute>
+      <attribute id="INVOICE_NO" key="true" order="4" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="INVOICE_NO"/>
+        <keyMapping columnObjectName="PROJ_ERROR_SEMANTICS" columnName="INVC_NO"/>
+      </attribute>
+      <attribute id="DOCUMENT_HEADER_TEXT" order="5" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="DOCUMENT_HEADER_TEXT"/>
+        <keyMapping columnObjectName="PROJ_ERROR_SEMANTICS" columnName="DOC_HDR_TEXT"/>
+      </attribute>
+      <attribute id="DOCUMENT_DATE" order="6" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="DOCUMENT_DATE"/>
+        <keyMapping columnObjectName="PROJ_ERROR_SEMANTICS" columnName="DOC_DT"/>
+      </attribute>
+      <attribute id="CURRENCY" order="7" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CURRENCY"/>
+        <keyMapping columnObjectName="PROJ_ERROR_SEMANTICS" columnName="CURRN"/>
+      </attribute>
+      <attribute id="COMPANY_CODE" order="8" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="COMPANY_CODE"/>
+        <keyMapping columnObjectName="PROJ_ERROR_SEMANTICS" columnName="CO_CD"/>
+      </attribute>
+      <attribute id="POSTING_DATE" key="true" order="9" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="POSTING_DATE"/>
+        <keyMapping columnObjectName="PROJ_ERROR_SEMANTICS" columnName="POST_DT"/>
+      </attribute>
+      <attribute id="FISCAL_YEAR" order="10" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="FISCAL_YEAR"/>
+        <keyMapping columnObjectName="PROJ_ERROR_SEMANTICS" columnName="FISC_YR"/>
+      </attribute>
+      <attribute id="POSTING_PERIOD" order="11" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="POSTING_PERIOD"/>
+        <keyMapping columnObjectName="PROJ_ERROR_SEMANTICS" columnName="POST_PD"/>
+      </attribute>
+      <attribute id="TAX_JURIS_CODE" order="13" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="TAX_JURIS_CODE"/>
+        <keyMapping columnObjectName="PROJ_ERROR_SEMANTICS" columnName="TAX_JURISD_CD"/>
+      </attribute>
+      <attribute id="COST_CENTER" order="14" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="COST_CENTER"/>
+        <keyMapping columnObjectName="PROJ_ERROR_SEMANTICS" columnName="COST_CENT"/>
+      </attribute>
+      <attribute id="ALLOCATION" order="15" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ALLOCATION"/>
+        <keyMapping columnObjectName="PROJ_ERROR_SEMANTICS" columnName="ALLOCATION"/>
+      </attribute>
+      <attribute id="TEXT_LINE_ITEM" order="16" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="TEXT_LINE_ITEM"/>
+        <keyMapping columnObjectName="PROJ_ERROR_SEMANTICS" columnName="TEXT_LINE_ITEM"/>
+      </attribute>
+      <attribute id="TRADING_PARTNER" order="17" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="TRADING_PARTNER"/>
+        <keyMapping columnObjectName="PROJ_ERROR_SEMANTICS" columnName="TRDG_PTNR"/>
+      </attribute>
+      <attribute id="SERVICE_PROVIDER" order="18" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SERVICE_PROVIDER"/>
+        <keyMapping columnObjectName="PROJ_ERROR_SEMANTICS" columnName="SERV_PRVD"/>
+      </attribute>
+      <attribute id="REFERENCE_FIELD" key="true" order="19" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="REFERENCE_FIELD"/>
+        <keyMapping columnObjectName="PROJ_ERROR_SEMANTICS" columnName="REF_FLD"/>
+      </attribute>
+      <attribute id="LEGAL_ENTITY" order="20" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="LEGAL_ENTITY"/>
+        <keyMapping columnObjectName="PROJ_ERROR_SEMANTICS" columnName="LGL_ENTT"/>
+      </attribute>
+      <attribute id="SUB_MARKET" order="21" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SUB_MARKET"/>
+        <keyMapping columnObjectName="PROJ_ERROR_SEMANTICS" columnName="SUB_MKT"/>
+      </attribute>
+      <attribute id="SERVICE_TYPE" order="22" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SERVICE_TYPE"/>
+        <keyMapping columnObjectName="PROJ_ERROR_SEMANTICS" columnName="SERV_TY"/>
+      </attribute>
+      <attribute id="START_DATE" order="23" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="START_DATE"/>
+        <keyMapping columnObjectName="PROJ_ERROR_SEMANTICS" columnName="STRT_DT"/>
+      </attribute>
+      <attribute id="END_DATE" order="24" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="END_DATE"/>
+        <keyMapping columnObjectName="PROJ_ERROR_SEMANTICS" columnName="END_DT"/>
+      </attribute>
+      <attribute id="GL_ACCOUNT" order="25" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="GL_ACCOUNT"/>
+        <keyMapping columnObjectName="PROJ_ERROR_SEMANTICS" columnName="GL_ACCOUNT"/>
+      </attribute>
+      <attribute id="CREDIT_DEBIT_FLG" order="26" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CREDIT_DEBIT_FLG"/>
+        <keyMapping columnObjectName="PROJ_ERROR_SEMANTICS" columnName="CREDIT_DEBIT_FLG"/>
+      </attribute>
+      <attribute id="CYCL_ID" order="27" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CYCL_ID"/>
+        <keyMapping columnObjectName="PROJ_ERROR_SEMANTICS" columnName="CYCL_ID"/>
+      </attribute>
+      <attribute id="CROSS_REFERENCE_ORDER_ID" order="28" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CROSS_REFERENCE_ORDER_ID"/>
+        <keyMapping columnObjectName="PROJ_ERROR_SEMANTICS" columnName="X_REF_ORD_ID"/>
+      </attribute>
+      <attribute id="TRANSACTION_ID" order="29" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="TRANSACTION_ID"/>
+        <keyMapping columnObjectName="PROJ_ERROR_SEMANTICS" columnName="TRANSID"/>
+      </attribute>
+      <attribute id="TRANSACTION_DATE" order="30" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="TRANSACTION_DATE"/>
+        <keyMapping columnObjectName="PROJ_ERROR_SEMANTICS" columnName="TRANS_DT"/>
+      </attribute>
+      <attribute id="ADJUSTMENT_CODE" order="31" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ADJUSTMENT_CODE"/>
+        <keyMapping columnObjectName="PROJ_ERROR_SEMANTICS" columnName="ADJ_CD"/>
+      </attribute>
+      <attribute id="ORDER_TYPE" order="32" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ORDER_TYPE"/>
+        <keyMapping columnObjectName="PROJ_ERROR_SEMANTICS" columnName="ORD_TY"/>
+      </attribute>
+      <attribute id="ANNIVERSARY_DATE" order="33" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ANNIVERSARY_DATE"/>
+        <keyMapping columnObjectName="PROJ_ERROR_SEMANTICS" columnName="ANNIVERSARY_DT"/>
+      </attribute>
+      <attribute id="REGION" order="34" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="REGION"/>
+        <keyMapping columnObjectName="PROJ_ERROR_SEMANTICS" columnName="RGN"/>
+      </attribute>
+      <attribute id="KUNNR_SID" order="35" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="KUNNR SID"/>
+        <keyMapping columnObjectName="PROJ_ERROR_SEMANTICS" columnName="KUNNR_SID"/>
+      </attribute>
+      <attribute id="SAP_ARTICLE_NO" order="36" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SAP_ARTICLE_NO"/>
+        <keyMapping columnObjectName="PROJ_ERROR_SEMANTICS" columnName="SAP_ARTICLE_NO"/>
+      </attribute>
+      <attribute id="ERROR_CODE" order="38" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ERROR_CODE"/>
+        <keyMapping columnObjectName="PROJ_ERROR_SEMANTICS" columnName="ERROR_CODE"/>
+      </attribute>
+      <attribute id="ERROR_STATUS" order="39" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ERROR_STATUS"/>
+        <keyMapping columnObjectName="PROJ_ERROR_SEMANTICS" columnName="ERROR_STATUS"/>
+      </attribute>
+      <attribute id="TERM_INDICATOR" order="42" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="TERM_INDICATOR"/>
+        <keyMapping columnObjectName="PROJ_ERROR_SEMANTICS" columnName="CC_TERM_INDICATOR"/>
+      </attribute>
+      <attribute id="BRAND" order="43" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="BRAND"/>
+        <keyMapping columnObjectName="PROJ_ERROR_SEMANTICS" columnName="CC_BRAND"/>
+      </attribute>
+      <attribute id="SOURCE_IDENTIFIER" order="44" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SOURCE_IDENTIFIER"/>
+        <keyMapping columnObjectName="PROJ_ERROR_SEMANTICS" columnName="CC_SOURCE_IDENTIFIER"/>
+      </attribute>
+      <attribute id="RECRNG_CHRG_FROM_DT" order="45" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="RECRNG_CHRG_FROM_DT"/>
+        <keyMapping columnObjectName="PROJ_ERROR_SEMANTICS" columnName="CC_RECRNG_CHRG_FROM_DT"/>
+      </attribute>
+      <attribute id="RECRNG_CHRG_TO_DT" order="46" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="RECRNG_CHRG_TO_DT"/>
+        <keyMapping columnObjectName="PROJ_ERROR_SEMANTICS" columnName="CC_RECRNG_CHRG_TO_DT"/>
+      </attribute>
+      <attribute id="OFFER_ID" order="47" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="OFFER_ID"/>
+        <keyMapping columnObjectName="PROJ_ERROR_SEMANTICS" columnName="CC_OFFER_ID"/>
+      </attribute>
+      <attribute id="TERM" order="48" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="TERM"/>
+        <keyMapping columnObjectName="PROJ_ERROR_SEMANTICS" columnName="CC_TERM"/>
+      </attribute>
+      <attribute id="MODIFIED_TS" order="49" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="MODIFIED_TS"/>
+        <keyMapping columnObjectName="PROJ_ERROR_SEMANTICS" columnName="CC_MODIFIED_TS"/>
+      </attribute>
+      <attribute id="MDN" order="50" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="MDN"/>
+        <keyMapping columnObjectName="PROJ_ERROR_SEMANTICS" columnName="MDN"/>
+      </attribute>
+      <attribute id="NETWORK_TY" order="51" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="NETWORK_TY"/>
+        <keyMapping columnObjectName="PROJ_ERROR_SEMANTICS" columnName="NETWORK_TY"/>
+      </attribute>
+      <attribute id="PRT_ELMNT" order="52" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="PRT_ELMNT"/>
+        <keyMapping columnObjectName="PROJ_ERROR_SEMANTICS" columnName="PRT_ELMNT"/>
+      </attribute>
+      <attribute id="IMSI" order="53" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="IMSI"/>
+        <keyMapping columnObjectName="PROJ_ERROR_SEMANTICS" columnName="IMSI"/>
+      </attribute>
+      <attribute id="IS_20401603" order="54" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="IS_20401603"/>
+        <keyMapping columnObjectName="PROJ_ERROR_SEMANTICS" columnName="IS_20401603"/>
+      </attribute>
+      <attribute id="IS_20401604" order="55" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="IS_20401604"/>
+        <keyMapping columnObjectName="PROJ_ERROR_SEMANTICS" columnName="IS_20401604"/>
+      </attribute>
+      <attribute id="IMEI" order="57" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="IMEI"/>
+        <keyMapping columnObjectName="PROJ_ERROR_SEMANTICS" columnName="IMEI"/>
+      </attribute>
+      <attribute id="IS_20401602" order="58" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="IS_20401602"/>
+        <keyMapping columnObjectName="PROJ_ERROR_SEMANTICS" columnName="IS_20401602"/>
+      </attribute>
+      <attribute id="IS_20401601" order="59" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false" transparentFilter="false">
+        <descriptions defaultDescription="IS_20401601"/>
+        <keyMapping columnObjectName="PROJ_ERROR_SEMANTICS" columnName="IS_20401601"/>
+      </attribute>
+      <attribute id="HANDSET_FLAG" order="60" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="HANDSET_FLAG"/>
+        <keyMapping columnObjectName="PROJ_ERROR_SEMANTICS" columnName="CC_HANDSET_FLAG_P"/>
+      </attribute>
+    </attributes>
+    <calculatedAttributes/>
+    <privateDataFoundation>
+      <tableProxies/>
+      <joins/>
+      <layout>
+        <shapes/>
+      </layout>
+    </privateDataFoundation>
+    <baseMeasures>
+      <measure id="AMOUNT" order="12" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="AMOUNT"/>
+        <measureMapping columnObjectName="PROJ_ERROR_SEMANTICS" columnName="AMT"/>
+      </measure>
+      <measure id="HANDSET_SRP_PRICE" order="37" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="HANDSET_SRP_PRICE"/>
+        <measureMapping columnObjectName="PROJ_ERROR_SEMANTICS" columnName="HANDSET_SRP_PRICE"/>
+      </measure>
+      <measure id="AWARD_CREDIT" order="40" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="AWARD_CREDIT"/>
+        <measureMapping columnObjectName="PROJ_ERROR_SEMANTICS" columnName="CC_AWARD_CREDIT"/>
+      </measure>
+      <measure id="ACCOUNT_BALANCE" order="41" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="ACCOUNT_BALANCE"/>
+        <measureMapping columnObjectName="PROJ_ERROR_SEMANTICS" columnName="NEW_PLATFORM_BALANCE"/>
+      </measure>
+      <measure id="CC_COUNT" order="56" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="CC_COUNT"/>
+        <measureMapping columnObjectName="PROJ_ERROR_SEMANTICS" columnName="CC_COUNT"/>
+      </measure>
+    </baseMeasures>
+    <calculatedMeasures/>
+    <restrictedMeasures/>
+    <localDimensions/>
+  </logicalModel>
+  <layout>
+    <shapes>
+      <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+        <upperLeftCorner x="226" y="87"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PS_JRNL_DATA" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="73" y="1171"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PS_AGRMT" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="227" y="1171"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="JOIN_JRNL_DATA_AGRMY" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="150" y="1075"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PS_TRANS_DATA" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="304" y="1075"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="JOIN_AGREMENT_TRANS_DATA" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="228" y="979"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_JRNL_AGRMNT_TRANS_DATA" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="22" y="901"/>
+        <rectangleSize height="64" width="190"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_MOBL_CUST" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="226" y="901"/>
+        <rectangleSize height="64" width="171"/>
+      </shape>
+      <shape expanded="true" modelObjectName="JOIN_JRNL_AGRMNT_DATA_MOBL_CUST" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="52" y="805"/>
+        <rectangleSize height="82" width="281"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_AGRMNT_FILTER" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="411" y="901"/>
+        <rectangleSize height="79" width="140"/>
+      </shape>
+      <shape expanded="true" modelObjectName="JOIN_HANDSETFLAG_P" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="347" y="805"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="UNION_MOBL_CUST" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="231" y="689"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_AGRMNT_DATA_MOBL_CUST" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="206" y="611"/>
+        <rectangleSize height="64" width="191"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_PPD_ORDER" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="227" y="533"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_DATA_PRODUCT_FILTER_1" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="73" y="533"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+      <shape expanded="true" modelObjectName="JOIN_AGRMNT_DATA_PPD_ORDER" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="149" y="437"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_ERROR_AGRMNT_DATA_PPD_ORDER" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="226" y="243"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_ERROR_SEMANTICS" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="226" y="165"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="UNION_ORDER" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="226" y="321"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_DATA_PRODUCT_FILTER_2" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="381" y="533"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="JOIN_AGRMNT_DATA_PPD_ORDER_2" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="303" y="437"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+    </shapes>
+  </layout>
+</Calculation:scenario>

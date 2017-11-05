@@ -1,0 +1,926 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:AccessControl="http://www.sap.com/ndb/SQLCoreModelAccessControl.ecore" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" schemaVersion="2.3" id="CA_TV_INVC_ORDR_PROD_MSTR" applyPrivilegeType="NONE" checkAnalyticPrivileges="false" defaultClient="$$client$$" defaultLanguage="$$language$$" hierarchiesSQLEnabled="false" translationRelevant="true" visibility="internal" calculationScenarioType="TREE_BASED" dataCategory="DIMENSION" enforceSqlExecution="false" executionSemantic="UNDEFINED" outputViewType="Projection">
+  <descriptions defaultDescription="CA_TV_INVC_ORDR_PROD_MSTR"/>
+  <metadata changedAt="2017-06-15 13:04:51.397"/>
+  <localVariables/>
+  <variableMappings/>
+  <informationModelLayout relativeWidthScenario="49"/>
+  <dataSources>
+    <DataSource id="CA_TV_BILLING" type="CALCULATION_VIEW">
+      <viewAttributes allViewAttributes="true"/>
+      <resourceUri>/IFRS_R1.BELLTV.RAI_BELLTV.PRIVATE/calculationviews/CA_TV_BILLING</resourceUri>
+    </DataSource>
+    <DataSource id="ECC_SDA_MARA" type="DATA_BASE_TABLE">
+      <viewAttributes allViewAttributes="true"/>
+      <columnObject schemaName="SDA" columnObjectName="ECC_SDA_MARA"/>
+    </DataSource>
+    <DataSource id="ZNON_DISTINCT" type="DATA_BASE_TABLE">
+      <viewAttributes allViewAttributes="true"/>
+      <columnObject schemaName="SDA" columnObjectName="ZNON_DISTINCT"/>
+    </DataSource>
+    <DataSource id="IFRS_R1.COMMON_COMP.RAI_COMMON::CHARGE_TYPE" type="DATA_BASE_TABLE">
+      <viewAttributes allViewAttributes="true"/>
+      <columnObject schemaName="RAI_COMMON" columnObjectName="IFRS_R1.COMMON_COMP.RAI_COMMON::CHARGE_TYPE"/>
+    </DataSource>
+  </dataSources>
+  <calculationViews>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_TV_BILLING">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="ITEM_ID"/>
+        <viewAttribute id="TRANS_ID"/>
+        <viewAttribute id="ACCT_NUM"/>
+        <viewAttribute id="AMT"/>
+        <viewAttribute id="EVNT_ID"/>
+        <viewAttribute id="ADJ_REASON_MON"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#CA_TV_BILLING">
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_ID" source="ITEM_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRANS_ID" source="TRANS_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACCT_NUM" source="ACCT_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AMT" source="AMT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EVNT_ID" source="EVNT_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ADJ_REASON_MON" source="ADJ_REASON_MON"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_MARA">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="MATKL"/>
+        <viewAttribute id="BISMT"/>
+        <viewAttribute id="NORMT"/>
+        <viewAttribute id="LVORM"/>
+        <viewAttribute id="MATNR"/>
+        <viewAttribute id="MANDT"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#ECC_SDA_MARA">
+        <mapping xsi:type="Calculation:AttributeMapping" target="MATKL" source="MATKL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BISMT" source="BISMT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NORMT" source="NORMT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LVORM" source="LVORM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MATNR" source="MATNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MANDT" source="MANDT"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_TRAN_EVNT" filterExpressionLanguage="COLUMN_ENGINE">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="ITEM_ID"/>
+        <viewAttribute id="TRANS_ID"/>
+        <viewAttribute id="ACCT_NUM"/>
+        <viewAttribute id="AMT"/>
+        <viewAttribute id="EVNT_ID"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#PROJ_TV_BILLING">
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_ID" source="ITEM_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRANS_ID" source="TRANS_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACCT_NUM" source="ACCT_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AMT" source="AMT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EVNT_ID" source="EVNT_ID"/>
+      </input>
+      <filter>(isNull(&quot;ITEM_ID&quot;))</filter>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="JOIN_MARA_BILLING_EVNT" joinType="leftOuter">
+      <descriptions>
+        <comment text="Join errors will be raised as 30101101.&#xD;&#xA;"/>
+      </descriptions>
+      <viewAttributes>
+        <viewAttribute id="MATKL"/>
+        <viewAttribute id="BISMT_RIGHT"/>
+        <viewAttribute id="ITEM_ID"/>
+        <viewAttribute id="TRANS_ID"/>
+        <viewAttribute id="ACCT_NUM"/>
+        <viewAttribute id="AMT"/>
+        <viewAttribute id="EVNT_ID"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="IS_30101101" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isNull(&quot;BISMT_RIGHT&quot;),'1','0')</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#PROJ_TRAN_EVNT">
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_ID" source="ITEM_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRANS_ID" source="TRANS_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACCT_NUM" source="ACCT_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AMT" source="AMT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EVNT_ID" source="EVNT_ID"/>
+      </input>
+      <input node="#PROJ_MARA">
+        <mapping xsi:type="Calculation:AttributeMapping" target="MATKL" source="MATKL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BISMT_RIGHT" source="BISMT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRANS_ID" source="BISMT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EVNT_ID" source="NORMT"/>
+      </input>
+      <joinAttribute name="TRANS_ID"/>
+      <joinAttribute name="EVNT_ID"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_ITEM_RSN" filterExpressionLanguage="COLUMN_ENGINE">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="ITEM_ID"/>
+        <viewAttribute id="ACCT_NUM"/>
+        <viewAttribute id="TRANS_ID"/>
+        <viewAttribute id="EVNT_ID"/>
+        <viewAttribute id="AMT"/>
+        <viewAttribute id="ADJ_REASON_MON"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#PROJ_TV_BILLING">
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_ID" source="ITEM_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACCT_NUM" source="ACCT_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRANS_ID" source="TRANS_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EVNT_ID" source="EVNT_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AMT" source="AMT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ADJ_REASON_MON" source="ADJ_REASON_MON"/>
+      </input>
+      <filter>(not isNull(&quot;ITEM_ID&quot;)) AND (not isNull(&quot;ADJ_REASON_MON&quot;))</filter>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="JOIN_MARA_BILLING_ITEM_RSN" joinType="leftOuter">
+      <descriptions>
+        <comment text="Join errors will be raised as 30101102."/>
+      </descriptions>
+      <viewAttributes>
+        <viewAttribute id="MATKL"/>
+        <viewAttribute id="BISMT_RIGHT"/>
+        <viewAttribute id="ITEM_ID"/>
+        <viewAttribute id="ACCT_NUM"/>
+        <viewAttribute id="TRANS_ID"/>
+        <viewAttribute id="EVNT_ID"/>
+        <viewAttribute id="AMT"/>
+        <viewAttribute hidden="true" id="JOIN$ADJ_REASON_MON$NORMT"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="IS_30101102" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isNull(&quot;BISMT_RIGHT&quot;),'1','0')</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#PROJ_ITEM_RSN">
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_ID" source="ITEM_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACCT_NUM" source="ACCT_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRANS_ID" source="TRANS_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EVNT_ID" source="EVNT_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AMT" source="AMT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$ADJ_REASON_MON$NORMT" source="ADJ_REASON_MON"/>
+      </input>
+      <input node="#PROJ_MARA">
+        <mapping xsi:type="Calculation:AttributeMapping" target="MATKL" source="MATKL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BISMT_RIGHT" source="BISMT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_ID" source="BISMT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$ADJ_REASON_MON$NORMT" source="NORMT"/>
+      </input>
+      <joinAttribute name="ITEM_ID"/>
+      <joinAttribute name="JOIN$ADJ_REASON_MON$NORMT"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_ITEM_EVNT" filterExpressionLanguage="COLUMN_ENGINE">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="ITEM_ID"/>
+        <viewAttribute id="TRANS_ID"/>
+        <viewAttribute id="ACCT_NUM"/>
+        <viewAttribute id="AMT"/>
+        <viewAttribute id="EVNT_ID"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#PROJ_TV_BILLING">
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_ID" source="ITEM_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRANS_ID" source="TRANS_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACCT_NUM" source="ACCT_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AMT" source="AMT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EVNT_ID" source="EVNT_ID"/>
+      </input>
+      <filter>(not isNull(&quot;ITEM_ID&quot;)) AND (not isNull(&quot;EVNT_ID&quot;))</filter>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="JOIN_MARA_BILLING_ITEM_EVNT" joinType="leftOuter">
+      <descriptions>
+        <comment text="Join errors will be raised as 30101103."/>
+      </descriptions>
+      <viewAttributes>
+        <viewAttribute id="MATKL"/>
+        <viewAttribute id="BISMT_RIGHT"/>
+        <viewAttribute id="ITEM_ID"/>
+        <viewAttribute id="TRANS_ID"/>
+        <viewAttribute id="ACCT_NUM"/>
+        <viewAttribute id="AMT"/>
+        <viewAttribute id="EVNT_ID"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="IS_30101103" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isNull(&quot;BISMT_RIGHT&quot;),'1','0')</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#PROJ_ITEM_EVNT">
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_ID" source="ITEM_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRANS_ID" source="TRANS_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACCT_NUM" source="ACCT_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AMT" source="AMT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EVNT_ID" source="EVNT_ID"/>
+      </input>
+      <input node="#PROJ_MARA">
+        <mapping xsi:type="Calculation:AttributeMapping" target="MATKL" source="MATKL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BISMT_RIGHT" source="BISMT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_ID" source="BISMT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EVNT_ID" source="NORMT"/>
+      </input>
+      <joinAttribute name="ITEM_ID"/>
+      <joinAttribute name="EVNT_ID"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_ITEM" filterExpressionLanguage="COLUMN_ENGINE">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="ITEM_ID"/>
+        <viewAttribute id="TRANS_ID"/>
+        <viewAttribute id="ACCT_NUM"/>
+        <viewAttribute id="AMT"/>
+        <viewAttribute id="EVNT_ID"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#PROJ_TV_BILLING">
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_ID" source="ITEM_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRANS_ID" source="TRANS_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACCT_NUM" source="ACCT_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AMT" source="AMT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EVNT_ID" source="EVNT_ID"/>
+      </input>
+      <filter>(not isNull(&quot;ITEM_ID&quot;)) AND (isNull(&quot;EVNT_ID&quot;))</filter>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="JOIN_MARA_BILLING_ITEM" joinType="leftOuter">
+      <descriptions>
+        <comment text="Join errors will be raised as 30101104."/>
+      </descriptions>
+      <viewAttributes>
+        <viewAttribute id="MATKL"/>
+        <viewAttribute id="BISMT_RIGHT"/>
+        <viewAttribute id="ITEM_ID"/>
+        <viewAttribute id="TRANS_ID"/>
+        <viewAttribute id="ACCT_NUM"/>
+        <viewAttribute id="AMT"/>
+        <viewAttribute id="EVNT_ID"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="IS_30101104" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isNull(&quot;BISMT_RIGHT&quot;),'1','0')</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#PROJ_ITEM">
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_ID" source="ITEM_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRANS_ID" source="TRANS_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACCT_NUM" source="ACCT_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AMT" source="AMT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EVNT_ID" source="EVNT_ID"/>
+      </input>
+      <input node="#PROJ_MARA">
+        <mapping xsi:type="Calculation:AttributeMapping" target="MATKL" source="MATKL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BISMT_RIGHT" source="BISMT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_ID" source="BISMT"/>
+      </input>
+      <joinAttribute name="ITEM_ID"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:UnionView" id="UNION_CHARGE_TYPE">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="ACCT_NUM"/>
+        <viewAttribute id="ITEM_ID"/>
+        <viewAttribute id="TRANS_ID"/>
+        <viewAttribute id="EVNT_ID"/>
+        <viewAttribute id="AMT"/>
+        <viewAttribute id="MATKL"/>
+        <viewAttribute datatype="NVARCHAR" id="IS_30101101" length="1" scale="0"/>
+        <viewAttribute datatype="NVARCHAR" id="IS_30101102" length="1" scale="0"/>
+        <viewAttribute datatype="NVARCHAR" id="IS_30101103" length="1" scale="0"/>
+        <viewAttribute datatype="NVARCHAR" id="IS_30101104" length="1" scale="0"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input emptyUnionBehavior="NO_ROW" node="#JOIN_MARA_BILLING_EVNT">
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACCT_NUM" source="ACCT_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_ID" source="ITEM_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRANS_ID" source="TRANS_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EVNT_ID" source="EVNT_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AMT" source="AMT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MATKL" source="MATKL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30101101" source="IS_30101101"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="IS_30101102" null="false" value="0"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="IS_30101103" null="false" value="0"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="IS_30101104" null="false" value="0"/>
+      </input>
+      <input emptyUnionBehavior="NO_ROW" node="#JOIN_MARA_BILLING_ITEM_RSN">
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACCT_NUM" source="ACCT_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_ID" source="ITEM_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRANS_ID" source="TRANS_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EVNT_ID" source="EVNT_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AMT" source="AMT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MATKL" source="MATKL"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="IS_30101101" null="false" value="0"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30101102" source="IS_30101102"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="IS_30101103" null="false" value="0"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="IS_30101104" null="false" value="0"/>
+      </input>
+      <input emptyUnionBehavior="NO_ROW" node="#JOIN_MARA_BILLING_ITEM_EVNT">
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACCT_NUM" source="ACCT_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_ID" source="ITEM_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRANS_ID" source="TRANS_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EVNT_ID" source="EVNT_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AMT" source="AMT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MATKL" source="MATKL"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="IS_30101101" null="false" value="0"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="IS_30101102" null="false" value="0"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30101103" source="IS_30101103"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="IS_30101104" null="false" value="0"/>
+      </input>
+      <input emptyUnionBehavior="NO_ROW" node="#JOIN_MARA_BILLING_ITEM">
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACCT_NUM" source="ACCT_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_ID" source="ITEM_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRANS_ID" source="TRANS_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EVNT_ID" source="EVNT_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AMT" source="AMT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MATKL" source="MATKL"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="IS_30101101" null="false" value="0"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="IS_30101102" null="false" value="0"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="IS_30101103" null="false" value="0"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30101104" source="IS_30101104"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_SOC">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="EVNT_ID">
+          <filter xsi:type="AccessControl:SingleValueFilter" operator="NL" including="false"/>
+        </viewAttribute>
+        <viewAttribute id="ITEM_ID">
+          <filter xsi:type="AccessControl:SingleValueFilter" operator="NL" including="true"/>
+        </viewAttribute>
+        <viewAttribute id="ACCT_NUM"/>
+        <viewAttribute id="AMT"/>
+        <viewAttribute id="MATKL"/>
+        <viewAttribute datatype="NVARCHAR" id="IS_30101101" length="1" scale="0"/>
+        <viewAttribute datatype="NVARCHAR" id="IS_30101102" length="1" scale="0"/>
+        <viewAttribute datatype="NVARCHAR" id="IS_30101103" length="1" scale="0"/>
+        <viewAttribute datatype="NVARCHAR" id="IS_30101104" length="1" scale="0"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#UNION_CHARGE_TYPE">
+        <mapping xsi:type="Calculation:AttributeMapping" target="EVNT_ID" source="EVNT_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_ID" source="ITEM_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACCT_NUM" source="ACCT_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AMT" source="AMT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MATKL" source="MATKL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30101101" source="IS_30101101"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30101102" source="IS_30101102"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30101103" source="IS_30101103"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30101104" source="IS_30101104"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_FEATURE_CD">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="ITEM_ID">
+          <filter xsi:type="AccessControl:SingleValueFilter" operator="NL" including="false"/>
+        </viewAttribute>
+        <viewAttribute id="EVNT_ID">
+          <filter xsi:type="AccessControl:SingleValueFilter" operator="NL" including="true"/>
+        </viewAttribute>
+        <viewAttribute id="ACCT_NUM"/>
+        <viewAttribute id="AMT"/>
+        <viewAttribute id="MATKL"/>
+        <viewAttribute datatype="NVARCHAR" id="IS_30101101" length="1" scale="0"/>
+        <viewAttribute datatype="NVARCHAR" id="IS_30101102" length="1" scale="0"/>
+        <viewAttribute datatype="NVARCHAR" id="IS_30101103" length="1" scale="0"/>
+        <viewAttribute datatype="NVARCHAR" id="IS_30101104" length="1" scale="0"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#UNION_CHARGE_TYPE">
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_ID" source="ITEM_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EVNT_ID" source="EVNT_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACCT_NUM" source="ACCT_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AMT" source="AMT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MATKL" source="MATKL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30101101" source="IS_30101101"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30101102" source="IS_30101102"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30101103" source="IS_30101103"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30101104" source="IS_30101104"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_SOC_FEATURE_CD">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="ITEM_ID">
+          <filter xsi:type="AccessControl:SingleValueFilter" operator="NL" including="false"/>
+        </viewAttribute>
+        <viewAttribute id="EVNT_ID">
+          <filter xsi:type="AccessControl:SingleValueFilter" operator="NL" including="false"/>
+        </viewAttribute>
+        <viewAttribute id="ACCT_NUM"/>
+        <viewAttribute id="AMT"/>
+        <viewAttribute id="MATKL"/>
+        <viewAttribute datatype="NVARCHAR" id="IS_30101101" length="1" scale="0"/>
+        <viewAttribute datatype="NVARCHAR" id="IS_30101102" length="1" scale="0"/>
+        <viewAttribute datatype="NVARCHAR" id="IS_30101103" length="1" scale="0"/>
+        <viewAttribute datatype="NVARCHAR" id="IS_30101104" length="1" scale="0"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#UNION_CHARGE_TYPE">
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_ID" source="ITEM_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EVNT_ID" source="EVNT_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACCT_NUM" source="ACCT_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AMT" source="AMT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MATKL" source="MATKL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30101101" source="IS_30101101"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30101102" source="IS_30101102"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30101103" source="IS_30101103"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30101104" source="IS_30101104"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_NON_DISTINCT">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="LOB">
+          <filter xsi:type="AccessControl:SingleValueFilter" including="true" value="TV"/>
+        </viewAttribute>
+        <viewAttribute id="CODE"/>
+        <viewAttribute id="NONDISTFLAG"/>
+        <viewAttribute id="FTR_ADJ_RSN_CD"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#ZNON_DISTINCT">
+        <mapping xsi:type="Calculation:AttributeMapping" target="LOB" source="LOB"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CODE" source="CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NONDISTFLAG" source="NONDISTFLAG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FTR_ADJ_RSN_CD" source="FTR_ADJ_RSN_CD"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="JOIN_NON_DISTINCT3" joinType="leftOuter">
+      <descriptions>
+        <comment text="Join Errors will be raised as 30101107."/>
+      </descriptions>
+      <viewAttributes>
+        <viewAttribute id="ACCT_NUM"/>
+        <viewAttribute id="ITEM_ID"/>
+        <viewAttribute id="SSP"/>
+        <viewAttribute id="TP"/>
+        <viewAttribute id="MATKL"/>
+        <viewAttribute id="NONDISTFLAG"/>
+        <viewAttribute id="CODE_RIGHT"/>
+        <viewAttribute datatype="NVARCHAR" id="IS_30101101" length="1" scale="0"/>
+        <viewAttribute datatype="NVARCHAR" id="IS_30101102" length="1" scale="0"/>
+        <viewAttribute datatype="NVARCHAR" id="IS_30101103" length="1" scale="0"/>
+        <viewAttribute datatype="NVARCHAR" id="IS_30101104" length="1" scale="0"/>
+        <viewAttribute hidden="true" id="JOIN$EVNT_ID$CODE"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CC_RULE_PATH" length="2" expressionLanguage="COLUMN_ENGINE">
+          <formula>If(&quot;MATKL&quot;='EQPT' AND &quot;SSP&quot;=&quot;TP&quot;,'A1',&#xD;
+If(&quot;MATKL&quot;='EQPT' AND &quot;TP&quot; &lt; &quot;SSP&quot;,'A2',&#xD;
+If(&quot;MATKL&quot;='OPT','C1',&#xD;
+If(&quot;MATKL&quot;='OTC','D1',&#xD;
+If(&quot;MATKL&quot;='OTHERDISC','F1',&#xD;
+If(&quot;MATKL&quot;='DUO','G1',&#xD;
+If(&quot;MATKL&quot;='TRIO','H1',&#xD;
+If(&quot;MATKL&quot;='INSTALL' AND &quot;NONDISTFLAG&quot;='X','J1',&#xD;
+If(&quot;MATKL&quot;='INSTALL' AND IsNull(&quot;NONDISTFLAG&quot;),'J2',&#xD;
+If(&quot;MATKL&quot;='OTHER','O1',string(null)))))))))))&#xD;
+</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="IS_30101107" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isNull(&quot;CODE_RIGHT&quot;),'1','0')</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#PROJ_SOC">
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACCT_NUM" source="ACCT_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_ID" source="ITEM_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SSP" source="AMT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TP" source="AMT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MATKL" source="MATKL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30101101" source="IS_30101101"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30101102" source="IS_30101102"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30101103" source="IS_30101103"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30101104" source="IS_30101104"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$EVNT_ID$CODE" source="EVNT_ID"/>
+      </input>
+      <input node="#PROJ_NON_DISTINCT">
+        <mapping xsi:type="Calculation:AttributeMapping" target="NONDISTFLAG" source="NONDISTFLAG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CODE_RIGHT" source="CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$EVNT_ID$CODE" source="CODE"/>
+      </input>
+      <joinAttribute name="JOIN$EVNT_ID$CODE"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="JOIN_NON_DISTINCT2" joinType="leftOuter">
+      <descriptions>
+        <comment text="Join Errors will be raised as 30101105."/>
+      </descriptions>
+      <viewAttributes>
+        <viewAttribute id="ACCT_NUM"/>
+        <viewAttribute id="ITEM_ID"/>
+        <viewAttribute id="SSP"/>
+        <viewAttribute id="TP"/>
+        <viewAttribute id="MATKL"/>
+        <viewAttribute id="NONDISTFLAG"/>
+        <viewAttribute datatype="NVARCHAR" id="IS_30101101" length="1" scale="0"/>
+        <viewAttribute datatype="NVARCHAR" id="IS_30101102" length="1" scale="0"/>
+        <viewAttribute datatype="NVARCHAR" id="IS_30101103" length="1" scale="0"/>
+        <viewAttribute datatype="NVARCHAR" id="IS_30101104" length="1" scale="0"/>
+        <viewAttribute id="FTR_ADJ_RSN_CD_RIGHT"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CC_RULE_PATH" length="2" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(&quot;MATKL&quot;='EQPT' and &quot;SSP&quot;=&quot;TP&quot;,'A1',&#xD;
+if(&quot;MATKL&quot;='EQPT' and &quot;TP&quot; &lt; &quot;SSP&quot;,'A2',&#xD;
+if(&quot;MATKL&quot;='OPT','C1',&#xD;
+if(&quot;MATKL&quot;='OTC','D1',&#xD;
+if(&quot;MATKL&quot;='OTHERDISC','F1',&#xD;
+if(&quot;MATKL&quot;='DUO','G1',&#xD;
+if(&quot;MATKL&quot;='TRIO','H1',&#xD;
+if(&quot;MATKL&quot;='INSTALL' and &quot;NONDISTFLAG&quot;='X','J1',&#xD;
+if(&quot;MATKL&quot;='INSTALL' and isNull(&quot;NONDISTFLAG&quot;),'J2',&#xD;
+if(&quot;MATKL&quot;='OTHER','O1',string(null)))))))))))&#xD;
+</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="IS_30101105" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isNull(&quot;FTR_ADJ_RSN_CD_RIGHT&quot;),'1','0')</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#PROJ_FEATURE_CD">
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACCT_NUM" source="ACCT_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_ID" source="ITEM_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SSP" source="AMT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TP" source="AMT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MATKL" source="MATKL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30101101" source="IS_30101101"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30101102" source="IS_30101102"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30101103" source="IS_30101103"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30101104" source="IS_30101104"/>
+      </input>
+      <input node="#PROJ_NON_DISTINCT">
+        <mapping xsi:type="Calculation:AttributeMapping" target="NONDISTFLAG" source="NONDISTFLAG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FTR_ADJ_RSN_CD_RIGHT" source="FTR_ADJ_RSN_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_ID" source="FTR_ADJ_RSN_CD"/>
+      </input>
+      <joinAttribute name="ITEM_ID"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="JOIN_NON_DISTINCT1" joinType="leftOuter">
+      <descriptions>
+        <comment text="Join Errors will be raised as 30101106."/>
+      </descriptions>
+      <viewAttributes>
+        <viewAttribute id="ACCT_NUM"/>
+        <viewAttribute id="ITEM_ID"/>
+        <viewAttribute id="SSP"/>
+        <viewAttribute id="TP"/>
+        <viewAttribute id="MATKL"/>
+        <viewAttribute id="CODE_RIGHT"/>
+        <viewAttribute id="NONDISTFLAG"/>
+        <viewAttribute datatype="NVARCHAR" id="IS_30101101" length="1" scale="0"/>
+        <viewAttribute datatype="NVARCHAR" id="IS_30101102" length="1" scale="0"/>
+        <viewAttribute datatype="NVARCHAR" id="IS_30101103" length="1" scale="0"/>
+        <viewAttribute datatype="NVARCHAR" id="IS_30101104" length="1" scale="0"/>
+        <viewAttribute hidden="true" id="JOIN$EVNT_ID$CODE"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CC_RULE_PATH" length="2" expressionLanguage="COLUMN_ENGINE">
+          <formula>If(&quot;MATKL&quot;='EQPT' AND &quot;SSP&quot;=&quot;TP&quot;,'A1',&#xD;
+If(&quot;MATKL&quot;='EQPT' AND &quot;TP&quot; &lt; &quot;SSP&quot;,'A2',&#xD;
+If(&quot;MATKL&quot;='OPT','C1',&#xD;
+If(&quot;MATKL&quot;='OTC','D1',&#xD;
+If(&quot;MATKL&quot;='OTHERDISC','F1',&#xD;
+If(&quot;MATKL&quot;='DUO','G1',&#xD;
+If(&quot;MATKL&quot;='TRIO','H1',&#xD;
+If(&quot;MATKL&quot;='INSTALL' AND &quot;NONDISTFLAG&quot;='X','J1',&#xD;
+If(&quot;MATKL&quot;='INSTALL' AND IsNull(&quot;NONDISTFLAG&quot;),'J2',&#xD;
+If(&quot;MATKL&quot;='OTHER','O1',string(null)))))))))))&#xD;
+</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="IS_30101106" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isNull(&quot;CODE_RIGHT&quot;),'1','0')</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#PROJ_SOC_FEATURE_CD">
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACCT_NUM" source="ACCT_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_ID" source="ITEM_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SSP" source="AMT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TP" source="AMT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MATKL" source="MATKL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30101101" source="IS_30101101"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30101102" source="IS_30101102"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30101103" source="IS_30101103"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30101104" source="IS_30101104"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$EVNT_ID$CODE" source="EVNT_ID"/>
+      </input>
+      <input node="#PROJ_NON_DISTINCT">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CODE_RIGHT" source="CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NONDISTFLAG" source="NONDISTFLAG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$EVNT_ID$CODE" source="CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_ID" source="FTR_ADJ_RSN_CD"/>
+      </input>
+      <joinAttribute name="JOIN$EVNT_ID$CODE"/>
+      <joinAttribute name="ITEM_ID"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:UnionView" id="UNION_RULE_PATH">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="CC_RULE_PATH"/>
+        <viewAttribute id="ACCT_NUM"/>
+        <viewAttribute id="ITEM_ID"/>
+        <viewAttribute id="SSP"/>
+        <viewAttribute id="TP"/>
+        <viewAttribute id="MATKL"/>
+        <viewAttribute datatype="NVARCHAR" id="IS_30101101" length="1" scale="0"/>
+        <viewAttribute datatype="NVARCHAR" id="IS_30101102" length="1" scale="0"/>
+        <viewAttribute datatype="NVARCHAR" id="IS_30101103" length="1" scale="0"/>
+        <viewAttribute datatype="NVARCHAR" id="IS_30101104" length="1" scale="0"/>
+        <viewAttribute datatype="NVARCHAR" id="IS_30101106" length="1" scale="0"/>
+        <viewAttribute datatype="NVARCHAR" id="IS_30101105" length="1" scale="0"/>
+        <viewAttribute datatype="NVARCHAR" id="IS_30101107" length="1" scale="0"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input emptyUnionBehavior="NO_ROW" node="#JOIN_NON_DISTINCT1">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_RULE_PATH" source="CC_RULE_PATH"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACCT_NUM" source="ACCT_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_ID" source="ITEM_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SSP" source="SSP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TP" source="TP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MATKL" source="MATKL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30101101" source="IS_30101101"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30101102" source="IS_30101102"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30101103" source="IS_30101103"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30101104" source="IS_30101104"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30101106" source="IS_30101106"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="IS_30101105" null="false" value="0"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="IS_30101107" null="false" value="0"/>
+      </input>
+      <input emptyUnionBehavior="NO_ROW" node="#JOIN_NON_DISTINCT2">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_RULE_PATH" source="CC_RULE_PATH"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACCT_NUM" source="ACCT_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_ID" source="ITEM_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SSP" source="SSP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TP" source="TP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MATKL" source="MATKL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30101101" source="IS_30101101"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30101102" source="IS_30101102"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30101103" source="IS_30101103"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30101104" source="IS_30101104"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="IS_30101106" null="false" value="0"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30101105" source="IS_30101105"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="IS_30101107" null="false" value="0"/>
+      </input>
+      <input emptyUnionBehavior="NO_ROW" node="#JOIN_NON_DISTINCT3">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_RULE_PATH" source="CC_RULE_PATH"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACCT_NUM" source="ACCT_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_ID" source="ITEM_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SSP" source="SSP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TP" source="TP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MATKL" source="MATKL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30101101" source="IS_30101101"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30101102" source="IS_30101102"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30101103" source="IS_30101103"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30101104" source="IS_30101104"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="IS_30101106" null="false" value="0"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="IS_30101105" null="false" value="0"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30101107" source="IS_30101107"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_POB">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="LOB">
+          <filter xsi:type="AccessControl:SingleValueFilter" including="true" value="TV"/>
+        </viewAttribute>
+        <viewAttribute id="CHARGE_TYPE"/>
+        <viewAttribute id="RULE_PATH"/>
+        <viewAttribute id="POB_TYPE"/>
+        <viewAttribute id="VALUE_RELEVANT"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#IFRS_R1.COMMON_COMP.RAI_COMMON::CHARGE_TYPE">
+        <mapping xsi:type="Calculation:AttributeMapping" target="LOB" source="LOB"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CHARGE_TYPE" source="CHARGE_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RULE_PATH" source="RULE_PATH"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="POB_TYPE" source="POB_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VALUE_RELEVANT" source="VALUE_RELEVANT"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="JOIN_POB_TYPE" joinType="leftOuter">
+      <descriptions>
+        <comment text="Join Errors will be raised as 30100208&#xD;&#xA;Value Errors will be raised as 30100209"/>
+      </descriptions>
+      <viewAttributes>
+        <viewAttribute id="ACCT_NUM"/>
+        <viewAttribute id="ITEM_ID"/>
+        <viewAttribute id="MATKL"/>
+        <viewAttribute id="POB_TYPE"/>
+        <viewAttribute id="VALUE_RELEVANT"/>
+        <viewAttribute id="CHARGE_TYPE_RIGHT"/>
+        <viewAttribute datatype="NVARCHAR" id="IS_30101101" length="1" scale="0"/>
+        <viewAttribute datatype="NVARCHAR" id="IS_30101102" length="1" scale="0"/>
+        <viewAttribute datatype="NVARCHAR" id="IS_30101103" length="1" scale="0"/>
+        <viewAttribute datatype="NVARCHAR" id="IS_30101104" length="1" scale="0"/>
+        <viewAttribute datatype="NVARCHAR" id="IS_30101106" length="1" scale="0"/>
+        <viewAttribute datatype="NVARCHAR" id="IS_30101105" length="1" scale="0"/>
+        <viewAttribute datatype="NVARCHAR" id="IS_30101107" length="1" scale="0"/>
+        <viewAttribute id="CC_RULE_PATH"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="IS_30101108" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isNull(&quot;CC_RULE_PATH&quot;),'1','0')</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="IS_30101109" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isNull(&quot;CHARGE_TYPE_RIGHT&quot;),'1','0')</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="IS_30101110" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isNull(&quot;POB_TYPE&quot;),'1','0') </formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#UNION_RULE_PATH">
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACCT_NUM" source="ACCT_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_ID" source="ITEM_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MATKL" source="MATKL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30101101" source="IS_30101101"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30101102" source="IS_30101102"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30101103" source="IS_30101103"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30101104" source="IS_30101104"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30101106" source="IS_30101106"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30101105" source="IS_30101105"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30101107" source="IS_30101107"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_RULE_PATH" source="CC_RULE_PATH"/>
+      </input>
+      <input node="#PROJ_POB">
+        <mapping xsi:type="Calculation:AttributeMapping" target="POB_TYPE" source="POB_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VALUE_RELEVANT" source="VALUE_RELEVANT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CHARGE_TYPE_RIGHT" source="CHARGE_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MATKL" source="CHARGE_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_RULE_PATH" source="RULE_PATH"/>
+      </input>
+      <joinAttribute name="MATKL"/>
+      <joinAttribute name="CC_RULE_PATH"/>
+    </calculationView>
+  </calculationViews>
+  <logicalModel id="JOIN_POB_TYPE">
+    <descriptions/>
+    <attributes>
+      <attribute id="ACCT_NUM" order="1" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ACCT_NUM"/>
+        <keyMapping columnObjectName="JOIN_POB_TYPE" columnName="ACCT_NUM"/>
+      </attribute>
+      <attribute id="ITEM_ID" order="2" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ITEM_ID"/>
+        <keyMapping columnObjectName="JOIN_POB_TYPE" columnName="ITEM_ID"/>
+      </attribute>
+      <attribute id="CHARGE_TYPE" order="3" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CHARGE_TYPE"/>
+        <keyMapping columnObjectName="JOIN_POB_TYPE" columnName="MATKL"/>
+      </attribute>
+      <attribute id="POB_TYPE" order="4" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="POB_TYPE"/>
+        <keyMapping columnObjectName="JOIN_POB_TYPE" columnName="POB_TYPE"/>
+      </attribute>
+      <attribute id="VALUE_RELEVANT" order="5" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="VALUE_RELEVANT"/>
+        <keyMapping columnObjectName="JOIN_POB_TYPE" columnName="VALUE_RELEVANT"/>
+      </attribute>
+      <attribute id="IS_30101101" order="6" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="IS_30101101"/>
+        <keyMapping columnObjectName="JOIN_POB_TYPE" columnName="IS_30101101"/>
+      </attribute>
+      <attribute id="IS_30101102" order="7" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="IS_30101102"/>
+        <keyMapping columnObjectName="JOIN_POB_TYPE" columnName="IS_30101102"/>
+      </attribute>
+      <attribute id="IS_30101103" order="8" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="IS_30101103"/>
+        <keyMapping columnObjectName="JOIN_POB_TYPE" columnName="IS_30101103"/>
+      </attribute>
+      <attribute id="IS_30101104" order="9" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="IS_30101104"/>
+        <keyMapping columnObjectName="JOIN_POB_TYPE" columnName="IS_30101104"/>
+      </attribute>
+      <attribute id="IS_30101105" order="10" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="IS_30101105"/>
+        <keyMapping columnObjectName="JOIN_POB_TYPE" columnName="IS_30101105"/>
+      </attribute>
+      <attribute id="IS_30101106" order="11" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="IS_30101106"/>
+        <keyMapping columnObjectName="JOIN_POB_TYPE" columnName="IS_30101106"/>
+      </attribute>
+      <attribute id="IS_30101107" order="12" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="IS_30101107"/>
+        <keyMapping columnObjectName="JOIN_POB_TYPE" columnName="IS_30101107"/>
+      </attribute>
+      <attribute id="IS_30101108" hidden="false" order="13" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="IS_30101108"/>
+        <keyMapping columnObjectName="JOIN_POB_TYPE" columnName="IS_30101108"/>
+      </attribute>
+      <attribute id="IS_30101109" hidden="false" order="14" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="IS_30101109"/>
+        <keyMapping columnObjectName="JOIN_POB_TYPE" columnName="IS_30101109"/>
+      </attribute>
+      <attribute id="IS_30101110" hidden="false" order="15" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="IS_30101110"/>
+        <keyMapping columnObjectName="JOIN_POB_TYPE" columnName="IS_30101110"/>
+      </attribute>
+    </attributes>
+    <calculatedAttributes/>
+    <privateDataFoundation>
+      <tableProxies/>
+      <joins/>
+      <layout>
+        <shapes/>
+      </layout>
+    </privateDataFoundation>
+    <baseMeasures/>
+    <calculatedMeasures/>
+    <restrictedMeasures/>
+    <localDimensions/>
+  </logicalModel>
+  <layout>
+    <shapes>
+      <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+        <upperLeftCorner x="351" y="87"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_TV_BILLING" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="330" y="895"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_MARA" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="330" y="817"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_TRAN_EVNT" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="22" y="817"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+      <shape expanded="true" modelObjectName="JOIN_MARA_BILLING_EVNT" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="98" y="721"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_ITEM_RSN" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="176" y="817"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+      <shape expanded="true" modelObjectName="JOIN_MARA_BILLING_ITEM_RSN" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="252" y="721"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_ITEM_EVNT" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="484" y="817"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+      <shape expanded="true" modelObjectName="JOIN_MARA_BILLING_ITEM_EVNT" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="406" y="721"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_ITEM" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="638" y="817"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+      <shape expanded="true" modelObjectName="JOIN_MARA_BILLING_ITEM" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="560" y="721"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="UNION_CHARGE_TYPE" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="326" y="569"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_SOC" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="634" y="491"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_FEATURE_CD" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="172" y="491"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_SOC_FEATURE_CD" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="326" y="491"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_NON_DISTINCT" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="480" y="491"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="JOIN_NON_DISTINCT3" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="582" y="395"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="JOIN_NON_DISTINCT2" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="274" y="395"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="JOIN_NON_DISTINCT1" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="428" y="395"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="UNION_RULE_PATH" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="428" y="261"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_POB" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="274" y="261"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="JOIN_POB_TYPE" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="351" y="165"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+    </shapes>
+  </layout>
+</Calculation:scenario>

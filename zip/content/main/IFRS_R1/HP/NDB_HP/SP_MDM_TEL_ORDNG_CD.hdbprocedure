@@ -1,0 +1,348 @@
+PROCEDURE "NDB_HP"."IFRS_R1.HP.NDB_HP::SP_MDM_TEL_ORDNG_CD"
+(IN IP_CYCL_ID NVARCHAR(3),
+OUT OP_STATUS  NVARCHAR(100)) 
+	LANGUAGE SQLSCRIPT
+	SQL SECURITY INVOKER
+	AS
+
+BEGIN
+--------------------------------------------------------------------------------------------------
+-- Procedure Title : SP_MDM_TEL_ORDNG_CD
+-- Created By      : BC_EZ08929 (Shivam)       
+-- Create Date     : 03-16-2017
+-- Description     : Data Inserted using Calculation View - CA_MDM_TEL_ORDNG_CD
+--                   To NDB Table - HP_MDM_ORDER_CD Using this stored procedure.
+-- Project         : Bell Canada
+-- Release         : R1 / IFRS
+--------------------------------------------------------------------------------------------------
+--   M O D I F I C A T I O N   H I S T O R Y
+--------------------------------------------------------------------------------------------------
+-- Date        | User ID          | Modification History/Release
+--------------------------------------------------------------------------------------------------
+--             |                  | 
+--------------------------------------------------------------------------------------------------
+-- Description Of the changes 
+--------------------------------------------------------------------------------------------------
+-- Modification Number          : <Assign Some Number> 
+-- Description of Changes Made> : <Description of Changes>       
+--------------------------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------------------------
+-- Global Variables Declaration
+--------------------------------------------------------------------------------------------------
+
+DECLARE LC_ERROR_TEXT 		NVARCHAR(70) DEFAULT 'OUT STATUS IS 1 : INSERT/UPDATE FOR ONE OR MORE RECORD FAILED';
+DECLARE LC_SUCCESS_TEXT 	NVARCHAR(70) DEFAULT 'OUT STATUS IS 0 : INSERT/UPDATE EXECUTION SUCCESSFUL';
+DECLARE LV_ERROR_FLAG 		NVARCHAR(1) := 'N';
+DECLARE LV_CUR_UTC 			TIMESTAMP := CURRENT_TIMESTAMP;
+DECLARE LV_PREV_DAY         DATE;
+  
+--------------------------------------------------------------------------------------------------
+-- Cursors Declaration
+--------------------------------------------------------------------------------------------------
+DECLARE CURSOR C_ORD_CD FOR 
+	   SELECT "ORDNG_CD_NM",
+		      "PROD_SHRT_NM",
+		      "REF_EFFC_DATE",
+		      "REF_EXP_DATE",
+		      "ATTR_ENG_NM",
+		      "ATTR_FR_NM",
+		      "ATTR_SHRT_NM",
+		      "ATTR_VAL_ENG_NM",
+		      "ATTR_VAL_FR_NM",
+		      "ATTR_VAL_SHRT_NM",
+		      "CAT",
+		      "DISC_TY",
+		      "DISC_VAL",
+		      "ELIG_LOBS",
+		      "LOB_NM",
+		      "MANDT_LOBS",
+		      "OFFR_TY",
+		      "ORDNG_CD_TY",
+		      "PROD_ENG_NM",
+		      "PROD_FR_NM",
+		      "PROMO_DUR",
+		      "REQ_NUM_OF_NEW_LOB_SEL",
+	          "CYCL_ID",
+	          "FLAG_EXISTING_RECORD" 
+         FROM "_SYS_BIC"."IFRS_R1.HP.NDB_HP/CA_MDM_TEL_ORDNG_CD"
+              (PLACEHOLDER."$$IP_CYCL_ID$$" => :IP_CYCL_ID);
+                   
+--------------------------------------------------------------------------------------------------
+-- Local Temporary Tables Declaration
+-------------------------------------------------------------------------------------------------- 
+
+CREATE LOCAL TEMPORARY TABLE #UPDATE_MDM_TEL_ORDER_CD (PROD_SHRT_NM NVARCHAR(200), ORDNG_CD_NM NVARCHAR(40), CYCL_ID NVARCHAR(3));
+CREATE LOCAL TEMPORARY TABLE #UPDATE_EH_DELETION (PROD_SHRT_NM NVARCHAR(200), ORDNG_CD_TY NVARCHAR(50));
+        	  
+--------------------------------------------------------------------------------------------------
+-- Cursors Loop
+-------------------------------------------------------------------------------------------------- 
+
+FOR CUR_ORD_CD AS C_ORD_CD DO
+
+--  Define Exit Handler
+	DECLARE EXIT HANDLER FOR SQLEXCEPTION 
+	BEGIN AUTONOMOUS TRANSACTION 
+			
+--    Define Exit Handler
+	  DECLARE EXIT HANDLER FOR SQLEXCEPTION 
+	  BEGIN AUTONOMOUS TRANSACTION 
+	
+      -- Do Nothing. Exception Handled to ensure SP does not get terminated
+	
+	  END; 
+			
+   -- Insert record into error table
+   	  INSERT INTO "NDB_HP"."IFRS_R1.HP.NDB_HP::HP_MDM_ORDER_CD_EH"(
+		   	      "ORDNG_CD_NM",
+		          "PROD_SHRT_NM",
+		          "REF_EFFC_DATE",
+		          "REF_EXP_DATE",
+		          "ATTR_ENG_NM",
+		          "ATTR_FR_NM",
+		          "ATTR_SHRT_NM",
+		          "ATTR_VAL_ENG_NM",
+		          "ATTR_VAL_FR_NM",
+		          "ATTR_VAL_SHRT_NM",
+		          "CAT",
+		          "DISC_TY",
+		          "DISC_VAL",
+		          "ELIG_LOBS",
+		          "LOB_NM",
+		          "MANDT_LOBS",
+		          "OFFR_TY",
+		          "ORDNG_CD_TY",
+		          "PROD_ENG_NM",
+		          "PROD_FR_NM",
+		          "PROMO_DUR",
+		          "REQ_NUM_OF_NEW_LOB_SEL",
+				  "ERROR_CODE",
+				  "TECHNICAL_MESSAGE",
+			      "ERROR_CREATE_TS") 
+		   VALUES (CUR_ORD_CD."ORDNG_CD_NM",
+		           CUR_ORD_CD."PROD_SHRT_NM",
+		           CUR_ORD_CD."REF_EFFC_DATE",
+		           CUR_ORD_CD."REF_EXP_DATE",
+		           CUR_ORD_CD."ATTR_ENG_NM",
+		           CUR_ORD_CD."ATTR_FR_NM",
+		           CUR_ORD_CD."ATTR_SHRT_NM",
+		           CUR_ORD_CD."ATTR_VAL_ENG_NM",
+		           CUR_ORD_CD."ATTR_VAL_FR_NM",
+		           CUR_ORD_CD."ATTR_VAL_SHRT_NM",
+		           CUR_ORD_CD."CAT",
+		           CUR_ORD_CD."DISC_TY",
+		           CUR_ORD_CD."DISC_VAL",
+		           CUR_ORD_CD."ELIG_LOBS",
+		           CUR_ORD_CD."LOB_NM",
+		           CUR_ORD_CD."MANDT_LOBS",
+		           CUR_ORD_CD."OFFR_TY",
+		           CUR_ORD_CD."ORDNG_CD_TY",
+		           CUR_ORD_CD."PROD_ENG_NM",
+		           CUR_ORD_CD."PROD_FR_NM",
+		           CUR_ORD_CD."PROMO_DUR",
+		           CUR_ORD_CD."REQ_NUM_OF_NEW_LOB_SEL",
+				   ::SQL_ERROR_CODE,
+		           ::SQL_ERROR_MESSAGE,
+		           LV_CUR_UTC);   
+   
+	  	LV_ERROR_FLAG := 'Y';
+
+  END; 
+
+--  If Record exists in the Target NDB Table
+    IF CUR_ORD_CD.FLAG_EXISTING_RECORD = 'U' THEN
+     
+    BEGIN AUTONOMOUS TRANSACTION
+
+--    Update the target NDB table
+      LV_PREV_DAY := ADD_DAYS(CUR_ORD_CD."REF_EFFC_DATE", -1);
+      
+--    Update Expiry Date of Current NDB Record to New Record.Effective Date - 1
+      UPDATE "NDB_HP"."IFRS_R1.HP.NDB_HP::HP_MDM_ORDER_CD" NDB
+         SET "REF_EXP_DATE"       = LV_PREV_DAY,
+             "MODIFIED_TS"        = LV_CUR_UTC
+       WHERE NDB."PROD_SHRT_NM"   = CUR_ORD_CD."PROD_SHRT_NM"
+         AND NDB."ORDNG_CD_TY"    = CUR_ORD_CD."ORDNG_CD_TY"
+         AND NDB."REF_EXP_DATE"   = TO_DATE('99991231','YYYYMMDD');
+
+--    Insert the Incoming new record
+   	  INSERT INTO "NDB_HP"."IFRS_R1.HP.NDB_HP::HP_MDM_ORDER_CD"(
+		   	      "ORDNG_CD_NM",
+		          "PROD_SHRT_NM",
+		          "REF_EFFC_DATE",
+		          "REF_EXP_DATE",
+		          "ATTR_ENG_NM",
+		          "ATTR_FR_NM",
+		          "ATTR_SHRT_NM",
+		          "ATTR_VAL_ENG_NM",
+		          "ATTR_VAL_FR_NM",
+		          "ATTR_VAL_SHRT_NM",
+		          "CAT",
+		          "DISC_TY",
+		          "DISC_VAL",
+		          "ELIG_LOBS",
+		          "LOB_NM",
+		          "MANDT_LOBS",
+		          "OFFR_TY",
+		          "ORDNG_CD_TY",
+		          "PROD_ENG_NM",
+		          "PROD_FR_NM",
+		          "PROMO_DUR",
+		          "REQ_NUM_OF_NEW_LOB_SEL",
+			      "INSERT_TS")
+		   VALUES (CUR_ORD_CD."ORDNG_CD_NM",
+		           CUR_ORD_CD."PROD_SHRT_NM",
+		           CUR_ORD_CD."REF_EFFC_DATE",
+		           CUR_ORD_CD."REF_EXP_DATE",
+		           CUR_ORD_CD."ATTR_ENG_NM",
+		           CUR_ORD_CD."ATTR_FR_NM",
+		           CUR_ORD_CD."ATTR_SHRT_NM",
+		           CUR_ORD_CD."ATTR_VAL_ENG_NM",
+		           CUR_ORD_CD."ATTR_VAL_FR_NM",
+		           CUR_ORD_CD."ATTR_VAL_SHRT_NM",
+		           CUR_ORD_CD."CAT",
+		           CUR_ORD_CD."DISC_TY",
+		           CUR_ORD_CD."DISC_VAL",
+		           CUR_ORD_CD."ELIG_LOBS",
+		           CUR_ORD_CD."LOB_NM",
+		           CUR_ORD_CD."MANDT_LOBS",
+		           CUR_ORD_CD."OFFR_TY",
+		           CUR_ORD_CD."ORDNG_CD_TY",
+		           CUR_ORD_CD."PROD_ENG_NM",
+		           CUR_ORD_CD."PROD_FR_NM",
+		           CUR_ORD_CD."PROMO_DUR",
+		           CUR_ORD_CD."REQ_NUM_OF_NEW_LOB_SEL",
+			       LV_CUR_UTC); 
+			   
+		  END ; 
+            
+--         Insert PK of successfully processed Records into Local Temp Tables 
+--         for Updating NDB_TS in corresponding Landing Tables records
+		   INSERT INTO #UPDATE_MDM_TEL_ORDER_CD
+		   			   (PROD_SHRT_NM,
+		   			    ORDNG_CD_NM,
+		   			    CYCL_ID) 
+		   		VALUES (CUR_ORD_CD."PROD_SHRT_NM",
+		   				CUR_ORD_CD."ORDNG_CD_NM", 		   				 
+		   				CUR_ORD_CD."CYCL_ID");
+		   					   	    		
+		   INSERT INTO #UPDATE_EH_DELETION
+		   			   (PROD_SHRT_NM, 
+		   				ORDNG_CD_TY) 
+		   		VALUES (CUR_ORD_CD."PROD_SHRT_NM", 
+		   			    CUR_ORD_CD."ORDNG_CD_TY");           
+                    	
+    ELSE
+    
+--    Insert Records into the target NDB table     
+   	  INSERT INTO "NDB_HP"."IFRS_R1.HP.NDB_HP::HP_MDM_ORDER_CD"(
+		   	      "ORDNG_CD_NM",
+		          "PROD_SHRT_NM",
+		          "REF_EFFC_DATE",
+		          "REF_EXP_DATE",
+		          "ATTR_ENG_NM",
+		          "ATTR_FR_NM",
+		          "ATTR_SHRT_NM",
+		          "ATTR_VAL_ENG_NM",
+		          "ATTR_VAL_FR_NM",
+		          "ATTR_VAL_SHRT_NM",
+		          "CAT",
+		          "DISC_TY",
+		          "DISC_VAL",
+		          "ELIG_LOBS",
+		          "LOB_NM",
+		          "MANDT_LOBS",
+		          "OFFR_TY",
+		          "ORDNG_CD_TY",
+		          "PROD_ENG_NM",
+		          "PROD_FR_NM",
+		          "PROMO_DUR",
+		          "REQ_NUM_OF_NEW_LOB_SEL",
+			      "INSERT_TS") 
+		   VALUES (CUR_ORD_CD."ORDNG_CD_NM",
+		           CUR_ORD_CD."PROD_SHRT_NM",
+		           CUR_ORD_CD."REF_EFFC_DATE",
+		           CUR_ORD_CD."REF_EXP_DATE",
+		           CUR_ORD_CD."ATTR_ENG_NM",
+		           CUR_ORD_CD."ATTR_FR_NM",
+		           CUR_ORD_CD."ATTR_SHRT_NM",
+		           CUR_ORD_CD."ATTR_VAL_ENG_NM",
+		           CUR_ORD_CD."ATTR_VAL_FR_NM",
+		           CUR_ORD_CD."ATTR_VAL_SHRT_NM",
+		           CUR_ORD_CD."CAT",
+		           CUR_ORD_CD."DISC_TY",
+		           CUR_ORD_CD."DISC_VAL",
+		           CUR_ORD_CD."ELIG_LOBS",
+		           CUR_ORD_CD."LOB_NM",
+		           CUR_ORD_CD."MANDT_LOBS",
+		           CUR_ORD_CD."OFFR_TY",
+		           CUR_ORD_CD."ORDNG_CD_TY",
+		           CUR_ORD_CD."PROD_ENG_NM",
+		           CUR_ORD_CD."PROD_FR_NM",
+		           CUR_ORD_CD."PROMO_DUR",
+		           CUR_ORD_CD."REQ_NUM_OF_NEW_LOB_SEL",
+			       LV_CUR_UTC);    
+
+--         Insert PK of successfully processed Records into Local Temp Tables 
+--         for Updating NDB_TS in corresponding Landing Tables records
+		   INSERT INTO #UPDATE_MDM_TEL_ORDER_CD
+		   			   (PROD_SHRT_NM,
+		   			    ORDNG_CD_NM, 
+		   			    CYCL_ID) 
+		   		VALUES (CUR_ORD_CD."PROD_SHRT_NM",
+		   				CUR_ORD_CD."ORDNG_CD_NM", 
+		   				CUR_ORD_CD."CYCL_ID");
+		   					   	    		
+		   INSERT INTO #UPDATE_EH_DELETION
+		   			   (PROD_SHRT_NM, 
+		   				ORDNG_CD_TY) 
+		   		VALUES (CUR_ORD_CD."PROD_SHRT_NM", 
+		   			    CUR_ORD_CD."ORDNG_CD_TY");
+		   
+    END IF;
+
+END FOR;
+
+--------------------------------------------------------------------------------------------------
+-- Update Landing Tables
+-------------------------------------------------------------------------------------------------- 
+
+-- Update Landing Table IFRS_R1.LAND::MDM_TEL_ORDNG_CD
+UPDATE "LAND"."IFRS_R1.LAND::MDM_TEL_ORDNG_CD" A
+  FROM "LAND"."IFRS_R1.LAND::MDM_TEL_ORDNG_CD" A 
+ INNER JOIN #UPDATE_MDM_TEL_ORDER_CD B 
+    ON A."PROD_SHRT_NM"       = B."PROD_SHRT_NM"
+   AND A."ORDNG_CD_NM"		  = B."ORDNG_CD_NM"
+   AND A."CYCL_ID"            = B."CYCL_ID"
+   SET NDB_TS = LV_CUR_UTC
+ WHERE A.NDB_TS IS NULL;
+
+--------------------------------------------------------------------------------------------------
+-- Update Error Table
+--------------------------------------------------------------------------------------------------
+
+UPDATE "NDB_HP"."IFRS_R1.HP.NDB_HP::HP_MDM_ORDER_CD_EH" A
+  FROM "NDB_HP"."IFRS_R1.HP.NDB_HP::HP_MDM_ORDER_CD_EH" A 
+ INNER JOIN #UPDATE_EH_DELETION B
+    ON A."PROD_SHRT_NM"       = B."PROD_SHRT_NM"
+   AND A."ORDNG_CD_TY"        = B."ORDNG_CD_TY"
+   SET (DELETE_DATE, DELETED) = (CURRENT_DATE, 1);
+
+--------------------------------------------------------------------------------------------------
+-- Set Overall Status
+-------------------------------------------------------------------------------------------------- 
+
+--  STATUS 0: Send the success message to scheduling tool to confirm this procedure has been
+--  executed successfully
+    IF(LV_ERROR_FLAG = 'Y') THEN		
+
+     OP_STATUS := LC_ERROR_TEXT; 
+			
+    ELSE
+
+  	 OP_STATUS := LC_SUCCESS_TEXT; 	
+				
+	END IF;
+		
+END; 

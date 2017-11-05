@@ -1,0 +1,69 @@
+PROCEDURE "RAI_COMMON"."IFRS_R1.COMMON_COMP.RAI_COMMON::SP_RAI_BATCHID_UPDATE"
+	      (
+	         IN IP_LOB      NVARCHAR(4),
+	      	 IN IP_INSUPD   NVARCHAR(1),
+	      	 IN IP_BATCH_ID NVARCHAR(10) 
+	      ) 
+	LANGUAGE SQLSCRIPT
+	--SQL SECURITY INVOKER 
+	--DEFAULT SCHEMA <default_schema_name>
+	--READS SQL DATA 
+	AS
+BEGIN
+----------------------------------------------------------------------------------------------------
+-- Procedure Title : IFRS_R1.COMMON_COMP.RAI_COMMON::SP_RAI_BATCHID_UPDATE
+----------------------------------------------------------------------------------------------------
+-- Created By      : BC_EY44387(Gunjan Joshi)          Date :10/09/2016
+----------------------------------------------------------------------------------------------------
+-- Procedure Description : The purpose of the Procedure is to modularize the process of incremantal
+--							update of the Batch id value 
+
+-- ERROR_LOG Table :
+
+-- Track Error/Process Control Table:
+----------------------------------------------------------------------------------------------------
+-- Release :R1/IFRS
+----------------------------------------------------------------------------------------------------
+--   M O D I F I C A T I O N   H I S T O R Y
+----------------------------------------------------------------------------------------------------
+-- Date        | User ID          | Modification History/Release
+----------------------------------------------------------------------------------------------------
+-- 06/10/2016  | BC_EY94137       | Updated after unit testing
+----------------------------------------------------------------------------------------------------
+-- Description Of the changes 
+----------------------------------------------------------------------------------------------------
+-- Modification Number          :<Assign Some Number> 
+-- Description of Changes Made> :<Updated the logic of NDB_TS write back>       
+----------------------------------------------------------------------------------------------------
+--Local Constants
+DECLARE LC_ERROR  NVARCHAR(15) DEFAULT 'RAI IN PROGRESS';
+DECLARE LC_STATUS NVARCHAR(11) DEFAULT 'RAI CREATED';
+DECLARE LC_INSERT NVARCHAR(1)  DEFAULT 'I';
+DECLARE LC_UPDATE NVARCHAR(1)  DEFAULT 'U'; 
+
+IF IP_INSUPD = LC_INSERT--'I'
+	 THEN
+/* Inserting the Incremental Batch id */
+
+	INSERT INTO "RAI_COMMON"."IFRS_R1.COMMON_COMP.RAI_COMMON::BATCH_CONTROL_TABLE_ORDR"
+	VALUES (
+	         IP_BATCH_ID,
+			 IP_LOB,
+		  	 LC_ERROR,--'RAI IN PROGRESS',
+			 CURRENT_DATE,
+			 ''
+			);
+			COMMIT;
+ELSEIF IP_INSUPD = LC_UPDATE--'U' 
+       THEN
+/* Need to check BODS job status before updating the BCT status and end date */
+/* Batch control table update with the status RAI CREATED */
+	UPDATE "RAI_COMMON"."IFRS_R1.COMMON_COMP.RAI_COMMON::BATCH_CONTROL_TABLE_ORDR"
+	    SET STATUS   = LC_STATUS,--'RAI CREATED',
+	        END_TIME = CURRENT_DATE 
+	WHERE "BATCH_ID" = IP_BATCH_ID
+	    AND "LOB_NM" = IP_LOB;	
+	COMMIT;
+END IF;
+
+END;

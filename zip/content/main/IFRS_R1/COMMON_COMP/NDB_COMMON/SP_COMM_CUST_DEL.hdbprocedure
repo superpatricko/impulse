@@ -1,0 +1,144 @@
+PROCEDURE "NDB_COMMON"."IFRS_R1.COMMON_COMP.NDB_COMMON::SP_COMM_CUST_DEL" 
+(IN P_NO_OF_DAYS INTEGER, OUT OT_STATUS NVARCHAR(1000))  
+	LANGUAGE SQLSCRIPT
+	SQL SECURITY INVOKER 
+	--DEFAULT SCHEMA <default_schema_name>
+	--READS SQL DATA 
+	AS
+BEGIN
+-- Procedure Title : SP_COMM_CUST_DEL
+--
+-- Created By      : BC_EZ07674(Suresh Konidala)          Date :17/08/2017
+-- 
+-- Procedure Description : The data from common customer master table will be 
+--  deleted frequently based on KUNNR and ECC timestamp field from COMM_CUST table. 
+-- Project :Bell Canada
+-- 
+-- Release :R1/IFRS
+--------------------------------------------------------------------------------
+--   M O D I F I C A T I O N   H I S T O R Y
+--------------------------------------------------------------------------------
+-- Date        | User ID          | Modification History/Release
+--------------------------------------------------------------------------------
+--             |                  | 
+--------------------------------------------------------------------------------
+-- Description Of the changes 
+--------------------------------------------------------------------------------
+-- Modification Number          :<Assign Some Number> 
+-- Description of Changes Made> :<Description of Changes>       
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------------------------
+-- Local Variables Declaration
+--------------------------------------------------------------------------------------------------
+DECLARE V_RECORD_CNT INT;
+DECLARE LC_EVENTID    			NVARCHAR(30) DEFAULT 'NDB_COMMON_COMM_CUST_DEL';
+DECLARE LC_START_TEXT 			NVARCHAR(30) DEFAULT 'START_TIME';
+DECLARE LC_END_TEXT   			NVARCHAR(30) DEFAULT 'END_TIME';
+DECLARE LC_ERROR     			NVARCHAR(5)  DEFAULT 'ERROR';
+DECLARE LC_SUCCESS     			NVARCHAR(10) DEFAULT 'SUCCESS';
+DECLARE LC_SUCCESS_MSG          NVARCHAR(30) DEFAULT 'EXECUTION SUCCESSFULL';
+DECLARE LC_NODATA_MOD           NVARCHAR(100)DEFAULT 'NO MODIFICATION DATA FOUND FOR PROCESSING';
+DECLARE LV_CUR_UTC 				TIMESTAMP := CURRENT_TIMESTAMP;
+DECLARE LV_ERROR_FLAG 		NVARCHAR(1) := 'N';
+DECLARE LC_ERROR_TEXT 			NVARCHAR(120) DEFAULT 'OUT STATUS IS 1 : PROCEDURE 
+            			IFRS_R1.COMMON_COMP.NDB_COMMON::SP_COMM_CUST_DEL UPDATE EXECUTION FAILED';
+DECLARE LC_SUCCESS_TEXT 		NVARCHAR(120) DEFAULT 'OUT STATUS IS 0 : PROCEDURE 
+					IFRS_R1.COMMON_COMP.NDB_COMMON::SP_COMM_CUST_DEL UPDATE EXECUTION SUCCESSFUL';
+					
+/* Exception handling: Capture standard error and rollback, if any error is encountered.  
+   The autonomous transaction is independent from the main procedure, if the error occurs
+   at any place in the procedure, then this part of the code will execute and roll back the 
+   updated records and insert into the error Log table with Standard error. */ 
+     
+DECLARE EXIT HANDLER FOR SQLEXCEPTION 
+BEGIN AUTONOMOUS TRANSACTION 
+	INSERT INTO "NDB_COMMON"."IFRS_R1.COMMON_COMP.NDB_COMMON::ERROR_LOG"
+	(
+		EVENT,
+		PROC_ID,
+		ERROR_CODE,
+		ERROR_MESSAGE,
+		START_END_TIME
+	)
+	VALUES
+	(
+		:LC_EVENTID,
+		::CURRENT_OBJECT_NAME,
+		::SQL_ERROR_CODE,
+		::SQL_ERROR_MESSAGE,
+		LV_CUR_UTC
+	);
+		
+/* STATUS 1: Send the Error message to scheduling tool to confirm whether procedure is 
+   successful or not */
+	OT_STATUS := LC_ERROR_TEXT;
+		
+	COMMIT;
+	RESIGNAL;
+END;
+/* Process Control Table: It will track the start time with User Id. */
+CALL "NDB_COMMON"."IFRS_R1.COMMON_COMP.NDB_COMMON::SP_PROCESS_CONTROL" 
+(
+	:LC_EVENTID,					--IP:Event ID
+	::CURRENT_OBJECT_NAME,			--IP:Current Object 
+	LV_CUR_UTC,						--IP:Current Timestamp
+	LC_START_TEXT,					--IP:Start / endtime Text
+	CURRENT_USER					--IP:Current User
+);
+
+NODE = 	SELECT * FROM "NDB_COMMON"."IFRS_R1.COMMON_COMP.NDB_COMMON::COMM_CUST"
+WHERE KUNNR_SID IS NOT NULL AND  NOT ( ECC_TS <= CURRENT_DATE
+AND ECC_TS >= ADD_DAYS (CURRENT_DATE,:P_NO_OF_DAYS));
+
+SELECT COUNT(1) INTO V_RECORD_CNT FROM :NODE;
+--Check if there is any modifiation record to be processed                             
+IF ( 0 = :V_RECORD_CNT ) THEN 
+                           
+	/* To update the Error Log table ERROR_LOG*/
+			CALL "NDB_COMMON"."IFRS_R1.COMMON_COMP.NDB_COMMON::SP_ERROR_LOG" 
+			(
+				:LC_EVENTID,		    --IP: Event type 
+				::CURRENT_OBJECT_NAME,  --IP: Current Object 
+				LC_ERROR,  				--IP: Error / Success   'ERROR',	
+				LC_NODATA_MOD, 	--IP: Error Message     'NO MODIFICATION DATA FOUND FOR PROCESSING',
+				LV_CUR_UTC				--IP : Timestamp
+			);                            
+
+ELSE                                   
+/* Update CUSTOMER_ID from OB_CUSTOMER table to MOBL_CUST table in NDB. */
+
+DELETE FROM "NDB_COMMON"."IFRS_R1.COMMON_COMP.NDB_COMMON::COMM_CUST"
+WHERE KUNNR_SID IS NOT NULL AND  NOT ( ECC_TS <= CURRENT_DATE
+AND ECC_TS >= ADD_DAYS (CURRENT_DATE,:P_NO_OF_DAYS));
+
+COMMIT;
+END IF; 
+
+SELECT CURRENT_TIMESTAMP INTO LV_CUR_UTC FROM DUMMY;
+
+/* Process Control Table:will track the end time*/
+	    CALL "NDB_COMMON"."IFRS_R1.COMMON_COMP.NDB_COMMON::SP_PROCESS_CONTROL" 
+		(
+			:LC_EVENTID,					--IP:Event ID
+			::CURRENT_OBJECT_NAME,			--IP:Current Object 
+			:LV_CUR_UTC,				    --IP:Current Timestamp
+			:LC_END_TEXT,					--IP:Start / endtime Text
+			CURRENT_USER					--IP:Current User
+	    );
+	                         
+
+/* STATUS 0: Send the success message to scheduling tool to confirm whether this procedure has been
+executed successfully. */
+		OT_STATUS := LC_SUCCESS_TEXT;                         
+ 		
+		/* Call the Error Log table ERROR_LOG*/
+		CALL "NDB_COMMON"."IFRS_R1.COMMON_COMP.NDB_COMMON::SP_ERROR_LOG"
+		(
+	        :LC_EVENTID,		  		    --IP: Event type 
+	        ::CURRENT_OBJECT_NAME,  			--IP: Current Object n
+	        LC_SUCCESS,				        --IP: Error / Success
+	        LC_SUCCESS_MSG,                 --'EXECUTION SUCCESSFULL'
+	        LV_CUR_UTC					    --IP : Timestamp
+		);  
+END;

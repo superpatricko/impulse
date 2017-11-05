@@ -1,0 +1,527 @@
+PROCEDURE "NDB_HP"."IFRS_R1.HP.NDB_HP::SP_CBSS_PROD_SERV_RT_LST" 
+(IN IP_CYCL_ID NVARCHAR(3),
+OUT OP_STATUS  NVARCHAR(100)) 
+	LANGUAGE SQLSCRIPT
+	SQL SECURITY INVOKER
+	AS
+
+BEGIN
+--------------------------------------------------------------------------------------------------
+-- Procedure Title : SP_CBSS_PROD_SERV_RT_LST
+-- Created By      : BC_EY94115(Prakhar)       
+-- Create Date     : 21-09-2016
+-- Description     : Data Inserted using Calculation View - CA_CBSS_PROD_SERV_RT_LST
+--                   To NDB Table - HP_PRICING Using this stored procedure.
+-- Project         : Bell Canada
+-- Release         : R1 / IFRS
+--------------------------------------------------------------------------------------------------
+--   M O D I F I C A T I O N   H I S T O R Y
+--------------------------------------------------------------------------------------------------
+-- Date        | User ID          | Modification History/Release
+--------------------------------------------------------------------------------------------------
+--             |                  | 
+--------------------------------------------------------------------------------------------------
+-- Description Of the changes 
+--------------------------------------------------------------------------------------------------
+-- Modification Number          : <Assign Some Number> 
+-- Description of Changes Made> : <Description of Changes>       
+--------------------------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------------------------
+-- Global Variables Declaration
+--------------------------------------------------------------------------------------------------
+
+DECLARE LC_ERROR_TEXT 		NVARCHAR(70) DEFAULT 'OUT STATUS IS 1 : INSERT/UPDATE FOR ONE OR MORE RECORD FAILED';
+DECLARE LC_SUCCESS_TEXT 	NVARCHAR(70) DEFAULT 'OUT STATUS IS 0 : INSERT/UPDATE EXECUTION SUCCESSFUL';
+DECLARE LV_ERROR_FLAG 		NVARCHAR(1) := 'N';
+DECLARE LV_CUR_UTC 			TIMESTAMP := CURRENT_TIMESTAMP;
+DECLARE LV_PREV_DAY         DATE;
+
+DECLARE i					INTEGER;
+DECLARE ERROR_TAB 			TABLE (ERROR_CODE NVARCHAR(100));
+DECLARE RECORD_COUNT		INTEGER;
+DECLARE CURRENT_ERROR		NVARCHAR(100);  
+-- New variables for version sequence check
+DECLARE LV_LOOP_ERROR_FLAG  INTEGER := 0;
+DECLARE LV_PREV_UNIQUE_IDENTIFIER  NVARCHAR(34) := NULL;
+  
+--------------------------------------------------------------------------------------------------
+-- Cursors Declaration
+--------------------------------------------------------------------------------------------------
+DECLARE CURSOR C_PROD_SERV FOR 
+     	SELECT "COMPANY_CODE",
+			   "RATE_STATE",
+			   "PRODSERV_CODE",
+			   "RT_GROUPING_CD",
+			   "TYPE_OF_ACCOUNT",
+			   "TAB_ENT_EFFV_DT",
+			   "REF_JRNL_ACT_CD",
+			   "PROD_SVC_BAS_RT",
+			   "TAB_ENT_REV_DT",
+			   "MIN_CHARGE_AMT",
+			   "PS_VAR_RATE_CD",
+			   "CYCL_ID",
+			   "FLAG_EXISTING_RECORD",
+			   "SEQ_ID",
+			   "ERROR_CODE",
+	           "ERROR_STATUS",
+			   "CC_CONCAT_PK" 
+	     FROM  "_SYS_BIC"."IFRS_R1.HP.NDB_HP/CA_CBSS_PROD_SERV_RT_LST"
+		       (PLACEHOLDER."$$IP_CYCL_ID$$" => :IP_CYCL_ID)
+		       ORDER BY COMPANY_CODE, RATE_STATE, PRODSERV_CODE, RT_GROUPING_CD, TYPE_OF_ACCOUNT,
+						TAB_ENT_EFFV_DT, PROD_SVC_BAS_RT, CYCL_ID, SEQ_ID;
+		 
+--------------------------------------------------------------------------------------------------
+-- Local Temporary Tables Declaration
+-------------------------------------------------------------------------------------------------- 
+
+CREATE LOCAL TEMPORARY TABLE #UPDATE_CBSS_PROD_SERV_RT_LST ( COMPANY_CODE NVARCHAR(16),RATE_STATE NVARCHAR(2),PRODSERV_CODE NVARCHAR(8),
+ 		 	 	 	 	 	 RT_GROUPING_CD NVARCHAR(4), TYPE_OF_ACCOUNT NVARCHAR(1), TAB_ENT_EFFV_DT DATE, 
+ 							 TAB_ENT_REV_DT DATE, CYCL_ID NVARCHAR(3), PROD_SVC_BAS_RT DECIMAL (15,2));
+CREATE LOCAL TEMPORARY TABLE #UPDATE_EH_DELETION (COMPANY_CODE NVARCHAR(16),RATE_STATE NVARCHAR(2),PRODSERV_CODE NVARCHAR(8),
+ 		 	 	 	 	 	 TYPE_OF_ACCOUNT NVARCHAR(1), TAB_ENT_EFFV_DT DATE);
+        	  
+--------------------------------------------------------------------------------------------------
+-- Cursors Loop
+-------------------------------------------------------------------------------------------------- 
+
+FOR CUR_PROD_SERV AS C_PROD_SERV DO
+
+--  Define Exit Handler
+	DECLARE EXIT HANDLER FOR SQLEXCEPTION 
+	BEGIN AUTONOMOUS TRANSACTION
+	
+--    Define Exit Handler
+	  DECLARE EXIT HANDLER FOR SQLEXCEPTION 
+	  BEGIN AUTONOMOUS TRANSACTION 
+	
+      -- Do Nothing. Exception Handled to ensure SP does not get terminated
+	
+	  END; 
+			
+   	 -- Insert record into error table
+   	   	INSERT INTO "NDB_HP"."IFRS_R1.HP.NDB_HP::HP_PRICING_EH"(
+					COMPANY_CODE,
+					RATE_STATE,
+					PRODSERV_CODE,
+					RT_GROUPING_CD,
+					TYPE_OF_ACCOUNT,
+					TAB_ENT_EFFV_DT,
+					REF_JRNL_ACT_CD,
+					PROD_SVC_BAS_RT,
+					TAB_ENT_REV_DT,
+					MIN_CHARGE_AMT,
+					PS_VAR_RATE_CD,
+					ERROR_CODE,
+			        TECHNICAL_MESSAGE,
+		            ERROR_CREATE_TS)
+			VALUES (CUR_PROD_SERV.COMPANY_CODE,
+				    CUR_PROD_SERV.RATE_STATE,
+				    CUR_PROD_SERV.PRODSERV_CODE,
+				    CUR_PROD_SERV.RT_GROUPING_CD,
+				    CUR_PROD_SERV.TYPE_OF_ACCOUNT,
+				    CUR_PROD_SERV.TAB_ENT_EFFV_DT,
+				    CUR_PROD_SERV.REF_JRNL_ACT_CD,
+				    CUR_PROD_SERV.PROD_SVC_BAS_RT,
+				    CUR_PROD_SERV.TAB_ENT_REV_DT,
+				    CUR_PROD_SERV.MIN_CHARGE_AMT,
+				    CUR_PROD_SERV.PS_VAR_RATE_CD,
+				    ::SQL_ERROR_CODE,
+		            ::SQL_ERROR_MESSAGE,
+		            LV_CUR_UTC);
+		            			           
+	  	LV_ERROR_FLAG := 'Y';
+		LV_LOOP_ERROR_FLAG := 1;
+   END ; 
+   
+	--------------------------------------------------------------------------------------------------------	
+	-- FOR CLEARING THE VARIABLES
+	IF (LV_PREV_UNIQUE_IDENTIFIER IS NULL OR CUR_PROD_SERV."CC_CONCAT_PK" != LV_PREV_UNIQUE_IDENTIFIER) THEN
+		LV_LOOP_ERROR_FLAG := 0;
+		LV_PREV_UNIQUE_IDENTIFIER := CUR_PROD_SERV."CC_CONCAT_PK";			 	   
+    END IF;    
+	--------------------------------------------------------------------------------------------------------   
+
+    --  Check the Error Status of the Record. If Record is with Error, then send to Error Table
+	IF CUR_PROD_SERV."ERROR_STATUS" = 1 THEN 
+	
+	--  Call the Stored Procedure to split the concatenated Error Messages into Error Rows
+		CALL "NDB_COMMON"."IFRS_R1.COMMON_COMP.EH::SP_EH_SPLIT_ERRORS"(CUR_PROD_SERV."ERROR_CODE", ERROR_TAB, RECORD_COUNT);
+
+     -- Loop through the Error Records
+		FOR i IN 1 .. :RECORD_COUNT DO
+			
+		 -- Fetch the Error Code
+			CURRENT_ERROR = :ERROR_TAB."ERROR_CODE"[:i];
+			
+		 -- Insert into the Error Table
+			INSERT INTO "NDB_HP"."IFRS_R1.HP.NDB_HP::HP_PRICING_EH"(
+						COMPANY_CODE,
+						RATE_STATE,
+						PRODSERV_CODE,
+						RT_GROUPING_CD,
+						TYPE_OF_ACCOUNT,
+						TAB_ENT_EFFV_DT,
+						REF_JRNL_ACT_CD,
+						PROD_SVC_BAS_RT,
+						TAB_ENT_REV_DT,
+						MIN_CHARGE_AMT,
+						PS_VAR_RATE_CD,
+						ERROR_CODE,
+						ERROR_CREATE_TS)
+				VALUES (CUR_PROD_SERV.COMPANY_CODE,
+						CUR_PROD_SERV.RATE_STATE,
+						CUR_PROD_SERV.PRODSERV_CODE,
+						CUR_PROD_SERV.RT_GROUPING_CD,
+						CUR_PROD_SERV.TYPE_OF_ACCOUNT,
+						CUR_PROD_SERV.TAB_ENT_EFFV_DT,
+						CUR_PROD_SERV.REF_JRNL_ACT_CD,
+						CUR_PROD_SERV.PROD_SVC_BAS_RT,
+						CUR_PROD_SERV.TAB_ENT_REV_DT,
+						CUR_PROD_SERV.MIN_CHARGE_AMT,
+						CUR_PROD_SERV.PS_VAR_RATE_CD,
+						:CURRENT_ERROR,
+						LV_CUR_UTC);
+		 -- End for inner for loop. 	       		
+		 END FOR;
+		
+		    -- Set Error Flag				        
+			LV_ERROR_FLAG := 'Y';	
+			LV_LOOP_ERROR_FLAG := 1;
+		    	
+-- Processing for Successful Records
+   ELSEIF CUR_PROD_SERV.ERROR_STATUS = '0' THEN
+	    
+	        IF LV_LOOP_ERROR_FLAG = 1 THEN
+	        -- Insert into the Error Table
+			INSERT INTO "NDB_HP"."IFRS_R1.HP.NDB_HP::HP_PRICING_EH"(
+						COMPANY_CODE,
+						RATE_STATE,
+						PRODSERV_CODE,
+						RT_GROUPING_CD,
+						TYPE_OF_ACCOUNT,
+						TAB_ENT_EFFV_DT,
+						REF_JRNL_ACT_CD,
+						PROD_SVC_BAS_RT,
+						TAB_ENT_REV_DT,
+						MIN_CHARGE_AMT,
+						PS_VAR_RATE_CD,
+						ERROR_CODE,
+						ERROR_CREATE_TS)
+				VALUES (CUR_PROD_SERV.COMPANY_CODE,
+						CUR_PROD_SERV.RATE_STATE,
+						CUR_PROD_SERV.PRODSERV_CODE,
+						CUR_PROD_SERV.RT_GROUPING_CD,
+						CUR_PROD_SERV.TYPE_OF_ACCOUNT,
+						CUR_PROD_SERV.TAB_ENT_EFFV_DT,
+						CUR_PROD_SERV.REF_JRNL_ACT_CD,
+						CUR_PROD_SERV.PROD_SVC_BAS_RT,
+						CUR_PROD_SERV.TAB_ENT_REV_DT,
+						CUR_PROD_SERV.MIN_CHARGE_AMT,
+						CUR_PROD_SERV.PS_VAR_RATE_CD,
+						:CURRENT_ERROR,
+						LV_CUR_UTC);					        									
+  ELSE      
+ -- If Record exists in the Target NDB Table
+    IF CUR_PROD_SERV.FLAG_EXISTING_RECORD = 'U' THEN
+    
+	    UPDATE "NDB_HP"."IFRS_R1.HP.NDB_HP::HP_PRICING" A
+		   SET (	RT_GROUPING_CD,
+					REF_JRNL_ACT_CD,
+					PROD_SVC_BAS_RT,
+					TAB_ENT_REV_DT,
+					MIN_CHARGE_AMT,
+					PS_VAR_RATE_CD,
+					MODIFIED_TS) =
+				   (CUR_PROD_SERV.RT_GROUPING_CD,
+				    CUR_PROD_SERV.REF_JRNL_ACT_CD,
+				    CUR_PROD_SERV.PROD_SVC_BAS_RT,
+				    CUR_PROD_SERV.TAB_ENT_REV_DT,
+				    CUR_PROD_SERV.MIN_CHARGE_AMT,
+				    CUR_PROD_SERV.PS_VAR_RATE_CD,
+					LV_CUR_UTC)
+		 WHERE A.COMPANY_CODE    = CUR_PROD_SERV.COMPANY_CODE
+		   AND A.RATE_STATE      = CUR_PROD_SERV.RATE_STATE
+		   AND A.PRODSERV_CODE   = CUR_PROD_SERV.PRODSERV_CODE
+		   AND A.TYPE_OF_ACCOUNT = CUR_PROD_SERV.TYPE_OF_ACCOUNT
+		   AND A.TAB_ENT_EFFV_DT = CUR_PROD_SERV.TAB_ENT_EFFV_DT;
+		   
+--         Insert PK of successfully processed Records into Local Temp Tables 
+--         for Updating NDB_TS in corresponding Landing Tables records
+		   INSERT INTO #UPDATE_CBSS_PROD_SERV_RT_LST(
+		   	 	 	   COMPANY_CODE,
+					   RATE_STATE,
+					   PRODSERV_CODE,
+					   RT_GROUPING_CD, 
+					   TYPE_OF_ACCOUNT,
+					   TAB_ENT_EFFV_DT, 
+					   TAB_ENT_REV_DT,
+					   CYCL_ID)
+				VALUES (CUR_PROD_SERV.COMPANY_CODE,
+		   		 	 	CUR_PROD_SERV.RATE_STATE,
+		   		 	 	CUR_PROD_SERV.PRODSERV_CODE,
+		   		 	 	CUR_PROD_SERV.RT_GROUPING_CD,		   		 	 			   		 	 	
+		   		 	 	CUR_PROD_SERV.TYPE_OF_ACCOUNT,
+		   		 	 	CUR_PROD_SERV.TAB_ENT_EFFV_DT,
+		   		 	 	CUR_PROD_SERV.TAB_ENT_REV_DT,
+		   		 	 	CUR_PROD_SERV.CYCL_ID);	   	  
+		   					              
+--         Add record to Delete the error from the error table if it exists			              
+		   INSERT INTO #UPDATE_EH_DELETION(
+		   	 	 	   COMPANY_CODE,
+					   RATE_STATE,
+					   PRODSERV_CODE, 
+					   TYPE_OF_ACCOUNT,
+					   TAB_ENT_EFFV_DT)
+				VALUES (CUR_PROD_SERV.COMPANY_CODE,
+		   		 	 	CUR_PROD_SERV.RATE_STATE,
+		   		 	 	CUR_PROD_SERV.PRODSERV_CODE,
+		   		 	 	CUR_PROD_SERV.TYPE_OF_ACCOUNT,
+		   		 	 	CUR_PROD_SERV.TAB_ENT_EFFV_DT);	
+
+      ELSE
+		BEGIN AUTONOMOUS TRANSACTION
+--      Insert Records into the target NDB table     
+   	    INSERT INTO "NDB_HP"."IFRS_R1.HP.NDB_HP::HP_PRICING"
+					(COMPANY_CODE,
+					RATE_STATE,
+					PRODSERV_CODE,
+					RT_GROUPING_CD,
+					TYPE_OF_ACCOUNT,
+					TAB_ENT_EFFV_DT,
+					REF_JRNL_ACT_CD,
+					PROD_SVC_BAS_RT,
+					TAB_ENT_REV_DT,
+					MIN_CHARGE_AMT,
+					PS_VAR_RATE_CD,
+					INSERT_TS)
+			VALUES (CUR_PROD_SERV.COMPANY_CODE,
+				    CUR_PROD_SERV.RATE_STATE,
+				    CUR_PROD_SERV.PRODSERV_CODE,
+				    CUR_PROD_SERV.RT_GROUPING_CD,
+				    CUR_PROD_SERV.TYPE_OF_ACCOUNT,
+				    CUR_PROD_SERV.TAB_ENT_EFFV_DT,
+				    CUR_PROD_SERV.REF_JRNL_ACT_CD,
+				    CUR_PROD_SERV.PROD_SVC_BAS_RT,
+				    CUR_PROD_SERV.TAB_ENT_REV_DT,
+				    CUR_PROD_SERV.MIN_CHARGE_AMT,
+				    CUR_PROD_SERV.PS_VAR_RATE_CD,
+		            LV_CUR_UTC);
+		   END;
+--         Insert PK of successfully processed Records into Local Temp Tables 
+--         for Updating NDB_TS in corresponding Landing Tables records
+		   INSERT INTO #UPDATE_CBSS_PROD_SERV_RT_LST(
+		   	 	 	   COMPANY_CODE,
+					   RATE_STATE,
+					   PRODSERV_CODE,
+					   RT_GROUPING_CD, 
+					   TYPE_OF_ACCOUNT,
+					   TAB_ENT_EFFV_DT, 
+					   TAB_ENT_REV_DT,
+					   CYCL_ID,
+					   PROD_SVC_BAS_RT)
+				VALUES (CUR_PROD_SERV.COMPANY_CODE,
+		   		 	 	CUR_PROD_SERV.RATE_STATE,
+		   		 	 	CUR_PROD_SERV.PRODSERV_CODE,
+		   		 	 	CUR_PROD_SERV.RT_GROUPING_CD,		   		 	 			   		 	 	
+		   		 	 	CUR_PROD_SERV.TYPE_OF_ACCOUNT,
+		   		 	 	CUR_PROD_SERV.TAB_ENT_EFFV_DT,
+		   		 	 	CUR_PROD_SERV.TAB_ENT_REV_DT,
+		   		 	 	CUR_PROD_SERV.CYCL_ID,
+		   		 	 	CUR_PROD_SERV.PROD_SVC_BAS_RT);	   	  
+		   					              
+--         Add record to Delete the error from the error table if it exists			              
+		   INSERT INTO #UPDATE_EH_DELETION(
+		   	 	 	   COMPANY_CODE,
+					   RATE_STATE,
+					   PRODSERV_CODE, 
+					   TYPE_OF_ACCOUNT,
+					   TAB_ENT_EFFV_DT)
+				VALUES (CUR_PROD_SERV.COMPANY_CODE,
+		   		 	 	CUR_PROD_SERV.RATE_STATE,
+		   		 	 	CUR_PROD_SERV.PRODSERV_CODE,
+		   		 	 	CUR_PROD_SERV.TYPE_OF_ACCOUNT,
+		   		 	 	CUR_PROD_SERV.TAB_ENT_EFFV_DT);								
+	       		END IF ;
+			END IF;
+		END IF ;
+	END FOR;
+
+/*
+--  If Record exists in the Target NDB Table
+    IF CUR_PROD_SERV.FLAG_EXISTING_RECORD = 'U' THEN
+    
+	    UPDATE "NDB_HP"."IFRS_R1.HP.NDB_HP::HP_PRICING" A
+		   SET (	RT_GROUPING_CD,
+					REF_JRNL_ACT_CD,
+					PROD_SVC_BAS_RT,
+					TAB_ENT_REV_DT,
+					MIN_CHARGE_AMT,
+					PS_VAR_RATE_CD,
+					MODIFIED_TS) =
+				   (CUR_PROD_SERV.RT_GROUPING_CD,
+				    CUR_PROD_SERV.REF_JRNL_ACT_CD,
+				    CUR_PROD_SERV.PROD_SVC_BAS_RT,
+				    CUR_PROD_SERV.TAB_ENT_REV_DT,
+				    CUR_PROD_SERV.MIN_CHARGE_AMT,
+				    CUR_PROD_SERV.PS_VAR_RATE_CD,
+					LV_CUR_UTC)
+		 WHERE A.COMPANY_CODE    = CUR_PROD_SERV.COMPANY_CODE
+		   AND A.RATE_STATE      = CUR_PROD_SERV.RATE_STATE
+		   AND A.PRODSERV_CODE   = CUR_PROD_SERV.PRODSERV_CODE
+		   AND A.TYPE_OF_ACCOUNT = CUR_PROD_SERV.TYPE_OF_ACCOUNT
+		   AND A.TAB_ENT_EFFV_DT = CUR_PROD_SERV.TAB_ENT_EFFV_DT;
+		   
+--         Insert PK of successfully processed Records into Local Temp Tables 
+--         for Updating NDB_TS in corresponding Landing Tables records
+		   INSERT INTO #UPDATE_CBSS_PROD_SERV_RT_LST(
+		   	 	 	   COMPANY_CODE,
+					   RATE_STATE,
+					   PRODSERV_CODE,
+					   RT_GROUPING_CD, 
+					   TYPE_OF_ACCOUNT,
+					   TAB_ENT_EFFV_DT, 
+					   TAB_ENT_REV_DT,
+					   CYCL_ID)
+				VALUES (CUR_PROD_SERV.COMPANY_CODE,
+		   		 	 	CUR_PROD_SERV.RATE_STATE,
+		   		 	 	CUR_PROD_SERV.PRODSERV_CODE,
+		   		 	 	CUR_PROD_SERV.RT_GROUPING_CD,		   		 	 			   		 	 	
+		   		 	 	CUR_PROD_SERV.TYPE_OF_ACCOUNT,
+		   		 	 	CUR_PROD_SERV.TAB_ENT_EFFV_DT,
+		   		 	 	CUR_PROD_SERV.TAB_ENT_REV_DT,
+		   		 	 	CUR_PROD_SERV.CYCL_ID);	   	  
+		   					              
+--         Add record to Delete the error from the error table if it exists			              
+		   INSERT INTO #UPDATE_EH_DELETION(
+		   	 	 	   COMPANY_CODE,
+					   RATE_STATE,
+					   PRODSERV_CODE, 
+					   TYPE_OF_ACCOUNT,
+					   TAB_ENT_EFFV_DT)
+				VALUES (CUR_PROD_SERV.COMPANY_CODE,
+		   		 	 	CUR_PROD_SERV.RATE_STATE,
+		   		 	 	CUR_PROD_SERV.PRODSERV_CODE,
+		   		 	 	CUR_PROD_SERV.TYPE_OF_ACCOUNT,
+		   		 	 	CUR_PROD_SERV.TAB_ENT_EFFV_DT);	  
+                    	
+    ELSE
+		BEGIN AUTONOMOUS TRANSACTION
+--      Insert Records into the target NDB table     
+   	    INSERT INTO "NDB_HP"."IFRS_R1.HP.NDB_HP::HP_PRICING"
+					(COMPANY_CODE,
+					RATE_STATE,
+					PRODSERV_CODE,
+					RT_GROUPING_CD,
+					TYPE_OF_ACCOUNT,
+					TAB_ENT_EFFV_DT,
+					REF_JRNL_ACT_CD,
+					PROD_SVC_BAS_RT,
+					TAB_ENT_REV_DT,
+					MIN_CHARGE_AMT,
+					PS_VAR_RATE_CD,
+					INSERT_TS)
+			VALUES (CUR_PROD_SERV.COMPANY_CODE,
+				    CUR_PROD_SERV.RATE_STATE,
+				    CUR_PROD_SERV.PRODSERV_CODE,
+				    CUR_PROD_SERV.RT_GROUPING_CD,
+				    CUR_PROD_SERV.TYPE_OF_ACCOUNT,
+				    CUR_PROD_SERV.TAB_ENT_EFFV_DT,
+				    CUR_PROD_SERV.REF_JRNL_ACT_CD,
+				    CUR_PROD_SERV.PROD_SVC_BAS_RT,
+				    CUR_PROD_SERV.TAB_ENT_REV_DT,
+				    CUR_PROD_SERV.MIN_CHARGE_AMT,
+				    CUR_PROD_SERV.PS_VAR_RATE_CD,
+		            LV_CUR_UTC);
+		   END;
+--         Insert PK of successfully processed Records into Local Temp Tables 
+--         for Updating NDB_TS in corresponding Landing Tables records
+		   INSERT INTO #UPDATE_CBSS_PROD_SERV_RT_LST(
+		   	 	 	   COMPANY_CODE,
+					   RATE_STATE,
+					   PRODSERV_CODE,
+					   RT_GROUPING_CD, 
+					   TYPE_OF_ACCOUNT,
+					   TAB_ENT_EFFV_DT, 
+					   TAB_ENT_REV_DT,
+					   CYCL_ID,
+					   PROD_SVC_BAS_RT)
+				VALUES (CUR_PROD_SERV.COMPANY_CODE,
+		   		 	 	CUR_PROD_SERV.RATE_STATE,
+		   		 	 	CUR_PROD_SERV.PRODSERV_CODE,
+		   		 	 	CUR_PROD_SERV.RT_GROUPING_CD,		   		 	 			   		 	 	
+		   		 	 	CUR_PROD_SERV.TYPE_OF_ACCOUNT,
+		   		 	 	CUR_PROD_SERV.TAB_ENT_EFFV_DT,
+		   		 	 	CUR_PROD_SERV.TAB_ENT_REV_DT,
+		   		 	 	CUR_PROD_SERV.CYCL_ID,
+		   		 	 	CUR_PROD_SERV.PROD_SVC_BAS_RT);	   	  
+		   					              
+--         Add record to Delete the error from the error table if it exists			              
+		   INSERT INTO #UPDATE_EH_DELETION(
+		   	 	 	   COMPANY_CODE,
+					   RATE_STATE,
+					   PRODSERV_CODE, 
+					   TYPE_OF_ACCOUNT,
+					   TAB_ENT_EFFV_DT)
+				VALUES (CUR_PROD_SERV.COMPANY_CODE,
+		   		 	 	CUR_PROD_SERV.RATE_STATE,
+		   		 	 	CUR_PROD_SERV.PRODSERV_CODE,
+		   		 	 	CUR_PROD_SERV.TYPE_OF_ACCOUNT,
+		   		 	 	CUR_PROD_SERV.TAB_ENT_EFFV_DT);	  		            			      
+
+		   			   
+    END IF;
+
+END FOR; */
+
+--------------------------------------------------------------------------------------------------
+-- Update Landing Tables
+-------------------------------------------------------------------------------------------------- 
+
+-- Update Landing Table IFRS_R1.LAND::CBSS_PROD_SERV_RT_LST
+UPDATE "LAND"."IFRS_R1.LAND::CBSS_PROD_SERV_RT_LST" A
+  FROM "LAND"."IFRS_R1.LAND::CBSS_PROD_SERV_RT_LST" A 
+ INNER JOIN #UPDATE_CBSS_PROD_SERV_RT_LST B 
+    ON 	A.COMPANY_CODE      = B.COMPANY_CODE
+   AND	A.RATE_STATE 		= B.RATE_STATE
+   AND  A.PRODSERV_CODE 	= B.PRODSERV_CODE
+   AND  A.RT_GROUPING_CD 	= B.RT_GROUPING_CD 
+   AND  A.TYPE_OF_ACCOUNT 	= B.TYPE_OF_ACCOUNT
+   AND  A.TAB_ENT_EFFV_DT 	= B.TAB_ENT_EFFV_DT
+   AND  A.TAB_ENT_REV_DT 	= B.TAB_ENT_REV_DT
+   AND  A.CYCL_ID 			= B.CYCL_ID
+   AND  A.PROD_SVC_BAS_RT   = B.PROD_SVC_BAS_RT
+   SET  NDB_TS 				= LV_CUR_UTC
+ WHERE  A.NDB_TS IS NULL;
+
+--------------------------------------------------------------------------------------------------
+-- Update Error Table
+--------------------------------------------------------------------------------------------------
+
+UPDATE "NDB_HP"."IFRS_R1.HP.NDB_HP::HP_PRICING_EH" A
+  FROM "NDB_HP"."IFRS_R1.HP.NDB_HP::HP_PRICING_EH" A 
+ INNER JOIN #UPDATE_EH_DELETION B
+    ON  A.COMPANY_CODE 		   = B.COMPANY_CODE
+   AND	A.RATE_STATE 	       = B.RATE_STATE
+   AND  A.PRODSERV_CODE        = B.PRODSERV_CODE
+   AND  A.TYPE_OF_ACCOUNT      = B.TYPE_OF_ACCOUNT
+   AND  A.TAB_ENT_EFFV_DT      = B.TAB_ENT_EFFV_DT
+   SET  (DELETE_DATE, DELETED)  = (CURRENT_DATE, 1);
+
+--------------------------------------------------------------------------------------------------
+-- Set Overall Status
+-------------------------------------------------------------------------------------------------- 
+
+--  STATUS 0: Send the success message to scheduling tool to confirm this procedure has been
+--  executed successfully
+    IF(LV_ERROR_FLAG = 'Y') THEN		
+
+     OP_STATUS := LC_ERROR_TEXT; 
+			
+    ELSE
+
+  	 OP_STATUS := LC_SUCCESS_TEXT; 	
+				
+	END IF; 
+		
+END;		   			   

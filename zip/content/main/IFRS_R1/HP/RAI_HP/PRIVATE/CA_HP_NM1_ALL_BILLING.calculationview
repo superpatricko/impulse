@@ -1,0 +1,292 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" schemaVersion="2.3" id="CA_HP_NM1_ALL_BILLING" defaultClient="$$client$$" defaultLanguage="$$language$$" hidden="true" hierarchiesSQLEnabled="false" translationRelevant="true" visibility="internal" calculationScenarioType="TREE_BASED" dataCategory="DIMENSION" enforceSqlExecution="false" executionSemantic="UNDEFINED" outputViewType="Projection">
+  <descriptions defaultDescription="CA_HP_NM1_ALL_BILLING"/>
+  <localVariables>
+    <variable id="IP_BILL_DAY" parameter="true">
+      <descriptions defaultDescription="IP_BILL_DAY"/>
+      <variableProperties datatype="DATE" defaultExpressionLanguage="COLUMN_ENGINE" mandatory="false">
+        <valueDomain type="empty"/>
+        <selection multiLine="false" type="SingleValue"/>
+        <defaultExpression>NOW()</defaultExpression>
+      </variableProperties>
+    </variable>
+  </localVariables>
+  <variableMappings>
+    <mapping xsi:type="Variable:VariableMapping" dataSource="#CA_HP_NM1_ORDR_BILL">
+      <targetVariable name="IP_BILL_DAY" resourceUri="/IFRS_R1.HP.RAI_HP.PRIVATE/calculationviews/CA_HP_NM1_ORDR_BILL"/>
+      <localVariable>#IP_BILL_DAY</localVariable>
+    </mapping>
+  </variableMappings>
+  <informationModelLayout relativeWidthScenario="61"/>
+  <dataSources>
+    <DataSource id="CA_HP_NM1_ORDR_BILL" type="CALCULATION_VIEW">
+      <viewAttributes allViewAttributes="true"/>
+      <resourceUri>/IFRS_R1.HP.RAI_HP.PRIVATE/calculationviews/CA_HP_NM1_ORDR_BILL</resourceUri>
+    </DataSource>
+  </dataSources>
+  <calculationViews>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_NDB_BILL" filterExpressionLanguage="COLUMN_ENGINE">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="BAN"/>
+        <viewAttribute id="SUBSCRIBER_NO"/>
+        <viewAttribute id="SOC"/>
+        <viewAttribute id="FEATURE_CODE"/>
+        <viewAttribute id="FTR_REVENUE_CODE"/>
+        <viewAttribute id="TRANSACTION_TYPE"/>
+        <viewAttribute id="PRD_CVRG_STRT_DATE"/>
+        <viewAttribute id="PRD_CVRG_END_DATE"/>
+        <viewAttribute id="ACCRUAL_IND"/>
+        <viewAttribute id="JOURNALIZATION_DATE"/>
+        <viewAttribute id="RAI_TS"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#CA_HP_NM1_ORDR_BILL">
+        <mapping xsi:type="Calculation:AttributeMapping" target="BAN" source="BAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBSCRIBER_NO" source="SUBSCRIBER_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SOC" source="SOC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FEATURE_CODE" source="FEATURE_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FTR_REVENUE_CODE" source="FTR_REVENUE_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRANSACTION_TYPE" source="TRANSACTION_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRD_CVRG_STRT_DATE" source="PRD_CVRG_STRT_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRD_CVRG_END_DATE" source="PRD_CVRG_END_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACCRUAL_IND" source="ACCRUAL_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="JOURNALIZATION_DATE" source="JOURNALIZATION_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RAI_TS" source="RAI_TS"/>
+      </input>
+      <filter>(&quot;TRANSACTION_TYPE&quot; ='CHG') and (&quot;FTR_REVENUE_CODE&quot;='R') and (&quot;JOURNALIZATION_DATE&quot;&lt;='$$IP_BILL_DAY$$') and isNull(&quot;RAI_TS&quot;)</filter>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_NON_PRORATED" filterExpressionLanguage="COLUMN_ENGINE">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="BAN"/>
+        <viewAttribute id="SUBSCRIBER_NO"/>
+        <viewAttribute id="SOC"/>
+        <viewAttribute id="FEATURE_CODE"/>
+        <viewAttribute id="TRANSACTION_TYPE"/>
+        <viewAttribute id="PRD_CVRG_STRT_DATE"/>
+        <viewAttribute id="PRD_CVRG_END_DATE"/>
+        <viewAttribute id="ACCRUAL_IND"/>
+        <viewAttribute id="JOURNALIZATION_DATE"/>
+        <viewAttribute id="RAI_TS"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#PROJ_NDB_BILL">
+        <mapping xsi:type="Calculation:AttributeMapping" target="BAN" source="BAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBSCRIBER_NO" source="SUBSCRIBER_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SOC" source="SOC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FEATURE_CODE" source="FEATURE_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRANSACTION_TYPE" source="TRANSACTION_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRD_CVRG_STRT_DATE" source="PRD_CVRG_STRT_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRD_CVRG_END_DATE" source="PRD_CVRG_END_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACCRUAL_IND" source="ACCRUAL_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="JOURNALIZATION_DATE" source="JOURNALIZATION_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RAI_TS" source="RAI_TS"/>
+      </input>
+      <filter>(&quot;ACCRUAL_IND&quot; ='N')</filter>
+    </calculationView>
+    <calculationView xsi:type="Calculation:AggregationView" id="AGGR_NON_PRORATED">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="BAN"/>
+        <viewAttribute id="SUBSCRIBER_NO"/>
+        <viewAttribute id="SOC"/>
+        <viewAttribute id="FEATURE_CODE"/>
+        <viewAttribute id="PRD_CVRG_STRT_DATE"/>
+        <viewAttribute id="PRD_CVRG_END_DATE"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#PROJ_NON_PRORATED">
+        <mapping xsi:type="Calculation:AttributeMapping" target="BAN" source="BAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBSCRIBER_NO" source="SUBSCRIBER_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SOC" source="SOC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FEATURE_CODE" source="FEATURE_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRD_CVRG_STRT_DATE" source="PRD_CVRG_STRT_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRD_CVRG_END_DATE" source="PRD_CVRG_END_DATE"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_PRORATED" filterExpressionLanguage="COLUMN_ENGINE">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="BAN"/>
+        <viewAttribute id="SUBSCRIBER_NO"/>
+        <viewAttribute id="SOC"/>
+        <viewAttribute id="FEATURE_CODE"/>
+        <viewAttribute id="TRANSACTION_TYPE"/>
+        <viewAttribute id="PRD_CVRG_STRT_DATE_PRORATED"/>
+        <viewAttribute id="PRD_CVRG_END_DATE_PRORATED"/>
+        <viewAttribute id="ACCRUAL_IND"/>
+        <viewAttribute id="JOURNALIZATION_DATE"/>
+        <viewAttribute id="RAI_TS"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#PROJ_NDB_BILL">
+        <mapping xsi:type="Calculation:AttributeMapping" target="BAN" source="BAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBSCRIBER_NO" source="SUBSCRIBER_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SOC" source="SOC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FEATURE_CODE" source="FEATURE_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRANSACTION_TYPE" source="TRANSACTION_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRD_CVRG_STRT_DATE_PRORATED" source="PRD_CVRG_STRT_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRD_CVRG_END_DATE_PRORATED" source="PRD_CVRG_END_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACCRUAL_IND" source="ACCRUAL_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="JOURNALIZATION_DATE" source="JOURNALIZATION_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RAI_TS" source="RAI_TS"/>
+      </input>
+      <filter>(&quot;ACCRUAL_IND&quot; ='Y')</filter>
+    </calculationView>
+    <calculationView xsi:type="Calculation:AggregationView" id="AGGR_PRORATED">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="BAN"/>
+        <viewAttribute id="SUBSCRIBER_NO"/>
+        <viewAttribute id="SOC"/>
+        <viewAttribute id="FEATURE_CODE"/>
+        <viewAttribute aggregationType="min" id="PRD_CVRG_STRT_DATE_PRORATED"/>
+        <viewAttribute aggregationType="max" id="PRD_CVRG_END_DATE_PRORATED"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#PROJ_PRORATED">
+        <mapping xsi:type="Calculation:AttributeMapping" target="BAN" source="BAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBSCRIBER_NO" source="SUBSCRIBER_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SOC" source="SOC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FEATURE_CODE" source="FEATURE_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRD_CVRG_STRT_DATE_PRORATED" source="PRD_CVRG_STRT_DATE_PRORATED"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRD_CVRG_END_DATE_PRORATED" source="PRD_CVRG_END_DATE_PRORATED"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="JOIN_BILLING" joinOrder="OUTSIDE_IN" joinType="inner">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="PRD_CVRG_STRT_DATE_PRORATED"/>
+        <viewAttribute id="PRD_CVRG_END_DATE_PRORATED"/>
+        <viewAttribute id="BAN"/>
+        <viewAttribute id="SUBSCRIBER_NO"/>
+        <viewAttribute id="SOC"/>
+        <viewAttribute id="FEATURE_CODE"/>
+        <viewAttribute id="PRD_CVRG_STRT_DATE"/>
+        <viewAttribute id="PRD_CVRG_END_DATE"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="DATE" id="CC_PRD_CVRG_END_DATE" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isNull(&quot;PRD_CVRG_END_DATE&quot;),&quot;PRD_CVRG_END_DATE&quot;, &#xD;
+if(&quot;PRD_CVRG_END_DATE&quot; &lt;&quot;PRD_CVRG_END_DATE_PRORATED&quot;,&#xD;
+&quot;PRD_CVRG_END_DATE_PRORATED&quot;,&quot;PRD_CVRG_END_DATE&quot;))</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="DATE" id="CC_PRD_CVRG_STRT_DATE" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isNull(&quot;PRD_CVRG_STRT_DATE_PRORATED&quot;),&quot;PRD_CVRG_STRT_DATE&quot;, &#xD;
+if(&quot;PRD_CVRG_STRT_DATE&quot; >&quot;PRD_CVRG_STRT_DATE_PRORATED&quot;,&#xD;
+&quot;PRD_CVRG_STRT_DATE_PRORATED&quot;,&quot;PRD_CVRG_STRT_DATE&quot;))</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#AGGR_NON_PRORATED">
+        <mapping xsi:type="Calculation:AttributeMapping" target="BAN" source="BAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBSCRIBER_NO" source="SUBSCRIBER_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SOC" source="SOC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FEATURE_CODE" source="FEATURE_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRD_CVRG_STRT_DATE" source="PRD_CVRG_STRT_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRD_CVRG_END_DATE" source="PRD_CVRG_END_DATE"/>
+      </input>
+      <input node="#AGGR_PRORATED">
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRD_CVRG_STRT_DATE_PRORATED" source="PRD_CVRG_STRT_DATE_PRORATED"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRD_CVRG_END_DATE_PRORATED" source="PRD_CVRG_END_DATE_PRORATED"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BAN" source="BAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBSCRIBER_NO" source="SUBSCRIBER_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SOC" source="SOC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FEATURE_CODE" source="FEATURE_CODE"/>
+      </input>
+      <joinAttribute name="BAN"/>
+      <joinAttribute name="SUBSCRIBER_NO"/>
+      <joinAttribute name="SOC"/>
+      <joinAttribute name="FEATURE_CODE"/>
+    </calculationView>
+  </calculationViews>
+  <logicalModel id="JOIN_BILLING">
+    <descriptions/>
+    <attributes>
+      <attribute id="PRD_CVRG_STRT_DATE_PRORATED" order="1" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="PRD_CVRG_STRT_DATE_PRORATED"/>
+        <keyMapping columnObjectName="JOIN_BILLING" columnName="PRD_CVRG_STRT_DATE_PRORATED"/>
+      </attribute>
+      <attribute id="PRD_CVRG_END_DATE_PRORATED" order="2" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="PRD_CVRG_END_DATE_PRORATED"/>
+        <keyMapping columnObjectName="JOIN_BILLING" columnName="PRD_CVRG_END_DATE_PRORATED"/>
+      </attribute>
+      <attribute id="BAN" order="3" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="BAN"/>
+        <keyMapping columnObjectName="JOIN_BILLING" columnName="BAN"/>
+      </attribute>
+      <attribute id="SUBSCRIBER_NO" order="4" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SUBSCRIBER_NO"/>
+        <keyMapping columnObjectName="JOIN_BILLING" columnName="SUBSCRIBER_NO"/>
+      </attribute>
+      <attribute id="SOC" order="5" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SOC"/>
+        <keyMapping columnObjectName="JOIN_BILLING" columnName="SOC"/>
+      </attribute>
+      <attribute id="FEATURE_CODE" order="6" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="FEATURE_CODE"/>
+        <keyMapping columnObjectName="JOIN_BILLING" columnName="FEATURE_CODE"/>
+      </attribute>
+      <attribute id="PRD_CVRG_STRT_DATE" order="7" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="PRD_CVRG_STRT_DATE"/>
+        <keyMapping columnObjectName="JOIN_BILLING" columnName="PRD_CVRG_STRT_DATE"/>
+      </attribute>
+      <attribute id="PRD_CVRG_END_DATE" order="8" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="PRD_CVRG_END_DATE"/>
+        <keyMapping columnObjectName="JOIN_BILLING" columnName="PRD_CVRG_END_DATE"/>
+      </attribute>
+      <attribute id="CC_PRD_CVRG_END_DATE" order="9" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CC_PRD_CVRG_END_DATE"/>
+        <keyMapping columnObjectName="JOIN_BILLING" columnName="CC_PRD_CVRG_END_DATE"/>
+      </attribute>
+      <attribute id="CC_PRD_CVRG_STRT_DATE" order="10" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CC_PRD_CVRG_STRT_DATE"/>
+        <keyMapping columnObjectName="JOIN_BILLING" columnName="CC_PRD_CVRG_STRT_DATE"/>
+      </attribute>
+    </attributes>
+    <calculatedAttributes/>
+    <privateDataFoundation>
+      <tableProxies/>
+      <joins/>
+      <layout>
+        <shapes/>
+      </layout>
+    </privateDataFoundation>
+    <baseMeasures/>
+    <calculatedMeasures/>
+    <restrictedMeasures/>
+    <localDimensions/>
+  </logicalModel>
+  <layout>
+    <shapes>
+      <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+        <upperLeftCorner x="99" y="87"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+      <shape expanded="true" modelObjectName="AGGR_NON_PRORATED" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="22" y="261"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="AGGR_PRORATED" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="176" y="261"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_NON_PRORATED" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="22" y="339"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_PRORATED" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="176" y="339"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_NDB_BILL" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="99" y="417"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="JOIN_BILLING" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="99" y="165"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+    </shapes>
+  </layout>
+</Calculation:scenario> 

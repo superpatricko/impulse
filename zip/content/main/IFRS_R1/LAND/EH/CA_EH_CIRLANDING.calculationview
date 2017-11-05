@@ -1,0 +1,714 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:AccessControl="http://www.sap.com/ndb/SQLCoreModelAccessControl.ecore" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" xmlns:Variable="http://www.sap.com/ndb/BiModelVariable.ecore" schemaVersion="2.3" id="CA_EH_CIRLANDING" applyPrivilegeType="ANALYTIC_PRIVILEGE" checkAnalyticPrivileges="true" defaultClient="$$client$$" defaultLanguage="$$language$$" hierarchiesSQLEnabled="false" translationRelevant="true" visibility="internal" calculationScenarioType="TREE_BASED" dataCategory="DIMENSION" enforceSqlExecution="false" executionSemantic="UNDEFINED" outputViewType="Projection">
+  <descriptions defaultDescription="Calculation view to process the errors raised during the CIR to Landing processing"/>
+  <localVariables>
+    <variable id="IP_TABLE_NAME" parameter="true">
+      <descriptions defaultDescription="IP_TABLE_NAME"/>
+      <variableProperties datatype="NVARCHAR" defaultValue="IFRS_R1.LAND::TAP_BILL" length="256" mandatory="false">
+        <valueDomain type="empty"/>
+        <selection multiLine="false" type="SingleValue"/>
+      </variableProperties>
+    </variable>
+    <variable id="IP_PROCESS_ID" parameter="true">
+      <descriptions defaultDescription="IP_PROCESS_ID"/>
+      <variableProperties datatype="INTEGER" defaultValue="12345" mandatory="false">
+        <valueDomain type="empty"/>
+        <selection multiLine="false" type="SingleValue"/>
+      </variableProperties>
+    </variable>
+  </localVariables>
+  <variableMappings>
+    <mapping xsi:type="Variable:VariableMapping" dataSource="#CA_EH_LANDING_TABLE_METADATA">
+      <targetVariable name="IP_TABLE_NAME" resourceUri="/IFRS_R1.LAND.EH/calculationviews/CA_EH_LANDING_TABLE_METADATA"/>
+      <localVariable>#IP_TABLE_NAME</localVariable>
+    </mapping>
+  </variableMappings>
+  <informationModelLayout relativeWidthScenario="61"/>
+  <dataSources>
+    <DataSource id="IFRS_R1.LAND.EH::EH_ERROR_RECORD_ROW" type="DATA_BASE_VIEW">
+      <viewAttributes allViewAttributes="true"/>
+      <columnObject schemaName="LAND" columnObjectName="IFRS_R1.LAND.EH::EH_ERROR_RECORD_ROW"/>
+    </DataSource>
+    <DataSource id="IFRS_R1.LAND.EH::EH_ERROR_PK_MAP" type="DATA_BASE_TABLE">
+      <viewAttributes allViewAttributes="true"/>
+      <columnObject schemaName="LAND" columnObjectName="IFRS_R1.LAND.EH::EH_ERROR_PK_MAP"/>
+    </DataSource>
+    <DataSource id="CA_EH_LANDING_TABLE_METADATA" type="CALCULATION_VIEW">
+      <viewAttributes allViewAttributes="true"/>
+      <resourceUri>/IFRS_R1.LAND.EH/calculationviews/CA_EH_LANDING_TABLE_METADATA</resourceUri>
+    </DataSource>
+  </dataSources>
+  <calculationViews>
+    <calculationView xsi:type="Calculation:ProjectionView" id="Error_Staging">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="JOB_ID"/>
+        <viewAttribute id="JOB_NAME"/>
+        <viewAttribute id="PROCESS_ID">
+          <filter xsi:type="AccessControl:SingleValueFilter" including="true" value="$$IP_PROCESS_ID$$"/>
+        </viewAttribute>
+        <viewAttribute id="CYCLE_ID"/>
+        <viewAttribute id="ERROR_RECORD"/>
+        <viewAttribute id="FILE_TYPE"/>
+        <viewAttribute id="LOAD_DATE"/>
+        <viewAttribute id="ROWID"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="INTEGER" id="row" expressionLanguage="COLUMN_ENGINE">
+          <formula>rownum()</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#IFRS_R1.LAND.EH::EH_ERROR_RECORD_ROW">
+        <mapping xsi:type="Calculation:AttributeMapping" target="JOB_ID" source="JOB_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="JOB_NAME" source="JOB_NAME"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROCESS_ID" source="PROCESS_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCLE_ID" source="CYCLE_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ERROR_RECORD" source="ERROR_RECORD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FILE_TYPE" source="FILE_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LOAD_DATE" source="LOAD_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ROWID" source="$rowid$"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="Error_Mapping">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="JOB_ID"/>
+        <viewAttribute id="JOB_NAME"/>
+        <viewAttribute id="TABLE_NAME">
+          <filter xsi:type="AccessControl:SingleValueFilter" including="true" value="$$IP_TABLE_NAME$$"/>
+        </viewAttribute>
+        <viewAttribute id="FIELD_NAME"/>
+        <viewAttribute id="PRIMARY_KEY"/>
+        <viewAttribute id="PARENT_KEY"/>
+        <viewAttribute id="AMOUNT_FLAG"/>
+        <viewAttribute id="FILE_TYPE"/>
+        <viewAttribute id="DATA_SEPARATOR"/>
+        <viewAttribute id="SEPARATOR_TYPE"/>
+        <viewAttribute id="START_POSITION"/>
+        <viewAttribute id="END_POSITION"/>
+        <viewAttribute id="SEPARATOR"/>
+        <viewAttribute id="SEPARATOR_POSITION"/>
+        <viewAttribute id="SEQUENCE_OF_CONCAT"/>
+        <viewAttribute id="AGING_LIMIT"/>
+        <viewAttribute id="RECORD_LENGTH"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#IFRS_R1.LAND.EH::EH_ERROR_PK_MAP">
+        <mapping xsi:type="Calculation:AttributeMapping" target="JOB_ID" source="JOB_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="JOB_NAME" source="JOB_NAME"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TABLE_NAME" source="TABLE_NAME"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FIELD_NAME" source="FIELD_NAME"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRIMARY_KEY" source="PRIMARY_KEY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PARENT_KEY" source="PARENT_KEY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AMOUNT_FLAG" source="AMOUNT_FLAG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FILE_TYPE" source="FILE_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DATA_SEPARATOR" source="DATA_SEPARATOR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SEPARATOR_TYPE" source="SEPARATOR_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="START_POSITION" source="START_POSITION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="END_POSITION" source="END_POSITION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SEPARATOR" source="SEPARATOR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SEPARATOR_POSITION" source="SEPARATOR_POSITION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SEQUENCE_OF_CONCAT" source="SEQUENCE_OF_CONCAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AGING_LIMIT" source="AGING"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RECORD_LENGTH" source="RECORD_LENGTH"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="Staging_Mapping" joinType="inner">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="JOB_ID"/>
+        <viewAttribute id="FILE_TYPE"/>
+        <viewAttribute id="ERROR_RECORD"/>
+        <viewAttribute id="TABLE_NAME"/>
+        <viewAttribute id="FIELD_NAME"/>
+        <viewAttribute id="IS_PRIMARY_KEY"/>
+        <viewAttribute id="IS_PARENT_KEY"/>
+        <viewAttribute id="IS_AMOUNT"/>
+        <viewAttribute id="DATA_SEPARATOR"/>
+        <viewAttribute id="SEPARATOR_TYPE"/>
+        <viewAttribute id="START_POSITION"/>
+        <viewAttribute id="END_POSITION"/>
+        <viewAttribute id="SEPARATOR"/>
+        <viewAttribute id="SEPARATOR_POSITION"/>
+        <viewAttribute id="SEQUENCE_OF_CONCAT"/>
+        <viewAttribute id="AGING_LIMIT"/>
+        <viewAttribute id="CYCLE_ID"/>
+        <viewAttribute id="PROCESS_ID"/>
+        <viewAttribute id="ROWID"/>
+        <viewAttribute id="RECORD_LENGTH"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#Error_Staging">
+        <mapping xsi:type="Calculation:AttributeMapping" target="JOB_ID" source="JOB_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FILE_TYPE" source="FILE_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ERROR_RECORD" source="ERROR_RECORD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCLE_ID" source="CYCLE_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROCESS_ID" source="PROCESS_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ROWID" source="ROWID"/>
+      </input>
+      <input node="#Error_Mapping">
+        <mapping xsi:type="Calculation:AttributeMapping" target="TABLE_NAME" source="TABLE_NAME"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FIELD_NAME" source="FIELD_NAME"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_PRIMARY_KEY" source="PRIMARY_KEY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_PARENT_KEY" source="PARENT_KEY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_AMOUNT" source="AMOUNT_FLAG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DATA_SEPARATOR" source="DATA_SEPARATOR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SEPARATOR_TYPE" source="SEPARATOR_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="START_POSITION" source="START_POSITION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="END_POSITION" source="END_POSITION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SEPARATOR" source="SEPARATOR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SEPARATOR_POSITION" source="SEPARATOR_POSITION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SEQUENCE_OF_CONCAT" source="SEQUENCE_OF_CONCAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AGING_LIMIT" source="AGING_LIMIT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RECORD_LENGTH" source="RECORD_LENGTH"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="JOB_ID" source="JOB_ID"/>
+      </input>
+      <joinAttribute name="JOB_ID"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="ERROR_FILE">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="JOB_ID"/>
+        <viewAttribute id="FILE_TYPE">
+          <filter xsi:type="AccessControl:SingleValueFilter" including="true" value="E"/>
+        </viewAttribute>
+        <viewAttribute id="ERROR_RECORD"/>
+        <viewAttribute id="TABLE_NAME"/>
+        <viewAttribute id="FIELD_NAME"/>
+        <viewAttribute id="IS_PRIMARY_KEY"/>
+        <viewAttribute id="IS_PARENT_KEY"/>
+        <viewAttribute id="DATA_SEPARATOR"/>
+        <viewAttribute id="SEPARATOR_TYPE"/>
+        <viewAttribute id="START_POSITION"/>
+        <viewAttribute id="END_POSITION"/>
+        <viewAttribute id="SEPARATOR"/>
+        <viewAttribute id="SEPARATOR_POSITION"/>
+        <viewAttribute id="SEQUENCE_OF_CONCAT"/>
+        <viewAttribute id="AGING_LIMIT"/>
+        <viewAttribute id="PROCESS_ID"/>
+        <viewAttribute id="CYCLE_ID"/>
+        <viewAttribute id="ROWID"/>
+        <viewAttribute id="RECORD_LENGTH"/>
+        <viewAttribute id="IS_AMOUNT"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#Staging_Mapping">
+        <mapping xsi:type="Calculation:AttributeMapping" target="JOB_ID" source="JOB_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FILE_TYPE" source="FILE_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ERROR_RECORD" source="ERROR_RECORD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TABLE_NAME" source="TABLE_NAME"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FIELD_NAME" source="FIELD_NAME"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_PRIMARY_KEY" source="IS_PRIMARY_KEY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_PARENT_KEY" source="IS_PARENT_KEY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DATA_SEPARATOR" source="DATA_SEPARATOR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SEPARATOR_TYPE" source="SEPARATOR_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="START_POSITION" source="START_POSITION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="END_POSITION" source="END_POSITION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SEPARATOR" source="SEPARATOR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SEPARATOR_POSITION" source="SEPARATOR_POSITION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SEQUENCE_OF_CONCAT" source="SEQUENCE_OF_CONCAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AGING_LIMIT" source="AGING_LIMIT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROCESS_ID" source="PROCESS_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCLE_ID" source="CYCLE_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ROWID" source="ROWID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RECORD_LENGTH" source="RECORD_LENGTH"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_AMOUNT" source="IS_AMOUNT"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="OVERFLOW_FILE">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="JOB_ID"/>
+        <viewAttribute id="FILE_TYPE">
+          <filter xsi:type="AccessControl:SingleValueFilter" including="true" value="O"/>
+        </viewAttribute>
+        <viewAttribute id="ERROR_RECORD"/>
+        <viewAttribute id="TABLE_NAME"/>
+        <viewAttribute id="FIELD_NAME"/>
+        <viewAttribute id="DATA_SEPARATOR"/>
+        <viewAttribute id="SEPARATOR_TYPE"/>
+        <viewAttribute id="START_POSITION"/>
+        <viewAttribute id="END_POSITION"/>
+        <viewAttribute id="SEPARATOR"/>
+        <viewAttribute id="SEPARATOR_POSITION"/>
+        <viewAttribute id="SEQUENCE_OF_CONCAT"/>
+        <viewAttribute id="AGING_LIMIT"/>
+        <viewAttribute id="IS_PRIMARY_KEY"/>
+        <viewAttribute id="IS_PARENT_KEY"/>
+        <viewAttribute id="PROCESS_ID"/>
+        <viewAttribute id="CYCLE_ID"/>
+        <viewAttribute id="ROWID"/>
+        <viewAttribute id="IS_AMOUNT"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="VARCHAR" id="CC_VALUES_ONLY" length="1000" expressionLanguage="SQL">
+          <formula>replace(replace(substr_after(&quot;ERROR_RECORD&quot;,'VALUES '),')',', '),'(',', ')</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#Staging_Mapping">
+        <mapping xsi:type="Calculation:AttributeMapping" target="JOB_ID" source="JOB_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FILE_TYPE" source="FILE_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ERROR_RECORD" source="ERROR_RECORD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TABLE_NAME" source="TABLE_NAME"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FIELD_NAME" source="FIELD_NAME"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DATA_SEPARATOR" source="DATA_SEPARATOR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SEPARATOR_TYPE" source="SEPARATOR_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="START_POSITION" source="START_POSITION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="END_POSITION" source="END_POSITION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SEPARATOR" source="SEPARATOR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SEPARATOR_POSITION" source="SEPARATOR_POSITION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SEQUENCE_OF_CONCAT" source="SEQUENCE_OF_CONCAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AGING_LIMIT" source="AGING_LIMIT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_PRIMARY_KEY" source="IS_PRIMARY_KEY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_PARENT_KEY" source="IS_PARENT_KEY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROCESS_ID" source="PROCESS_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCLE_ID" source="CYCLE_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ROWID" source="ROWID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_AMOUNT" source="IS_AMOUNT"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="LANDING_METADATA">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="SCHEMA_NAME"/>
+        <viewAttribute id="TABLE_NAME"/>
+        <viewAttribute id="COLUMN_NAME"/>
+        <viewAttribute id="POSITION"/>
+        <viewAttribute id="INDEX_POSITION"/>
+        <viewAttribute id="DATA_TYPE_NAME"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#CA_EH_LANDING_TABLE_METADATA">
+        <mapping xsi:type="Calculation:AttributeMapping" target="SCHEMA_NAME" source="SCHEMA_NAME"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TABLE_NAME" source="TABLE_NAME"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="COLUMN_NAME" source="COLUMN_NAME"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="POSITION" source="POSITION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INDEX_POSITION" source="INDEX_POSITION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DATA_TYPE_NAME" source="DATA_TYPE_NAME"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="OVERFLOW_METADATA" joinType="inner">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="JOB_ID"/>
+        <viewAttribute id="TABLE_NAME"/>
+        <viewAttribute id="IS_PRIMARY_KEY"/>
+        <viewAttribute id="IS_PARENT_KEY"/>
+        <viewAttribute id="AGING_LIMIT"/>
+        <viewAttribute id="SEPARATOR_POSITION"/>
+        <viewAttribute id="SEQUENCE_OF_CONCAT"/>
+        <viewAttribute id="FILE_TYPE"/>
+        <viewAttribute id="CC_VALUES_ONLY"/>
+        <viewAttribute id="COLUMN_NAME"/>
+        <viewAttribute id="PROCESS_ID"/>
+        <viewAttribute id="CYCLE_ID"/>
+        <viewAttribute id="ROWID"/>
+        <viewAttribute id="IS_AMOUNT"/>
+        <viewAttribute id="DATA_TYPE_NAME"/>
+        <viewAttribute hidden="true" id="JOIN$FIELD_NAME$COLUMN_NAME"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="TINYINT" id="IS_A_PRIMARY_KEY" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isnull(&quot;SEQUENCE_OF_CONCAT&quot;), 0,1)</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#OVERFLOW_FILE">
+        <mapping xsi:type="Calculation:AttributeMapping" target="JOB_ID" source="JOB_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TABLE_NAME" source="TABLE_NAME"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_PRIMARY_KEY" source="IS_PRIMARY_KEY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_PARENT_KEY" source="IS_PARENT_KEY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AGING_LIMIT" source="AGING_LIMIT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FILE_TYPE" source="FILE_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_VALUES_ONLY" source="CC_VALUES_ONLY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROCESS_ID" source="PROCESS_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCLE_ID" source="CYCLE_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ROWID" source="ROWID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_AMOUNT" source="IS_AMOUNT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$FIELD_NAME$COLUMN_NAME" source="FIELD_NAME"/>
+      </input>
+      <input node="#LANDING_METADATA">
+        <mapping xsi:type="Calculation:AttributeMapping" target="SEPARATOR_POSITION" source="POSITION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SEQUENCE_OF_CONCAT" source="INDEX_POSITION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="COLUMN_NAME" source="COLUMN_NAME"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DATA_TYPE_NAME" source="DATA_TYPE_NAME"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TABLE_NAME" source="TABLE_NAME"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$FIELD_NAME$COLUMN_NAME" source="COLUMN_NAME"/>
+      </input>
+      <joinAttribute name="TABLE_NAME"/>
+      <joinAttribute name="JOIN$FIELD_NAME$COLUMN_NAME"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="FIXED_WIDTH">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="JOB_ID"/>
+        <viewAttribute id="FILE_TYPE"/>
+        <viewAttribute id="ERROR_RECORD"/>
+        <viewAttribute id="TABLE_NAME"/>
+        <viewAttribute id="FIELD_NAME"/>
+        <viewAttribute id="IS_PRIMARY_KEY"/>
+        <viewAttribute id="IS_PARENT_KEY"/>
+        <viewAttribute id="DATA_SEPARATOR"/>
+        <viewAttribute id="SEPARATOR_TYPE">
+          <filter xsi:type="AccessControl:SingleValueFilter" including="true" value="F"/>
+        </viewAttribute>
+        <viewAttribute id="START_POSITION"/>
+        <viewAttribute id="END_POSITION"/>
+        <viewAttribute id="SEPARATOR"/>
+        <viewAttribute id="SEPARATOR_POSITION"/>
+        <viewAttribute id="SEQUENCE_OF_CONCAT"/>
+        <viewAttribute id="AGING_LIMIT"/>
+        <viewAttribute id="PROCESS_ID"/>
+        <viewAttribute id="CYCLE_ID"/>
+        <viewAttribute id="ROWID"/>
+        <viewAttribute id="RECORD_LENGTH"/>
+        <viewAttribute id="IS_AMOUNT"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="VARCHAR" id="CC_PRIMARY_KEY" length="50" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(&quot;IS_PRIMARY_KEY&quot; = 1,&#xD;
+     if(&quot;FIELD_NAME&quot; = 'CYCL_ID', &#xD;
+     &quot;CYCLE_ID&quot;,&#xD;
+     midstr(&quot;DATA_ONLY&quot;, &quot;START_POSITION&quot;, &quot;END_POSITION&quot;-&quot;START_POSITION&quot;+1))&#xD;
+, '')&#xD;
+</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="VARCHAR" id="CC_PARENT_KEY" length="50" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(&quot;IS_PARENT_KEY&quot; = 1,&#xD;
+     if(&quot;FIELD_NAME&quot; = 'CYCL_ID', &#xD;
+     &quot;CYCLE_ID&quot;,&#xD;
+     midstr(&quot;DATA_ONLY&quot;, &quot;START_POSITION&quot;, &quot;END_POSITION&quot;-&quot;START_POSITION&quot;+1)),&#xD;
+'')</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="DOUBLE" id="CC_AMOUNT" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(&quot;IS_AMOUNT&quot;, double(midstr(&quot;DATA_ONLY&quot;,&quot;START_POSITION&quot;, &quot;END_POSITION&quot;-&quot;START_POSITION&quot;+1)), 0)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="DATA_ONLY" length="2000" expressionLanguage="COLUMN_ENGINE">
+          <formula>rightstr(&quot;ERROR_RECORD&quot;,&quot;RECORD_LENGTH&quot;)</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#ERROR_FILE">
+        <mapping xsi:type="Calculation:AttributeMapping" target="JOB_ID" source="JOB_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FILE_TYPE" source="FILE_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ERROR_RECORD" source="ERROR_RECORD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TABLE_NAME" source="TABLE_NAME"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FIELD_NAME" source="FIELD_NAME"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_PRIMARY_KEY" source="IS_PRIMARY_KEY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_PARENT_KEY" source="IS_PARENT_KEY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DATA_SEPARATOR" source="DATA_SEPARATOR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SEPARATOR_TYPE" source="SEPARATOR_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="START_POSITION" source="START_POSITION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="END_POSITION" source="END_POSITION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SEPARATOR" source="SEPARATOR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SEPARATOR_POSITION" source="SEPARATOR_POSITION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SEQUENCE_OF_CONCAT" source="SEQUENCE_OF_CONCAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AGING_LIMIT" source="AGING_LIMIT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROCESS_ID" source="PROCESS_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCLE_ID" source="CYCLE_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ROWID" source="ROWID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RECORD_LENGTH" source="RECORD_LENGTH"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_AMOUNT" source="IS_AMOUNT"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="DELIMITER">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="JOB_ID"/>
+        <viewAttribute id="FILE_TYPE"/>
+        <viewAttribute id="ERROR_RECORD"/>
+        <viewAttribute id="TABLE_NAME"/>
+        <viewAttribute id="FIELD_NAME"/>
+        <viewAttribute id="IS_PRIMARY_KEY"/>
+        <viewAttribute id="IS_PARENT_KEY"/>
+        <viewAttribute id="SEPARATOR"/>
+        <viewAttribute id="SEPARATOR_POSITION"/>
+        <viewAttribute id="SEPARATOR_TYPE">
+          <filter xsi:type="AccessControl:SingleValueFilter" including="true" value="D"/>
+        </viewAttribute>
+        <viewAttribute id="SEQUENCE_OF_CONCAT"/>
+        <viewAttribute id="AGING_LIMIT"/>
+        <viewAttribute id="DATA_SEPARATOR"/>
+        <viewAttribute id="PROCESS_ID"/>
+        <viewAttribute id="CYCLE_ID"/>
+        <viewAttribute id="ROWID"/>
+        <viewAttribute id="IS_AMOUNT"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="VARCHAR" id="CC_DATA_ONLY" length="1000" expressionLanguage="SQL">
+          <formula>substr_after(&quot;ERROR_RECORD&quot;,&quot;DATA_SEPARATOR&quot;)</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#ERROR_FILE">
+        <mapping xsi:type="Calculation:AttributeMapping" target="JOB_ID" source="JOB_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FILE_TYPE" source="FILE_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ERROR_RECORD" source="ERROR_RECORD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TABLE_NAME" source="TABLE_NAME"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FIELD_NAME" source="FIELD_NAME"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_PRIMARY_KEY" source="IS_PRIMARY_KEY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_PARENT_KEY" source="IS_PARENT_KEY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SEPARATOR" source="SEPARATOR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SEPARATOR_POSITION" source="SEPARATOR_POSITION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SEPARATOR_TYPE" source="SEPARATOR_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SEQUENCE_OF_CONCAT" source="SEQUENCE_OF_CONCAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AGING_LIMIT" source="AGING_LIMIT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DATA_SEPARATOR" source="DATA_SEPARATOR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROCESS_ID" source="PROCESS_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCLE_ID" source="CYCLE_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ROWID" source="ROWID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_AMOUNT" source="IS_AMOUNT"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:UnionView" id="All_error_record">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="JOB_ID"/>
+        <viewAttribute id="FILE_TYPE"/>
+        <viewAttribute datatype="VARCHAR" id="ERROR_RECORD" length="1000" scale="0"/>
+        <viewAttribute id="TABLE_NAME"/>
+        <viewAttribute id="FIELD_NAME"/>
+        <viewAttribute id="IS_PRIMARY_KEY"/>
+        <viewAttribute id="IS_PARENT_KEY"/>
+        <viewAttribute datatype="NVARCHAR" id="SEPARATOR_TYPE" length="1" scale="0"/>
+        <viewAttribute id="START_POSITION"/>
+        <viewAttribute id="END_POSITION"/>
+        <viewAttribute datatype="NVARCHAR" id="SEPARATOR" length="1" scale="0"/>
+        <viewAttribute id="SEPARATOR_POSITION"/>
+        <viewAttribute id="SEQUENCE_OF_CONCAT"/>
+        <viewAttribute id="AGING_LIMIT"/>
+        <viewAttribute id="CC_PARENT_KEY"/>
+        <viewAttribute id="CC_PRIMARY_KEY"/>
+        <viewAttribute id="PROCESS_ID"/>
+        <viewAttribute id="CYCLE_ID"/>
+        <viewAttribute id="ROWID"/>
+        <viewAttribute id="CC_AMOUNT"/>
+        <viewAttribute id="IS_AMOUNT"/>
+        <viewAttribute id="DATA_TYPE_NAME"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input emptyUnionBehavior="NO_ROW" node="#FIXED_WIDTH">
+        <mapping xsi:type="Calculation:AttributeMapping" target="JOB_ID" source="JOB_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FILE_TYPE" source="FILE_TYPE"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="ERROR_RECORD" null="true" value=""/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TABLE_NAME" source="TABLE_NAME"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FIELD_NAME" source="FIELD_NAME"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_PRIMARY_KEY" source="IS_PRIMARY_KEY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_PARENT_KEY" source="IS_PARENT_KEY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SEPARATOR_TYPE" source="SEPARATOR_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="START_POSITION" source="START_POSITION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="END_POSITION" source="END_POSITION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SEPARATOR" source="SEPARATOR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SEPARATOR_POSITION" source="SEPARATOR_POSITION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SEQUENCE_OF_CONCAT" source="SEQUENCE_OF_CONCAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AGING_LIMIT" source="AGING_LIMIT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_PARENT_KEY" source="CC_PARENT_KEY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_PRIMARY_KEY" source="CC_PRIMARY_KEY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROCESS_ID" source="PROCESS_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCLE_ID" source="CYCLE_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ROWID" source="ROWID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_AMOUNT" source="CC_AMOUNT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_AMOUNT" source="IS_AMOUNT"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="DATA_TYPE_NAME" null="true" value=""/>
+      </input>
+      <input emptyUnionBehavior="NO_ROW" node="#DELIMITER">
+        <mapping xsi:type="Calculation:AttributeMapping" target="JOB_ID" source="JOB_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FILE_TYPE" source="FILE_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ERROR_RECORD" source="CC_DATA_ONLY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TABLE_NAME" source="TABLE_NAME"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FIELD_NAME" source="FIELD_NAME"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_PRIMARY_KEY" source="IS_PRIMARY_KEY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_PARENT_KEY" source="IS_PARENT_KEY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SEPARATOR_TYPE" source="SEPARATOR_TYPE"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="START_POSITION" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="END_POSITION" null="true" value=""/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SEPARATOR" source="SEPARATOR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SEPARATOR_POSITION" source="SEPARATOR_POSITION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SEQUENCE_OF_CONCAT" source="SEQUENCE_OF_CONCAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AGING_LIMIT" source="AGING_LIMIT"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="CC_PARENT_KEY" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="CC_PRIMARY_KEY" null="true" value=""/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROCESS_ID" source="PROCESS_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCLE_ID" source="CYCLE_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ROWID" source="ROWID"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="CC_AMOUNT" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="IS_AMOUNT" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="DATA_TYPE_NAME" null="true" value=""/>
+      </input>
+      <input emptyUnionBehavior="NO_ROW" node="#OVERFLOW_METADATA">
+        <mapping xsi:type="Calculation:AttributeMapping" target="JOB_ID" source="JOB_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FILE_TYPE" source="FILE_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ERROR_RECORD" source="CC_VALUES_ONLY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TABLE_NAME" source="TABLE_NAME"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FIELD_NAME" source="COLUMN_NAME"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_PRIMARY_KEY" source="IS_A_PRIMARY_KEY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_PARENT_KEY" source="IS_PARENT_KEY"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="SEPARATOR_TYPE" null="false" value="D"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="START_POSITION" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="END_POSITION" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="SEPARATOR" null="false" value=","/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SEPARATOR_POSITION" source="SEPARATOR_POSITION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SEQUENCE_OF_CONCAT" source="SEQUENCE_OF_CONCAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="AGING_LIMIT" source="AGING_LIMIT"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="CC_PARENT_KEY" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="CC_PRIMARY_KEY" null="true" value=""/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROCESS_ID" source="PROCESS_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCLE_ID" source="CYCLE_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ROWID" source="ROWID"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="CC_AMOUNT" null="true" value=""/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="IS_AMOUNT" null="true" value=""/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DATA_TYPE_NAME" source="DATA_TYPE_NAME"/>
+      </input>
+    </calculationView>
+  </calculationViews>
+  <logicalModel id="All_error_record">
+    <descriptions/>
+    <attributes>
+      <attribute id="JOB_ID" order="1" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="JOB_ID"/>
+        <keyMapping columnObjectName="All_error_record" columnName="JOB_ID"/>
+      </attribute>
+      <attribute id="FILE_TYPE" order="2" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="FILE_TYPE"/>
+        <keyMapping columnObjectName="All_error_record" columnName="FILE_TYPE"/>
+      </attribute>
+      <attribute id="ERROR_RECORD" order="3" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ERROR_RECORD"/>
+        <keyMapping columnObjectName="All_error_record" columnName="ERROR_RECORD"/>
+      </attribute>
+      <attribute id="TABLE_NAME" order="4" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="TABLE_NAME"/>
+        <keyMapping columnObjectName="All_error_record" columnName="TABLE_NAME"/>
+      </attribute>
+      <attribute id="FIELD_NAME" order="5" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="FIELD_NAME"/>
+        <keyMapping columnObjectName="All_error_record" columnName="FIELD_NAME"/>
+      </attribute>
+      <attribute id="IS_PRIMARY_KEY" order="6" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="IS_PRIMARY_KEY"/>
+        <keyMapping columnObjectName="All_error_record" columnName="IS_PRIMARY_KEY"/>
+      </attribute>
+      <attribute id="IS_PARENT_KEY" order="7" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="IS_PARENT_KEY"/>
+        <keyMapping columnObjectName="All_error_record" columnName="IS_PARENT_KEY"/>
+      </attribute>
+      <attribute id="SEPARATOR_TYPE" order="8" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SEPARATOR_TYPE"/>
+        <keyMapping columnObjectName="All_error_record" columnName="SEPARATOR_TYPE"/>
+      </attribute>
+      <attribute id="START_POSITION" order="9" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="START_POSITION"/>
+        <keyMapping columnObjectName="All_error_record" columnName="START_POSITION"/>
+      </attribute>
+      <attribute id="END_POSITION" order="10" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="END_POSITION"/>
+        <keyMapping columnObjectName="All_error_record" columnName="END_POSITION"/>
+      </attribute>
+      <attribute id="SEPARATOR" order="11" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SEPARATOR"/>
+        <keyMapping columnObjectName="All_error_record" columnName="SEPARATOR"/>
+      </attribute>
+      <attribute id="SEPARATOR_POSITION" order="12" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SEPARATOR_POSITION"/>
+        <keyMapping columnObjectName="All_error_record" columnName="SEPARATOR_POSITION"/>
+      </attribute>
+      <attribute id="SEQUENCE_OF_CONCAT" order="13" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SEQUENCE_OF_CONCAT"/>
+        <keyMapping columnObjectName="All_error_record" columnName="SEQUENCE_OF_CONCAT"/>
+      </attribute>
+      <attribute id="AGING_LIMIT" order="14" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="AGING_LIMIT"/>
+        <keyMapping columnObjectName="All_error_record" columnName="AGING_LIMIT"/>
+      </attribute>
+      <attribute id="CC_PARENT_KEY" order="15" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CC_PARENT_KEY"/>
+        <keyMapping columnObjectName="All_error_record" columnName="CC_PARENT_KEY"/>
+      </attribute>
+      <attribute id="CC_PRIMARY_KEY" order="16" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CC_PRIMARY_KEY"/>
+        <keyMapping columnObjectName="All_error_record" columnName="CC_PRIMARY_KEY"/>
+      </attribute>
+      <attribute id="PROCESS_ID" order="17" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="PROCESS_ID"/>
+        <keyMapping columnObjectName="All_error_record" columnName="PROCESS_ID"/>
+      </attribute>
+      <attribute id="CYCLE_ID" order="18" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CYCLE_ID"/>
+        <keyMapping columnObjectName="All_error_record" columnName="CYCLE_ID"/>
+      </attribute>
+      <attribute id="ROWID" order="19" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ROWID"/>
+        <keyMapping columnObjectName="All_error_record" columnName="ROWID"/>
+      </attribute>
+      <attribute id="CC_AMOUNT" hidden="false" order="20" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions/>
+        <keyMapping columnObjectName="All_error_record" columnName="CC_AMOUNT"/>
+      </attribute>
+      <attribute id="IS_AMOUNT" order="21" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Is the field an amount?"/>
+        <keyMapping columnObjectName="All_error_record" columnName="IS_AMOUNT"/>
+      </attribute>
+      <attribute id="DATA_TYPE_NAME" order="22" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SQL data type name of the column"/>
+        <keyMapping columnObjectName="All_error_record" columnName="DATA_TYPE_NAME"/>
+      </attribute>
+    </attributes>
+    <calculatedAttributes/>
+    <privateDataFoundation>
+      <tableProxies/>
+      <joins/>
+      <layout>
+        <shapes/>
+      </layout>
+    </privateDataFoundation>
+    <baseMeasures/>
+    <calculatedMeasures/>
+    <restrictedMeasures/>
+    <localDimensions/>
+  </logicalModel>
+  <layout>
+    <shapes>
+      <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+        <upperLeftCorner x="176" y="87"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Error_Staging" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="98" y="569"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Error_Mapping" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="252" y="569"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Staging_Mapping" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="175" y="473"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="ERROR_FILE" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="99" y="395"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="OVERFLOW_FILE" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="253" y="395"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="LANDING_METADATA" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="407" y="395"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="OVERFLOW_METADATA" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="330" y="299"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="FIXED_WIDTH" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="22" y="299"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="DELIMITER" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="176" y="299"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="All_error_record" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="176" y="165"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+    </shapes>
+  </layout>
+</Calculation:scenario>

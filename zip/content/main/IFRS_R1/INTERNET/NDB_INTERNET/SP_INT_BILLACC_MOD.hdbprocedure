@@ -1,0 +1,320 @@
+PROCEDURE "NDB_INTERNET"."IFRS_R1.INTERNET.NDB_INTERNET::SP_INT_BILLACC_MOD"
+(OUT OP_STATUS NVARCHAR(100)) 
+	LANGUAGE SQLSCRIPT
+	SQL SECURITY INVOKER 
+	AS
+
+BEGIN 
+--------------------------------------------------------------------------------------------------
+-- Procedure Title : SP_INT_CUST_MOD
+-- Created By      : BC_EY94106 (Rohit)       
+-- Create Date     : 20-07-2017
+-- Description     : Data Inserted using Calculation View - CA_INT_BILLACC_MOD
+--                   to NDB Table - INT_CUST Using this stored procedure.
+-- Project         : Bell Canada
+-- Release         : R1 / IFRS
+--------------------------------------------------------------------------------------------------
+--   M O D I F I C A T I O N   H I S T O R Y
+--------------------------------------------------------------------------------------------------
+-- Date        | User ID          | Modification History/Release
+--------------------------------------------------------------------------------------------------
+--             |                  | 
+--------------------------------------------------------------------------------------------------
+-- Description Of the changes 
+--------------------------------------------------------------------------------------------------
+-- Modification Number          : <Assign Some Number> 
+-- Description of Changes Made> : <Description of Changes>    
+--------------------------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------------------------
+-- Local Variables Declaration
+--------------------------------------------------------------------------------------------------
+
+DECLARE LC_ERROR_TEXT 		NVARCHAR(70) DEFAULT 'OUT STATUS IS 1 : INSERT/UPDATE FOR ONE OR MORE RECORD FAILED';
+DECLARE LC_SUCCESS_TEXT 	NVARCHAR(70) DEFAULT 'OUT STATUS IS 0 : INSERT/UPDATE EXECUTION SUCCESSFUL';
+DECLARE LV_ERROR_FLAG 		NVARCHAR(1) := 'N';
+DECLARE LV_CUR_UTC 			TIMESTAMP := CURRENT_TIMESTAMP;
+DECLARE ERROR_TAB 			TABLE (ERROR_CODE NVARCHAR(1000));
+DECLARE i					INTEGER;
+DECLARE RECORD_COUNT		INTEGER;
+DECLARE CURRENT_ERROR		NVARCHAR(1000);
+DECLARE LV_OPT_AO_PRC		DECIMAL(15,5);
+DECLARE LV_AO_PRC			DECIMAL(15,5);
+DECLARE LV_PRC_MOD_IND		NVARCHAR(1);
+  
+--------------------------------------------------------------------------------------------------
+-- Cursors Declaration
+-------------------------------------------------------------------------------------------------- 
+DECLARE CURSOR C_CUST FOR
+			SELECT	 "ALTN_CONTR_NUM",
+	 	             "PRM_CONTR_CUST",
+	 	             "PRDCT_TYP",
+	 	             "ACCT_TY",
+	 	             "ACCT_SUB_TY",
+	 	             "SERV_STRT_DT",
+	 	             "CUST_STATE",
+	 	             "CUST_LOC_ID_BILLACC",
+	                 "LGL_ENTT",
+       	             "MKT",
+	                 "SUBMKT",
+	                 "BAN_STS",
+	                 "BL_CYC",
+	                 "CYCLE_BILL_DAY",
+	                 "SUB_STS_RSN_CD",
+	                 "REQ_ST_GRC_PRD",
+	                 "REQ_END_GRC_PRD",
+	                 "CMT_STRT_DT",
+                	 "CMT_END_DT",
+	                 "CMT_RSN_CD",
+	                 "NXT_BAN",
+	                 "NXT_BAN_MOVE_DT",
+	                 "PRV_BAN",
+	                 "PRV_BAN_MOVE_DT",
+	                 "CONTR_IPTN_DT",
+	                 "CONTR_TERM",
+	                 "SUB_STATUS_LAST_ACT",
+	                 "SUB_STATUS_DATE",
+	                 "ONEBILL_BAN",
+	                 "KUNNR_SID",
+	                 "REFERENCE_EFFECTIVE_DT_BILLACC",
+	                 "REFERENCE_EXPIRY_DT_BILLACC",
+	                 "CST_CNTR",
+	                 "MODIFICATION",
+	                 "EFFECTIVE_DATE_PREV_DAY" 
+                     FROM "_SYS_BIC"."IFRS_R1.INTERNET.NDB_INTERNET/CA_INT_BILLACC_MOD";
+         
+--------------------------------------------------------------------------------------------------
+-- Local Temporary Tables Declaration
+-------------------------------------------------------------------------------------------------- 
+
+CREATE LOCAL TEMPORARY TABLE #UPDATE_EH_DELETION (PRM_CONTR_CUST NVARCHAR(20), ALTN_CONTR_NUM NVARCHAR(9), REFERENCE_EFFECTIVE_DT DATE);
+        	  
+--------------------------------------------------------------------------------------------------
+-- Cursors Loop
+-------------------------------------------------------------------------------------------------- 
+
+FOR CUR_CUST AS C_CUST DO
+
+--  Define Exit Handler
+	DECLARE EXIT HANDLER FOR SQLEXCEPTION 
+	BEGIN AUTONOMOUS TRANSACTION 
+			
+		--  Define Exit Handler
+			DECLARE EXIT HANDLER FOR SQLEXCEPTION 
+			BEGIN AUTONOMOUS TRANSACTION 
+			
+			END;
+						
+		   -- Insert record into error table
+		   	  INSERT INTO "NDB_INTERNET"."IFRS_R1.INTERNET.NDB_INTERNET::INT_CUST_EH"(
+		   	  		       "PRM_CONTR_CUST",
+						   "ALTN_CONTR_NUM",
+						   "PRDCT_TYP",		
+						   "ACCT_TY",
+						   "ACCT_SUB_TY",
+						   "SERV_STRT_DT",
+						   "CUST_STATE",
+			   	   		   "CUST_LOC_ID",
+		    			   "LGL_ENTT",
+		    			   "MKT",
+		    			   "SUBMKT",
+		    			   "BAN_STS",
+						   "BL_CYC",
+		    			   "CYCLE_BILL_DAY",
+		    			   "SUB_STS_RSN_CD",
+		    			   "REQ_ST_GRC_PRD",
+		    			   "REQ_END_GRC_PRD",	
+			 			   "CMT_STRT_DT",
+						   "CMT_END_DT",			
+						   "CMT_RSN_CD",
+						   "NXT_BAN",
+						   "NXT_BAN_MOVE_DT",
+						   "PRV_BAN",
+						   "PRV_BAN_MOVE_DT",
+						   "CONTR_IPTN_DT",
+						   "CONTR_TERM",
+						   "REFERENCE_EFFECTIVE_DT",
+						   "REFERENCE_EXPIRY_DT",
+						   "SUB_STATUS_DATE",
+			               "SUB_STATUS_LAST_ACT",
+			               "CST_CNTR",
+			               "KUNNR_SID",
+						   "ONEBILL_BAN",				   						
+						   "INSERT_TS",
+						   "ERROR_CODE",
+				           "TECHNICAL_MESSAGE",
+				           "ERROR_CREATE_TS")
+			       VALUES(CUR_CUST."PRM_CONTR_CUST",
+						  CUR_CUST."ALTN_CONTR_NUM",
+						  CUR_CUST."PRDCT_TYP",
+						  CUR_CUST."ACCT_TY",
+						  CUR_CUST."ACCT_SUB_TY",
+						  CUR_CUST."SERV_STRT_DT",
+						  CUR_CUST."CUST_STATE",
+						  CUR_CUST."CUST_LOC_ID_BILLACC",
+						  CUR_CUST."LGL_ENTT",
+		    			  CUR_CUST."MKT",
+		    			  CUR_CUST."SUBMKT",
+		    			  CUR_CUST."BAN_STS",
+						  CUR_CUST."BL_CYC",
+		    			  CUR_CUST."CYCLE_BILL_DAY",
+		    			  CUR_CUST."SUB_STS_RSN_CD",
+		    			  CUR_CUST."REQ_ST_GRC_PRD",
+		    			  CUR_CUST."REQ_END_GRC_PRD",	
+			 			  CUR_CUST."CMT_STRT_DT",
+						  CUR_CUST."CMT_END_DT",			
+						  CUR_CUST."CMT_RSN_CD",
+						  CUR_CUST."NXT_BAN",
+						  CUR_CUST."NXT_BAN_MOVE_DT",
+						  CUR_CUST."PRV_BAN",
+						  CUR_CUST."PRV_BAN_MOVE_DT",
+						  CUR_CUST."CONTR_IPTN_DT",
+						  CUR_CUST."CONTR_TERM",
+						  CUR_CUST."REFERENCE_EFFECTIVE_DT_BILLACC",
+						  CUR_CUST."REFERENCE_EXPIRY_DT_BILLACC",
+						  CUR_CUST."SUB_STATUS_DATE",
+			              CUR_CUST."SUB_STATUS_LAST_ACT",
+			              CUR_CUST."CST_CNTR",
+			              CUR_CUST."KUNNR_SID",
+						  CUR_CUST."ONEBILL_BAN",
+						  LV_CUR_UTC,
+						  ::SQL_ERROR_CODE,
+				          ::SQL_ERROR_MESSAGE,
+				          LV_CUR_UTC);
+				          
+		       LV_ERROR_FLAG := 'Y';
+		       
+      END;
+		
+-- Processing for Successful Records
+   
+--   If Record exists in the Target NDB Table
+     IF CUR_CUST.MODIFICATION = 'Y' THEN
+
+BEGIN AUTONOMOUS TRANSACTION 
+	--      Update the target NDB table
+		    UPDATE "NDB_INTERNET"."IFRS_R1.INTERNET.NDB_INTERNET::INT_CUST" NDB 
+			   SET  NDB.REFERENCE_EXPIRY_DT   = CUR_CUST.EFFECTIVE_DATE_PREV_DAY,
+		 		    NDB.MODIFIED_TS           = LV_CUR_UTC 
+			 WHERE  CUR_CUST."PRM_CONTR_CUST" = NDB."PRM_CONTR_CUST"  
+			   AND  CUR_CUST."ALTN_CONTR_NUM" = NDB."ALTN_CONTR_NUM"
+			   AND  NDB.REFERENCE_EXPIRY_DT   = '99991231';
+	   	  
+	--    Insert the Incoming new record
+		  INSERT INTO "NDB_INTERNET"."IFRS_R1.INTERNET.NDB_INTERNET::INT_CUST"(
+		   	  		   "PRM_CONTR_CUST",
+					   "ALTN_CONTR_NUM",
+					   "PRDCT_TYP",		
+					   "ACCT_TY",
+					   "ACCT_SUB_TY",
+					   "SERV_STRT_DT",
+					   "CUST_STATE",
+			   		   "CUST_LOC_ID",
+		    		   "LGL_ENTT",
+		    		   "MKT",
+		    		   "SUBMKT",
+		    		   "BAN_STS",
+					   "BL_CYC",
+		    		   "CYCLE_BILL_DAY",
+		    		   "SUB_STS_RSN_CD",
+		    		   "REQ_ST_GRC_PRD",
+		    		   "REQ_END_GRC_PRD",	
+			 		   "CMT_STRT_DT",
+					   "CMT_END_DT",			
+					   "CMT_RSN_CD",
+					   "NXT_BAN",
+					   "NXT_BAN_MOVE_DT",
+					   "PRV_BAN",
+					   "PRV_BAN_MOVE_DT",
+					   "CONTR_IPTN_DT",
+					   "CONTR_TERM",
+					   "REFERENCE_EFFECTIVE_DT",
+					   "REFERENCE_EXPIRY_DT",
+					   "SUB_STATUS_DATE",
+			           "SUB_STATUS_LAST_ACT",
+			           "CST_CNTR",
+			           "KUNNR_SID",
+			           "ONEBILL_BAN",						   						
+					   "INSERT_TS",
+					   "MODIFIED_TS")
+		       VALUES(CUR_CUST."PRM_CONTR_CUST",
+					  CUR_CUST."ALTN_CONTR_NUM",
+					  CUR_CUST."PRDCT_TYP",
+					  CUR_CUST."ACCT_TY",
+					  CUR_CUST."ACCT_SUB_TY",
+					  CUR_CUST."SERV_STRT_DT",
+					  CUR_CUST."CUST_STATE",
+					  CUR_CUST."CUST_LOC_ID_BILLACC",
+					  CUR_CUST."LGL_ENTT",
+					  CUR_CUST."MKT",
+					  CUR_CUST."SUBMKT",
+				      CUR_CUST."BAN_STS",
+					  CUR_CUST."BL_CYC",
+					  CUR_CUST."CYCLE_BILL_DAY",
+		    		  CUR_CUST."SUB_STS_RSN_CD",
+		    		  CUR_CUST."REQ_ST_GRC_PRD",
+		    		  CUR_CUST."REQ_END_GRC_PRD",
+					  CUR_CUST."CMT_END_DT",
+					  CUR_CUST."CMT_STRT_DT",
+					  CUR_CUST."CMT_RSN_CD",
+				      CUR_CUST."NXT_BAN",
+					  CUR_CUST."NXT_BAN_MOVE_DT",
+					  CUR_CUST."PRV_BAN",
+					  CUR_CUST."PRV_BAN_MOVE_DT",
+					  CUR_CUST."CONTR_IPTN_DT",
+					  CUR_CUST."CONTR_TERM",
+				      CUR_CUST."REFERENCE_EFFECTIVE_DT_BILLACC",
+					  CUR_CUST."REFERENCE_EXPIRY_DT_BILLACC",
+					  CUR_CUST."SUB_STATUS_DATE",
+			          CUR_CUST."SUB_STATUS_LAST_ACT",
+			          CUR_CUST."CST_CNTR",						   						
+					  CUR_CUST."KUNNR_SID",
+		              CUR_CUST."ONEBILL_BAN",
+					  LV_CUR_UTC,
+			          LV_CUR_UTC);
+			          
+			  END ; -- END AUTONOMOUS TRANSACTION				   	        
+			          
+		          
+--         Insert PK of successfully processed Records into Local Temp Tables 
+--         for Updating NDB_TS in corresponding Landing Tables records
+		   INSERT INTO #UPDATE_EH_DELETION
+					   (PRM_CONTR_CUST, 
+					   	ALTN_CONTR_NUM,
+					   	REFERENCE_EFFECTIVE_DT) 
+		        VALUES (CUR_CUST."PRM_CONTR_CUST", 
+					   	CUR_CUST."ALTN_CONTR_NUM",
+					   	CUR_CUST."REFERENCE_EFFECTIVE_DT_BILLACC");                     	
+    
+    END IF;
+
+END FOR;
+
+
+-- Update Error Table 
+
+UPDATE "NDB_INTERNET"."IFRS_R1.INTERNET.NDB_INTERNET::INT_CUST_EH" A
+  FROM "NDB_INTERNET"."IFRS_R1.INTERNET.NDB_INTERNET::INT_CUST_EH" A 
+ INNER JOIN #UPDATE_EH_DELETION B
+    ON A."PRM_CONTR_CUST" 	      = B."PRM_CONTR_CUST"
+   AND A."ALTN_CONTR_NUM" 	      = B."ALTN_CONTR_NUM"
+   AND A."REFERENCE_EFFECTIVE_DT" = B."REFERENCE_EFFECTIVE_DT"
+   SET (DELETE_DATE, DELETED)     = (CURRENT_DATE, 1);
+
+--------------------------------------------------------------------------------------------------
+-- Set Overall Status
+-------------------------------------------------------------------------------------------------- 
+
+--  STATUS 0: Send the success message to scheduling tool to confirm this procedure has been
+--  executed successfully
+    IF(LV_ERROR_FLAG = 'Y') THEN		
+
+     OP_STATUS := LC_ERROR_TEXT; 
+			
+    ELSE
+
+  	 OP_STATUS := LC_SUCCESS_TEXT; 	
+				
+	END IF;
+		
+END;

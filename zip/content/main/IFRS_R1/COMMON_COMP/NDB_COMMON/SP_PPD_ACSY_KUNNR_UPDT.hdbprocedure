@@ -1,0 +1,119 @@
+PROCEDURE "NDB_COMMON"."IFRS_R1.COMMON_COMP.NDB_COMMON::SP_PPD_ACSY_KUNNR_UPDT"
+(OUT OP_STATUS NVARCHAR(1000))
+	LANGUAGE SQLSCRIPT
+	SQL SECURITY INVOKER 
+	--DEFAULT SCHEMA <default_schema_name>
+	--READS SQL DATA 
+	AS
+BEGIN
+-- Procedure Title : SP_PPD_ACSY_KUNNR_UPDT
+--
+-- Created By      : BC_EZ07674(Suresh Konidala)          Date :09/01/2017
+-- 
+-- Procedure Description : This is a stored procedure designed to update KUNNR and ECC TS 
+--                        from COMM_CUST table to PPD_ACSY_CUSTOMER table in NDB.
+-- Project :Bell Canada
+-- 
+-- Release :R1/IFRS
+--------------------------------------------------------------------------------
+--   M O D I F I C A T I O N   H I S T O R Y
+--------------------------------------------------------------------------------
+-- Date        | User ID          | Modification History/Release
+--------------------------------------------------------------------------------
+-- 02/05/2017  | EZ_18762		  | Effective date as input and one cursor logic/error logic 
+--------------------------------------------------------------------------------
+-- Description Of the changes 
+--------------------------------------------------------------------------------
+-- Modification Number          :<Assign Some Number> 
+-- Description of Changes Made> :<Description of Changes>       
+--------------------------------------------------------------------------------
+/* Local Varibale Declaration */
+
+ 
+
+	DECLARE LC_ERROR_TEXT 		NVARCHAR(70) DEFAULT 'OUT STATUS IS 1 : INSERT/UPDATE FOR ONE OR MORE RECORD FAILED';
+	DECLARE LC_SUCCESS_TEXT 	NVARCHAR(70) DEFAULT 'OUT STATUS IS 0 : INSERT/UPDATE EXECUTION SUCCESSFUL';
+	DECLARE LV_ERROR_FLAG 		NVARCHAR(1) := 'N';
+	DECLARE LV_CUR_UTC 			TIMESTAMP := CURRENT_TIMESTAMP;
+	DECLARE ERROR_TAB 			TABLE (ERROR_CODE NVARCHAR(100));
+	DECLARE i					INTEGER;
+	DECLARE RECORD_COUNT		INTEGER;
+	DECLARE CURRENT_ERROR		NVARCHAR(100);
+	
+	
+	DECLARE CURSOR CA_PPD_ACSY FOR
+		SELECT
+		 "UNIQUE_ACC_NO",
+		 "KUNNR_SID",
+		 "ECC_TS"
+		FROM "_SYS_BIC"."IFRS_R1.COMMON_COMP.NDB_COMMON/CA_PPD_ACSY_KUNNR_UPDT";
+
+	
+--------------------------------------------------------------------------------------------------
+-- Local Temporary Tables Declaration
+--------------------------------------------------------------------------------------------------	
+	 CREATE LOCAL TEMPORARY TABLE #UPDATE_EH_DELETION(UNIQUE_ACC_NO NVARCHAR(16));
+
+--------------------------------------------------------------------------------------------------
+-- Cursors Loop
+--------------------------------------------------------------------------------------------------                      
+ 
+   FOR CUR_PPD AS CA_PPD_ACSY DO
+		
+		-- Define Exit Handler
+		DECLARE EXIT HANDLER FOR SQLEXCEPTION 
+		BEGIN AUTONOMOUS TRANSACTION
+			-- Define Exit Handler
+			DECLARE EXIT HANDLER FOR SQLEXCEPTION 
+			BEGIN AUTONOMOUS TRANSACTION 
+			END;
+			
+			INSERT INTO "NDB_MOBILITY"."IFRS_R1.MOBILITY.NDB_MOBILITY::PPD_ACSY_CUSTOMER_EH"
+			("UNIQUE_ACC_NO",			
+		    "ERROR_CODE",
+			"TECHNICAL_MESSAGE",
+			"ERROR_CREATE_TS") 
+			VALUES
+			(CUR_PPD."UNIQUE_ACC_NO",
+			::SQL_ERROR_CODE,
+			::SQL_ERROR_MESSAGE,
+	  		LV_CUR_UTC);
+			LV_ERROR_FLAG := 'Y';		   
+		END;
+		
+			-- If KUNNR_SID exists in the COMM_CUST Table for this record, update the record with KUNNR_SID	
+     				/* Update KUNNR,MODIFIED_TS from COMM_CUST table to P77_ACSY_CUSTOMER table in NDB. */
+			UPDATE A
+			    SET A."ACSY_KUNNR_SID" = CUR_PPD."KUNNR_SID",
+			    A."MODIFIED_TS" = CUR_PPD."ECC_TS"
+			FROM "NDB_MOBILITY"."IFRS_R1.MOBILITY.NDB_MOBILITY::PPD_ACSY_CUSTOMER" A
+			WHERE A."UNIQUE_ACC_NO" = CUR_PPD."UNIQUE_ACC_NO";					
+			
+			INSERT INTO #UPDATE_EH_DELETION
+					(UNIQUE_ACC_NO)     
+ 	     	VALUES (CUR_PPD."UNIQUE_ACC_NO");
+	END FOR;
+ 
+--------------------------------------------------------------------------------------------------
+-- Update Error Table
+--------------------------------------------------------------------------------------------------
+
+	UPDATE "NDB_MOBILITY"."IFRS_R1.MOBILITY.NDB_MOBILITY::PPD_ACSY_CUSTOMER_EH" A
+    FROM "NDB_MOBILITY"."IFRS_R1.MOBILITY.NDB_MOBILITY::PPD_ACSY_CUSTOMER_EH" A 
+    INNER JOIN #UPDATE_EH_DELETION B       
+    ON A."UNIQUE_ACC_NO" = B."UNIQUE_ACC_NO"
+    SET (DELETE_DATE, DELETED) = (CURRENT_DATE, 1);
+
+    
+ --------------------------------------------------------------------------------------------------
+	-- Set Overall Status
+-------------------------------------------------------------------------------------------------- 
+	--  STATUS 0: Send the success message to scheduling tool to confirm this procedure has been
+	--  executed successfully
+    IF(LV_ERROR_FLAG = 'Y') THEN
+    	OP_STATUS := LC_ERROR_TEXT; 			
+    ELSE
+  		OP_STATUS := LC_SUCCESS_TEXT;				
+	END IF;
+	
+END;   

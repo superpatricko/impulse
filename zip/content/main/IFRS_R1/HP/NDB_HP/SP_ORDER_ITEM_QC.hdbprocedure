@@ -1,0 +1,560 @@
+PROCEDURE "NDB_HP"."IFRS_R1.HP.NDB_HP::SP_ORDER_ITEM_QC" 
+(IN IP_CYCL_ID NVARCHAR(3),
+OUT OP_STATUS NVARCHAR(100))   
+	LANGUAGE SQLSCRIPT
+	SQL SECURITY INVOKER
+	AS
+
+BEGIN
+--------------------------------------------------------------------------------------------------
+-- Procedure Title : SP_ORDER_ITEM_QC
+-- Created By      : BC_EY94134 (Deepika)       
+-- Create Date     : 03-09-2016
+-- Description     : Data Inserted using Calculation View - CA_ORDER_ITEM_QC
+--                   To NDB Table - HP_ORDER Using this stored procedure.
+--                   HP Order includes data from table BCRIS_ITEM_LST_QC.			
+-- Project         : Bell Canada
+-- Release         : R1 / IFRS
+--------------------------------------------------------------------------------------------------
+--   M O D I F I C A T I O N   H I S T O R Y
+--------------------------------------------------------------------------------------------------
+-- Date        | User ID          | Modification History/Release
+--------------------------------------------------------------------------------------------------
+--             |                  | 
+--------------------------------------------------------------------------------------------------
+-- Description Of the changes 
+--------------------------------------------------------------------------------------------------
+-- Modification Number          : <Assign Some Number> 
+-- Description of Changes Made> : <Description of Changes>       
+--------------------------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------------------------
+-- Global Variables Declaration
+--------------------------------------------------------------------------------------------------
+
+DECLARE LC_ERROR_TEXT 		NVARCHAR(70) DEFAULT 'OUT STATUS IS 1 : INSERT/UPDATE FOR ONE OR MORE RECORD FAILED';
+DECLARE LC_SUCCESS_TEXT 	NVARCHAR(70) DEFAULT 'OUT STATUS IS 0 : INSERT/UPDATE EXECUTION SUCCESSFUL';
+DECLARE LV_ERROR_FLAG 		NVARCHAR(1) := 'N';
+DECLARE LV_CUR_UTC 			TIMESTAMP := CURRENT_TIMESTAMP;
+DECLARE ERROR_TAB 			TABLE (ERROR_CODE NVARCHAR(100));
+DECLARE i					INTEGER;
+DECLARE RECORD_COUNT		INTEGER;
+DECLARE CURRENT_ERROR		NVARCHAR(100);
+DECLARE LV_PREV_DAY         DATE;
+
+--- NEW VARIABLES DECLARATION-----
+DECLARE LV_LOOP_ERROR_FLAG INTEGER := 0;
+DECLARE LV_PREV_ITEM_CODE NVARCHAR(5) := NULL;
+---END  NEW VARIABLES DECLARATION-----  
+--------------------------------------------------------------------------------------------------
+-- Cursors Declaration
+--------------------------------------------------------------------------------------------------
+DECLARE CURSOR C_ORDER_QC FOR
+   SELECT "CONTRACT_UNIQUE_IDENTIFIER",
+	 	  "POB_END_DATE",
+	 	  "POB_EFFC_DATE",
+		  "PRIMARY_TELEPHONE_NUMBER",
+		  "SYSTEM_REGION",
+		  "SUBSCRIBER_NUMBER",
+		  "TERM_M2M",
+		  "WORKING_TELEPHONE_NUMBER",
+		  "ITEM_CODE",
+		  "ITEM_TYPE",
+		  "ITEM_QUANTITY",
+		  "FIXED_OR_VARIABLE_RATE_INDICATOR",
+		  "RATE_BAND",
+		  "ITEM_RATE",
+		  "ITEM_GROUP_CODE",
+		  "ITEM_INCEPTION_DT",
+		  "ITEM_END_DT",
+		  "M2M_SERVICE_INDICATOR",
+		  "RAC_CODE",
+		  "TOLL_FREE_NUMBER",
+		  "TEMPORARY_SEASONAL_SUSPENSION",
+		  "TOLL_FREE_CONV_NUMBER",
+		  "SOURCE_SYSTEM_CODE",
+		  "ITEM_ACTION",
+		  "MOD_EVENT_ID",
+		  "KUNNR_SID",
+		  "CONTRACT_INCEPTION_DT",
+		  "ERROR_STATUS",
+          "ERROR_CODE",
+		  "FLAG_EXISTING_RECORD",
+		  "CYCL_ID",
+		  "SEQ_ID",
+		  "ITEM_QB_PRIMARY_KEY"
+	 FROM "_SYS_BIC"."IFRS_R1.HP.NDB_HP/CA_ORDER_ITEM_QC"
+	      (PLACEHOLDER."$$IP_CYCL_ID$$" => :IP_CYCL_ID)
+	      ORDER BY "CONTRACT_UNIQUE_IDENTIFIER", "POB_END_DATE","WORKING_TELEPHONE_NUMBER","ITEM_CODE", "ITEM_INCEPTION_DT", "CYCL_ID", "SEQ_ID";
+        	  
+--------------------------------------------------------------------------------------------------
+-- Local Temporary Tables Declaration
+-------------------------------------------------------------------------------------------------- 			 
+   
+CREATE LOCAL TEMPORARY TABLE #UPDATE_BCRIS_ITEM_LST_QC (ITEM_QB_PRIMARY_KEY NVARCHAR(110));
+CREATE LOCAL TEMPORARY TABLE #UPDATE_EH_DELETION (CONTRACT_UNIQUE_IDENTIFIER NVARCHAR(20), POB_END_DATE DATE, WORKING_TELEPHONE_NUMBER NVARCHAR(14), ITEM_CODE NVARCHAR(5));
+        	  
+--------------------------------------------------------------------------------------------------
+-- Cursors Loop
+-------------------------------------------------------------------------------------------------- 
+
+FOR CUR_ORDER AS C_ORDER_QC DO
+
+--  Define Exit Handler
+	DECLARE EXIT HANDLER FOR SQLEXCEPTION 
+	BEGIN AUTONOMOUS TRANSACTION 
+	
+--    Define Exit Handler
+	  DECLARE EXIT HANDLER FOR SQLEXCEPTION 
+	  BEGIN AUTONOMOUS TRANSACTION 
+	
+      -- Do Nothing. Exception Handled to ensure SP does not get terminated
+	
+	  END; 	
+			
+   -- Insert record into error table
+   	  INSERT INTO "NDB_HP"."IFRS_R1.HP.NDB_HP::HP_ORDER_EH"(   
+		   	      "CONTRACT_UNIQUE_IDENTIFIER",
+		   	      "POB_END_DATE",
+	 	  		  "POB_EFFC_DATE",
+		  		  "PRIMARY_TELEPHONE_NUMBER",
+		  		  "SYSTEM_REGION",
+		  		  "SUBSCRIBER_NUMBER",
+		  		  "TERM_M2M",
+		  		  "WORKING_TELEPHONE_NUMBER",
+		  		  "ITEM_CODE",
+		  		  "ITEM_TYPE",
+		  		  "ITEM_QUANTITY",
+		  		  "FIXED_OR_VARIABLE_RATE_INDICATOR",
+		          "RATE_BAND",
+		          "ITEM_RATE",
+				  "ITEM_GROUP_CODE",
+				  "ITEM_INCEPTION_DT",
+				  "ITEM_END_DT",
+				  "M2M_SERVICE_INDICATOR",
+				  "RAC_CODE",
+				  "TOLL_FREE_NUMBER",
+				  "TEMPORARY_SEASONAL_SUSPENSION",
+				  "TOLL_FREE_CONV_NUMBER",
+				  "SOURCE_SYSTEM_CODE",
+				  "ITEM_ACTION",
+				  "MOD_EVENT_ID",
+				  "KUNNR_SID",
+				  "CONTRACT_INCEPTION_DT",
+				  "INSERT_TS",
+				  "ERROR_CODE",
+		          "TECHNICAL_MESSAGE",
+		          "ERROR_CREATE_TS")
+		   VALUES (CUR_ORDER."CONTRACT_UNIQUE_IDENTIFIER",
+			 	   CUR_ORDER."POB_END_DATE",
+			 	   CUR_ORDER."POB_EFFC_DATE",
+				   CUR_ORDER."PRIMARY_TELEPHONE_NUMBER",
+				   CUR_ORDER."SYSTEM_REGION",
+				   CUR_ORDER."SUBSCRIBER_NUMBER",
+				   CUR_ORDER."TERM_M2M",
+				   CUR_ORDER."WORKING_TELEPHONE_NUMBER",
+				   CUR_ORDER."ITEM_CODE",
+				   CUR_ORDER."ITEM_TYPE",
+				   CUR_ORDER."ITEM_QUANTITY",
+				   CUR_ORDER."FIXED_OR_VARIABLE_RATE_INDICATOR",
+				   CUR_ORDER."RATE_BAND",
+				   CUR_ORDER."ITEM_RATE",
+				   CUR_ORDER."ITEM_GROUP_CODE",
+				   CUR_ORDER."ITEM_INCEPTION_DT",
+				   CUR_ORDER."ITEM_END_DT",
+				   CUR_ORDER."M2M_SERVICE_INDICATOR",
+				   CUR_ORDER."RAC_CODE",
+				   CUR_ORDER."TOLL_FREE_NUMBER",
+				   CUR_ORDER."TEMPORARY_SEASONAL_SUSPENSION",
+				   CUR_ORDER."TOLL_FREE_CONV_NUMBER",
+				   CUR_ORDER."SOURCE_SYSTEM_CODE",
+				   CUR_ORDER."ITEM_ACTION",
+				   CUR_ORDER."MOD_EVENT_ID",
+				   CUR_ORDER."KUNNR_SID",
+				   CUR_ORDER."CONTRACT_INCEPTION_DT",
+				   LV_CUR_UTC,
+				   ::SQL_ERROR_CODE,
+		           ::SQL_ERROR_MESSAGE,
+		           LV_CUR_UTC);		          
+   
+	  	LV_ERROR_FLAG := 'Y';
+		LV_LOOP_ERROR_FLAG :=1;
+  END;
+  
+  
+	  ----	FOR CEARING THE VARIABLES -----
+			IF (CUR_ORDER."ITEM_CODE" != LV_PREV_ITEM_CODE) THEN
+				LV_LOOP_ERROR_FLAG := 0;
+				LV_PREV_ITEM_CODE := CUR_ORDER."ITEM_CODE";
+			END IF;
+  
+  ----	END FOR CEARING THE VARIABLES -----
+--  Check the Error Status of the Record. If Record is with Error, then send to Error Table
+	IF CUR_ORDER.ERROR_STATUS = '1' THEN
+	
+	--  Call the Stored Procedure to split the concatenated Error Messages into Error Rows
+		CALL "NDB_COMMON"."IFRS_R1.COMMON_COMP.EH::SP_EH_SPLIT_ERRORS"(CUR_ORDER."ERROR_CODE", ERROR_TAB, RECORD_COUNT);
+
+     -- Loop through the Error Records
+		FOR i IN 1 .. :RECORD_COUNT DO
+			
+		 -- Fetch the Error Code
+			CURRENT_ERROR = :ERROR_TAB."ERROR_CODE"[:i];
+			
+		 -- Insert into the Error Table
+			INSERT INTO "NDB_HP"."IFRS_R1.HP.NDB_HP::HP_ORDER_EH"(
+			            "CONTRACT_UNIQUE_IDENTIFIER",
+				   	     "POB_END_DATE",
+			 	  		 "POB_EFFC_DATE",
+				  		 "PRIMARY_TELEPHONE_NUMBER",
+				  		 "SYSTEM_REGION",
+				  		 "SUBSCRIBER_NUMBER",
+				  		 "TERM_M2M",
+				  		 "WORKING_TELEPHONE_NUMBER",
+				  		 "ITEM_CODE",
+				  		 "ITEM_TYPE",
+				  		 "ITEM_QUANTITY",
+				  	     "FIXED_OR_VARIABLE_RATE_INDICATOR",
+				         "RATE_BAND",
+				         "ITEM_RATE",
+						 "ITEM_GROUP_CODE",
+						 "ITEM_INCEPTION_DT",
+						 "ITEM_END_DT",
+						 "M2M_SERVICE_INDICATOR",
+						 "RAC_CODE",
+						 "TOLL_FREE_NUMBER",
+						 "TEMPORARY_SEASONAL_SUSPENSION",
+						 "TOLL_FREE_CONV_NUMBER",
+						 "SOURCE_SYSTEM_CODE",
+						 "ITEM_ACTION",
+						 "MOD_EVENT_ID",
+						 "KUNNR_SID",
+						 "CONTRACT_INCEPTION_DT",
+						 "INSERT_TS",
+						 "ERROR_CODE",
+				         "ERROR_CREATE_TS")
+				  VALUES (CUR_ORDER."CONTRACT_UNIQUE_IDENTIFIER",
+					 	  CUR_ORDER."POB_END_DATE",
+					 	  CUR_ORDER."POB_EFFC_DATE",
+						  CUR_ORDER."PRIMARY_TELEPHONE_NUMBER",
+						  CUR_ORDER."SYSTEM_REGION",
+						  CUR_ORDER."SUBSCRIBER_NUMBER",
+						  CUR_ORDER."TERM_M2M",
+						  CUR_ORDER."WORKING_TELEPHONE_NUMBER",
+						  CUR_ORDER."ITEM_CODE",
+						  CUR_ORDER."ITEM_TYPE",
+						  CUR_ORDER."ITEM_QUANTITY",
+						  CUR_ORDER."FIXED_OR_VARIABLE_RATE_INDICATOR",
+						  CUR_ORDER."RATE_BAND",
+						  CUR_ORDER."ITEM_RATE",
+						  CUR_ORDER."ITEM_GROUP_CODE",
+						  CUR_ORDER."ITEM_INCEPTION_DT",
+						  CUR_ORDER."ITEM_END_DT",
+						  CUR_ORDER."M2M_SERVICE_INDICATOR",
+						  CUR_ORDER."RAC_CODE",
+						  CUR_ORDER."TOLL_FREE_NUMBER",
+						  CUR_ORDER."TEMPORARY_SEASONAL_SUSPENSION",
+						  CUR_ORDER."TOLL_FREE_CONV_NUMBER",
+						  CUR_ORDER."SOURCE_SYSTEM_CODE",
+						  CUR_ORDER."ITEM_ACTION",
+						  CUR_ORDER."MOD_EVENT_ID",
+						  CUR_ORDER."KUNNR_SID",
+						  CUR_ORDER."CONTRACT_INCEPTION_DT",
+						  LV_CUR_UTC,
+						  :CURRENT_ERROR,
+				          LV_CUR_UTC);
+			
+		END FOR;
+				         		        
+         -- Set Error Flag				        
+			LV_ERROR_FLAG := 'Y';
+			LV_LOOP_ERROR_FLAG := 1;
+			
+-- Processing for Successful Records
+   ELSE
+			IF CUR_ORDER.ERROR_STATUS = '0' THEN
+			IF LV_LOOP_ERROR_FLAG = 1 THEN
+				INSERT INTO "NDB_HP"."IFRS_R1.HP.NDB_HP::HP_ORDER_EH"(
+			            "CONTRACT_UNIQUE_IDENTIFIER",
+				   	     "POB_END_DATE",
+			 	  		 "POB_EFFC_DATE",
+				  		 "PRIMARY_TELEPHONE_NUMBER",
+				  		 "SYSTEM_REGION",
+				  		 "SUBSCRIBER_NUMBER",
+				  		 "TERM_M2M",
+				  		 "WORKING_TELEPHONE_NUMBER",
+				  		 "ITEM_CODE",
+				  		 "ITEM_TYPE",
+				  		 "ITEM_QUANTITY",
+				  	     "FIXED_OR_VARIABLE_RATE_INDICATOR",
+				         "RATE_BAND",
+				         "ITEM_RATE",
+						 "ITEM_GROUP_CODE",
+						 "ITEM_INCEPTION_DT",
+						 "ITEM_END_DT",
+						 "M2M_SERVICE_INDICATOR",
+						 "RAC_CODE",
+						 "TOLL_FREE_NUMBER",
+						 "TEMPORARY_SEASONAL_SUSPENSION",
+						 "TOLL_FREE_CONV_NUMBER",
+						 "SOURCE_SYSTEM_CODE",
+						 "ITEM_ACTION",
+						 "MOD_EVENT_ID",
+						 "KUNNR_SID",
+						 "CONTRACT_INCEPTION_DT",
+						 "INSERT_TS",
+						 "ERROR_CODE",
+				         "ERROR_CREATE_TS")
+				  VALUES (CUR_ORDER."CONTRACT_UNIQUE_IDENTIFIER",
+					 	  CUR_ORDER."POB_END_DATE",
+					 	  CUR_ORDER."POB_EFFC_DATE",
+						  CUR_ORDER."PRIMARY_TELEPHONE_NUMBER",
+						  CUR_ORDER."SYSTEM_REGION",
+						  CUR_ORDER."SUBSCRIBER_NUMBER",
+						  CUR_ORDER."TERM_M2M",
+						  CUR_ORDER."WORKING_TELEPHONE_NUMBER",
+						  CUR_ORDER."ITEM_CODE",
+						  CUR_ORDER."ITEM_TYPE",
+						  CUR_ORDER."ITEM_QUANTITY",
+						  CUR_ORDER."FIXED_OR_VARIABLE_RATE_INDICATOR",
+						  CUR_ORDER."RATE_BAND",
+						  CUR_ORDER."ITEM_RATE",
+						  CUR_ORDER."ITEM_GROUP_CODE",
+						  CUR_ORDER."ITEM_INCEPTION_DT",
+						  CUR_ORDER."ITEM_END_DT",
+						  CUR_ORDER."M2M_SERVICE_INDICATOR",
+						  CUR_ORDER."RAC_CODE",
+						  CUR_ORDER."TOLL_FREE_NUMBER",
+						  CUR_ORDER."TEMPORARY_SEASONAL_SUSPENSION",
+						  CUR_ORDER."TOLL_FREE_CONV_NUMBER",
+						  CUR_ORDER."SOURCE_SYSTEM_CODE",
+						  CUR_ORDER."ITEM_ACTION",
+						  CUR_ORDER."MOD_EVENT_ID",
+						  CUR_ORDER."KUNNR_SID",
+						  CUR_ORDER."CONTRACT_INCEPTION_DT",
+						  LV_CUR_UTC,
+						  'PREVIOUS VERSION IN ERROR',
+				          LV_CUR_UTC);
+						  ELSE
+
+--   If Record exists in the Target NDB Table
+     IF CUR_ORDER.FLAG_EXISTING_RECORD = 'U' THEN
+
+BEGIN AUTONOMOUS TRANSACTION
+     
+     LV_PREV_DAY := ADD_DAYS(CUR_ORDER."POB_EFFC_DATE", -1);
+     
+     --History maintenance 	
+       UPDATE  "NDB_HP"."IFRS_R1.HP.NDB_HP::HP_ORDER" NDB
+          SET ( "POB_END_DATE",
+			   "MODIFIED_TS") 
+			 = (LV_PREV_DAY,
+			    LV_CUR_UTC)
+          WHERE NDB."CONTRACT_UNIQUE_IDENTIFIER"          = CUR_ORDER."CONTRACT_UNIQUE_IDENTIFIER"
+            AND NDB."WORKING_TELEPHONE_NUMBER"            = CUR_ORDER."WORKING_TELEPHONE_NUMBER"
+            AND NDB."ITEM_CODE"                           = CUR_ORDER."ITEM_CODE"
+            AND NDB."POB_END_DATE"                        = CUR_ORDER."POB_END_DATE";	
+            
+        INSERT INTO "NDB_HP"."IFRS_R1.HP.NDB_HP::HP_ORDER"
+              ("CONTRACT_UNIQUE_IDENTIFIER",
+	 	       "POB_END_DATE",
+	 	       "POB_EFFC_DATE",
+		       "PRIMARY_TELEPHONE_NUMBER",
+		       "SYSTEM_REGION",
+		       "SUBSCRIBER_NUMBER",
+		       "TERM_M2M",
+		       "WORKING_TELEPHONE_NUMBER",
+		       "ITEM_CODE",
+		       "ITEM_TYPE",
+		       "ITEM_QUANTITY",
+		       "FIXED_OR_VARIABLE_RATE_INDICATOR",
+		       "RATE_BAND",
+		       "ITEM_RATE",
+		       "ITEM_GROUP_CODE",
+		       "ITEM_INCEPTION_DT",
+		       "ITEM_END_DT",
+		       "M2M_SERVICE_INDICATOR",
+		       "RAC_CODE",
+		       "TOLL_FREE_NUMBER",
+		       "TEMPORARY_SEASONAL_SUSPENSION",
+		       "TOLL_FREE_CONV_NUMBER",
+		       "SOURCE_SYSTEM_CODE",
+		       "ITEM_ACTION",
+		       "MOD_EVENT_ID",
+		       "KUNNR_SID",
+		       "CONTRACT_INCEPTION_DT",
+		       "INSERT_TS")
+		 VALUES (CUR_ORDER."CONTRACT_UNIQUE_IDENTIFIER",
+		         CUR_ORDER."POB_END_DATE",
+		         CUR_ORDER."POB_EFFC_DATE",
+		         CUR_ORDER."PRIMARY_TELEPHONE_NUMBER",
+		         CUR_ORDER."SYSTEM_REGION",
+		         CUR_ORDER."SUBSCRIBER_NUMBER",
+		         CUR_ORDER."TERM_M2M",
+		         CUR_ORDER."WORKING_TELEPHONE_NUMBER",
+		         CUR_ORDER."ITEM_CODE",
+		         CUR_ORDER."ITEM_TYPE",
+		         CUR_ORDER."ITEM_QUANTITY",
+		         CUR_ORDER."FIXED_OR_VARIABLE_RATE_INDICATOR",
+		         CUR_ORDER."RATE_BAND",
+		         CUR_ORDER."ITEM_RATE",
+		         CUR_ORDER."ITEM_GROUP_CODE",
+		         CUR_ORDER."ITEM_INCEPTION_DT",
+		         CUR_ORDER."ITEM_END_DT",
+		         CUR_ORDER."M2M_SERVICE_INDICATOR",
+		         CUR_ORDER."RAC_CODE",
+		         CUR_ORDER."TOLL_FREE_NUMBER",
+		         CUR_ORDER."TEMPORARY_SEASONAL_SUSPENSION",
+		         CUR_ORDER."TOLL_FREE_CONV_NUMBER",
+		         CUR_ORDER."SOURCE_SYSTEM_CODE",
+		         CUR_ORDER."ITEM_ACTION",
+		         CUR_ORDER."MOD_EVENT_ID",
+		         CUR_ORDER."KUNNR_SID",
+		         CUR_ORDER."CONTRACT_INCEPTION_DT",
+		         LV_CUR_UTC);	          
+     END;  -- END AUTONOMOUS TRANSACTION       		    		           				          
+            
+--         Insert PK of successfully processed Records into Local Temp Tables 
+--         for Updating NDB_TS in corresponding Landing Tables records
+		   INSERT INTO #UPDATE_BCRIS_ITEM_LST_QC
+		   			   (ITEM_QB_PRIMARY_KEY)
+		   		VALUES (CUR_ORDER."ITEM_QB_PRIMARY_KEY");
+		   		        
+			INSERT INTO	#UPDATE_EH_DELETION
+						(CONTRACT_UNIQUE_IDENTIFIER,
+						 POB_END_DATE,
+						 WORKING_TELEPHONE_NUMBER,
+						 ITEM_CODE)
+		   		VALUES (CUR_ORDER."CONTRACT_UNIQUE_IDENTIFIER",
+		   		        CUR_ORDER."POB_END_DATE",
+		   		        CUR_ORDER.WORKING_TELEPHONE_NUMBER,
+						CUR_ORDER.ITEM_CODE);
+                    	
+    ELSE
+    
+--     Insert Records into the target NDB table  
+       
+       BEGIN AUTONOMOUS TRANSACTION
+       
+       INSERT INTO "NDB_HP"."IFRS_R1.HP.NDB_HP::HP_ORDER"
+              ("CONTRACT_UNIQUE_IDENTIFIER",
+	 	       "POB_END_DATE",
+	 	       "POB_EFFC_DATE",
+		       "PRIMARY_TELEPHONE_NUMBER",
+		       "SYSTEM_REGION",
+		       "SUBSCRIBER_NUMBER",
+		       "TERM_M2M",
+		       "WORKING_TELEPHONE_NUMBER",
+		       "ITEM_CODE",
+		       "ITEM_TYPE",
+		       "ITEM_QUANTITY",
+		       "FIXED_OR_VARIABLE_RATE_INDICATOR",
+		       "RATE_BAND",
+		       "ITEM_RATE",
+		       "ITEM_GROUP_CODE",
+		       "ITEM_INCEPTION_DT",
+		       "ITEM_END_DT",
+		       "M2M_SERVICE_INDICATOR",
+		       "RAC_CODE",
+		       "TOLL_FREE_NUMBER",
+		       "TEMPORARY_SEASONAL_SUSPENSION",
+		       "TOLL_FREE_CONV_NUMBER",
+		       "SOURCE_SYSTEM_CODE",
+		       "ITEM_ACTION",
+		       "MOD_EVENT_ID",
+		       "KUNNR_SID",
+		       "CONTRACT_INCEPTION_DT",
+		       "INSERT_TS")
+		 VALUES (CUR_ORDER."CONTRACT_UNIQUE_IDENTIFIER",
+		         CUR_ORDER."POB_END_DATE",
+		         CUR_ORDER."POB_EFFC_DATE",
+		         CUR_ORDER."PRIMARY_TELEPHONE_NUMBER",
+		         CUR_ORDER."SYSTEM_REGION",
+		         CUR_ORDER."SUBSCRIBER_NUMBER",
+		         CUR_ORDER."TERM_M2M",
+		         CUR_ORDER."WORKING_TELEPHONE_NUMBER",
+		         CUR_ORDER."ITEM_CODE",
+		         CUR_ORDER."ITEM_TYPE",
+		         CUR_ORDER."ITEM_QUANTITY",
+		         CUR_ORDER."FIXED_OR_VARIABLE_RATE_INDICATOR",
+		         CUR_ORDER."RATE_BAND",
+		         CUR_ORDER."ITEM_RATE",
+		         CUR_ORDER."ITEM_GROUP_CODE",
+		         CUR_ORDER."ITEM_INCEPTION_DT",
+		         CUR_ORDER."ITEM_END_DT",
+		         CUR_ORDER."M2M_SERVICE_INDICATOR",
+		         CUR_ORDER."RAC_CODE",
+		         CUR_ORDER."TOLL_FREE_NUMBER",
+		         CUR_ORDER."TEMPORARY_SEASONAL_SUSPENSION",
+		         CUR_ORDER."TOLL_FREE_CONV_NUMBER",
+		         CUR_ORDER."SOURCE_SYSTEM_CODE",
+		         CUR_ORDER."ITEM_ACTION",
+		         CUR_ORDER."MOD_EVENT_ID",
+		         CUR_ORDER."KUNNR_SID",
+		         CUR_ORDER."CONTRACT_INCEPTION_DT",
+		         LV_CUR_UTC);						         
+	   END; 				    
+
+--         Insert PK of successfully processed Records into Local Temp Tables 
+--         for Updating NDB_TS in corresponding Landing Tables records
+ 		   INSERT INTO #UPDATE_BCRIS_ITEM_LST_QC
+		   			   (ITEM_QB_PRIMARY_KEY)
+		   		VALUES (CUR_ORDER."ITEM_QB_PRIMARY_KEY");
+		   		        
+			INSERT INTO	#UPDATE_EH_DELETION
+						(CONTRACT_UNIQUE_IDENTIFIER,
+						 POB_END_DATE,
+						 WORKING_TELEPHONE_NUMBER,
+						 ITEM_CODE)
+		   		VALUES (CUR_ORDER."CONTRACT_UNIQUE_IDENTIFIER",
+		   		        CUR_ORDER."POB_END_DATE",
+		   		        CUR_ORDER."WORKING_TELEPHONE_NUMBER",
+						CUR_ORDER."ITEM_CODE");		
+					END IF;
+				END IF;
+    END IF;
+
+  END IF;
+
+END FOR;
+
+--------------------------------------------------------------------------------------------------
+-- Update Landing Tables
+-------------------------------------------------------------------------------------------------- 
+
+-- Update Landing Table IFRS_R1.LAND::BCRIS_ITEM_LST_QC
+UPDATE "LAND"."IFRS_R1.LAND::BCRIS_ITEM_LST_QC" A
+  FROM "LAND"."IFRS_R1.LAND::BCRIS_ITEM_LST_QC" A 
+ INNER JOIN #UPDATE_BCRIS_ITEM_LST_QC B 
+    ON A."ITEM_QB_PRIMARY_KEY" = B."ITEM_QB_PRIMARY_KEY"
+   SET NDB_TS = LV_CUR_UTC
+ WHERE A.NDB_TS IS NULL;
+ 
+-- Update Error Table
+UPDATE "NDB_HP"."IFRS_R1.HP.NDB_HP::HP_ORDER_EH" A
+  FROM "NDB_HP"."IFRS_R1.HP.NDB_HP::HP_ORDER_EH" A 
+ INNER JOIN #UPDATE_EH_DELETION B
+    ON A."CONTRACT_UNIQUE_IDENTIFIER"      = B."CONTRACT_UNIQUE_IDENTIFIER"
+   AND A."POB_END_DATE"                    = B."POB_END_DATE"
+   AND A."WORKING_TELEPHONE_NUMBER"        = B."WORKING_TELEPHONE_NUMBER"
+   AND A."ITEM_CODE"                       = B."ITEM_CODE"
+   SET (DELETE_DATE, DELETED) = (CURRENT_DATE, 1); 
+
+--------------------------------------------------------------------------------------------------
+-- Set Overall Status
+-------------------------------------------------------------------------------------------------- 
+
+--  STATUS 0: Send the success message to scheduling tool to confirm this procedure has been
+--  executed successfully
+    IF(LV_ERROR_FLAG = 'Y') THEN		
+
+     OP_STATUS := LC_ERROR_TEXT; 
+			
+    ELSE
+
+  	 OP_STATUS := LC_SUCCESS_TEXT; 	
+				
+	END IF;
+		
+END;
+ 

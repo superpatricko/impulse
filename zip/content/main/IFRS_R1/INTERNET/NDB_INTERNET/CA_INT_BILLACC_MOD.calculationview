@@ -1,0 +1,793 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:AccessControl="http://www.sap.com/ndb/SQLCoreModelAccessControl.ecore" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" schemaVersion="2.3" id="CA_INT_BILLACC_MOD" applyPrivilegeType="ANALYTIC_PRIVILEGE" checkAnalyticPrivileges="true" defaultClient="$$client$$" defaultLanguage="$$language$$" hierarchiesSQLEnabled="false" translationRelevant="true" visibility="internal" calculationScenarioType="TREE_BASED" dataCategory="DIMENSION" enforceSqlExecution="false" executionSemantic="UNDEFINED" outputViewType="Projection">
+  <descriptions defaultDescription="CA_INT_BILLACC_MOD"/>
+  <localVariables/>
+  <variableMappings/>
+  <informationModelLayout relativeWidthScenario="37"/>
+  <dataSources>
+    <DataSource id="IFRS_R1.INTERNET.NDB_INTERNET::INT_CUST" type="DATA_BASE_TABLE">
+      <viewAttributes allViewAttributes="true"/>
+      <columnObject schemaName="NDB_INTERNET" columnObjectName="IFRS_R1.INTERNET.NDB_INTERNET::INT_CUST"/>
+    </DataSource>
+    <DataSource id="IFRS_R1.INTERNET.NDB_INTERNET::INT_BILL_ACC" type="DATA_BASE_TABLE">
+      <viewAttributes allViewAttributes="true"/>
+      <columnObject schemaName="NDB_INTERNET" columnObjectName="IFRS_R1.INTERNET.NDB_INTERNET::INT_BILL_ACC"/>
+    </DataSource>
+    <DataSource id="IFRS_R1.INTERNET.NDB_INTERNET::INT_MKT" type="DATA_BASE_TABLE">
+      <viewAttributes allViewAttributes="true"/>
+      <columnObject schemaName="NDB_INTERNET" columnObjectName="IFRS_R1.INTERNET.NDB_INTERNET::INT_MKT"/>
+    </DataSource>
+    <DataSource id="ZINTERNET_ENSMBL" type="DATA_BASE_TABLE">
+      <viewAttributes allViewAttributes="true"/>
+      <columnObject schemaName="SDA" columnObjectName="ZINTERNET_ENSMBL"/>
+    </DataSource>
+  </dataSources>
+  <calculationViews>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_INT_CUST">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="ALTN_CONTR_NUM"/>
+        <viewAttribute id="CUST_LOC_ID"/>
+        <viewAttribute id="REFERENCE_EFFECTIVE_DT_CUST"/>
+        <viewAttribute id="REFERENCE_EXPIRY_DT_CUST">
+          <filter xsi:type="AccessControl:SingleValueFilter" including="true" value="99991231"/>
+        </viewAttribute>
+        <viewAttribute id="PRM_CONTR_CUST"/>
+        <viewAttribute id="PRDCT_TYP"/>
+        <viewAttribute id="ACCT_TY"/>
+        <viewAttribute id="ACCT_SUB_TY"/>
+        <viewAttribute id="SERV_STRT_DT"/>
+        <viewAttribute id="CUST_STATE"/>
+        <viewAttribute id="LGL_ENTT"/>
+        <viewAttribute id="MKT"/>
+        <viewAttribute id="SUBMKT"/>
+        <viewAttribute id="BAN_STS"/>
+        <viewAttribute id="BL_CYC"/>
+        <viewAttribute id="CYCLE_BILL_DAY"/>
+        <viewAttribute id="SUB_STS_RSN_CD"/>
+        <viewAttribute id="REQ_ST_GRC_PRD"/>
+        <viewAttribute id="REQ_END_GRC_PRD"/>
+        <viewAttribute id="CMT_STRT_DT"/>
+        <viewAttribute id="CMT_END_DT"/>
+        <viewAttribute id="CMT_RSN_CD"/>
+        <viewAttribute id="NXT_BAN"/>
+        <viewAttribute id="NXT_BAN_MOVE_DT"/>
+        <viewAttribute id="PRV_BAN"/>
+        <viewAttribute id="PRV_BAN_MOVE_DT"/>
+        <viewAttribute id="CONTR_IPTN_DT"/>
+        <viewAttribute id="CONTR_TERM"/>
+        <viewAttribute id="SUB_STATUS_LAST_ACT"/>
+        <viewAttribute id="SUB_STATUS_DATE"/>
+        <viewAttribute id="ONEBILL_BAN"/>
+        <viewAttribute id="KUNNR_SID"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#IFRS_R1.INTERNET.NDB_INTERNET::INT_CUST">
+        <mapping xsi:type="Calculation:AttributeMapping" target="ALTN_CONTR_NUM" source="ALTN_CONTR_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUST_LOC_ID" source="CUST_LOC_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_EFFECTIVE_DT_CUST" source="REFERENCE_EFFECTIVE_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_EXPIRY_DT_CUST" source="REFERENCE_EXPIRY_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRM_CONTR_CUST" source="PRM_CONTR_CUST"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRDCT_TYP" source="PRDCT_TYP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACCT_TY" source="ACCT_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACCT_SUB_TY" source="ACCT_SUB_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SERV_STRT_DT" source="SERV_STRT_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUST_STATE" source="CUST_STATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LGL_ENTT" source="LGL_ENTT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MKT" source="MKT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBMKT" source="SUBMKT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BAN_STS" source="BAN_STS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BL_CYC" source="BL_CYC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCLE_BILL_DAY" source="CYCLE_BILL_DAY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUB_STS_RSN_CD" source="SUB_STS_RSN_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REQ_ST_GRC_PRD" source="REQ_ST_GRC_PRD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REQ_END_GRC_PRD" source="REQ_END_GRC_PRD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CMT_STRT_DT" source="CMT_STRT_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CMT_END_DT" source="CMT_END_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CMT_RSN_CD" source="CMT_RSN_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NXT_BAN" source="NXT_BAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NXT_BAN_MOVE_DT" source="NXT_BAN_MOVE_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRV_BAN" source="PRV_BAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRV_BAN_MOVE_DT" source="PRV_BAN_MOVE_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTR_IPTN_DT" source="CONTR_IPTN_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTR_TERM" source="CONTR_TERM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUB_STATUS_LAST_ACT" source="SUB_STATUS_LAST_ACT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUB_STATUS_DATE" source="SUB_STATUS_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ONEBILL_BAN" source="ONEBILL_BAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KUNNR_SID" source="KUNNR_SID"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_INT_BILL_ACC">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="BAN"/>
+        <viewAttribute id="DEFAULT_SUB_MARKET"/>
+        <viewAttribute id="REFERENCE_EFFECTIVE_DT_BILLACC"/>
+        <viewAttribute id="REFERENCE_EXPIRY_DT_BILLACC">
+          <filter xsi:type="AccessControl:SingleValueFilter" including="true" value="99991231"/>
+        </viewAttribute>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CC_CUST_LOC_ID" length="30" expressionLanguage="COLUMN_ENGINE">
+          <formula>rightstr(&quot;DEFAULT_SUB_MARKET&quot;,2)</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#IFRS_R1.INTERNET.NDB_INTERNET::INT_BILL_ACC">
+        <mapping xsi:type="Calculation:AttributeMapping" target="BAN" source="BAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DEFAULT_SUB_MARKET" source="DEFAULT_SUB_MARKET"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_EFFECTIVE_DT_BILLACC" source="REFERENCE_EFFECTIVE_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_EXPIRY_DT_BILLACC" source="REFERENCE_EXPIRY_DT"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="JOIN_PROV_MOD" joinType="leftOuter">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="BAN"/>
+        <viewAttribute id="DEFAULT_SUB_MARKET"/>
+        <viewAttribute id="CUST_LOC_ID_CUST"/>
+        <viewAttribute id="ALTN_CONTR_NUM"/>
+        <viewAttribute id="CUST_LOC_ID_BILLACC"/>
+        <viewAttribute id="REFERENCE_EFFECTIVE_DT_BILLACC"/>
+        <viewAttribute id="REFERENCE_EFFECTIVE_DT_CUST"/>
+        <viewAttribute id="REFERENCE_EXPIRY_DT_CUST"/>
+        <viewAttribute id="PRM_CONTR_CUST"/>
+        <viewAttribute id="PRDCT_TYP"/>
+        <viewAttribute id="ACCT_TY"/>
+        <viewAttribute id="ACCT_SUB_TY"/>
+        <viewAttribute id="SERV_STRT_DT"/>
+        <viewAttribute id="CUST_STATE"/>
+        <viewAttribute id="BAN_STS"/>
+        <viewAttribute id="BL_CYC"/>
+        <viewAttribute id="CYCLE_BILL_DAY"/>
+        <viewAttribute id="SUB_STS_RSN_CD"/>
+        <viewAttribute id="REQ_ST_GRC_PRD"/>
+        <viewAttribute id="REQ_END_GRC_PRD"/>
+        <viewAttribute id="CMT_STRT_DT"/>
+        <viewAttribute id="CMT_END_DT"/>
+        <viewAttribute id="CMT_RSN_CD"/>
+        <viewAttribute id="NXT_BAN"/>
+        <viewAttribute id="NXT_BAN_MOVE_DT"/>
+        <viewAttribute id="PRV_BAN"/>
+        <viewAttribute id="PRV_BAN_MOVE_DT"/>
+        <viewAttribute id="CONTR_IPTN_DT"/>
+        <viewAttribute id="CONTR_TERM"/>
+        <viewAttribute id="SUB_STATUS_LAST_ACT"/>
+        <viewAttribute id="SUB_STATUS_DATE"/>
+        <viewAttribute id="ONEBILL_BAN"/>
+        <viewAttribute id="KUNNR_SID"/>
+        <viewAttribute id="REFERENCE_EXPIRY_DT_BILLACC"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#PROJ_INT_BILL_ACC">
+        <mapping xsi:type="Calculation:AttributeMapping" target="BAN" source="BAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DEFAULT_SUB_MARKET" source="DEFAULT_SUB_MARKET"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUST_LOC_ID_BILLACC" source="CC_CUST_LOC_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_EFFECTIVE_DT_BILLACC" source="REFERENCE_EFFECTIVE_DT_BILLACC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_EXPIRY_DT_BILLACC" source="REFERENCE_EXPIRY_DT_BILLACC"/>
+      </input>
+      <input node="#PROJ_INT_CUST">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUST_LOC_ID_CUST" source="CUST_LOC_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ALTN_CONTR_NUM" source="ALTN_CONTR_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_EFFECTIVE_DT_CUST" source="REFERENCE_EFFECTIVE_DT_CUST"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_EXPIRY_DT_CUST" source="REFERENCE_EXPIRY_DT_CUST"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRM_CONTR_CUST" source="PRM_CONTR_CUST"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRDCT_TYP" source="PRDCT_TYP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACCT_TY" source="ACCT_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACCT_SUB_TY" source="ACCT_SUB_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SERV_STRT_DT" source="SERV_STRT_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUST_STATE" source="CUST_STATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BAN_STS" source="BAN_STS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BL_CYC" source="BL_CYC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCLE_BILL_DAY" source="CYCLE_BILL_DAY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUB_STS_RSN_CD" source="SUB_STS_RSN_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REQ_ST_GRC_PRD" source="REQ_ST_GRC_PRD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REQ_END_GRC_PRD" source="REQ_END_GRC_PRD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CMT_STRT_DT" source="CMT_STRT_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CMT_END_DT" source="CMT_END_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CMT_RSN_CD" source="CMT_RSN_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NXT_BAN" source="NXT_BAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NXT_BAN_MOVE_DT" source="NXT_BAN_MOVE_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRV_BAN" source="PRV_BAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRV_BAN_MOVE_DT" source="PRV_BAN_MOVE_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTR_IPTN_DT" source="CONTR_IPTN_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTR_TERM" source="CONTR_TERM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUB_STATUS_LAST_ACT" source="SUB_STATUS_LAST_ACT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUB_STATUS_DATE" source="SUB_STATUS_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ONEBILL_BAN" source="ONEBILL_BAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KUNNR_SID" source="KUNNR_SID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BAN" source="ALTN_CONTR_NUM"/>
+      </input>
+      <joinAttribute name="BAN"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_ACTIVE_PROV" filterExpressionLanguage="COLUMN_ENGINE">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="DEFAULT_SUB_MARKET"/>
+        <viewAttribute id="CUST_LOC_ID_CUST"/>
+        <viewAttribute id="ALTN_CONTR_NUM"/>
+        <viewAttribute id="CUST_LOC_ID_BILLACC"/>
+        <viewAttribute id="REFERENCE_EFFECTIVE_DT_BILLACC"/>
+        <viewAttribute id="REFERENCE_EFFECTIVE_DT_CUST"/>
+        <viewAttribute id="REFERENCE_EXPIRY_DT_CUST"/>
+        <viewAttribute id="PRM_CONTR_CUST"/>
+        <viewAttribute id="PRDCT_TYP"/>
+        <viewAttribute id="ACCT_TY"/>
+        <viewAttribute id="ACCT_SUB_TY"/>
+        <viewAttribute id="SERV_STRT_DT"/>
+        <viewAttribute id="CUST_STATE"/>
+        <viewAttribute id="BAN_STS"/>
+        <viewAttribute id="BL_CYC"/>
+        <viewAttribute id="CYCLE_BILL_DAY"/>
+        <viewAttribute id="SUB_STS_RSN_CD"/>
+        <viewAttribute id="REQ_ST_GRC_PRD"/>
+        <viewAttribute id="REQ_END_GRC_PRD"/>
+        <viewAttribute id="CMT_STRT_DT"/>
+        <viewAttribute id="CMT_END_DT"/>
+        <viewAttribute id="CMT_RSN_CD"/>
+        <viewAttribute id="NXT_BAN"/>
+        <viewAttribute id="NXT_BAN_MOVE_DT"/>
+        <viewAttribute id="PRV_BAN"/>
+        <viewAttribute id="PRV_BAN_MOVE_DT"/>
+        <viewAttribute id="CONTR_IPTN_DT"/>
+        <viewAttribute id="CONTR_TERM"/>
+        <viewAttribute id="SUB_STATUS_LAST_ACT"/>
+        <viewAttribute id="SUB_STATUS_DATE"/>
+        <viewAttribute id="ONEBILL_BAN"/>
+        <viewAttribute id="KUNNR_SID"/>
+        <viewAttribute id="REFERENCE_EXPIRY_DT_BILLACC"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CC_MODIFICATION" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(&quot;CUST_LOC_ID_BILLACC&quot; != &quot;CUST_LOC_ID_CUST&quot;, 'Y', 'N')</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="DATE" id="CC_EFFECTIVE_DATE_PREV_DAY" expressionLanguage="COLUMN_ENGINE">
+          <formula>adddays(&quot;REFERENCE_EFFECTIVE_DT_BILLACC&quot;, -1)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CC_LGL_ENTT" length="16" expressionLanguage="COLUMN_ENGINE">
+          <formula>&quot;DEFAULT_SUB_MARKET&quot;</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CC_SUBMKT" length="5" expressionLanguage="COLUMN_ENGINE">
+          <formula>&quot;DEFAULT_SUB_MARKET&quot;</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#JOIN_PROV_MOD">
+        <mapping xsi:type="Calculation:AttributeMapping" target="DEFAULT_SUB_MARKET" source="DEFAULT_SUB_MARKET"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUST_LOC_ID_CUST" source="CUST_LOC_ID_CUST"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ALTN_CONTR_NUM" source="ALTN_CONTR_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUST_LOC_ID_BILLACC" source="CUST_LOC_ID_BILLACC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_EFFECTIVE_DT_BILLACC" source="REFERENCE_EFFECTIVE_DT_BILLACC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_EFFECTIVE_DT_CUST" source="REFERENCE_EFFECTIVE_DT_CUST"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_EXPIRY_DT_CUST" source="REFERENCE_EXPIRY_DT_CUST"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRM_CONTR_CUST" source="PRM_CONTR_CUST"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRDCT_TYP" source="PRDCT_TYP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACCT_TY" source="ACCT_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACCT_SUB_TY" source="ACCT_SUB_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SERV_STRT_DT" source="SERV_STRT_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUST_STATE" source="CUST_STATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BAN_STS" source="BAN_STS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BL_CYC" source="BL_CYC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCLE_BILL_DAY" source="CYCLE_BILL_DAY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUB_STS_RSN_CD" source="SUB_STS_RSN_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REQ_ST_GRC_PRD" source="REQ_ST_GRC_PRD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REQ_END_GRC_PRD" source="REQ_END_GRC_PRD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CMT_STRT_DT" source="CMT_STRT_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CMT_END_DT" source="CMT_END_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CMT_RSN_CD" source="CMT_RSN_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NXT_BAN" source="NXT_BAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NXT_BAN_MOVE_DT" source="NXT_BAN_MOVE_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRV_BAN" source="PRV_BAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRV_BAN_MOVE_DT" source="PRV_BAN_MOVE_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTR_IPTN_DT" source="CONTR_IPTN_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTR_TERM" source="CONTR_TERM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUB_STATUS_LAST_ACT" source="SUB_STATUS_LAST_ACT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUB_STATUS_DATE" source="SUB_STATUS_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ONEBILL_BAN" source="ONEBILL_BAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KUNNR_SID" source="KUNNR_SID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_EXPIRY_DT_BILLACC" source="REFERENCE_EXPIRY_DT_BILLACC"/>
+      </input>
+      <filter>(&quot;REFERENCE_EFFECTIVE_DT_BILLACC&quot; >= &quot;REFERENCE_EFFECTIVE_DT_CUST&quot;) and &#xD;
+(&quot;REFERENCE_EFFECTIVE_DT_BILLACC&quot; &lt;= &quot;REFERENCE_EXPIRY_DT_CUST&quot;)</filter>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_INT_MKT">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="MKT_CD"/>
+        <viewAttribute id="MKT_NM"/>
+        <viewAttribute id="REFERENCE_EFFECTIVE_DT_MKT"/>
+        <viewAttribute id="REFERENCE_EXPIRY_DT_MKT">
+          <filter xsi:type="AccessControl:SingleValueFilter" including="true" value="99991231"/>
+        </viewAttribute>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#IFRS_R1.INTERNET.NDB_INTERNET::INT_MKT">
+        <mapping xsi:type="Calculation:AttributeMapping" target="MKT_CD" source="MKT_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MKT_NM" source="MKT_NM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_EFFECTIVE_DT_MKT" source="REFERENCE_EFFECTIVE_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_EXPIRY_DT_MKT" source="REFERENCE_EXPIRY_DT"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="JOIN_MKT" joinType="leftOuter">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="DEFAULT_SUB_MARKET"/>
+        <viewAttribute id="ALTN_CONTR_NUM"/>
+        <viewAttribute id="CUST_LOC_ID_BILLACC"/>
+        <viewAttribute id="REFERENCE_EFFECTIVE_DT_BILLACC"/>
+        <viewAttribute id="CC_MODIFICATION"/>
+        <viewAttribute id="CC_EFFECTIVE_DATE_PREV_DAY"/>
+        <viewAttribute id="PRM_CONTR_CUST"/>
+        <viewAttribute id="PRDCT_TYP"/>
+        <viewAttribute id="ACCT_TY"/>
+        <viewAttribute id="ACCT_SUB_TY"/>
+        <viewAttribute id="SERV_STRT_DT"/>
+        <viewAttribute id="CUST_STATE"/>
+        <viewAttribute id="BAN_STS"/>
+        <viewAttribute id="BL_CYC"/>
+        <viewAttribute id="CYCLE_BILL_DAY"/>
+        <viewAttribute id="SUB_STS_RSN_CD"/>
+        <viewAttribute id="REQ_ST_GRC_PRD"/>
+        <viewAttribute id="REQ_END_GRC_PRD"/>
+        <viewAttribute id="CMT_STRT_DT"/>
+        <viewAttribute id="CMT_END_DT"/>
+        <viewAttribute id="CMT_RSN_CD"/>
+        <viewAttribute id="NXT_BAN"/>
+        <viewAttribute id="NXT_BAN_MOVE_DT"/>
+        <viewAttribute id="PRV_BAN"/>
+        <viewAttribute id="PRV_BAN_MOVE_DT"/>
+        <viewAttribute id="CONTR_IPTN_DT"/>
+        <viewAttribute id="CONTR_TERM"/>
+        <viewAttribute id="SUB_STATUS_LAST_ACT"/>
+        <viewAttribute id="SUB_STATUS_DATE"/>
+        <viewAttribute id="ONEBILL_BAN"/>
+        <viewAttribute id="KUNNR_SID"/>
+        <viewAttribute id="CC_LGL_ENTT"/>
+        <viewAttribute id="CC_SUBMKT"/>
+        <viewAttribute id="MKT_NM"/>
+        <viewAttribute id="REFERENCE_EFFECTIVE_DT_MKT"/>
+        <viewAttribute id="REFERENCE_EXPIRY_DT_MKT"/>
+        <viewAttribute id="REFERENCE_EXPIRY_DT_BILLACC"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CC_MKT" length="30" expressionLanguage="COLUMN_ENGINE">
+          <formula>&quot;MKT_NM&quot;</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#PROJ_ACTIVE_PROV">
+        <mapping xsi:type="Calculation:AttributeMapping" target="DEFAULT_SUB_MARKET" source="DEFAULT_SUB_MARKET"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ALTN_CONTR_NUM" source="ALTN_CONTR_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUST_LOC_ID_BILLACC" source="CUST_LOC_ID_BILLACC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_EFFECTIVE_DT_BILLACC" source="REFERENCE_EFFECTIVE_DT_BILLACC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_MODIFICATION" source="CC_MODIFICATION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_EFFECTIVE_DATE_PREV_DAY" source="CC_EFFECTIVE_DATE_PREV_DAY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRM_CONTR_CUST" source="PRM_CONTR_CUST"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRDCT_TYP" source="PRDCT_TYP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACCT_TY" source="ACCT_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACCT_SUB_TY" source="ACCT_SUB_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SERV_STRT_DT" source="SERV_STRT_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUST_STATE" source="CUST_STATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BAN_STS" source="BAN_STS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BL_CYC" source="BL_CYC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCLE_BILL_DAY" source="CYCLE_BILL_DAY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUB_STS_RSN_CD" source="SUB_STS_RSN_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REQ_ST_GRC_PRD" source="REQ_ST_GRC_PRD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REQ_END_GRC_PRD" source="REQ_END_GRC_PRD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CMT_STRT_DT" source="CMT_STRT_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CMT_END_DT" source="CMT_END_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CMT_RSN_CD" source="CMT_RSN_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NXT_BAN" source="NXT_BAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NXT_BAN_MOVE_DT" source="NXT_BAN_MOVE_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRV_BAN" source="PRV_BAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRV_BAN_MOVE_DT" source="PRV_BAN_MOVE_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTR_IPTN_DT" source="CONTR_IPTN_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTR_TERM" source="CONTR_TERM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUB_STATUS_LAST_ACT" source="SUB_STATUS_LAST_ACT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUB_STATUS_DATE" source="SUB_STATUS_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ONEBILL_BAN" source="ONEBILL_BAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KUNNR_SID" source="KUNNR_SID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_LGL_ENTT" source="CC_LGL_ENTT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_SUBMKT" source="CC_SUBMKT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_EXPIRY_DT_BILLACC" source="REFERENCE_EXPIRY_DT_BILLACC"/>
+      </input>
+      <input node="#PROJ_INT_MKT">
+        <mapping xsi:type="Calculation:AttributeMapping" target="MKT_NM" source="MKT_NM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_EFFECTIVE_DT_MKT" source="REFERENCE_EFFECTIVE_DT_MKT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_EXPIRY_DT_MKT" source="REFERENCE_EXPIRY_DT_MKT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DEFAULT_SUB_MARKET" source="MKT_CD"/>
+      </input>
+      <joinAttribute name="DEFAULT_SUB_MARKET"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_SDA">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="PROVINCE"/>
+        <viewAttribute id="KOSTL"/>
+        <viewAttribute id="VALID_FROM"/>
+        <viewAttribute id="VALID_TO"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#ZINTERNET_ENSMBL">
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROVINCE" source="PROVINCE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KOSTL" source="KOSTL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VALID_FROM" source="VALID_FROM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VALID_TO" source="VALID_TO"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="JOIN_SDA" cardinality="C1_1" joinType="leftOuter">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="ALTN_CONTR_NUM"/>
+        <viewAttribute id="PRM_CONTR_CUST"/>
+        <viewAttribute id="PRDCT_TYP"/>
+        <viewAttribute id="ACCT_TY"/>
+        <viewAttribute id="ACCT_SUB_TY"/>
+        <viewAttribute id="SERV_STRT_DT"/>
+        <viewAttribute id="CUST_STATE"/>
+        <viewAttribute id="CUST_LOC_ID_BILLACC"/>
+        <viewAttribute id="LGL_ENTT"/>
+        <viewAttribute id="MKT"/>
+        <viewAttribute id="SUBMKT"/>
+        <viewAttribute id="BAN_STS"/>
+        <viewAttribute id="BL_CYC"/>
+        <viewAttribute id="CYCLE_BILL_DAY"/>
+        <viewAttribute id="SUB_STS_RSN_CD"/>
+        <viewAttribute id="REQ_ST_GRC_PRD"/>
+        <viewAttribute id="REQ_END_GRC_PRD"/>
+        <viewAttribute id="CMT_STRT_DT"/>
+        <viewAttribute id="CMT_END_DT"/>
+        <viewAttribute id="CMT_RSN_CD"/>
+        <viewAttribute id="NXT_BAN"/>
+        <viewAttribute id="NXT_BAN_MOVE_DT"/>
+        <viewAttribute id="PRV_BAN"/>
+        <viewAttribute id="PRV_BAN_MOVE_DT"/>
+        <viewAttribute id="CONTR_IPTN_DT"/>
+        <viewAttribute id="CONTR_TERM"/>
+        <viewAttribute id="SUB_STATUS_LAST_ACT"/>
+        <viewAttribute id="SUB_STATUS_DATE"/>
+        <viewAttribute id="ONEBILL_BAN"/>
+        <viewAttribute id="KUNNR_SID"/>
+        <viewAttribute id="REFERENCE_EFFECTIVE_DT_BILLACC"/>
+        <viewAttribute id="REFERENCE_EXPIRY_DT_BILLACC"/>
+        <viewAttribute id="MODIFICATION"/>
+        <viewAttribute id="EFFECTIVE_DATE_PREV_DAY"/>
+        <viewAttribute id="KOSTL"/>
+        <viewAttribute id="VALID_FROM"/>
+        <viewAttribute id="VALID_TO"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="DATE" id="CC_VALID_FROM" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isnull(&quot;VALID_FROM&quot;),date('19000101'),date(&quot;VALID_FROM&quot;))</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="DATE" id="CC_VALID_TO" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isnull(&quot;VALID_TO&quot;),date('99991231'),date(&quot;VALID_TO&quot;))</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#JOIN_MKT">
+        <mapping xsi:type="Calculation:AttributeMapping" target="ALTN_CONTR_NUM" source="ALTN_CONTR_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRM_CONTR_CUST" source="PRM_CONTR_CUST"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRDCT_TYP" source="PRDCT_TYP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACCT_TY" source="ACCT_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACCT_SUB_TY" source="ACCT_SUB_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SERV_STRT_DT" source="SERV_STRT_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUST_STATE" source="CUST_STATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUST_LOC_ID_BILLACC" source="CUST_LOC_ID_BILLACC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LGL_ENTT" source="CC_LGL_ENTT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MKT" source="CC_MKT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBMKT" source="CC_SUBMKT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BAN_STS" source="BAN_STS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BL_CYC" source="BL_CYC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCLE_BILL_DAY" source="CYCLE_BILL_DAY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUB_STS_RSN_CD" source="SUB_STS_RSN_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REQ_ST_GRC_PRD" source="REQ_ST_GRC_PRD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REQ_END_GRC_PRD" source="REQ_END_GRC_PRD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CMT_STRT_DT" source="CMT_STRT_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CMT_END_DT" source="CMT_END_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CMT_RSN_CD" source="CMT_RSN_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NXT_BAN" source="NXT_BAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NXT_BAN_MOVE_DT" source="NXT_BAN_MOVE_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRV_BAN" source="PRV_BAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRV_BAN_MOVE_DT" source="PRV_BAN_MOVE_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTR_IPTN_DT" source="CONTR_IPTN_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTR_TERM" source="CONTR_TERM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUB_STATUS_LAST_ACT" source="SUB_STATUS_LAST_ACT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUB_STATUS_DATE" source="SUB_STATUS_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ONEBILL_BAN" source="ONEBILL_BAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KUNNR_SID" source="KUNNR_SID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_EFFECTIVE_DT_BILLACC" source="REFERENCE_EFFECTIVE_DT_BILLACC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_EXPIRY_DT_BILLACC" source="REFERENCE_EXPIRY_DT_BILLACC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MODIFICATION" source="CC_MODIFICATION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFFECTIVE_DATE_PREV_DAY" source="CC_EFFECTIVE_DATE_PREV_DAY"/>
+      </input>
+      <input node="#PROJ_SDA">
+        <mapping xsi:type="Calculation:AttributeMapping" target="KOSTL" source="KOSTL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VALID_FROM" source="VALID_FROM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VALID_TO" source="VALID_TO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUST_LOC_ID_BILLACC" source="PROVINCE"/>
+      </input>
+      <joinAttribute name="CUST_LOC_ID_BILLACC"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_SDA_ACTV" filterExpressionLanguage="COLUMN_ENGINE">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="EFFECTIVE_DATE_PREV_DAY"/>
+        <viewAttribute id="MODIFICATION"/>
+        <viewAttribute id="REFERENCE_EXPIRY_DT_BILLACC"/>
+        <viewAttribute id="REFERENCE_EFFECTIVE_DT_BILLACC"/>
+        <viewAttribute id="KUNNR_SID"/>
+        <viewAttribute id="ONEBILL_BAN"/>
+        <viewAttribute id="SUB_STATUS_DATE"/>
+        <viewAttribute id="SUB_STATUS_LAST_ACT"/>
+        <viewAttribute id="CONTR_TERM"/>
+        <viewAttribute id="CONTR_IPTN_DT"/>
+        <viewAttribute id="PRV_BAN_MOVE_DT"/>
+        <viewAttribute id="PRV_BAN"/>
+        <viewAttribute id="NXT_BAN_MOVE_DT"/>
+        <viewAttribute id="NXT_BAN"/>
+        <viewAttribute id="CMT_RSN_CD"/>
+        <viewAttribute id="CMT_END_DT"/>
+        <viewAttribute id="CMT_STRT_DT"/>
+        <viewAttribute id="REQ_END_GRC_PRD"/>
+        <viewAttribute id="REQ_ST_GRC_PRD"/>
+        <viewAttribute id="SUB_STS_RSN_CD"/>
+        <viewAttribute id="CYCLE_BILL_DAY"/>
+        <viewAttribute id="BL_CYC"/>
+        <viewAttribute id="BAN_STS"/>
+        <viewAttribute id="SUBMKT"/>
+        <viewAttribute id="MKT"/>
+        <viewAttribute id="LGL_ENTT"/>
+        <viewAttribute id="CUST_LOC_ID_BILLACC"/>
+        <viewAttribute id="CUST_STATE"/>
+        <viewAttribute id="SERV_STRT_DT"/>
+        <viewAttribute id="ACCT_SUB_TY"/>
+        <viewAttribute id="ACCT_TY"/>
+        <viewAttribute id="PRDCT_TYP"/>
+        <viewAttribute id="PRM_CONTR_CUST"/>
+        <viewAttribute id="ALTN_CONTR_NUM"/>
+        <viewAttribute id="VALID_FROM"/>
+        <viewAttribute id="VALID_TO"/>
+        <viewAttribute id="KOSTL"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#JOIN_SDA">
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFFECTIVE_DATE_PREV_DAY" source="EFFECTIVE_DATE_PREV_DAY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MODIFICATION" source="MODIFICATION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_EXPIRY_DT_BILLACC" source="REFERENCE_EXPIRY_DT_BILLACC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_EFFECTIVE_DT_BILLACC" source="REFERENCE_EFFECTIVE_DT_BILLACC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KUNNR_SID" source="KUNNR_SID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ONEBILL_BAN" source="ONEBILL_BAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUB_STATUS_DATE" source="SUB_STATUS_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUB_STATUS_LAST_ACT" source="SUB_STATUS_LAST_ACT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTR_TERM" source="CONTR_TERM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTR_IPTN_DT" source="CONTR_IPTN_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRV_BAN_MOVE_DT" source="PRV_BAN_MOVE_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRV_BAN" source="PRV_BAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NXT_BAN_MOVE_DT" source="NXT_BAN_MOVE_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NXT_BAN" source="NXT_BAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CMT_RSN_CD" source="CMT_RSN_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CMT_END_DT" source="CMT_END_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CMT_STRT_DT" source="CMT_STRT_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REQ_END_GRC_PRD" source="REQ_END_GRC_PRD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REQ_ST_GRC_PRD" source="REQ_ST_GRC_PRD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUB_STS_RSN_CD" source="SUB_STS_RSN_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCLE_BILL_DAY" source="CYCLE_BILL_DAY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BL_CYC" source="BL_CYC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BAN_STS" source="BAN_STS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBMKT" source="SUBMKT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MKT" source="MKT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LGL_ENTT" source="LGL_ENTT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUST_LOC_ID_BILLACC" source="CUST_LOC_ID_BILLACC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUST_STATE" source="CUST_STATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SERV_STRT_DT" source="SERV_STRT_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACCT_SUB_TY" source="ACCT_SUB_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACCT_TY" source="ACCT_TY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRDCT_TYP" source="PRDCT_TYP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRM_CONTR_CUST" source="PRM_CONTR_CUST"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ALTN_CONTR_NUM" source="ALTN_CONTR_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VALID_FROM" source="CC_VALID_FROM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VALID_TO" source="CC_VALID_TO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KOSTL" source="KOSTL"/>
+      </input>
+      <filter>(&quot;REFERENCE_EFFECTIVE_DT_BILLACC&quot;>=&quot;VALID_FROM&quot;) and (&quot;REFERENCE_EFFECTIVE_DT_BILLACC&quot;&lt;=&quot;VALID_TO&quot;)</filter>
+    </calculationView>
+  </calculationViews>
+  <logicalModel id="PROJ_SDA_ACTV">
+    <descriptions/>
+    <attributes>
+      <attribute id="EFFECTIVE_DATE_PREV_DAY" order="1" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="EFFECTIVE_DATE_PREV_DAY"/>
+        <keyMapping columnObjectName="PROJ_SDA_ACTV" columnName="EFFECTIVE_DATE_PREV_DAY"/>
+      </attribute>
+      <attribute id="MODIFICATION" order="2" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="MODIFICATION"/>
+        <keyMapping columnObjectName="PROJ_SDA_ACTV" columnName="MODIFICATION"/>
+      </attribute>
+      <attribute id="REFERENCE_EXPIRY_DT_BILLACC" order="3" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="REFERENCE_EXPIRY_DT_BILLACC"/>
+        <keyMapping columnObjectName="PROJ_SDA_ACTV" columnName="REFERENCE_EXPIRY_DT_BILLACC"/>
+      </attribute>
+      <attribute id="REFERENCE_EFFECTIVE_DT_BILLACC" order="4" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="REFERENCE_EFFECTIVE_DT_BILLACC"/>
+        <keyMapping columnObjectName="PROJ_SDA_ACTV" columnName="REFERENCE_EFFECTIVE_DT_BILLACC"/>
+      </attribute>
+      <attribute id="KUNNR_SID" order="5" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="KUNNR_SID"/>
+        <keyMapping columnObjectName="PROJ_SDA_ACTV" columnName="KUNNR_SID"/>
+      </attribute>
+      <attribute id="ONEBILL_BAN" order="6" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ONEBILL_BAN"/>
+        <keyMapping columnObjectName="PROJ_SDA_ACTV" columnName="ONEBILL_BAN"/>
+      </attribute>
+      <attribute id="SUB_STATUS_DATE" order="7" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SUB_STATUS_DATE"/>
+        <keyMapping columnObjectName="PROJ_SDA_ACTV" columnName="SUB_STATUS_DATE"/>
+      </attribute>
+      <attribute id="SUB_STATUS_LAST_ACT" order="8" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SUB_STATUS_LAST_ACT"/>
+        <keyMapping columnObjectName="PROJ_SDA_ACTV" columnName="SUB_STATUS_LAST_ACT"/>
+      </attribute>
+      <attribute id="CONTR_TERM" order="9" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CONTR_TERM"/>
+        <keyMapping columnObjectName="PROJ_SDA_ACTV" columnName="CONTR_TERM"/>
+      </attribute>
+      <attribute id="CONTR_IPTN_DT" order="10" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CONTR_IPTN_DT"/>
+        <keyMapping columnObjectName="PROJ_SDA_ACTV" columnName="CONTR_IPTN_DT"/>
+      </attribute>
+      <attribute id="PRV_BAN_MOVE_DT" order="11" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="PRV_BAN_MOVE_DT"/>
+        <keyMapping columnObjectName="PROJ_SDA_ACTV" columnName="PRV_BAN_MOVE_DT"/>
+      </attribute>
+      <attribute id="PRV_BAN" order="12" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="PRV_BAN"/>
+        <keyMapping columnObjectName="PROJ_SDA_ACTV" columnName="PRV_BAN"/>
+      </attribute>
+      <attribute id="NXT_BAN_MOVE_DT" order="13" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="NXT_BAN_MOVE_DT"/>
+        <keyMapping columnObjectName="PROJ_SDA_ACTV" columnName="NXT_BAN_MOVE_DT"/>
+      </attribute>
+      <attribute id="NXT_BAN" order="14" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="NXT_BAN"/>
+        <keyMapping columnObjectName="PROJ_SDA_ACTV" columnName="NXT_BAN"/>
+      </attribute>
+      <attribute id="CMT_RSN_CD" order="15" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CMT_RSN_CD"/>
+        <keyMapping columnObjectName="PROJ_SDA_ACTV" columnName="CMT_RSN_CD"/>
+      </attribute>
+      <attribute id="CMT_END_DT" order="16" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CMT_END_DT"/>
+        <keyMapping columnObjectName="PROJ_SDA_ACTV" columnName="CMT_END_DT"/>
+      </attribute>
+      <attribute id="CMT_STRT_DT" order="17" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CMT_STRT_DT"/>
+        <keyMapping columnObjectName="PROJ_SDA_ACTV" columnName="CMT_STRT_DT"/>
+      </attribute>
+      <attribute id="REQ_END_GRC_PRD" order="18" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="REQ_END_GRACE_PERIOD"/>
+        <keyMapping columnObjectName="PROJ_SDA_ACTV" columnName="REQ_END_GRC_PRD"/>
+      </attribute>
+      <attribute id="REQ_ST_GRC_PRD" order="19" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="REQ_ST_GRC_PRD"/>
+        <keyMapping columnObjectName="PROJ_SDA_ACTV" columnName="REQ_ST_GRC_PRD"/>
+      </attribute>
+      <attribute id="SUB_STS_RSN_CD" order="20" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SUB_STATUS_RSN_CODE"/>
+        <keyMapping columnObjectName="PROJ_SDA_ACTV" columnName="SUB_STS_RSN_CD"/>
+      </attribute>
+      <attribute id="CYCLE_BILL_DAY" order="21" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CYCLE_BILL_DAY"/>
+        <keyMapping columnObjectName="PROJ_SDA_ACTV" columnName="CYCLE_BILL_DAY"/>
+      </attribute>
+      <attribute id="BL_CYC" order="22" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="BL_CYC"/>
+        <keyMapping columnObjectName="PROJ_SDA_ACTV" columnName="BL_CYC"/>
+      </attribute>
+      <attribute id="BAN_STS" order="23" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="BAN_STS"/>
+        <keyMapping columnObjectName="PROJ_SDA_ACTV" columnName="BAN_STS"/>
+      </attribute>
+      <attribute id="SUBMKT" order="24" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SUBMKT"/>
+        <keyMapping columnObjectName="PROJ_SDA_ACTV" columnName="SUBMKT"/>
+      </attribute>
+      <attribute id="MKT" order="25" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="MKT"/>
+        <keyMapping columnObjectName="PROJ_SDA_ACTV" columnName="MKT"/>
+      </attribute>
+      <attribute id="LGL_ENTT" order="26" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="LGL_ENTT"/>
+        <keyMapping columnObjectName="PROJ_SDA_ACTV" columnName="LGL_ENTT"/>
+      </attribute>
+      <attribute id="CUST_LOC_ID_BILLACC" order="27" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CUST_LOC_ID_BILLACC"/>
+        <keyMapping columnObjectName="PROJ_SDA_ACTV" columnName="CUST_LOC_ID_BILLACC"/>
+      </attribute>
+      <attribute id="CUST_STATE" order="28" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CUST_STATE"/>
+        <keyMapping columnObjectName="PROJ_SDA_ACTV" columnName="CUST_STATE"/>
+      </attribute>
+      <attribute id="SERV_STRT_DT" order="29" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SERV_STRT_DT"/>
+        <keyMapping columnObjectName="PROJ_SDA_ACTV" columnName="SERV_STRT_DT"/>
+      </attribute>
+      <attribute id="ACCT_SUB_TY" order="30" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ACCT_SUB_TY"/>
+        <keyMapping columnObjectName="PROJ_SDA_ACTV" columnName="ACCT_SUB_TY"/>
+      </attribute>
+      <attribute id="ACCT_TY" order="31" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ACCT_TY"/>
+        <keyMapping columnObjectName="PROJ_SDA_ACTV" columnName="ACCT_TY"/>
+      </attribute>
+      <attribute id="PRDCT_TYP" order="32" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="PRDCT_TYP"/>
+        <keyMapping columnObjectName="PROJ_SDA_ACTV" columnName="PRDCT_TYP"/>
+      </attribute>
+      <attribute id="PRM_CONTR_CUST" order="33" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="PRM_CONTR_CUST"/>
+        <keyMapping columnObjectName="PROJ_SDA_ACTV" columnName="PRM_CONTR_CUST"/>
+      </attribute>
+      <attribute id="ALTN_CONTR_NUM" order="34" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ALTN_CONTR_NUM"/>
+        <keyMapping columnObjectName="PROJ_SDA_ACTV" columnName="ALTN_CONTR_NUM"/>
+      </attribute>
+      <attribute id="CST_CNTR" order="35" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CST_CNTR"/>
+        <keyMapping columnObjectName="PROJ_SDA_ACTV" columnName="KOSTL"/>
+      </attribute>
+    </attributes>
+    <calculatedAttributes/>
+    <privateDataFoundation>
+      <tableProxies/>
+      <joins/>
+      <layout>
+        <shapes/>
+      </layout>
+    </privateDataFoundation>
+    <baseMeasures/>
+    <calculatedMeasures/>
+    <restrictedMeasures/>
+    <localDimensions/>
+  </logicalModel>
+  <layout>
+    <shapes>
+      <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+        <upperLeftCorner x="252" y="87"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_INT_CUST" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="176" y="609"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_INT_BILL_ACC" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="22" y="609"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="JOIN_PROV_MOD" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="99" y="513"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_ACTIVE_PROV" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="99" y="435"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_INT_MKT" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="253" y="435"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="JOIN_MKT" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="175" y="339"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_SDA" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="329" y="339"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="JOIN_SDA" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="252" y="243"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_SDA_ACTV" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="252" y="165"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+    </shapes>
+  </layout>
+</Calculation:scenario>

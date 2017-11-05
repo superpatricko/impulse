@@ -1,0 +1,503 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:AccessControl="http://www.sap.com/ndb/SQLCoreModelAccessControl.ecore" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" xmlns:Variable="http://www.sap.com/ndb/BiModelVariable.ecore" schemaVersion="2.3" id="CA_NM1_EDW_SUB" applyPrivilegeType="NONE" checkAnalyticPrivileges="false" defaultClient="$$client$$" defaultLanguage="$$language$$" hierarchiesSQLEnabled="false" translationRelevant="true" visibility="internal" calculationScenarioType="TREE_BASED" dataCategory="DIMENSION" enforceSqlExecution="false" executionSemantic="UNDEFINED" outputViewType="Projection">
+  <descriptions defaultDescription="Landing Table - Table NM1_EDW_SUB"/>
+  <localVariables>
+    <variable id="IP_EFF_DT" parameter="true">
+      <descriptions defaultDescription="IP_EFF_DT"/>
+      <variableProperties datatype="DATE" defaultValue="99991231" mandatory="false">
+        <valueDomain type="empty"/>
+        <selection multiLine="false" type="SingleValue"/>
+      </variableProperties>
+    </variable>
+  </localVariables>
+  <variableMappings>
+    <mapping xsi:type="Variable:ConstantVariableMapping" dataSource="#CA_EH_ERROR_TABLE" value="1207">
+      <targetVariable name="IP_JOB_ID" resourceUri="/IFRS_R1.LAND.EH/calculationviews/CA_EH_ERROR_TABLE"/>
+    </mapping>
+  </variableMappings>
+  <informationModelLayout relativeWidthScenario="43"/>
+  <dataSources>
+    <DataSource id="IFRS_R1.LAND::NM1_EDW_SUB" type="DATA_BASE_TABLE">
+      <viewAttributes allViewAttributes="true"/>
+      <columnObject schemaName="LAND" columnObjectName="IFRS_R1.LAND::NM1_EDW_SUB"/>
+    </DataSource>
+    <DataSource id="CA_EH_ERROR_TABLE" type="CALCULATION_VIEW">
+      <viewAttributes allViewAttributes="true"/>
+      <resourceUri>/IFRS_R1.LAND.EH/calculationviews/CA_EH_ERROR_TABLE</resourceUri>
+    </DataSource>
+  </dataSources>
+  <calculationViews>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_NM1_EDW_SUB" filterExpressionLanguage="COLUMN_ENGINE">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="CUST_ID"/>
+        <viewAttribute id="SUBS_NO"/>
+        <viewAttribute id="TRANS_DT"/>
+        <viewAttribute id="BUS_ID"/>
+        <viewAttribute id="FRST_NM"/>
+        <viewAttribute id="HIER_ID"/>
+        <viewAttribute id="INIT_ACTV_DT"/>
+        <viewAttribute id="LAST_BUS_NM"/>
+        <viewAttribute id="MSID_NO"/>
+        <viewAttribute id="NTWK_SUB_TY_CD"/>
+        <viewAttribute id="NTWK_TY_CD"/>
+        <viewAttribute id="PORT_IND"/>
+        <viewAttribute id="PREV_BAN"/>
+        <viewAttribute id="PREV_CTN"/>
+        <viewAttribute id="PREV_SUBS"/>
+        <viewAttribute id="PROD_TYPE"/>
+        <viewAttribute id="SUBS_REF_NO"/>
+        <viewAttribute id="SUBS_ST_RSN_CD"/>
+        <viewAttribute id="SUBS_TYPE"/>
+        <viewAttribute id="SUB_MKT_CODE"/>
+        <viewAttribute id="SUB_ST"/>
+        <viewAttribute id="SUB_ST_DT"/>
+        <viewAttribute id="SUB_ST_LAST_ACT"/>
+        <viewAttribute id="WCOC_IND"/>
+        <viewAttribute id="NXT_BAN"/>
+        <viewAttribute id="ODS_SYST_CD"/>
+        <viewAttribute id="EXPY_DT"/>
+        <viewAttribute id="INSRT_TS"/>
+        <viewAttribute id="NDB_MART"/>
+        <viewAttribute id="PROCESS_ID"/>
+        <viewAttribute id="CYCL_ID"/>
+        <viewAttribute id="SEQ_ID"/>
+        <viewAttribute id="SRC_TS"/>
+        <viewAttribute id="SP_HP_NM1_CUST_TS"/>
+        <viewAttribute id="ADDR_PROV_STATE_CD"/>
+        <viewAttribute id="ADDR_PSTL_ZIP"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="DATE" id="CC_EXPY_DT" expressionLanguage="COLUMN_ENGINE">
+          <formula>if((&quot;EXPY_DT&quot; =  date(29991231)), date(99991231), &quot;EXPY_DT&quot;)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CC_VERSION_CHECK" length="200" expressionLanguage="COLUMN_ENGINE">
+          <formula>string(&quot;CUST_ID&quot; ) + '|'+ string(&quot;SUBS_NO&quot;)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="DATE" id="EFF_DT" expressionLanguage="COLUMN_ENGINE">
+          <formula>&quot;TRANS_DT&quot;</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#IFRS_R1.LAND::NM1_EDW_SUB">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUST_ID" source="CUST_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBS_NO" source="SUBS_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRANS_DT" source="TRANS_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUS_ID" source="BUS_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FRST_NM" source="FRST_NM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="HIER_ID" source="HIER_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INIT_ACTV_DT" source="INIT_ACTV_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LAST_BUS_NM" source="LAST_BUS_NM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MSID_NO" source="MSID_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NTWK_SUB_TY_CD" source="NTWK_SUB_TY_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NTWK_TY_CD" source="NTWK_TY_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PORT_IND" source="PORT_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PREV_BAN" source="PREV_BAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PREV_CTN" source="PREV_CTN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PREV_SUBS" source="PREV_SUBS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROD_TYPE" source="PROD_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBS_REF_NO" source="SUBS_REF_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBS_ST_RSN_CD" source="SUBS_ST_RSN_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBS_TYPE" source="SUBS_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUB_MKT_CODE" source="SUB_MKT_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUB_ST" source="SUB_ST"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUB_ST_DT" source="SUB_ST_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUB_ST_LAST_ACT" source="SUB_ST_LAST_ACT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WCOC_IND" source="WCOC_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NXT_BAN" source="NXT_BAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ODS_SYST_CD" source="ODS_SYST_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXPY_DT" source="EXPY_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INSRT_TS" source="INSRT_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NDB_MART" source="NDB_MART"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROCESS_ID" source="PROCESS_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SEQ_ID" source="SEQ_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SRC_TS" source="SRC_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SP_HP_NM1_CUST_TS" source="SP_HP_NM1_CUST_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ADDR_PROV_STATE_CD" source="ADDR_PROV_STATE_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ADDR_PSTL_ZIP" source="ADDR_PSTL_ZIP"/>
+      </input>
+      <filter>(isNull(&quot;SP_HP_NM1_CUST_TS&quot;) ) and (&quot;PROD_TYPE&quot; ='HPN')  and  (not(&quot;SUB_ST&quot; = 'R') ) and (&quot;EFF_DT&quot;&lt;= '$$IP_EFF_DT$$')</filter>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_ERROR_TABLE">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="PARENT_KEY"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#CA_EH_ERROR_TABLE">
+        <mapping xsi:type="Calculation:AttributeMapping" target="PARENT_KEY" source="PARENT_KEY"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="JOIN_ERROR_TABLE" joinType="leftOuter">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="CUST_ID"/>
+        <viewAttribute id="SUBS_NO"/>
+        <viewAttribute id="BUS_ID"/>
+        <viewAttribute id="FRST_NM"/>
+        <viewAttribute id="HIER_ID"/>
+        <viewAttribute id="INIT_ACTV_DT"/>
+        <viewAttribute id="LAST_BUS_NM"/>
+        <viewAttribute id="MSID_NO"/>
+        <viewAttribute id="NTWK_SUB_TY_CD"/>
+        <viewAttribute id="NTWK_TY_CD"/>
+        <viewAttribute id="PORT_IND"/>
+        <viewAttribute id="PREV_BAN"/>
+        <viewAttribute id="PREV_CTN"/>
+        <viewAttribute id="PREV_SUBS"/>
+        <viewAttribute id="PROD_TYPE"/>
+        <viewAttribute id="SUBS_REF_NO"/>
+        <viewAttribute id="SUBS_ST_RSN_CD"/>
+        <viewAttribute id="SUBS_TYPE"/>
+        <viewAttribute id="SUB_MKT_CODE"/>
+        <viewAttribute id="SUB_ST"/>
+        <viewAttribute id="SUB_ST_DT"/>
+        <viewAttribute id="SUB_ST_LAST_ACT"/>
+        <viewAttribute id="WCOC_IND"/>
+        <viewAttribute id="NXT_BAN"/>
+        <viewAttribute id="ODS_SYST_CD"/>
+        <viewAttribute id="INSRT_TS"/>
+        <viewAttribute id="NDB_MART"/>
+        <viewAttribute id="PROCESS_ID"/>
+        <viewAttribute id="CYCL_ID"/>
+        <viewAttribute id="SEQ_ID"/>
+        <viewAttribute id="SRC_TS"/>
+        <viewAttribute id="EXPY_DT"/>
+        <viewAttribute id="SP_HP_NM1_CUST_TS"/>
+        <viewAttribute id="ADDR_PROV_STATE_CD"/>
+        <viewAttribute id="ADDR_PSTL_ZIP"/>
+        <viewAttribute id="PARENT_KEY_ERROR"/>
+        <viewAttribute id="TRANS_DT"/>
+        <viewAttribute id="CC_VERSION_CHECK"/>
+        <viewAttribute id="EFF_DT"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#PROJ_NM1_EDW_SUB">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUST_ID" source="CUST_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBS_NO" source="SUBS_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUS_ID" source="BUS_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FRST_NM" source="FRST_NM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="HIER_ID" source="HIER_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INIT_ACTV_DT" source="INIT_ACTV_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LAST_BUS_NM" source="LAST_BUS_NM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MSID_NO" source="MSID_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NTWK_SUB_TY_CD" source="NTWK_SUB_TY_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NTWK_TY_CD" source="NTWK_TY_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PORT_IND" source="PORT_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PREV_BAN" source="PREV_BAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PREV_CTN" source="PREV_CTN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PREV_SUBS" source="PREV_SUBS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROD_TYPE" source="PROD_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBS_REF_NO" source="SUBS_REF_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBS_ST_RSN_CD" source="SUBS_ST_RSN_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBS_TYPE" source="SUBS_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUB_MKT_CODE" source="SUB_MKT_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUB_ST" source="SUB_ST"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUB_ST_DT" source="SUB_ST_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUB_ST_LAST_ACT" source="SUB_ST_LAST_ACT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WCOC_IND" source="WCOC_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NXT_BAN" source="NXT_BAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ODS_SYST_CD" source="ODS_SYST_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INSRT_TS" source="INSRT_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NDB_MART" source="NDB_MART"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROCESS_ID" source="PROCESS_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SEQ_ID" source="SEQ_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SRC_TS" source="SRC_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXPY_DT" source="CC_EXPY_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SP_HP_NM1_CUST_TS" source="SP_HP_NM1_CUST_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ADDR_PROV_STATE_CD" source="ADDR_PROV_STATE_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ADDR_PSTL_ZIP" source="ADDR_PSTL_ZIP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRANS_DT" source="TRANS_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_VERSION_CHECK" source="CC_VERSION_CHECK"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFF_DT" source="EFF_DT"/>
+      </input>
+      <input node="#PROJ_ERROR_TABLE">
+        <mapping xsi:type="Calculation:AttributeMapping" target="PARENT_KEY_ERROR" source="PARENT_KEY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_VERSION_CHECK" source="PARENT_KEY"/>
+      </input>
+      <joinAttribute name="CC_VERSION_CHECK"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_ERROR_FILTER">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="ADDR_PSTL_ZIP"/>
+        <viewAttribute id="ADDR_PROV_STATE_CD"/>
+        <viewAttribute id="SP_HP_NM1_CUST_TS"/>
+        <viewAttribute id="EXPY_DT"/>
+        <viewAttribute id="SRC_TS"/>
+        <viewAttribute id="SEQ_ID"/>
+        <viewAttribute id="CYCL_ID"/>
+        <viewAttribute id="PROCESS_ID"/>
+        <viewAttribute id="NDB_MART"/>
+        <viewAttribute id="INSRT_TS"/>
+        <viewAttribute id="ODS_SYST_CD"/>
+        <viewAttribute id="NXT_BAN"/>
+        <viewAttribute id="WCOC_IND"/>
+        <viewAttribute id="SUB_ST_LAST_ACT"/>
+        <viewAttribute id="SUB_ST_DT"/>
+        <viewAttribute id="SUB_ST"/>
+        <viewAttribute id="SUB_MKT_CODE"/>
+        <viewAttribute id="SUBS_TYPE"/>
+        <viewAttribute id="SUBS_ST_RSN_CD"/>
+        <viewAttribute id="SUBS_REF_NO"/>
+        <viewAttribute id="PROD_TYPE"/>
+        <viewAttribute id="PREV_SUBS"/>
+        <viewAttribute id="PREV_CTN"/>
+        <viewAttribute id="PREV_BAN"/>
+        <viewAttribute id="PORT_IND"/>
+        <viewAttribute id="NTWK_TY_CD"/>
+        <viewAttribute id="NTWK_SUB_TY_CD"/>
+        <viewAttribute id="MSID_NO"/>
+        <viewAttribute id="LAST_BUS_NM"/>
+        <viewAttribute id="INIT_ACTV_DT"/>
+        <viewAttribute id="HIER_ID"/>
+        <viewAttribute id="FRST_NM"/>
+        <viewAttribute id="BUS_ID"/>
+        <viewAttribute id="SUBS_NO"/>
+        <viewAttribute id="CUST_ID"/>
+        <viewAttribute id="PARENT_KEY_ERROR">
+          <filter xsi:type="AccessControl:SingleValueFilter" operator="NL" including="true"/>
+        </viewAttribute>
+        <viewAttribute id="TRANS_DT"/>
+        <viewAttribute id="CC_VERSION_CHECK"/>
+        <viewAttribute id="EFF_DT"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#JOIN_ERROR_TABLE">
+        <mapping xsi:type="Calculation:AttributeMapping" target="ADDR_PSTL_ZIP" source="ADDR_PSTL_ZIP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ADDR_PROV_STATE_CD" source="ADDR_PROV_STATE_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SP_HP_NM1_CUST_TS" source="SP_HP_NM1_CUST_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXPY_DT" source="EXPY_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SRC_TS" source="SRC_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SEQ_ID" source="SEQ_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROCESS_ID" source="PROCESS_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NDB_MART" source="NDB_MART"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INSRT_TS" source="INSRT_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ODS_SYST_CD" source="ODS_SYST_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NXT_BAN" source="NXT_BAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WCOC_IND" source="WCOC_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUB_ST_LAST_ACT" source="SUB_ST_LAST_ACT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUB_ST_DT" source="SUB_ST_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUB_ST" source="SUB_ST"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUB_MKT_CODE" source="SUB_MKT_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBS_TYPE" source="SUBS_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBS_ST_RSN_CD" source="SUBS_ST_RSN_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBS_REF_NO" source="SUBS_REF_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROD_TYPE" source="PROD_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PREV_SUBS" source="PREV_SUBS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PREV_CTN" source="PREV_CTN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PREV_BAN" source="PREV_BAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PORT_IND" source="PORT_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NTWK_TY_CD" source="NTWK_TY_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NTWK_SUB_TY_CD" source="NTWK_SUB_TY_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MSID_NO" source="MSID_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LAST_BUS_NM" source="LAST_BUS_NM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INIT_ACTV_DT" source="INIT_ACTV_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="HIER_ID" source="HIER_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FRST_NM" source="FRST_NM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUS_ID" source="BUS_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBS_NO" source="SUBS_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUST_ID" source="CUST_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PARENT_KEY_ERROR" source="PARENT_KEY_ERROR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRANS_DT" source="TRANS_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_VERSION_CHECK" source="CC_VERSION_CHECK"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFF_DT" source="EFF_DT"/>
+      </input>
+    </calculationView>
+  </calculationViews>
+  <logicalModel id="PROJ_ERROR_FILTER">
+    <descriptions/>
+    <attributes>
+      <attribute id="CUST_ID" order="1" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CUST_ID"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="CUST_ID"/>
+      </attribute>
+      <attribute id="SUBS_NO" order="2" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SUBS_NO"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="SUBS_NO"/>
+      </attribute>
+      <attribute id="BUS_ID" order="3" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="BUS_ID"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="BUS_ID"/>
+      </attribute>
+      <attribute id="FRST_NM" order="4" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="FRST_NM"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="FRST_NM"/>
+      </attribute>
+      <attribute id="HIER_ID" order="5" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="HIER_ID"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="HIER_ID"/>
+      </attribute>
+      <attribute id="INIT_ACTV_DT" order="6" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="INIT_ACTV_DT"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="INIT_ACTV_DT"/>
+      </attribute>
+      <attribute id="LAST_BUS_NM" order="7" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="LAST_BUS_NM"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="LAST_BUS_NM"/>
+      </attribute>
+      <attribute id="MSID_NO" order="8" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="MSID_NO"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="MSID_NO"/>
+      </attribute>
+      <attribute id="NTWK_SUB_TY_CD" order="9" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="NTWK_SUB_TY_CD"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="NTWK_SUB_TY_CD"/>
+      </attribute>
+      <attribute id="NTWK_TY_CD" order="10" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="NTWK_TY_CD"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="NTWK_TY_CD"/>
+      </attribute>
+      <attribute id="PORT_IND" order="11" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="PORT_IND"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="PORT_IND"/>
+      </attribute>
+      <attribute id="PREV_BAN" order="12" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="PREV_BAN"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="PREV_BAN"/>
+      </attribute>
+      <attribute id="PREV_CTN" order="13" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="PREV_CTN"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="PREV_CTN"/>
+      </attribute>
+      <attribute id="PREV_SUBS" order="14" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="PREV_SUBS"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="PREV_SUBS"/>
+      </attribute>
+      <attribute id="PROD_TYPE" order="15" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="PROD_TYPE"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="PROD_TYPE"/>
+      </attribute>
+      <attribute id="SUBS_REF_NO" order="16" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SUBS_REF_NO"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="SUBS_REF_NO"/>
+      </attribute>
+      <attribute id="SUBS_ST_RSN_CD" order="17" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SUBS_ST_RSN_CD"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="SUBS_ST_RSN_CD"/>
+      </attribute>
+      <attribute id="SUBS_TYPE" order="18" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SUBS_TYPE"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="SUBS_TYPE"/>
+      </attribute>
+      <attribute id="SUB_MKT_CODE" order="19" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SUB_MKT_CODE"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="SUB_MKT_CODE"/>
+      </attribute>
+      <attribute id="SUB_ST" order="20" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SUB_ST"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="SUB_ST"/>
+      </attribute>
+      <attribute id="SUB_ST_DT" order="21" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SUB_ST_DT"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="SUB_ST_DT"/>
+      </attribute>
+      <attribute id="SUB_ST_LAST_ACT" order="22" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SUB_ST_LAST_ACT"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="SUB_ST_LAST_ACT"/>
+      </attribute>
+      <attribute id="WCOC_IND" order="23" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="WCOC_IND"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="WCOC_IND"/>
+      </attribute>
+      <attribute id="NXT_BAN" order="24" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="NXT_BAN"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="NXT_BAN"/>
+      </attribute>
+      <attribute id="ODS_SYST_CD" order="25" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ODS_SYST_CD"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="ODS_SYST_CD"/>
+      </attribute>
+      <attribute id="INSRT_TS" order="26" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="INSRT_TS"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="INSRT_TS"/>
+      </attribute>
+      <attribute id="NDB_MART" order="27" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="NDB_MART"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="NDB_MART"/>
+      </attribute>
+      <attribute id="PROCESS_ID" order="28" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="PROCESS_ID"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="PROCESS_ID"/>
+      </attribute>
+      <attribute id="CYCL_ID" order="29" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CYCL_ID"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="CYCL_ID"/>
+      </attribute>
+      <attribute id="SEQ_ID" order="30" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SEQ_ID"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="SEQ_ID"/>
+      </attribute>
+      <attribute id="SRC_TS" order="31" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SRC_TS"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="SRC_TS"/>
+      </attribute>
+      <attribute id="EXPY_DT" order="32" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="EXPY_DT"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="EXPY_DT"/>
+      </attribute>
+      <attribute id="SP_HP_NM1_CUST_TS" order="33" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SP_HP_NM1_CUST_TS"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="SP_HP_NM1_CUST_TS"/>
+      </attribute>
+      <attribute id="ADDR_PROV_STATE_CD" order="34" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ADDR_PROV_STATE_CD"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="ADDR_PROV_STATE_CD"/>
+      </attribute>
+      <attribute id="ADDR_PSTL_ZIP" order="35" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ADDR_PSTL_ZIP"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="ADDR_PSTL_ZIP"/>
+      </attribute>
+      <attribute id="TRANS_DT" order="36" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="TRANS_DT"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="TRANS_DT"/>
+      </attribute>
+      <attribute id="CC_VERSION_CHECK" order="37" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CC_VERSION_CHECK"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="CC_VERSION_CHECK"/>
+      </attribute>
+      <attribute id="EFF_DT" hidden="false" order="38" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="EFF_DT"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="EFF_DT"/>
+      </attribute>
+    </attributes>
+    <calculatedAttributes/>
+    <privateDataFoundation>
+      <tableProxies/>
+      <joins/>
+      <layout>
+        <shapes/>
+      </layout>
+    </privateDataFoundation>
+    <baseMeasures/>
+    <calculatedMeasures/>
+    <restrictedMeasures/>
+    <localDimensions/>
+  </logicalModel>
+  <layout>
+    <shapes>
+      <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+        <upperLeftCorner x="99" y="87"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_NM1_EDW_SUB" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="22" y="339"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_ERROR_TABLE" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="176" y="339"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="JOIN_ERROR_TABLE" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="99" y="243"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_ERROR_FILTER" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="99" y="165"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+    </shapes>
+  </layout>
+</Calculation:scenario>

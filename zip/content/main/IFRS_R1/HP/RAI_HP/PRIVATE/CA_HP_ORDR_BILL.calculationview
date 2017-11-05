@@ -1,0 +1,717 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:AccessControl="http://www.sap.com/ndb/SQLCoreModelAccessControl.ecore" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" schemaVersion="2.3" id="CA_HP_ORDR_BILL" applyPrivilegeType="ANALYTIC_PRIVILEGE" checkAnalyticPrivileges="true" defaultClient="$$client$$" defaultLanguage="$$language$$" hierarchiesSQLEnabled="false" translationRelevant="true" visibility="internal" calculationScenarioType="TREE_BASED" dataCategory="DIMENSION" enforceSqlExecution="false" executionSemantic="UNDEFINED" outputViewType="Projection">
+  <descriptions defaultDescription="CA_HP_ORDR_BILL"/>
+  <localVariables>
+    <variable id="IP_BILL_DAY" parameter="true">
+      <descriptions defaultDescription="IP_BILL_DAY"/>
+      <variableProperties datatype="DATE" defaultExpressionLanguage="COLUMN_ENGINE" mandatory="false">
+        <valueDomain type="empty"/>
+        <selection multiLine="false" type="SingleValue"/>
+        <defaultExpression>date(now())</defaultExpression>
+      </variableProperties>
+    </variable>
+  </localVariables>
+  <variableMappings/>
+  <informationModelLayout relativeWidthScenario="35"/>
+  <dataSources>
+    <DataSource id="IFRS_R1.HP.NDB_HP::HP_BILLING" type="DATA_BASE_TABLE">
+      <viewAttributes allViewAttributes="true"/>
+      <columnObject schemaName="NDB_HP" columnObjectName="IFRS_R1.HP.NDB_HP::HP_BILLING"/>
+    </DataSource>
+    <DataSource id="IFRS_R1.HP.NDB_HP::HP_BILLING_EH" type="DATA_BASE_TABLE">
+      <viewAttributes allViewAttributes="true"/>
+      <columnObject schemaName="NDB_HP" columnObjectName="IFRS_R1.HP.NDB_HP::HP_BILLING_EH"/>
+    </DataSource>
+    <DataSource id="IFRS_R1.HP.NDB_HP::HP_ORDER_EH" type="DATA_BASE_TABLE">
+      <viewAttributes allViewAttributes="true"/>
+      <columnObject schemaName="NDB_HP" columnObjectName="IFRS_R1.HP.NDB_HP::HP_ORDER_EH"/>
+    </DataSource>
+  </dataSources>
+  <calculationViews>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_HP_BILLING" filterExpressionLanguage="COLUMN_ENGINE">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="INVOICE_DATE"/>
+        <viewAttribute id="DUE_DATE"/>
+        <viewAttribute id="SUMMARY_ACCOUNT_NUMBER"/>
+        <viewAttribute id="CUSTOMER_ACCOUNT_NUMBER"/>
+        <viewAttribute id="BILL_SYSTEM_CODE"/>
+        <viewAttribute id="PRIMARY_TELEPHONE_NUMBER"/>
+        <viewAttribute id="WORKING_TELEPHONE_NUMBER"/>
+        <viewAttribute id="PRODUCT_START_DATE"/>
+        <viewAttribute id="PRODUCT_END_DATE"/>
+        <viewAttribute id="BRA_CD"/>
+        <viewAttribute id="ITEM_CODE"/>
+        <viewAttribute id="ITEM_TYPE"/>
+        <viewAttribute id="PRODUCT_SERVICE_TYPE"/>
+        <viewAttribute id="PS_QTY_PRPS_CD"/>
+        <viewAttribute id="ITEM_CHARGE"/>
+        <viewAttribute id="ITEM_QUANTITY"/>
+        <viewAttribute id="RAC_CODE"/>
+        <viewAttribute id="DUO_TRIO_IND"/>
+        <viewAttribute id="CURRENCY"/>
+        <viewAttribute id="SOURCE_SYSTEM_CODE"/>
+        <viewAttribute id="MDM_DISCOUNT_TYPE"/>
+        <viewAttribute id="TF_DISCOUNT_AMOUNT"/>
+        <viewAttribute id="KUNNR_SID"/>
+        <viewAttribute id="ORIG_DOC_ID"/>
+        <viewAttribute id="SRCDOC_ID"/>
+        <viewAttribute id="HEADER_ID"/>
+        <viewAttribute id="REFERENCE_ID"/>
+        <viewAttribute id="TIME_IND"/>
+        <viewAttribute id="RAI_ITEM_ID"/>
+        <viewAttribute id="EXECUTION_ID"/>
+        <viewAttribute id="INSERT_TS"/>
+        <viewAttribute id="MODIFIED_TS"/>
+        <viewAttribute id="BATCH_ID"/>
+        <viewAttribute id="CONVERSION_IND"/>
+        <viewAttribute id="RUN_ID"/>
+        <viewAttribute id="RAI_TS"/>
+        <viewAttribute id="PMP_TS"/>
+        <viewAttribute id="CYCL_ID"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#IFRS_R1.HP.NDB_HP::HP_BILLING">
+        <mapping xsi:type="Calculation:AttributeMapping" target="INVOICE_DATE" source="INVOICE_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DUE_DATE" source="DUE_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUMMARY_ACCOUNT_NUMBER" source="SUMMARY_ACCOUNT_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_ACCOUNT_NUMBER" source="CUSTOMER_ACCOUNT_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_SYSTEM_CODE" source="BILL_SYSTEM_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRIMARY_TELEPHONE_NUMBER" source="PRIMARY_TELEPHONE_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WORKING_TELEPHONE_NUMBER" source="WORKING_TELEPHONE_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT_START_DATE" source="PRODUCT_START_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT_END_DATE" source="PRODUCT_END_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BRA_CD" source="BRA_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_CODE" source="ITEM_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_TYPE" source="ITEM_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT_SERVICE_TYPE" source="PRODUCT_SERVICE_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PS_QTY_PRPS_CD" source="PS_QTY_PRPS_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_CHARGE" source="ITEM_CHARGE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_QUANTITY" source="ITEM_QUANTITY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RAC_CODE" source="RAC_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DUO_TRIO_IND" source="DUO_TRIO_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CURRENCY" source="CURRENCY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SOURCE_SYSTEM_CODE" source="SOURCE_SYSTEM_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MDM_DISCOUNT_TYPE" source="MDM_DISCOUNT_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TF_DISCOUNT_AMOUNT" source="TF_DISCOUNT_AMOUNT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KUNNR_SID" source="KUNNR_SID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ORIG_DOC_ID" source="ORIG_DOC_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SRCDOC_ID" source="SRCDOC_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="HEADER_ID" source="HEADER_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_ID" source="REFERENCE_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TIME_IND" source="TIME_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RAI_ITEM_ID" source="RAI_ITEM_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXECUTION_ID" source="EXECUTION_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INSERT_TS" source="INSERT_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MODIFIED_TS" source="MODIFIED_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BATCH_ID" source="BATCH_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONVERSION_IND" source="CONVERSION_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RUN_ID" source="RUN_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RAI_TS" source="RAI_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PMP_TS" source="PMP_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+      </input>
+      <filter>isNull(&quot;RAI_TS&quot;) and (&quot;INVOICE_DATE&quot; &lt;='$$IP_BILL_DAY$$')</filter>
+    </calculationView>
+    <calculationView xsi:type="Calculation:AggregationView" id="AGGR_HP_BILLING_EH">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="DELETED"/>
+        <viewAttribute id="PRIMARY_TELEPHONE_NUMBER"/>
+        <viewAttribute id="WORKING_TELEPHONE_NUMBER"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#IFRS_R1.HP.NDB_HP::HP_BILLING_EH">
+        <mapping xsi:type="Calculation:AttributeMapping" target="DELETED" source="DELETED"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRIMARY_TELEPHONE_NUMBER" source="PRIMARY_TELEPHONE_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WORKING_TELEPHONE_NUMBER" source="WORKING_TELEPHONE_NUMBER"/>
+      </input>
+      <filter>isNull(&quot;DELETED&quot; )</filter>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="JOIN_BILLING_PARENT" joinOrder="OUTSIDE_IN" joinType="leftOuter">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="INVOICE_DATE"/>
+        <viewAttribute id="DUE_DATE"/>
+        <viewAttribute id="SUMMARY_ACCOUNT_NUMBER"/>
+        <viewAttribute id="CUSTOMER_ACCOUNT_NUMBER"/>
+        <viewAttribute id="BILL_SYSTEM_CODE"/>
+        <viewAttribute id="PRIMARY_TELEPHONE_NUMBER"/>
+        <viewAttribute id="WORKING_TELEPHONE_NUMBER"/>
+        <viewAttribute id="PRODUCT_START_DATE"/>
+        <viewAttribute id="PRODUCT_END_DATE"/>
+        <viewAttribute id="BRA_CD"/>
+        <viewAttribute id="ITEM_CODE"/>
+        <viewAttribute id="ITEM_TYPE"/>
+        <viewAttribute id="PRODUCT_SERVICE_TYPE"/>
+        <viewAttribute id="PS_QTY_PRPS_CD"/>
+        <viewAttribute id="ITEM_CHARGE"/>
+        <viewAttribute id="ITEM_QUANTITY"/>
+        <viewAttribute id="RAC_CODE"/>
+        <viewAttribute id="DUO_TRIO_IND"/>
+        <viewAttribute id="CURRENCY"/>
+        <viewAttribute id="SOURCE_SYSTEM_CODE"/>
+        <viewAttribute id="MDM_DISCOUNT_TYPE"/>
+        <viewAttribute id="TF_DISCOUNT_AMOUNT"/>
+        <viewAttribute id="KUNNR_SID"/>
+        <viewAttribute id="ORIG_DOC_ID"/>
+        <viewAttribute id="SRCDOC_ID"/>
+        <viewAttribute id="HEADER_ID"/>
+        <viewAttribute id="REFERENCE_ID"/>
+        <viewAttribute id="TIME_IND"/>
+        <viewAttribute id="RAI_ITEM_ID"/>
+        <viewAttribute id="EXECUTION_ID"/>
+        <viewAttribute id="INSERT_TS"/>
+        <viewAttribute id="MODIFIED_TS"/>
+        <viewAttribute id="BATCH_ID"/>
+        <viewAttribute id="CONVERSION_IND"/>
+        <viewAttribute id="RUN_ID"/>
+        <viewAttribute id="RAI_TS"/>
+        <viewAttribute id="PMP_TS"/>
+        <viewAttribute id="CYCL_ID"/>
+        <viewAttribute id="PRIMARY_TELEPHONE_NUMBER_RIGHT"/>
+        <viewAttribute id="WORKING_TELEPHONE_NUMBER_RIGHT"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#PROJ_HP_BILLING">
+        <mapping xsi:type="Calculation:AttributeMapping" target="INVOICE_DATE" source="INVOICE_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DUE_DATE" source="DUE_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUMMARY_ACCOUNT_NUMBER" source="SUMMARY_ACCOUNT_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_ACCOUNT_NUMBER" source="CUSTOMER_ACCOUNT_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_SYSTEM_CODE" source="BILL_SYSTEM_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRIMARY_TELEPHONE_NUMBER" source="PRIMARY_TELEPHONE_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WORKING_TELEPHONE_NUMBER" source="WORKING_TELEPHONE_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT_START_DATE" source="PRODUCT_START_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT_END_DATE" source="PRODUCT_END_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BRA_CD" source="BRA_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_CODE" source="ITEM_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_TYPE" source="ITEM_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT_SERVICE_TYPE" source="PRODUCT_SERVICE_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PS_QTY_PRPS_CD" source="PS_QTY_PRPS_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_CHARGE" source="ITEM_CHARGE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_QUANTITY" source="ITEM_QUANTITY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RAC_CODE" source="RAC_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DUO_TRIO_IND" source="DUO_TRIO_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CURRENCY" source="CURRENCY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SOURCE_SYSTEM_CODE" source="SOURCE_SYSTEM_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MDM_DISCOUNT_TYPE" source="MDM_DISCOUNT_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TF_DISCOUNT_AMOUNT" source="TF_DISCOUNT_AMOUNT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KUNNR_SID" source="KUNNR_SID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ORIG_DOC_ID" source="ORIG_DOC_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SRCDOC_ID" source="SRCDOC_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="HEADER_ID" source="HEADER_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_ID" source="REFERENCE_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TIME_IND" source="TIME_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RAI_ITEM_ID" source="RAI_ITEM_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXECUTION_ID" source="EXECUTION_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INSERT_TS" source="INSERT_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MODIFIED_TS" source="MODIFIED_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BATCH_ID" source="BATCH_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONVERSION_IND" source="CONVERSION_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RUN_ID" source="RUN_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RAI_TS" source="RAI_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PMP_TS" source="PMP_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+      </input>
+      <input node="#AGGR_HP_BILLING_EH">
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRIMARY_TELEPHONE_NUMBER_RIGHT" source="PRIMARY_TELEPHONE_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WORKING_TELEPHONE_NUMBER_RIGHT" source="WORKING_TELEPHONE_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRIMARY_TELEPHONE_NUMBER" source="PRIMARY_TELEPHONE_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WORKING_TELEPHONE_NUMBER" source="WORKING_TELEPHONE_NUMBER"/>
+      </input>
+      <joinAttribute name="PRIMARY_TELEPHONE_NUMBER"/>
+      <joinAttribute name="WORKING_TELEPHONE_NUMBER"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_BILLING_PARENT" filterExpressionLanguage="COLUMN_ENGINE">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="INVOICE_DATE"/>
+        <viewAttribute id="DUE_DATE"/>
+        <viewAttribute id="SUMMARY_ACCOUNT_NUMBER"/>
+        <viewAttribute id="CUSTOMER_ACCOUNT_NUMBER"/>
+        <viewAttribute id="BILL_SYSTEM_CODE"/>
+        <viewAttribute id="PRIMARY_TELEPHONE_NUMBER"/>
+        <viewAttribute id="WORKING_TELEPHONE_NUMBER"/>
+        <viewAttribute id="PRODUCT_START_DATE"/>
+        <viewAttribute id="PRODUCT_END_DATE"/>
+        <viewAttribute id="BRA_CD"/>
+        <viewAttribute id="ITEM_CODE"/>
+        <viewAttribute id="ITEM_TYPE"/>
+        <viewAttribute id="PRODUCT_SERVICE_TYPE"/>
+        <viewAttribute id="PS_QTY_PRPS_CD"/>
+        <viewAttribute id="ITEM_CHARGE"/>
+        <viewAttribute id="ITEM_QUANTITY"/>
+        <viewAttribute id="RAC_CODE"/>
+        <viewAttribute id="DUO_TRIO_IND"/>
+        <viewAttribute id="CURRENCY"/>
+        <viewAttribute id="SOURCE_SYSTEM_CODE"/>
+        <viewAttribute id="MDM_DISCOUNT_TYPE"/>
+        <viewAttribute id="TF_DISCOUNT_AMOUNT"/>
+        <viewAttribute id="KUNNR_SID"/>
+        <viewAttribute id="ORIG_DOC_ID"/>
+        <viewAttribute id="SRCDOC_ID"/>
+        <viewAttribute id="HEADER_ID"/>
+        <viewAttribute id="REFERENCE_ID"/>
+        <viewAttribute id="TIME_IND"/>
+        <viewAttribute id="RAI_ITEM_ID"/>
+        <viewAttribute id="EXECUTION_ID"/>
+        <viewAttribute id="INSERT_TS"/>
+        <viewAttribute id="MODIFIED_TS"/>
+        <viewAttribute id="BATCH_ID"/>
+        <viewAttribute id="CONVERSION_IND"/>
+        <viewAttribute id="RUN_ID"/>
+        <viewAttribute id="RAI_TS"/>
+        <viewAttribute id="PMP_TS"/>
+        <viewAttribute id="CYCL_ID"/>
+        <viewAttribute id="PRIMARY_TELEPHONE_NUMBER_RIGHT"/>
+        <viewAttribute id="WORKING_TELEPHONE_NUMBER_RIGHT"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#JOIN_BILLING_PARENT">
+        <mapping xsi:type="Calculation:AttributeMapping" target="INVOICE_DATE" source="INVOICE_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DUE_DATE" source="DUE_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUMMARY_ACCOUNT_NUMBER" source="SUMMARY_ACCOUNT_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_ACCOUNT_NUMBER" source="CUSTOMER_ACCOUNT_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_SYSTEM_CODE" source="BILL_SYSTEM_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRIMARY_TELEPHONE_NUMBER" source="PRIMARY_TELEPHONE_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WORKING_TELEPHONE_NUMBER" source="WORKING_TELEPHONE_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT_START_DATE" source="PRODUCT_START_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT_END_DATE" source="PRODUCT_END_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BRA_CD" source="BRA_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_CODE" source="ITEM_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_TYPE" source="ITEM_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT_SERVICE_TYPE" source="PRODUCT_SERVICE_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PS_QTY_PRPS_CD" source="PS_QTY_PRPS_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_CHARGE" source="ITEM_CHARGE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_QUANTITY" source="ITEM_QUANTITY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RAC_CODE" source="RAC_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DUO_TRIO_IND" source="DUO_TRIO_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CURRENCY" source="CURRENCY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SOURCE_SYSTEM_CODE" source="SOURCE_SYSTEM_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MDM_DISCOUNT_TYPE" source="MDM_DISCOUNT_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TF_DISCOUNT_AMOUNT" source="TF_DISCOUNT_AMOUNT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KUNNR_SID" source="KUNNR_SID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ORIG_DOC_ID" source="ORIG_DOC_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SRCDOC_ID" source="SRCDOC_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="HEADER_ID" source="HEADER_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_ID" source="REFERENCE_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TIME_IND" source="TIME_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RAI_ITEM_ID" source="RAI_ITEM_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXECUTION_ID" source="EXECUTION_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INSERT_TS" source="INSERT_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MODIFIED_TS" source="MODIFIED_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BATCH_ID" source="BATCH_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONVERSION_IND" source="CONVERSION_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RUN_ID" source="RUN_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RAI_TS" source="RAI_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PMP_TS" source="PMP_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRIMARY_TELEPHONE_NUMBER_RIGHT" source="PRIMARY_TELEPHONE_NUMBER_RIGHT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WORKING_TELEPHONE_NUMBER_RIGHT" source="WORKING_TELEPHONE_NUMBER_RIGHT"/>
+      </input>
+      <filter>isNull(&quot;PRIMARY_TELEPHONE_NUMBER_RIGHT&quot;) and isNull(&quot;WORKING_TELEPHONE_NUMBER_RIGHT&quot;)</filter>
+    </calculationView>
+    <calculationView xsi:type="Calculation:AggregationView" id="AGGR_HP_ORDR_EH">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="WORKING_TELEPHONE_NUMBER"/>
+        <viewAttribute id="PRIMARY_TELEPHONE_NUMBER"/>
+        <viewAttribute id="DELETED"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#IFRS_R1.HP.NDB_HP::HP_ORDER_EH">
+        <mapping xsi:type="Calculation:AttributeMapping" target="WORKING_TELEPHONE_NUMBER" source="WORKING_TELEPHONE_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRIMARY_TELEPHONE_NUMBER" source="PRIMARY_TELEPHONE_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DELETED" source="DELETED"/>
+      </input>
+      <filter>isNull(&quot;DELETED&quot;)</filter>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="JOIN_ORDER_BILLING" joinOrder="OUTSIDE_IN" joinType="leftOuter">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="INVOICE_DATE"/>
+        <viewAttribute id="DUE_DATE"/>
+        <viewAttribute id="SUMMARY_ACCOUNT_NUMBER"/>
+        <viewAttribute id="CUSTOMER_ACCOUNT_NUMBER"/>
+        <viewAttribute id="BILL_SYSTEM_CODE"/>
+        <viewAttribute id="PRIMARY_TELEPHONE_NUMBER"/>
+        <viewAttribute id="WORKING_TELEPHONE_NUMBER"/>
+        <viewAttribute id="PRODUCT_START_DATE"/>
+        <viewAttribute id="PRODUCT_END_DATE"/>
+        <viewAttribute id="BRA_CD"/>
+        <viewAttribute id="ITEM_CODE"/>
+        <viewAttribute id="ITEM_TYPE"/>
+        <viewAttribute id="PRODUCT_SERVICE_TYPE"/>
+        <viewAttribute id="PS_QTY_PRPS_CD"/>
+        <viewAttribute id="ITEM_CHARGE"/>
+        <viewAttribute id="ITEM_QUANTITY"/>
+        <viewAttribute id="RAC_CODE"/>
+        <viewAttribute id="DUO_TRIO_IND"/>
+        <viewAttribute id="CURRENCY"/>
+        <viewAttribute id="SOURCE_SYSTEM_CODE"/>
+        <viewAttribute id="MDM_DISCOUNT_TYPE"/>
+        <viewAttribute id="TF_DISCOUNT_AMOUNT"/>
+        <viewAttribute id="KUNNR_SID"/>
+        <viewAttribute id="ORIG_DOC_ID"/>
+        <viewAttribute id="SRCDOC_ID"/>
+        <viewAttribute id="HEADER_ID"/>
+        <viewAttribute id="REFERENCE_ID"/>
+        <viewAttribute id="TIME_IND"/>
+        <viewAttribute id="RAI_ITEM_ID"/>
+        <viewAttribute id="EXECUTION_ID"/>
+        <viewAttribute id="INSERT_TS"/>
+        <viewAttribute id="MODIFIED_TS"/>
+        <viewAttribute id="BATCH_ID"/>
+        <viewAttribute id="CONVERSION_IND"/>
+        <viewAttribute id="RUN_ID"/>
+        <viewAttribute id="RAI_TS"/>
+        <viewAttribute id="PMP_TS"/>
+        <viewAttribute id="CYCL_ID"/>
+        <viewAttribute id="WORKING_TELEPHONE_NUMBER_RIGHT"/>
+        <viewAttribute id="PRIMARY_TELEPHONE_NUMBER_RIGHT"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#PROJ_BILLING_PARENT">
+        <mapping xsi:type="Calculation:AttributeMapping" target="INVOICE_DATE" source="INVOICE_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DUE_DATE" source="DUE_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUMMARY_ACCOUNT_NUMBER" source="SUMMARY_ACCOUNT_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_ACCOUNT_NUMBER" source="CUSTOMER_ACCOUNT_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_SYSTEM_CODE" source="BILL_SYSTEM_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRIMARY_TELEPHONE_NUMBER" source="PRIMARY_TELEPHONE_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WORKING_TELEPHONE_NUMBER" source="WORKING_TELEPHONE_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT_START_DATE" source="PRODUCT_START_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT_END_DATE" source="PRODUCT_END_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BRA_CD" source="BRA_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_CODE" source="ITEM_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_TYPE" source="ITEM_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT_SERVICE_TYPE" source="PRODUCT_SERVICE_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PS_QTY_PRPS_CD" source="PS_QTY_PRPS_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_CHARGE" source="ITEM_CHARGE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_QUANTITY" source="ITEM_QUANTITY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RAC_CODE" source="RAC_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DUO_TRIO_IND" source="DUO_TRIO_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CURRENCY" source="CURRENCY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SOURCE_SYSTEM_CODE" source="SOURCE_SYSTEM_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MDM_DISCOUNT_TYPE" source="MDM_DISCOUNT_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TF_DISCOUNT_AMOUNT" source="TF_DISCOUNT_AMOUNT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KUNNR_SID" source="KUNNR_SID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ORIG_DOC_ID" source="ORIG_DOC_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SRCDOC_ID" source="SRCDOC_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="HEADER_ID" source="HEADER_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_ID" source="REFERENCE_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TIME_IND" source="TIME_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RAI_ITEM_ID" source="RAI_ITEM_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXECUTION_ID" source="EXECUTION_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INSERT_TS" source="INSERT_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MODIFIED_TS" source="MODIFIED_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BATCH_ID" source="BATCH_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONVERSION_IND" source="CONVERSION_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RUN_ID" source="RUN_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RAI_TS" source="RAI_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PMP_TS" source="PMP_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+      </input>
+      <input node="#AGGR_HP_ORDR_EH">
+        <mapping xsi:type="Calculation:AttributeMapping" target="WORKING_TELEPHONE_NUMBER_RIGHT" source="WORKING_TELEPHONE_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRIMARY_TELEPHONE_NUMBER_RIGHT" source="PRIMARY_TELEPHONE_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WORKING_TELEPHONE_NUMBER" source="WORKING_TELEPHONE_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRIMARY_TELEPHONE_NUMBER" source="PRIMARY_TELEPHONE_NUMBER"/>
+      </input>
+      <joinAttribute name="WORKING_TELEPHONE_NUMBER"/>
+      <joinAttribute name="PRIMARY_TELEPHONE_NUMBER"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_ORDER_BILLING">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="INVOICE_DATE"/>
+        <viewAttribute id="DUE_DATE"/>
+        <viewAttribute id="SUMMARY_ACCOUNT_NUMBER"/>
+        <viewAttribute id="CUSTOMER_ACCOUNT_NUMBER"/>
+        <viewAttribute id="BILL_SYSTEM_CODE"/>
+        <viewAttribute id="PRIMARY_TELEPHONE_NUMBER"/>
+        <viewAttribute id="WORKING_TELEPHONE_NUMBER"/>
+        <viewAttribute id="PRODUCT_START_DATE"/>
+        <viewAttribute id="PRODUCT_END_DATE"/>
+        <viewAttribute id="BRA_CD"/>
+        <viewAttribute id="ITEM_CODE"/>
+        <viewAttribute id="ITEM_TYPE"/>
+        <viewAttribute id="PRODUCT_SERVICE_TYPE"/>
+        <viewAttribute id="PS_QTY_PRPS_CD"/>
+        <viewAttribute id="ITEM_CHARGE"/>
+        <viewAttribute id="ITEM_QUANTITY"/>
+        <viewAttribute id="RAC_CODE"/>
+        <viewAttribute id="DUO_TRIO_IND"/>
+        <viewAttribute id="CURRENCY"/>
+        <viewAttribute id="SOURCE_SYSTEM_CODE"/>
+        <viewAttribute id="MDM_DISCOUNT_TYPE"/>
+        <viewAttribute id="TF_DISCOUNT_AMOUNT"/>
+        <viewAttribute id="KUNNR_SID"/>
+        <viewAttribute id="ORIG_DOC_ID"/>
+        <viewAttribute id="SRCDOC_ID"/>
+        <viewAttribute id="HEADER_ID"/>
+        <viewAttribute id="REFERENCE_ID"/>
+        <viewAttribute id="TIME_IND"/>
+        <viewAttribute id="RAI_ITEM_ID"/>
+        <viewAttribute id="EXECUTION_ID"/>
+        <viewAttribute id="INSERT_TS"/>
+        <viewAttribute id="MODIFIED_TS"/>
+        <viewAttribute id="BATCH_ID"/>
+        <viewAttribute id="CONVERSION_IND"/>
+        <viewAttribute id="RUN_ID"/>
+        <viewAttribute id="RAI_TS"/>
+        <viewAttribute id="PMP_TS"/>
+        <viewAttribute id="CYCL_ID"/>
+        <viewAttribute id="WORKING_TELEPHONE_NUMBER_RIGHT">
+          <filter xsi:type="AccessControl:SingleValueFilter" operator="NL" including="true"/>
+        </viewAttribute>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#JOIN_ORDER_BILLING">
+        <mapping xsi:type="Calculation:AttributeMapping" target="INVOICE_DATE" source="INVOICE_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DUE_DATE" source="DUE_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUMMARY_ACCOUNT_NUMBER" source="SUMMARY_ACCOUNT_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_ACCOUNT_NUMBER" source="CUSTOMER_ACCOUNT_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_SYSTEM_CODE" source="BILL_SYSTEM_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRIMARY_TELEPHONE_NUMBER" source="PRIMARY_TELEPHONE_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WORKING_TELEPHONE_NUMBER" source="WORKING_TELEPHONE_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT_START_DATE" source="PRODUCT_START_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT_END_DATE" source="PRODUCT_END_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BRA_CD" source="BRA_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_CODE" source="ITEM_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_TYPE" source="ITEM_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT_SERVICE_TYPE" source="PRODUCT_SERVICE_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PS_QTY_PRPS_CD" source="PS_QTY_PRPS_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_CHARGE" source="ITEM_CHARGE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_QUANTITY" source="ITEM_QUANTITY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RAC_CODE" source="RAC_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DUO_TRIO_IND" source="DUO_TRIO_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CURRENCY" source="CURRENCY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SOURCE_SYSTEM_CODE" source="SOURCE_SYSTEM_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MDM_DISCOUNT_TYPE" source="MDM_DISCOUNT_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TF_DISCOUNT_AMOUNT" source="TF_DISCOUNT_AMOUNT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KUNNR_SID" source="KUNNR_SID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ORIG_DOC_ID" source="ORIG_DOC_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SRCDOC_ID" source="SRCDOC_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="HEADER_ID" source="HEADER_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_ID" source="REFERENCE_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TIME_IND" source="TIME_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RAI_ITEM_ID" source="RAI_ITEM_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXECUTION_ID" source="EXECUTION_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INSERT_TS" source="INSERT_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MODIFIED_TS" source="MODIFIED_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BATCH_ID" source="BATCH_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONVERSION_IND" source="CONVERSION_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RUN_ID" source="RUN_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RAI_TS" source="RAI_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PMP_TS" source="PMP_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WORKING_TELEPHONE_NUMBER_RIGHT" source="WORKING_TELEPHONE_NUMBER_RIGHT"/>
+      </input>
+    </calculationView>
+  </calculationViews>
+  <logicalModel id="PROJ_ORDER_BILLING">
+    <descriptions/>
+    <attributes>
+      <attribute id="INVOICE_DATE" order="1" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="INVOICE_DATE"/>
+        <keyMapping columnObjectName="PROJ_ORDER_BILLING" columnName="INVOICE_DATE"/>
+      </attribute>
+      <attribute id="DUE_DATE" order="2" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="DUE_DATE"/>
+        <keyMapping columnObjectName="PROJ_ORDER_BILLING" columnName="DUE_DATE"/>
+      </attribute>
+      <attribute id="SUMMARY_ACCOUNT_NUMBER" order="3" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SUMMARY_ACCOUNT_NUMBER"/>
+        <keyMapping columnObjectName="PROJ_ORDER_BILLING" columnName="SUMMARY_ACCOUNT_NUMBER"/>
+      </attribute>
+      <attribute id="CUSTOMER_ACCOUNT_NUMBER" order="4" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CUSTOMER_ACCOUNT_NUMBER"/>
+        <keyMapping columnObjectName="PROJ_ORDER_BILLING" columnName="CUSTOMER_ACCOUNT_NUMBER"/>
+      </attribute>
+      <attribute id="BILL_SYSTEM_CODE" order="5" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="BILL_SYSTEM_CODE"/>
+        <keyMapping columnObjectName="PROJ_ORDER_BILLING" columnName="BILL_SYSTEM_CODE"/>
+      </attribute>
+      <attribute id="PRIMARY_TELEPHONE_NUMBER" order="6" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="PRIMARY_TELEPHONE_NUMBER"/>
+        <keyMapping columnObjectName="PROJ_ORDER_BILLING" columnName="PRIMARY_TELEPHONE_NUMBER"/>
+      </attribute>
+      <attribute id="WORKING_TELEPHONE_NUMBER" order="7" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="WORKING_TELEPHONE_NUMBER"/>
+        <keyMapping columnObjectName="PROJ_ORDER_BILLING" columnName="WORKING_TELEPHONE_NUMBER"/>
+      </attribute>
+      <attribute id="PRODUCT_START_DATE" order="8" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="PRODUCT_START_DATE"/>
+        <keyMapping columnObjectName="PROJ_ORDER_BILLING" columnName="PRODUCT_START_DATE"/>
+      </attribute>
+      <attribute id="PRODUCT_END_DATE" order="9" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="PRODUCT_END_DATE"/>
+        <keyMapping columnObjectName="PROJ_ORDER_BILLING" columnName="PRODUCT_END_DATE"/>
+      </attribute>
+      <attribute id="BRA_CD" order="10" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="BRA_CD"/>
+        <keyMapping columnObjectName="PROJ_ORDER_BILLING" columnName="BRA_CD"/>
+      </attribute>
+      <attribute id="ITEM_CODE" order="11" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ITEM_CODE"/>
+        <keyMapping columnObjectName="PROJ_ORDER_BILLING" columnName="ITEM_CODE"/>
+      </attribute>
+      <attribute id="ITEM_TYPE" order="12" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ITEM_TYPE"/>
+        <keyMapping columnObjectName="PROJ_ORDER_BILLING" columnName="ITEM_TYPE"/>
+      </attribute>
+      <attribute id="PRODUCT_SERVICE_TYPE" order="13" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="PRODUCT_SERVICE_TYPE"/>
+        <keyMapping columnObjectName="PROJ_ORDER_BILLING" columnName="PRODUCT_SERVICE_TYPE"/>
+      </attribute>
+      <attribute id="PS_QTY_PRPS_CD" order="14" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="PS_QTY_PRPS_CD"/>
+        <keyMapping columnObjectName="PROJ_ORDER_BILLING" columnName="PS_QTY_PRPS_CD"/>
+      </attribute>
+      <attribute id="ITEM_CHARGE" order="15" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ITEM_CHARGE"/>
+        <keyMapping columnObjectName="PROJ_ORDER_BILLING" columnName="ITEM_CHARGE"/>
+      </attribute>
+      <attribute id="ITEM_QUANTITY" order="16" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ITEM_QUANTITY"/>
+        <keyMapping columnObjectName="PROJ_ORDER_BILLING" columnName="ITEM_QUANTITY"/>
+      </attribute>
+      <attribute id="RAC_CODE" order="17" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="RAC_CODE"/>
+        <keyMapping columnObjectName="PROJ_ORDER_BILLING" columnName="RAC_CODE"/>
+      </attribute>
+      <attribute id="DUO_TRIO_IND" order="18" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="DUO_TRIO_IND"/>
+        <keyMapping columnObjectName="PROJ_ORDER_BILLING" columnName="DUO_TRIO_IND"/>
+      </attribute>
+      <attribute id="CURRENCY" order="19" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CURRENCY"/>
+        <keyMapping columnObjectName="PROJ_ORDER_BILLING" columnName="CURRENCY"/>
+      </attribute>
+      <attribute id="SOURCE_SYSTEM_CODE" order="20" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SOURCE_SYSTEM_CODE"/>
+        <keyMapping columnObjectName="PROJ_ORDER_BILLING" columnName="SOURCE_SYSTEM_CODE"/>
+      </attribute>
+      <attribute id="MDM_DISCOUNT_TYPE" order="21" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="MDM_DISCOUNT_TYPE"/>
+        <keyMapping columnObjectName="PROJ_ORDER_BILLING" columnName="MDM_DISCOUNT_TYPE"/>
+      </attribute>
+      <attribute id="TF_DISCOUNT_AMOUNT" order="22" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="TF_DISCOUNT_AMOUNT"/>
+        <keyMapping columnObjectName="PROJ_ORDER_BILLING" columnName="TF_DISCOUNT_AMOUNT"/>
+      </attribute>
+      <attribute id="KUNNR_SID" order="23" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="KUNNR_SID"/>
+        <keyMapping columnObjectName="PROJ_ORDER_BILLING" columnName="KUNNR_SID"/>
+      </attribute>
+      <attribute id="ORIG_DOC_ID" order="24" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ORIG_DOC_ID"/>
+        <keyMapping columnObjectName="PROJ_ORDER_BILLING" columnName="ORIG_DOC_ID"/>
+      </attribute>
+      <attribute id="SRCDOC_ID" order="25" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SRCDOC_ID"/>
+        <keyMapping columnObjectName="PROJ_ORDER_BILLING" columnName="SRCDOC_ID"/>
+      </attribute>
+      <attribute id="HEADER_ID" order="26" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="HEADER_ID"/>
+        <keyMapping columnObjectName="PROJ_ORDER_BILLING" columnName="HEADER_ID"/>
+      </attribute>
+      <attribute id="REFERENCE_ID" order="27" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="REFERENCE_ID"/>
+        <keyMapping columnObjectName="PROJ_ORDER_BILLING" columnName="REFERENCE_ID"/>
+      </attribute>
+      <attribute id="TIME_IND" order="28" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="TIME_IND"/>
+        <keyMapping columnObjectName="PROJ_ORDER_BILLING" columnName="TIME_IND"/>
+      </attribute>
+      <attribute id="RAI_ITEM_ID" order="29" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="RAI_ITEM_ID"/>
+        <keyMapping columnObjectName="PROJ_ORDER_BILLING" columnName="RAI_ITEM_ID"/>
+      </attribute>
+      <attribute id="EXECUTION_ID" order="30" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="EXECUTION_ID"/>
+        <keyMapping columnObjectName="PROJ_ORDER_BILLING" columnName="EXECUTION_ID"/>
+      </attribute>
+      <attribute id="INSERT_TS" order="31" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="INSERT_TS"/>
+        <keyMapping columnObjectName="PROJ_ORDER_BILLING" columnName="INSERT_TS"/>
+      </attribute>
+      <attribute id="MODIFIED_TS" order="32" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="MODIFIED_TS"/>
+        <keyMapping columnObjectName="PROJ_ORDER_BILLING" columnName="MODIFIED_TS"/>
+      </attribute>
+      <attribute id="BATCH_ID" order="33" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="BATCH_ID"/>
+        <keyMapping columnObjectName="PROJ_ORDER_BILLING" columnName="BATCH_ID"/>
+      </attribute>
+      <attribute id="CONVERSION_IND" order="34" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CONVERSION_IND"/>
+        <keyMapping columnObjectName="PROJ_ORDER_BILLING" columnName="CONVERSION_IND"/>
+      </attribute>
+      <attribute id="RUN_ID" order="35" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="RUN_ID"/>
+        <keyMapping columnObjectName="PROJ_ORDER_BILLING" columnName="RUN_ID"/>
+      </attribute>
+      <attribute id="RAI_TS" order="36" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="RAI_TS"/>
+        <keyMapping columnObjectName="PROJ_ORDER_BILLING" columnName="RAI_TS"/>
+      </attribute>
+      <attribute id="PMP_TS" order="37" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="PMP_DATE"/>
+        <keyMapping columnObjectName="PROJ_ORDER_BILLING" columnName="PMP_TS"/>
+      </attribute>
+      <attribute id="CYCL_ID" order="38" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CYCL_ID"/>
+        <keyMapping columnObjectName="PROJ_ORDER_BILLING" columnName="CYCL_ID"/>
+      </attribute>
+    </attributes>
+    <calculatedAttributes/>
+    <privateDataFoundation>
+      <tableProxies/>
+      <joins/>
+      <layout>
+        <shapes/>
+      </layout>
+    </privateDataFoundation>
+    <baseMeasures/>
+    <calculatedMeasures/>
+    <restrictedMeasures/>
+    <localDimensions/>
+  </logicalModel>
+  <layout>
+    <shapes>
+      <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+        <upperLeftCorner x="176" y="87"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_HP_BILLING" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="22" y="513"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="AGGR_HP_BILLING_EH" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="176" y="513"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="JOIN_BILLING_PARENT" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="99" y="417"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_BILLING_PARENT" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="99" y="339"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="AGGR_HP_ORDR_EH" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="253" y="339"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="JOIN_ORDER_BILLING" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="176" y="243"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_ORDER_BILLING" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="176" y="165"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+    </shapes>
+  </layout>
+</Calculation:scenario>

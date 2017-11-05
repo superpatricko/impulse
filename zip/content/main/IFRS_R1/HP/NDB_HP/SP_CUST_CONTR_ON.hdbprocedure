@@ -1,0 +1,357 @@
+PROCEDURE "NDB_HP"."IFRS_R1.HP.NDB_HP::SP_CUST_CONTR_ON" 
+(IN  IP_CYCL_ID NVARCHAR(3),
+ OUT OP_STATUS NVARCHAR(1000))   
+	LANGUAGE SQLSCRIPT
+	SQL SECURITY INVOKER
+	AS
+
+BEGIN
+--------------------------------------------------------------------------------------------------
+-- Procedure Title : SP_CUST_CONTR_ON
+-- Created By      : BC_EY94118(Prakhar)       
+-- Create Date     : 10-09-2016
+-- Description     : Data Inserted using Calculation View - CA_CUST_CONTR_ON
+--                   To NDB Table - HP_CUSTOMER Using this stored procedure.		
+-- Project         : Bell Canada
+-- Release         : R1 / IFRS
+--------------------------------------------------------------------------------------------------
+--   M O D I F I C A T I O N   H I S T O R Y
+--------------------------------------------------------------------------------------------------
+-- Date        | User ID          | Modification History/Release
+--------------------------------------------------------------------------------------------------
+--             |                  | 
+--------------------------------------------------------------------------------------------------
+-- Description Of the changes 
+--------------------------------------------------------------------------------------------------
+-- Modification Number          : <Assign Some Number> 
+-- Description of Changes Made> : <Description of Changes>       
+--------------------------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------------------------
+-- Global Variables Declaration
+--------------------------------------------------------------------------------------------------
+
+DECLARE LC_ERROR_TEXT 		NVARCHAR(70) DEFAULT 'OUT STATUS IS 1 : INSERT/UPDATE FOR ONE OR MORE RECORD FAILED';
+DECLARE LC_SUCCESS_TEXT 	NVARCHAR(70) DEFAULT 'OUT STATUS IS 0 : INSERT/UPDATE EXECUTION SUCCESSFUL';
+DECLARE LV_ERROR_FLAG 		NVARCHAR(1) := 'N';
+DECLARE LV_CUR_UTC 			TIMESTAMP := CURRENT_TIMESTAMP;
+DECLARE ERROR_TAB 			TABLE (ERROR_CODE NVARCHAR(100));
+DECLARE i					INTEGER;
+DECLARE RECORD_COUNT		INTEGER;
+DECLARE CURRENT_ERROR		NVARCHAR(100);
+  
+--------------------------------------------------------------------------------------------------
+-- Cursors Declaration
+-------------------------------------------------------------------------------------------------- 
+  
+ DECLARE CURSOR C_CONTR_ON FOR
+    SELECT  CONTRACT_UNIQUE_IDENTIFIER,
+			PRIMARY_TELEPHONE_NUMBER,
+			SUBSCRIBER_NUMBER,
+			REF_EFFECTIVE_DATE,
+			REF_EXPIRY_DATE,
+			CONTRACT_INCEPTION_DT,
+			CUSTOMER_LOCATION_ID,
+			SYSTEM_REGION,
+			TAX_JURISDICTION_CD,
+			CUSTOMER_SEG_TYP_CD,
+			CBSS_ACC_STATUS,
+			TO_BE_REBILL_IND,
+			ACC_TYPE,
+			CBSS_CAN,
+			TOLL_FREE_CAN,
+			GIFT_G01,
+			GIFT_G02,
+			ONE_BILL_BAN,
+			NM1_BAN,
+			NM1_BILLED_INDICATOR,
+			TERM_M2M_INDICATOR,
+			TFB_CUST_PROV,
+			WTN_800_NUMBER,
+			TFB_ACCOUNT_STATUS,
+			SUBSCRIBER_ACTION,
+			EXECUTION_ID,
+			INSERT_TS,
+			MODIFIED_TS,
+			BATCH_ID,
+			CONVERSION_IND,
+			CLASS_OF_SERVICE,
+			ERROR_STATUS,
+			ERROR_CODE,
+			CONTRACT_TERM,
+			SEQ_ID,
+			CYCL_ID,
+			CNTRT_ONT_PRIMARY_KEY
+	FROM  "_SYS_BIC"."IFRS_R1.HP.NDB_HP/CA_CUST_CONTR_ON"
+	      (PLACEHOLDER."$$IP_CYCL_ID$$" => :IP_CYCL_ID )
+	       ORDER BY CONTRACT_INCEPTION_DT, CYCL_ID, SEQ_ID;
+
+--------------------------------------------------------------------------------------------------
+-- Local Temporary Tables Declaration
+--------------------------------------------------------------------------------------------------  
+
+CREATE LOCAL TEMPORARY TABLE #UPDATE_BCRIS_CONTR_INFO_ON("CNTRT_ONT_PRIMARY_KEY"  NVARCHAR(120));
+CREATE LOCAL TEMPORARY TABLE #UPDATE_EH_DELETION(CONTRACT_UNIQUE_IDENTIFIER NVARCHAR(20), SUBSCRIBER_NUMBER NVARCHAR(14), REF_EFFECTIVE_DATE DATE );	
+
+--------------------------------------------------------------------------------------------------
+-- Cursors Loop
+-------------------------------------------------------------------------------------------------- 
+FOR CURR_CONTR AS C_CONTR_ON DO
+
+--  Define Exit Handler
+	DECLARE EXIT HANDLER FOR SQLEXCEPTION 
+	BEGIN AUTONOMOUS TRANSACTION 
+
+--    Define Exit Handler
+	  DECLARE EXIT HANDLER FOR SQLEXCEPTION 
+	  BEGIN AUTONOMOUS TRANSACTION 
+	
+      -- Do Nothing. Exception Handled to ensure SP does not get terminated
+	
+	  END;  
+
+   -- Insert into the Error Table
+	  INSERT INTO "NDB_HP"."IFRS_R1.HP.NDB_HP::HP_CUSTOMER_EH"(
+				  "CONTRACT_UNIQUE_IDENTIFIER",
+				  "PRIMARY_TELEPHONE_NUMBER",
+				  "SUBSCRIBER_NUMBER",
+				  "REF_EFFECTIVE_DATE",
+				  "REF_EXPIRY_DATE",
+				  "CONTRACT_INCEPTION_DT",
+				  "CUSTOMER_LOCATION_ID",
+				  "SYSTEM_REGION",
+				  "TAX_JURISDICTION_CD",
+				  "CUSTOMER_SEG_TYP_CD",
+				  "CBSS_ACC_STATUS",
+				  "TO_BE_REBILL_IND",
+				  "ACC_TYPE",
+				  "CBSS_CAN",
+				  "TOLL_FREE_CAN",
+				  "GIFT_G01",
+				  "GIFT_G02",
+				  "ONE_BILL_BAN",
+				  "NM1_BAN",
+				  "NM1_BILLED_INDICATOR",
+				  "TERM_M2M_INDICATOR",
+				  "TFB_CUST_PROV",
+				  "WTN_800_NUMBER",
+				  "TFB_ACCOUNT_STATUS",
+				  "SUBSCRIBER_ACTION",
+				  "INSERT_TS",
+				  "CLASS_OF_SERVICE", 
+			      "ERROR_CODE",
+		          "TECHNICAL_MESSAGE",
+			      "ERROR_CREATE_TS")
+	  	   VALUES (CURR_CONTR.CONTRACT_UNIQUE_IDENTIFIER,
+				   CURR_CONTR.PRIMARY_TELEPHONE_NUMBER,
+				   CURR_CONTR.SUBSCRIBER_NUMBER,
+				   CURR_CONTR.REF_EFFECTIVE_DATE,
+				   CURR_CONTR.REF_EXPIRY_DATE,
+				   CURR_CONTR.CONTRACT_INCEPTION_DT,
+				   CURR_CONTR.CUSTOMER_LOCATION_ID,
+				   CURR_CONTR.SYSTEM_REGION,
+				   CURR_CONTR.TAX_JURISDICTION_CD,
+				   CURR_CONTR.CUSTOMER_SEG_TYP_CD,
+				   CURR_CONTR.CBSS_ACC_STATUS,
+				   CURR_CONTR.TO_BE_REBILL_IND,
+				   CURR_CONTR.ACC_TYPE,
+				   CURR_CONTR.CBSS_CAN,
+				   CURR_CONTR.TOLL_FREE_CAN,
+				   CURR_CONTR.GIFT_G01,
+				   CURR_CONTR.GIFT_G02,
+				   CURR_CONTR.ONE_BILL_BAN,
+				   CURR_CONTR.NM1_BAN,
+				   CURR_CONTR.NM1_BILLED_INDICATOR,
+				   CURR_CONTR.TERM_M2M_INDICATOR,
+				   CURR_CONTR.TFB_CUST_PROV,
+				   CURR_CONTR.WTN_800_NUMBER,
+				   CURR_CONTR.TFB_ACCOUNT_STATUS,
+				   CURR_CONTR.SUBSCRIBER_ACTION,
+				   LV_CUR_UTC,
+				   CURR_CONTR.CLASS_OF_SERVICE,
+		           ::SQL_ERROR_CODE,
+		           ::SQL_ERROR_MESSAGE,
+			       LV_CUR_UTC);
+			        
+     -- Set Error Flag				        
+		LV_ERROR_FLAG := 'Y';
+
+  END ;	
+	
+--  Check the Error Status of the Record. If Record is with Error, then send to Error Table
+	IF CURR_CONTR.ERROR_STATUS = 1 THEN
+	
+	--  Call the Stored Procedure to split the concatenated Error Messages into Error Rows
+		CALL "NDB_COMMON"."IFRS_R1.COMMON_COMP.EH::SP_EH_SPLIT_ERRORS"(CURR_CONTR."ERROR_CODE", ERROR_TAB, RECORD_COUNT);
+
+     -- Loop through the Error Records
+		FOR i IN 1 .. :RECORD_COUNT DO
+			
+		 -- Fetch the Error Code
+			CURRENT_ERROR = :ERROR_TAB."ERROR_CODE"[:i];
+			
+		 -- Insert into the Error Table
+			INSERT INTO "NDB_HP"."IFRS_R1.HP.NDB_HP::HP_CUSTOMER_EH"
+						("CONTRACT_UNIQUE_IDENTIFIER",
+						"PRIMARY_TELEPHONE_NUMBER",
+						"SUBSCRIBER_NUMBER",
+						"REF_EFFECTIVE_DATE",
+						"REF_EXPIRY_DATE",
+						"CONTRACT_INCEPTION_DT",
+						"CUSTOMER_LOCATION_ID",
+						"SYSTEM_REGION",
+						"TAX_JURISDICTION_CD",
+						"CUSTOMER_SEG_TYP_CD",
+						"CBSS_ACC_STATUS",
+						"TO_BE_REBILL_IND",
+						"ACC_TYPE",
+						"CBSS_CAN",
+						"TOLL_FREE_CAN",
+						"GIFT_G01",
+						"GIFT_G02",
+						"ONE_BILL_BAN",
+						"NM1_BAN",
+						"NM1_BILLED_INDICATOR",
+						"TERM_M2M_INDICATOR",
+						"TFB_CUST_PROV",
+						"WTN_800_NUMBER",
+						"TFB_ACCOUNT_STATUS",
+						"SUBSCRIBER_ACTION",
+						"INSERT_TS",
+						"CLASS_OF_SERVICE", 
+				        "ERROR_CODE",
+				        "ERROR_CREATE_TS")
+				VALUES (CURR_CONTR.CONTRACT_UNIQUE_IDENTIFIER,
+						CURR_CONTR.PRIMARY_TELEPHONE_NUMBER,
+						CURR_CONTR.SUBSCRIBER_NUMBER,
+						CURR_CONTR.REF_EFFECTIVE_DATE,
+						CURR_CONTR.REF_EXPIRY_DATE,
+						CURR_CONTR.CONTRACT_INCEPTION_DT,
+						CURR_CONTR.CUSTOMER_LOCATION_ID,
+						CURR_CONTR.SYSTEM_REGION,
+						CURR_CONTR.TAX_JURISDICTION_CD,
+						CURR_CONTR.CUSTOMER_SEG_TYP_CD,
+						CURR_CONTR.CBSS_ACC_STATUS,
+						CURR_CONTR.TO_BE_REBILL_IND,
+						CURR_CONTR.ACC_TYPE,
+						CURR_CONTR.CBSS_CAN,
+						CURR_CONTR.TOLL_FREE_CAN,
+						CURR_CONTR.GIFT_G01,
+						CURR_CONTR.GIFT_G02,
+						CURR_CONTR.ONE_BILL_BAN,
+						CURR_CONTR.NM1_BAN,
+						CURR_CONTR.NM1_BILLED_INDICATOR,
+						CURR_CONTR.TERM_M2M_INDICATOR,
+						CURR_CONTR.TFB_CUST_PROV,
+						CURR_CONTR.WTN_800_NUMBER,
+						CURR_CONTR.TFB_ACCOUNT_STATUS,
+						CURR_CONTR.SUBSCRIBER_ACTION,
+						LV_CUR_UTC,
+						CURR_CONTR.CLASS_OF_SERVICE,
+						:CURRENT_ERROR,
+				        LV_CUR_UTC);
+				        	
+		END FOR;	
+						        
+         -- Set Error Flag				        
+			LV_ERROR_FLAG := 'Y';
+								
+-- Processing for Successful Records
+	ELSE
+   
+  		 UPDATE "NDB_HP"."IFRS_R1.HP.NDB_HP::HP_CUSTOMER" NDB 
+			SET( CONTRACT_INCEPTION_DT,
+				 SYSTEM_REGION,
+				 TOLL_FREE_CAN,
+				 GIFT_G01,
+				 GIFT_G02,
+				 ONE_BILL_BAN,
+				 NM1_BAN,
+				 NM1_BILLED_INDICATOR,
+				 TERM_M2M_INDICATOR,
+				 SUBSCRIBER_ACTION,
+				 MODIFIED_TS,
+				 CLASS_OF_SERVICE ) = (CURR_CONTR.CONTRACT_INCEPTION_DT,
+				 CURR_CONTR.SYSTEM_REGION,
+				 CURR_CONTR.TOLL_FREE_CAN,
+				 CURR_CONTR.GIFT_G01,
+				 CURR_CONTR.GIFT_G02,
+				 CURR_CONTR.ONE_BILL_BAN,
+				 CURR_CONTR.NM1_BAN,
+				 CURR_CONTR.NM1_BILLED_INDICATOR,
+				 CURR_CONTR.TERM_M2M_INDICATOR,
+				 CURR_CONTR.SUBSCRIBER_ACTION,
+			 	 LV_CUR_UTC ,--MODIFIED_TS
+			 	 CURR_CONTR.CLASS_OF_SERVICE )
+		    WHERE NDB.CONTRACT_UNIQUE_IDENTIFIER = CURR_CONTR.CONTRACT_UNIQUE_IDENTIFIER;
+ 
+-- Add record to Update NDB_TS with current_timestamp for the records that has been processed
+		   	INSERT INTO #UPDATE_BCRIS_CONTR_INFO_ON 
+					   (CNTRT_ONT_PRIMARY_KEY) 
+				VALUES (CURR_CONTR.CNTRT_ONT_PRIMARY_KEY);
+		
+-- Add record to Delete the error from the error table if it exists
+		   INSERT INTO #UPDATE_EH_DELETION
+		               (CONTRACT_UNIQUE_IDENTIFIER, 
+		                SUBSCRIBER_NUMBER, 
+		                REF_EFFECTIVE_DATE) 
+		        VALUES (CURR_CONTR.CONTRACT_UNIQUE_IDENTIFIER, 
+		                CURR_CONTR.SUBSCRIBER_NUMBER, 
+		                CURR_CONTR.REF_EFFECTIVE_DATE);	 
+	
+    END IF;
+    
+ END FOR;
+
+--------------------------------------------------------------------------------------------------
+-- Delete records for class of service irrelevent to HP_CUSTOMER 
+-------------------------------------------------------------------------------------------------- 
+DELETE FROM "NDB_HP"."IFRS_R1.HP.NDB_HP::HP_CUSTOMER" NDB
+WHERE CLASS_OF_SERVICE IN ( SELECT DISTINCT SRVCLS_CODE
+							FROM "SDA"."ZTSRVCLS_CODE" SDA
+							WHERE NDB.CLASS_OF_SERVICE           = SDA.SRVCLS_CODE
+							AND LEFT(NDB.CUSTOMER_SEG_TYP_CD,1)  = SDA.ACC_TYPE)
+OR NM1_BAN IS NOT NULL;
+							
+--------------------------------------------------------------------------------------------------
+-- Update Landing Tables
+-------------------------------------------------------------------------------------------------- 
+
+--  Update Landing Table IFRS_R1.LAND::BCRIS_CONTR_INFO_ON
+--  Update Landing Table IFRS_R1.LAND::BCRIS_CONTR_INFO_ON
+UPDATE "LAND"."IFRS_R1.LAND::BCRIS_CONTR_INFO_ON" A
+  FROM "LAND"."IFRS_R1.LAND::BCRIS_CONTR_INFO_ON" A 
+ INNER JOIN #UPDATE_BCRIS_CONTR_INFO_ON B 
+    ON A.CNTRT_ONT_PRIMARY_KEY        = B.CNTRT_ONT_PRIMARY_KEY
+   SET A.NDB_TS = LV_CUR_UTC
+ WHERE A.NDB_TS IS NULL;
+
+--------------------------------------------------------------------------------------------------
+-- Update Error Table
+--------------------------------------------------------------------------------------------------
+UPDATE "NDB_HP"."IFRS_R1.HP.NDB_HP::HP_CUSTOMER_EH" A
+  FROM "NDB_HP"."IFRS_R1.HP.NDB_HP::HP_CUSTOMER_EH" A 
+ INNER JOIN 	#UPDATE_EH_DELETION B 
+	ON A.CONTRACT_UNIQUE_IDENTIFIER      = B.CONTRACT_UNIQUE_IDENTIFIER 
+   AND A.SUBSCRIBER_NUMBER               = B.SUBSCRIBER_NUMBER 
+   AND A.REF_EFFECTIVE_DATE              = B.REF_EFFECTIVE_DATE
+   SET (DELETE_DATE, DELETED)            = (CURRENT_DATE, 1);
+
+
+--------------------------------------------------------------------------------------------------
+-- Set Overall Status
+-------------------------------------------------------------------------------------------------- 
+
+--  STATUS 0: Send the success message to scheduling tool to confirm this procedure has been
+--  executed successfully
+    IF(LV_ERROR_FLAG = 'Y') THEN		
+
+     OP_STATUS := LC_ERROR_TEXT; 
+			
+    ELSE
+
+  	 OP_STATUS := LC_SUCCESS_TEXT; 	
+				
+	END IF;
+		
+END;

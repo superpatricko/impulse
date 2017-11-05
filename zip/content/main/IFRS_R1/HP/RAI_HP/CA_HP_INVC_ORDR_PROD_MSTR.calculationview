@@ -1,0 +1,422 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:AccessControl="http://www.sap.com/ndb/SQLCoreModelAccessControl.ecore" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" xmlns:Variable="http://www.sap.com/ndb/BiModelVariable.ecore" schemaVersion="2.3" id="CA_HP_INVC_ORDR_PROD_MSTR" applyPrivilegeType="NONE" checkAnalyticPrivileges="false" defaultClient="$$client$$" defaultLanguage="$$language$$" hierarchiesSQLEnabled="false" historyEnabled="false" translationRelevant="true" visibility="internal" calculationScenarioType="TREE_BASED" dataCategory="DIMENSION" enforceSqlExecution="false" executionSemantic="UNDEFINED" outputViewType="Projection">
+  <descriptions defaultDescription="CA_HP_INVC_ORDR_PROD_MSTR"/>
+  <localVariables>
+    <variable id="IP_BILL_DATE" parameter="true">
+      <descriptions defaultDescription="IP_BILL_DATE"/>
+      <variableProperties datatype="DATE" defaultExpressionLanguage="COLUMN_ENGINE" mandatory="false">
+        <valueDomain type="empty"/>
+        <selection multiLine="false" type="SingleValue"/>
+        <defaultExpression>date (now())</defaultExpression>
+      </variableProperties>
+    </variable>
+  </localVariables>
+  <variableMappings>
+    <mapping xsi:type="Variable:VariableMapping" dataSource="#CA_HP_BILLING">
+      <targetVariable name="IP_BILL_DATE" resourceUri="/IFRS_R1.HP.RAI_HP.PRIVATE/calculationviews/CA_HP_BILLING"/>
+      <localVariable>#IP_BILL_DATE</localVariable>
+    </mapping>
+  </variableMappings>
+  <informationModelLayout relativeWidthScenario="53"/>
+  <dataSources>
+    <DataSource id="MARA" type="DATA_BASE_TABLE">
+      <viewAttributes allViewAttributes="true"/>
+      <columnObject schemaName="SDA" columnObjectName="MARA"/>
+    </DataSource>
+    <DataSource id="CA_HP_BILLING" type="CALCULATION_VIEW">
+      <viewAttributes allViewAttributes="true"/>
+      <resourceUri>/IFRS_R1.HP.RAI_HP.PRIVATE/calculationviews/CA_HP_BILLING</resourceUri>
+    </DataSource>
+    <DataSource id="CA_HP_ORDR" type="CALCULATION_VIEW">
+      <viewAttributes allViewAttributes="true"/>
+      <resourceUri>/IFRS_R1.HP.RAI_HP.PRIVATE/calculationviews/CA_HP_ORDR</resourceUri>
+    </DataSource>
+    <DataSource id="IFRS_R1.COMMON_COMP.RAI_COMMON::CHARGE_TYPE" type="DATA_BASE_TABLE">
+      <viewAttributes allViewAttributes="true"/>
+      <columnObject schemaName="RAI_COMMON" columnObjectName="IFRS_R1.COMMON_COMP.RAI_COMMON::CHARGE_TYPE"/>
+    </DataSource>
+  </dataSources>
+  <calculationViews>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_MARA" filterExpressionLanguage="COLUMN_ENGINE">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="MATKL"/>
+        <viewAttribute id="BISMT"/>
+        <viewAttribute id="LVORM"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#MARA">
+        <mapping xsi:type="Calculation:AttributeMapping" target="MATKL" source="MATKL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BISMT" source="BISMT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LVORM" source="LVORM"/>
+      </input>
+      <filter>(isNull(&quot;LVORM&quot;) or &quot;LVORM&quot;='')</filter>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_HP_BILLING">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="PRIMARY_TELEPHONE_NUMBER"/>
+        <viewAttribute id="WORKING_TELEPHONE_NUMBER"/>
+        <viewAttribute id="ITEM_CODE"/>
+        <viewAttribute id="ITEM_CHARGE"/>
+        <viewAttribute id="INVOICE_DATE"/>
+        <viewAttribute id="BRA_CD"/>
+        <viewAttribute id="HP_BILLING_PK"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#CA_HP_BILLING">
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRIMARY_TELEPHONE_NUMBER" source="PRIMARY_TELEPHONE_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WORKING_TELEPHONE_NUMBER" source="WORKING_TELEPHONE_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_CODE" source="ITEM_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_CHARGE" source="ITEM_CHARGE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INVOICE_DATE" source="INVOICE_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BRA_CD" source="BRA_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="HP_BILLING_PK" source="HP_BILLING_PK"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_HP_ORDER">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="PRIMARY_TELEPHONE_NUMBER"/>
+        <viewAttribute id="WORKING_TELEPHONE_NUMBER"/>
+        <viewAttribute id="ITEM_CODE"/>
+        <viewAttribute id="TERM_M2M"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#CA_HP_ORDR">
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRIMARY_TELEPHONE_NUMBER" source="PRIMARY_TELEPHONE_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WORKING_TELEPHONE_NUMBER" source="WORKING_TELEPHONE_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_CODE" source="ITEM_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TERM_M2M" source="TERM_M2M"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="JOIN_BILL_ORDR" joinOrder="OUTSIDE_IN" joinType="leftOuter">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="PRIMARY_TELEPHONE_NUMBER"/>
+        <viewAttribute id="WORKING_TELEPHONE_NUMBER"/>
+        <viewAttribute id="ITEM_CODE"/>
+        <viewAttribute id="ITEM_CHARGE"/>
+        <viewAttribute id="PRIMARY_TELEPHONE_NUMBER_ORDER"/>
+        <viewAttribute id="INVOICE_DATE"/>
+        <viewAttribute id="BRA_CD"/>
+        <viewAttribute id="HP_BILLING_PK"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#PROJ_HP_BILLING">
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRIMARY_TELEPHONE_NUMBER" source="PRIMARY_TELEPHONE_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WORKING_TELEPHONE_NUMBER" source="WORKING_TELEPHONE_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_CODE" source="ITEM_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_CHARGE" source="ITEM_CHARGE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INVOICE_DATE" source="INVOICE_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BRA_CD" source="BRA_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="HP_BILLING_PK" source="HP_BILLING_PK"/>
+      </input>
+      <input node="#PROJ_HP_ORDER">
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRIMARY_TELEPHONE_NUMBER_ORDER" source="PRIMARY_TELEPHONE_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRIMARY_TELEPHONE_NUMBER" source="PRIMARY_TELEPHONE_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WORKING_TELEPHONE_NUMBER" source="WORKING_TELEPHONE_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_CODE" source="ITEM_CODE"/>
+      </input>
+      <joinAttribute name="PRIMARY_TELEPHONE_NUMBER"/>
+      <joinAttribute name="WORKING_TELEPHONE_NUMBER"/>
+      <joinAttribute name="ITEM_CODE"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_BILL_TO_ORDR">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="PRIMARY_TELEPHONE_NUMBER"/>
+        <viewAttribute id="WORKING_TELEPHONE_NUMBER"/>
+        <viewAttribute id="ITEM_CODE"/>
+        <viewAttribute id="ITEM_CHARGE"/>
+        <viewAttribute id="PRIMARY_TELEPHONE_NUMBER_ORDER">
+          <filter xsi:type="AccessControl:SingleValueFilter" operator="NL" including="true"/>
+        </viewAttribute>
+        <viewAttribute id="INVOICE_DATE"/>
+        <viewAttribute id="BRA_CD"/>
+        <viewAttribute id="HP_BILLING_PK"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#JOIN_BILL_ORDR">
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRIMARY_TELEPHONE_NUMBER" source="PRIMARY_TELEPHONE_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WORKING_TELEPHONE_NUMBER" source="WORKING_TELEPHONE_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_CODE" source="ITEM_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_CHARGE" source="ITEM_CHARGE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRIMARY_TELEPHONE_NUMBER_ORDER" source="PRIMARY_TELEPHONE_NUMBER_ORDER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INVOICE_DATE" source="INVOICE_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BRA_CD" source="BRA_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="HP_BILLING_PK" source="HP_BILLING_PK"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="JOIN_MARA" joinOrder="OUTSIDE_IN" joinType="leftOuter">
+      <descriptions>
+        <comment text="Join Errors will be raised as 30200801&#xD;&#xA;Value error on CC_CHARGE_TYPE will be raised as IS_30200802"/>
+      </descriptions>
+      <viewAttributes>
+        <viewAttribute id="MATKL"/>
+        <viewAttribute id="PRIMARY_TELEPHONE_NUMBER"/>
+        <viewAttribute id="WORKING_TELEPHONE_NUMBER"/>
+        <viewAttribute id="ITEM_CODE"/>
+        <viewAttribute id="ITEM_CHARGE"/>
+        <viewAttribute id="BISMT_RIGHT"/>
+        <viewAttribute id="INVOICE_DATE"/>
+        <viewAttribute id="BRA_CD"/>
+        <viewAttribute id="HP_BILLING_PK"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CC_CHARGE_TYPE" length="20" expressionLanguage="COLUMN_ENGINE">
+          <formula>&quot;MATKL&quot;</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CC_RULE_PATH" length="18" expressionLanguage="COLUMN_ENGINE">
+          <formula>If(&quot;CC_CHARGE_TYPE&quot;='EQPT' AND &quot;CC_SSP&quot;=&quot;CC_TP&quot;,'A1',&#xD;
+If(&quot;CC_CHARGE_TYPE&quot;='EQPT' AND &quot;CC_TP&quot; &lt; &quot;CC_SSP&quot;,'A2',&#xD;
+If(&quot;CC_CHARGE_TYPE&quot;='OPT','C1',&#xD;
+If(&quot;CC_CHARGE_TYPE&quot;='OTC','D1',&#xD;
+If(&quot;CC_CHARGE_TYPE&quot;='OTHERDISC','F1',&#xD;
+If(&quot;CC_CHARGE_TYPE&quot;='DUO','G1',&#xD;
+If(&quot;CC_CHARGE_TYPE&quot;='TRIO','H1',&#xD;
+If(&quot;CC_CHARGE_TYPE&quot;='OTHER','O1',''))))))))&#xD;
+</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="DECIMAL" id="CC_SSP" length="23" scale="2" expressionLanguage="COLUMN_ENGINE">
+          <formula>&quot;ITEM_CHARGE&quot;</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="DECIMAL" id="CC_TP" length="23" scale="2" expressionLanguage="COLUMN_ENGINE">
+          <formula>&quot;ITEM_CHARGE&quot;</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="IS_30200801" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isNull(&quot;BISMT_RIGHT&quot;),'1','0')</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="IS_30200802" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isNull(&quot;CC_CHARGE_TYPE&quot;),'1','0')</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#PROJ_BILL_TO_ORDR">
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRIMARY_TELEPHONE_NUMBER" source="PRIMARY_TELEPHONE_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WORKING_TELEPHONE_NUMBER" source="WORKING_TELEPHONE_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_CODE" source="ITEM_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_CHARGE" source="ITEM_CHARGE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INVOICE_DATE" source="INVOICE_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BRA_CD" source="BRA_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="HP_BILLING_PK" source="HP_BILLING_PK"/>
+      </input>
+      <input node="#PROJ_MARA">
+        <mapping xsi:type="Calculation:AttributeMapping" target="MATKL" source="MATKL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BISMT_RIGHT" source="BISMT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_CODE" source="BISMT"/>
+      </input>
+      <joinAttribute name="ITEM_CODE"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_CHRG_TYPE" filterExpressionLanguage="COLUMN_ENGINE">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="LOB"/>
+        <viewAttribute id="CHARGE_TYPE"/>
+        <viewAttribute id="RULE_PATH"/>
+        <viewAttribute id="POB_TYPE"/>
+        <viewAttribute id="VALUE_RELEVANT"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#IFRS_R1.COMMON_COMP.RAI_COMMON::CHARGE_TYPE">
+        <mapping xsi:type="Calculation:AttributeMapping" target="LOB" source="LOB"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CHARGE_TYPE" source="CHARGE_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RULE_PATH" source="RULE_PATH"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="POB_TYPE" source="POB_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="VALUE_RELEVANT" source="VALUE_RELEVANT"/>
+      </input>
+      <filter>(&quot;LOB&quot;='HP')</filter>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="JOIN_CHRG_TYPE_POB_TYPE" joinOrder="OUTSIDE_IN" joinType="leftOuter">
+      <descriptions>
+        <comment text="Join Errors will be raised as 30200803&#xD;&#xA;Value error on POB_TYPE will be raised as IS_30200804"/>
+      </descriptions>
+      <viewAttributes>
+        <viewAttribute id="VALUE_RELEVANT"/>
+        <viewAttribute id="POB_TYPE"/>
+        <viewAttribute id="LOB"/>
+        <viewAttribute id="MATKL"/>
+        <viewAttribute id="CC_CHARGE_TYPE"/>
+        <viewAttribute id="CC_RULE_PATH"/>
+        <viewAttribute id="CC_TP"/>
+        <viewAttribute id="CC_SSP"/>
+        <viewAttribute id="ITEM_CHARGE"/>
+        <viewAttribute id="ITEM_CODE"/>
+        <viewAttribute id="WORKING_TELEPHONE_NUMBER"/>
+        <viewAttribute id="PRIMARY_TELEPHONE_NUMBER"/>
+        <viewAttribute id="IS_30200801"/>
+        <viewAttribute id="IS_30200802"/>
+        <viewAttribute id="CC_CHARGE_TYPE_RIGHT"/>
+        <viewAttribute id="INVOICE_DATE"/>
+        <viewAttribute id="BRA_CD"/>
+        <viewAttribute id="HP_BILLING_PK"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="IS_30200803" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isNull(&quot;CC_CHARGE_TYPE_RIGHT&quot;),'1','0')</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="IS_30200804" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isNull(&quot;POB_TYPE&quot;),'1','0')</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#JOIN_MARA">
+        <mapping xsi:type="Calculation:AttributeMapping" target="MATKL" source="MATKL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_CHARGE_TYPE" source="CC_CHARGE_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_RULE_PATH" source="CC_RULE_PATH"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_TP" source="CC_TP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_SSP" source="CC_SSP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_CHARGE" source="ITEM_CHARGE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_CODE" source="ITEM_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WORKING_TELEPHONE_NUMBER" source="WORKING_TELEPHONE_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRIMARY_TELEPHONE_NUMBER" source="PRIMARY_TELEPHONE_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30200801" source="IS_30200801"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30200802" source="IS_30200802"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INVOICE_DATE" source="INVOICE_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BRA_CD" source="BRA_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="HP_BILLING_PK" source="HP_BILLING_PK"/>
+      </input>
+      <input node="#PROJ_CHRG_TYPE">
+        <mapping xsi:type="Calculation:AttributeMapping" target="VALUE_RELEVANT" source="VALUE_RELEVANT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="POB_TYPE" source="POB_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="LOB" source="LOB"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_CHARGE_TYPE_RIGHT" source="CHARGE_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_CHARGE_TYPE" source="CHARGE_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_RULE_PATH" source="RULE_PATH"/>
+      </input>
+      <joinAttribute name="CC_CHARGE_TYPE"/>
+      <joinAttribute name="CC_RULE_PATH"/>
+    </calculationView>
+  </calculationViews>
+  <logicalModel id="JOIN_CHRG_TYPE_POB_TYPE">
+    <descriptions/>
+    <attributes>
+      <attribute id="VALUE_RELEVANT" order="1" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="VALUE_RELEVANT"/>
+        <keyMapping columnObjectName="JOIN_CHRG_TYPE_POB_TYPE" columnName="VALUE_RELEVANT"/>
+      </attribute>
+      <attribute id="POB_TYPE" order="2" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="POB_TYPE"/>
+        <keyMapping columnObjectName="JOIN_CHRG_TYPE_POB_TYPE" columnName="POB_TYPE"/>
+      </attribute>
+      <attribute id="LOB" order="3" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="LOB"/>
+        <keyMapping columnObjectName="JOIN_CHRG_TYPE_POB_TYPE" columnName="LOB"/>
+      </attribute>
+      <attribute id="MATKL" order="4" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="MATKL"/>
+        <keyMapping columnObjectName="JOIN_CHRG_TYPE_POB_TYPE" columnName="MATKL"/>
+      </attribute>
+      <attribute id="CC_CHARGE_TYPE" order="5" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CC_CHARGE_TYPE"/>
+        <keyMapping columnObjectName="JOIN_CHRG_TYPE_POB_TYPE" columnName="CC_CHARGE_TYPE"/>
+      </attribute>
+      <attribute id="CC_RULE_PATH" order="6" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CC_RULE_PATH"/>
+        <keyMapping columnObjectName="JOIN_CHRG_TYPE_POB_TYPE" columnName="CC_RULE_PATH"/>
+      </attribute>
+      <attribute id="CC_TP" order="7" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CC_TP"/>
+        <keyMapping columnObjectName="JOIN_CHRG_TYPE_POB_TYPE" columnName="CC_TP"/>
+      </attribute>
+      <attribute id="CC_SSP" order="8" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CC_SSP"/>
+        <keyMapping columnObjectName="JOIN_CHRG_TYPE_POB_TYPE" columnName="CC_SSP"/>
+      </attribute>
+      <attribute id="ITEM_CHARGE" order="9" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ITEM_CHARGE"/>
+        <keyMapping columnObjectName="JOIN_CHRG_TYPE_POB_TYPE" columnName="ITEM_CHARGE"/>
+      </attribute>
+      <attribute id="ITEM_CODE" order="10" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ITEM_CODE"/>
+        <keyMapping columnObjectName="JOIN_CHRG_TYPE_POB_TYPE" columnName="ITEM_CODE"/>
+      </attribute>
+      <attribute id="WORKING_TELEPHONE_NUMBER" order="11" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="WORKING_TELEPHONE_NUMBER"/>
+        <keyMapping columnObjectName="JOIN_CHRG_TYPE_POB_TYPE" columnName="WORKING_TELEPHONE_NUMBER"/>
+      </attribute>
+      <attribute id="PRIMARY_TELEPHONE_NUMBER" order="12" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="PRIMARY_TELEPHONE_NUMBER"/>
+        <keyMapping columnObjectName="JOIN_CHRG_TYPE_POB_TYPE" columnName="PRIMARY_TELEPHONE_NUMBER"/>
+      </attribute>
+      <attribute id="IS_30200801" hidden="false" order="13" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="IS_30200801"/>
+        <keyMapping columnObjectName="JOIN_CHRG_TYPE_POB_TYPE" columnName="IS_30200801"/>
+      </attribute>
+      <attribute id="IS_30200802" hidden="false" order="14" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="IS_30200802"/>
+        <keyMapping columnObjectName="JOIN_CHRG_TYPE_POB_TYPE" columnName="IS_30200802"/>
+      </attribute>
+      <attribute id="IS_30200803" order="15" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="IS_30200803"/>
+        <keyMapping columnObjectName="JOIN_CHRG_TYPE_POB_TYPE" columnName="IS_30200803"/>
+      </attribute>
+      <attribute id="IS_30200804" order="16" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="IS_30200804"/>
+        <keyMapping columnObjectName="JOIN_CHRG_TYPE_POB_TYPE" columnName="IS_30200804"/>
+      </attribute>
+      <attribute id="INVOICE_DATE" order="17" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="INVOICE_DATE"/>
+        <keyMapping columnObjectName="JOIN_CHRG_TYPE_POB_TYPE" columnName="INVOICE_DATE"/>
+      </attribute>
+      <attribute id="BRA_CD" order="18" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="BRA_CD"/>
+        <keyMapping columnObjectName="JOIN_CHRG_TYPE_POB_TYPE" columnName="BRA_CD"/>
+      </attribute>
+      <attribute id="HP_BILLING_PK" order="19" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="HP_BILLING_PK"/>
+        <keyMapping columnObjectName="JOIN_CHRG_TYPE_POB_TYPE" columnName="HP_BILLING_PK"/>
+      </attribute>
+    </attributes>
+    <calculatedAttributes/>
+    <privateDataFoundation>
+      <tableProxies/>
+      <joins/>
+      <layout>
+        <shapes/>
+      </layout>
+    </privateDataFoundation>
+    <baseMeasures/>
+    <calculatedMeasures/>
+    <restrictedMeasures/>
+    <localDimensions/>
+  </logicalModel>
+  <layout>
+    <shapes>
+      <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+        <upperLeftCorner x="252" y="87"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_MARA" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="253" y="357"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_HP_BILLING" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="22" y="531"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_HP_ORDER" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="176" y="531"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="JOIN_BILL_ORDR" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="99" y="435"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_BILL_TO_ORDR" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="99" y="357"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+      <shape expanded="true" modelObjectName="JOIN_MARA" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="175" y="261"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_CHRG_TYPE" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="329" y="261"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="JOIN_CHRG_TYPE_POB_TYPE" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="252" y="165"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+    </shapes>
+  </layout>
+</Calculation:scenario>

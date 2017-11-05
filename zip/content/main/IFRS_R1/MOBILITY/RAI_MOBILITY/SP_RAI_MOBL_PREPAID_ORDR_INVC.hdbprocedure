@@ -1,0 +1,2085 @@
+PROCEDURE "RAI_MOBILITY"."IFRS_R1.MOBILITY.RAI_MOBILITY::SP_RAI_MOBL_PREPAID_ORDR_INVC" 
+(IN IP_DATE DATE,
+IN IP_BAN NVARCHAR(1000),
+OUT OP_STATUS NVARCHAR(1000))  
+	LANGUAGE SQLSCRIPT
+	SQL SECURITY INVOKER   
+	 AS
+BEGIN   
+----------------------------------------------------------------------------------------------------
+-- Procedure Title : IFRS_R1.MOBILITY.RAI_MOBILITY::SP_RAI_MOBL_PREPAID_ORDR_INVC
+-- Created By      : BC_EY94105(Snehlata)    
+-- Date            : 02/06/2017
+-- Description     : This Procedure will create the RAI order Items and invoice items based on
+--	                 Prepaid Billing table.
+--	                There are two types of prepaid plans:
+--					 1. Monthly Plan - Monthly plan includes a defined bundle of services.
+--         				The customer cannot carry forward any unused services (but does retain the balance on the card). 
+--					 2. Pay-per-use Plans - Pay-per-use plans have a specified rate per minute of usage.
+--		 			 3. No Order modification is applicable 
+                      
+--	                 This Procedure has one parameter:
+--	                 1. The  OP_STATUS parametere : This parameter give the status of the Procedure whether it is 
+--	                 success or failure
+
+--	                 FREQUENCY OF PROCEDURE EXECUTION: Daily
+
+-- Project         : Bell Canada
+-- Release         : R1 / IFRS
+--------------------------------------------------------------------------------------------------
+
+----------------------------------------------------------------------------------------------------
+-- M O D I F I C A T I O N   H I S T O R Y
+----------------------------------------------------------------------------------------------------
+-- Date        | User ID          | Modification History/Release
+----------------------------------------------------------------------------------------------------
+-- 02/08/2017   BC_EZ18725          Defect 2827-Added a hint in SIBLING CHECK view to resolve 
+--                                  issues raised with SDA table joins
+-- 08/08/2017  | BC_EZ23103       | CR 283 - Update to process the records based on input parameter as IP_BAN 
+----------------------------------------------------------------------------------------------------
+-- Description Of the changes 
+----------------------------------------------------------------------------------------------------
+-- Modification Number          : <Assign Some Number>
+-- Description of Changes Made> : <Description of Changes>        
+----------------------------------------------------------------------------------------------------
+ 
+--------------------------------------------------------------------------------------------------
+-- Global Variables Declaration
+--------------------------------------------------------------------------------------------------
+
+DECLARE LV_BATCH_ID           INTEGER;
+DECLARE LV_COUNT_ORDR         INTEGER;
+DECLARE LV_COUNT_INVC         INTEGER;
+DECLARE LV_ERROR_FLAG 		  NVARCHAR(1) := 'N';
+DECLARE LV_CUR_UTC            TIMESTAMP := CURRENT_TIMESTAMP;
+
+DECLARE LC_SQL_ERROR          NVARCHAR(40) DEFAULT 'SQL_EXCEPTION : SIBLING ERROR';
+DECLARE LC_ERROR_TEXT 		  NVARCHAR(70) DEFAULT 'OUT STATUS IS 1 : INSERT/UPDATE FOR ONE OR MORE RECORD FAILED';
+DECLARE LC_SUCCESS_TEXT 	  NVARCHAR(70) DEFAULT 'OUT STATUS IS 0 : INSERT/UPDATE EXECUTION SUCCESSFUL';
+DECLARE LC_SET		  	      NVARCHAR(1)  DEFAULT 'X';
+DECLARE CURRENT_ERROR		  NVARCHAR(100);
+DECLARE ERROR_TAB 			  TABLE (ERROR_CODE NVARCHAR(100));
+DECLARE RECORD_COUNT		  INTEGER;
+DECLARE i					  INTEGER;
+DECLARE IP_BAN_LIST           NVARCHAR(1000);
+
+	
+--------------------------------------------------------------------------------------------------
+-- Temporary tables/Variables/Nodes Declaration to hold data from the final CVs
+-------------------------------------------------------------------------------------------------- 
+
+
+	RAI_ORDR_INVC_NODE_TEMP = 
+				SELECT
+					   "CC_QUANTITY",
+					   "CC_QUANTITY_UNIT",
+					   "CC_INCEPTION_DATE",
+					   "ZZ_BRANDACT",
+					   "ZZ_PAOBJNR",
+					   "ZZ_BILLER",
+					   "ZZ_BU_VIEW",
+					   "CC_CATEGORY",
+					   "CC_SRCDOCID_INV",
+					   "CC_QUANTITY_REL",
+					   "CC_EXCHANGE_RATE",
+					   "REFERENCE_TYPE",
+					   "SRCDOC_COMP",
+					   "SRCDOC_LOGSYS",
+					   "SRCDOC_TYPE",
+					   "BUKRS",
+					   "WAERS",
+					   "ORIGDOC_COMP",
+					   "ORIGDOC_LOGSYS",
+					   "ORIGDOC_TYPE",
+					   "CC_SRCDOC_ID",
+					   "CC_RAI_ITEM_ID",
+					   "GL_ACCOUNT",
+					   "HANDSET_FLAG",
+					   "AMOUNT",
+					   "PRODUCT_ID",
+					   "COMPANY_CODE",
+					   "TAX_JURIS_CODE",
+					   "TEXT_LINE_ITEM",
+					   "TRADING_PARTNER",
+					   "MDN",
+					   "ADJUSTMENT_CODE",
+					   "SERVICE_TYPE",
+					   "TERM",
+					   "DOCUMENT_HEADER_TEXT",
+					   "DOCUMENT_DATE",
+					   "CUSTOMER_ID",
+					   "ORDER_TYPE",
+					   "TERM_INDICATOR",
+					   "INSERT_TS",
+					   "KUNNR_SID",
+					   "BAN",
+					   "CC_LOB",
+					   "CC_SRCDOCID_TMP",
+					   "CC_HEADERID",
+					   "CC_REFERENCE_ID",
+					   "CC_START_DATE_NEW",
+					   "CC_END_DATE_NEW",
+					   "REFERENCE_FIELD",
+					   "CC_NGCC_TYPE",
+					   "VALUE_RELEVANT",
+					   "CC_CHARGE_TYPE",
+					   "POB_TYPE",
+					   "ZZ_BLDAT",
+					   "ZZ_BUDAT",
+					   "ZZ_BKTXT_ORDR",
+					   "ZZ_BKTXT_INVC",
+					   "ZZ_BUKRS",
+					   "PL_ACCOUNT",
+					   "ZZ_TXJCD",
+					   "ZZ_KOSTL",
+					   "CC_IS_SIBLING_ERROR",
+					   "CC_SSP",
+					   "CC_TP",
+					   "POSTING_DATE",
+					   "INVOICE_NO",
+					   "ZZ_MWSKZ",
+					   "ERROR_STATUS",
+					   "ERROR_CODE",
+					   "ZZ_SGTXT",
+					   "ZZ_ZUONR",
+					   "ZZ_LEGACY",
+					   "CC_MAIN_COND_TYPE",
+					   "RECEIV_ACCOUNT",
+					   "INVOICE_TYPE",
+					   "CC_ZZ_XBLNR",
+					   "CC_ZZ_PRE_POST",
+		    		   to_decimal(to_char("CC_INCEPTION_DATE",'YYYYMMDD')||substr(to_char(current_timestamp,'YYYYMMDDHHMISS'),9,6),15,0) "JRNL_DT"
+		     		FROM "_SYS_BIC"."IFRS_R1.MOBILITY.RAI_MOBILITY/CA_MOBL_ORDR_INVC_PREPAID_SIBLING_CHECK"
+		     		(PLACEHOLDER."$$IP_DATE$$" => :IP_DATE)		     		
+		     		WITH HINT(NO_REMOTE_JOIN_RELOCATION);
+	 
+--------------------------------------------------------------------------------------------------
+--      FILTER CUSTOMER_ID as per CR 283
+--------------------------------------------------------------------------------------------------	                
+IF IP_BAN IS NULL THEN
+ 	IP_BAN_LIST := '1=1';
+ELSE
+ IP_BAN_LIST := 'CUSTOMER_ID IN('||:IP_BAN||')';
+END IF;
+
+RAI_ORDR_INVC_NODE = APPLY_FILTER (:RAI_ORDR_INVC_NODE_TEMP,:IP_BAN_LIST);	     
+	 
+ 
+BEGIN
+	-------------------------------------------------------------------------------------------------
+	-- Cursors Declaration for Invoice Order and Invoice
+	--------------------------------------------------------------------------------------------------
+	
+	DECLARE CURSOR C_RAI_INVC_ORDR FOR SELECT * FROM :RAI_ORDR_INVC_NODE;
+		  
+	DECLARE CURSOR C_RAI_INVC_ORDR_PARENT FOR 
+	        SELECT "CC_HEADERID" 
+	        FROM :RAI_ORDR_INVC_NODE 
+	        WHERE "CC_IS_SIBLING_ERROR" = '0' 
+	        AND "ERROR_STATUS" = '0'
+	        GROUP BY "CC_HEADERID";
+
+	CREATE LOCAL TEMPORARY TABLE #UPDATE_INVC(
+        SRCDOC_ID                NVARCHAR(35),
+	    REFERENCE_ID             NVARCHAR(30),
+	    RAI_ITEM_ID              NVARCHAR(15),
+	    BATCH_ID                 INTEGER,
+	    HEADER_ID				 NVARCHAR(20),
+	    MDN                      NVARCHAR(20),
+	    PRODUCT_ID               NVARCHAR(18),
+	    CUSTOMER_ID              NVARCHAR(30),
+	    REFERENCE_FIELD          NVARCHAR(44),
+	    INVOICE_NO 		         NVARCHAR(44),
+	    GL_ACCOUNT               NVARCHAR(10),
+	    POSTING_DATE             DATE,
+	    START_DATE	             DATE,
+	    END_DATE                 DATE);
+	--------------------------------------------------------------------------------------------------
+	-- Batch ID creation for RAI processing
+	-------------------------------------------------------------------------------------------------- 	
+	
+	SELECT "RAI_COMMON"."IFRS_R1.COMMON_COMP.RAI_COMMON::RAI_BATCH_ID".NEXTVAL INTO LV_BATCH_ID 
+    FROM DUMMY;	
+	
+	--------------------------------------------------------------------------------------------------
+	-- Local Temporary Tables Declaration
+	-------------------------------------------------------------------------------------------------- 			 
+	
+	CREATE LOCAL TEMPORARY TABLE #UPDATE_EH_DELETION_ORDR_MAIN(SRCDOC_ID NVARCHAR(35));
+	
+	CREATE LOCAL TEMPORARY TABLE #UPDATE_EH_DELETION_ORDR_COND(SRCDOC_ID NVARCHAR(35));
+	
+	CREATE LOCAL TEMPORARY TABLE #UPDATE_EH_DELETION_ORDR_MAIN_INVC (SRCDOC_ID NVARCHAR(35));
+	
+	CREATE LOCAL TEMPORARY TABLE #UPDATE_EH_DELETION_ORDR_COND_INVC (SRCDOC_ID NVARCHAR(35));
+	
+	--------------------------------------------------------------------------------------------------
+	-- Cursors Loop
+	-------------------------------------------------------------------------------------------------- 
+	
+	FOR CUR_INVC AS C_RAI_INVC_ORDR DO
+	
+	
+	--  Define Exit Handler
+		DECLARE EXIT HANDLER FOR SQLEXCEPTION 
+		BEGIN AUTONOMOUS TRANSACTION 
+	
+	 --  Define Exit Handler
+		  DECLARE EXIT HANDLER FOR SQLEXCEPTION 
+		  BEGIN AUTONOMOUS TRANSACTION	
+		
+     --  Do Nothing. Exception Handled to ensure SP does not get terminated			 			     
+	      END;
+	
+	   --  Insert record into ORDER main error table
+	   	INSERT INTO "RAI_MOBILITY"."IFRS_R1.MOBILITY.RAI_MOBILITY::MOBL_PREPAID_ORDR_MAIN_EH"
+		(
+			"SRCDOC_COMP",			
+			"SRCDOC_LOGSYS",
+			"SRCDOC_TYPE",
+			"SRCDOC_ID",
+			"TIMESTAMP_UTC",
+			"HEADER_ID",
+			"ITEM_ID",
+			"REFERENCE_TYPE",
+			"REFERENCE_ID",
+			"KUNNR",
+			"BUKRS",
+			"WAERS",
+			"BILREL",
+			"QUANTITY",
+			"QUANTITY_UNIT",
+			"START_DATE",
+			"END_DATE",
+			"RECEIV_ACCOUNT",
+			"INCEPTION_DATE",
+			"ZZ_BATCH_ID",
+			"ZZ_BILLER",
+			"ZZ_BKTXT",
+			"ZZ_BRANDACT",
+			"ZZ_BUKRS",
+			"ZZ_BU_VIEW",
+			"ZZ_KOSTL",
+			"ZZ_LEGACY",
+			"ZZ_MATNR",
+			"ZZ_MATNR_GRP",
+			"ZZ_MOD_TYPE",
+			"ZZ_MWSKZ",
+			"ZZ_PAOBJNR",
+			"ZZ_SGTXT",
+			"ZZ_TXJCD",
+			"ZZ_ZUONR",
+			"ZZ_XBLNR",
+			"ZZ_PRE_POST",
+			"VALUE_RELEVANT",
+			"ERROR_CODE",
+			"TECHNICAL_MESSAGE",
+			"ERROR_CREATE_TS")		 		         		
+	VALUES (CUR_INVC."ORIGDOC_COMP",
+			CUR_INVC."ORIGDOC_LOGSYS",
+			CUR_INVC."ORIGDOC_TYPE",
+			CUR_INVC."CC_SRCDOC_ID",
+			CUR_INVC."JRNL_DT",
+			CUR_INVC."CC_HEADERID",
+			CUR_INVC."CC_RAI_ITEM_ID",
+			CUR_INVC."REFERENCE_TYPE",
+			CUR_INVC."CC_REFERENCE_ID",
+			CUR_INVC."KUNNR_SID",
+			CUR_INVC."BUKRS",
+			CUR_INVC."WAERS",
+			CUR_INVC."CC_QUANTITY_REL",
+			CUR_INVC."CC_QUANTITY",
+			CUR_INVC."CC_QUANTITY_UNIT",
+			CUR_INVC."CC_START_DATE_NEW",
+			CUR_INVC."CC_END_DATE_NEW",
+			CUR_INVC."RECEIV_ACCOUNT",
+			CUR_INVC."CC_INCEPTION_DATE",
+			LV_BATCH_ID,
+			CUR_INVC."ZZ_BILLER",
+			CUR_INVC."ZZ_BKTXT_ORDR",
+			CUR_INVC."ZZ_BRANDACT",
+			CUR_INVC."ZZ_BUKRS",
+			CUR_INVC."ZZ_BU_VIEW",
+			CUR_INVC."ZZ_KOSTL",
+			CUR_INVC."ZZ_LEGACY",
+			CUR_INVC."CC_CHARGE_TYPE",
+			CUR_INVC."POB_TYPE",
+			CUR_INVC."BUKRS",
+			CUR_INVC."ZZ_MWSKZ",
+			CUR_INVC."ZZ_PAOBJNR",
+			CUR_INVC."ZZ_SGTXT",
+			CUR_INVC."ZZ_TXJCD",
+			CUR_INVC."ZZ_ZUONR",
+			CUR_INVC.CC_ZZ_XBLNR,
+	        CUR_INVC.CC_ZZ_PRE_POST,
+			CUR_INVC."VALUE_RELEVANT",
+			::SQL_ERROR_CODE,
+			::SQL_ERROR_MESSAGE,
+			LV_CUR_UTC
+		   );
+			
+--  Insert record into ORDER Condition error table for SSP(Standalone Selling Price) 
+		INSERT INTO "RAI_MOBILITY"."IFRS_R1.MOBILITY.RAI_MOBILITY::MOBL_PREPAID_ORDR_COND_EH"
+		   (
+		        "SRCDOC_COMP",
+                "SRCDOC_LOGSYS",
+				"SRCDOC_TYPE",
+				"SRCDOC_ID",
+				"TIMESTAMP_UTC",
+				"CONDITION_TYPE",
+				"PL_ACCOUNT",				
+				"BETRW",
+				"WAERS",				
+				"CATEGORY",
+				"ERROR_CODE",
+				"TECHNICAL_MESSAGE",
+				"ERROR_CREATE_TS")					
+			VALUES(
+				 CUR_INVC."ORIGDOC_COMP",
+				 CUR_INVC."ORIGDOC_LOGSYS",
+				 CUR_INVC."ORIGDOC_TYPE",
+				 CUR_INVC."CC_SRCDOC_ID",
+				 CUR_INVC."JRNL_DT",
+				 CUR_INVC."CC_SSP",
+				 CUR_INVC."PL_ACCOUNT",
+				 CUR_INVC."AMOUNT" ,				
+				 CUR_INVC."WAERS",
+				 CUR_INVC."CC_CATEGORY",				
+		         ::SQL_ERROR_CODE,
+				 ::SQL_ERROR_MESSAGE,
+				 LV_CUR_UTC);		
+		
+/* Insert into Order Condition Table for TP(Transaction Price) */
+	 	INSERT INTO "RAI_MOBILITY"."IFRS_R1.MOBILITY.RAI_MOBILITY::MOBL_PREPAID_ORDR_COND_EH"
+		   (
+		        "SRCDOC_COMP",
+                "SRCDOC_LOGSYS",
+				"SRCDOC_TYPE",
+				"SRCDOC_ID",
+				"TIMESTAMP_UTC",
+				"CONDITION_TYPE",
+				"PL_ACCOUNT",				
+				"BETRW",
+				"WAERS",				
+				"CATEGORY",
+				"ERROR_CODE",
+				"TECHNICAL_MESSAGE",
+				"ERROR_CREATE_TS")					
+			VALUES(
+				 CUR_INVC."ORIGDOC_COMP",
+				 CUR_INVC."ORIGDOC_LOGSYS",
+				 CUR_INVC."ORIGDOC_TYPE",
+				 CUR_INVC."CC_SRCDOC_ID",
+				 CUR_INVC."JRNL_DT",
+				 CUR_INVC."CC_TP",
+				 CUR_INVC."PL_ACCOUNT",
+				 CUR_INVC."AMOUNT" ,				
+				 CUR_INVC."WAERS",
+				 CUR_INVC."CC_CATEGORY",				
+		         ::SQL_ERROR_CODE,
+				 ::SQL_ERROR_MESSAGE,
+				 LV_CUR_UTC);	
+				 
+				 INSERT INTO "RAI_MOBILITY"."IFRS_R1.MOBILITY.RAI_MOBILITY::MOBL_PREPAID_INVC_MAIN_EH"
+		(
+		    	"SRCDOC_COMP",
+					    "SRCDOC_LOGSYS",
+					    "SRCDOC_TYPE",
+					    "SRCDOC_ID",
+					    "TIMESTAMP_UTC",
+					    "HEADER_ID",
+					    "ITEM_ID",
+					    "KUNNR",			
+					    "BUKRS",
+						"WAERS",
+						"HWAER",
+						"QUANTITY",
+						"QUANTITY_UNIT",
+						"QUANTITY_REL",
+						"ORIGDOC_COMP",
+						"ORIGDOC_LOGSYS",
+						"ORIGDOC_TYPE",
+						"ORIGDOC_ID",
+						"DUE_DATE",
+						"POSTING_DATE",
+						"FINAL_INVOICE",
+						"EXCHANGE_RATE",
+						"BLDAT",
+						"ZZ_BUKRS",
+						"ZZ_BATCH_ID",
+						"ZZ_BKTXT",
+						"ZZ_BLDAT",
+						"ZZ_BUDAT",
+						--"ZZ_ICHKONT",
+						"ZZ_KOSTL",
+						"ZZ_LEGACY",
+						"ZZ_MWSKZ",
+						"ZZ_SGTXT",
+						"ZZ_TXJCD",
+						"ZZ_ZUONR",
+						"ZZ_XBLNR",
+						--"INVOICE_TYPE",
+						"ERROR_CODE",
+						"TECHNICAL_MESSAGE",
+						"ERROR_CREATE_TS"		
+		)
+		VALUES( CUR_INVC."SRCDOC_COMP",
+						CUR_INVC."SRCDOC_LOGSYS",
+						CUR_INVC."SRCDOC_TYPE",
+						CUR_INVC."CC_SRCDOCID_INV",					 
+						CUR_INVC."JRNL_DT",
+						CUR_INVC."CC_HEADERID",
+						CUR_INVC."CC_RAI_ITEM_ID",
+						CUR_INVC."KUNNR_SID",											 					 
+						CUR_INVC."BUKRS", 
+						CUR_INVC."WAERS",
+						CUR_INVC."WAERS",
+						CUR_INVC."CC_QUANTITY",
+						CUR_INVC."CC_QUANTITY_UNIT",
+						CUR_INVC."CC_QUANTITY_REL",
+						CUR_INVC."ORIGDOC_COMP",
+						CUR_INVC."ORIGDOC_LOGSYS",
+						CUR_INVC."ORIGDOC_TYPE",					 					 
+						CUR_INVC."CC_SRCDOC_ID",					 
+						CUR_INVC."ZZ_BUDAT",
+						CUR_INVC."ZZ_BUDAT",
+						CUR_INVC."CC_MAIN_COND_TYPE",
+						CUR_INVC."CC_EXCHANGE_RATE",	
+						CUR_INVC."ZZ_BLDAT",
+						CUR_INVC."ZZ_BUKRS",
+						:LV_BATCH_ID,
+						CUR_INVC."ZZ_BKTXT_INVC",  
+						CUR_INVC."ZZ_BLDAT",
+						CUR_INVC."ZZ_BUDAT", 
+						--CUR_INVC."PL_ACCOUNT",
+						CUR_INVC."ZZ_KOSTL",
+						CUR_INVC."ZZ_LEGACY",  
+						CUR_INVC."ZZ_MWSKZ", 
+						CUR_INVC."ZZ_SGTXT",
+						CUR_INVC."ZZ_TXJCD",
+						CUR_INVC."ZZ_ZUONR",
+						CUR_INVC."CC_ZZ_XBLNR",
+						--CUR_INVC."INVOICE_TYPE",
+					    ::SQL_ERROR_CODE,
+			            ::SQL_ERROR_MESSAGE,
+			            :LV_CUR_UTC);
+				 
+				 	
+
+/* Insert into Invoice Condition Table for TP(Transaction Price) */
+INSERT INTO "RAI_MOBILITY"."IFRS_R1.MOBILITY.RAI_MOBILITY::MOBL_PREPAID_INVC_COND_EH"
+	(
+		"SRCDOC_COMP",
+		"SRCDOC_LOGSYS",
+		"SRCDOC_TYPE",
+		"SRCDOC_ID",
+		"TIMESTAMP_UTC",
+		"CONDITION_TYPE",	
+		"PL_ACCOUNT",
+		"BETRW",
+		"WAERS",
+		"BETRH",
+		"HWAER",
+		"CATEGORY",
+		"MAIN_COND_TYPE",
+		"ERROR_CODE",
+		"TECHNICAL_MESSAGE",
+		"ERROR_CREATE_TS"
+	)
+	VALUES(	CUR_INVC."SRCDOC_COMP",
+			CUR_INVC."SRCDOC_LOGSYS",
+			CUR_INVC."SRCDOC_TYPE",
+			CUR_INVC."CC_SRCDOCID_INV",
+			CUR_INVC."JRNL_DT",
+			CUR_INVC.CC_TP,
+			CUR_INVC."PL_ACCOUNT",
+			CUR_INVC."AMOUNT",
+			CUR_INVC."WAERS",
+			CUR_INVC."AMOUNT",
+			CUR_INVC."WAERS",
+			CUR_INVC.CC_CATEGORY,
+			CUR_INVC."CC_MAIN_COND_TYPE",
+			::SQL_ERROR_CODE,
+			::SQL_ERROR_MESSAGE,
+			LV_CUR_UTC);
+	
+		 LV_ERROR_FLAG := 'Y';		 
+END;
+
+
+	--  Check the Error Status of the Record. 
+	--  If Record is with Error or the sibling is with Error, then send to Error Table
+	
+		IF CUR_INVC.CC_IS_SIBLING_ERROR = '1'
+		OR CUR_INVC.ERROR_STATUS     = '1'
+		THEN
+		
+	    --  Call the Stored Procedure to split the concatenated Error Messages into Error Rows
+			CALL "NDB_COMMON"."IFRS_R1.COMMON_COMP.EH::SP_EH_SPLIT_ERRORS"(CUR_INVC."ERROR_CODE", 
+																		   ERROR_TAB, 
+				                                                           RECORD_COUNT);	
+	   
+	    -- 	Loop through the Error Records
+			FOR i IN 1 .. :RECORD_COUNT DO
+				
+	        --  Fetch the Error Code
+				CURRENT_ERROR = :ERROR_TAB."ERROR_CODE"[:i];
+				
+--  All erroneous records are inserted into Order Main EH table 
+
+	   	INSERT INTO "RAI_MOBILITY"."IFRS_R1.MOBILITY.RAI_MOBILITY::MOBL_PREPAID_ORDR_MAIN_EH"
+		(
+			"SRCDOC_COMP",			
+			"SRCDOC_LOGSYS",
+			"SRCDOC_TYPE",
+			"SRCDOC_ID",
+			"TIMESTAMP_UTC",
+			"HEADER_ID",
+			"ITEM_ID",
+			"REFERENCE_TYPE",
+			"REFERENCE_ID",
+			"KUNNR",
+			"BUKRS",
+			"WAERS",
+			"BILREL",
+			"QUANTITY",
+			"QUANTITY_UNIT",
+			"START_DATE",
+			"END_DATE",
+			"RECEIV_ACCOUNT",
+			"INCEPTION_DATE",
+			"ZZ_BATCH_ID",
+			"ZZ_BILLER",
+			"ZZ_BKTXT",
+			"ZZ_BRANDACT",
+			"ZZ_BUKRS",
+			"ZZ_BU_VIEW",
+			"ZZ_KOSTL",
+			"ZZ_LEGACY",
+			"ZZ_MATNR",
+			"ZZ_MATNR_GRP",
+			"ZZ_MOD_TYPE",
+			"ZZ_MWSKZ",
+			"ZZ_PAOBJNR",
+			"ZZ_SGTXT",
+			"ZZ_TXJCD",
+			"ZZ_ZUONR",
+			ZZ_XBLNR,
+		    ZZ_PRE_POST,
+			"VALUE_RELEVANT",
+			"ERROR_CODE",
+			"TECHNICAL_MESSAGE",
+			"ERROR_CREATE_TS")		 		         		
+	VALUES (CUR_INVC."ORIGDOC_COMP",
+			CUR_INVC."ORIGDOC_LOGSYS",
+			CUR_INVC."ORIGDOC_TYPE",
+			CUR_INVC."CC_SRCDOC_ID",
+			CUR_INVC."JRNL_DT",
+			CUR_INVC."CC_HEADERID",
+			CUR_INVC."CC_RAI_ITEM_ID",
+			CUR_INVC."REFERENCE_TYPE",
+			CUR_INVC."CC_REFERENCE_ID",
+			CUR_INVC."KUNNR_SID",
+			CUR_INVC."BUKRS",
+			CUR_INVC."WAERS",
+			CUR_INVC."CC_QUANTITY_REL",
+			CUR_INVC."CC_QUANTITY",
+			CUR_INVC."CC_QUANTITY_UNIT",
+			CUR_INVC."CC_START_DATE_NEW",
+			CUR_INVC."CC_END_DATE_NEW",
+			CUR_INVC."RECEIV_ACCOUNT",
+			CUR_INVC."CC_INCEPTION_DATE",
+			LV_BATCH_ID,
+			CUR_INVC."ZZ_BILLER",
+			CUR_INVC."ZZ_BKTXT_ORDR",
+			CUR_INVC."ZZ_BRANDACT",
+			CUR_INVC."ZZ_BUKRS",
+			CUR_INVC."ZZ_BU_VIEW",
+			CUR_INVC."ZZ_KOSTL",
+			CUR_INVC."ZZ_LEGACY",
+			CUR_INVC."CC_CHARGE_TYPE",
+			CUR_INVC."POB_TYPE",
+			CUR_INVC."BUKRS",
+			CUR_INVC."ZZ_MWSKZ",
+			CUR_INVC."ZZ_PAOBJNR",
+			CUR_INVC."ZZ_SGTXT",
+			CUR_INVC."ZZ_TXJCD",
+			CUR_INVC."ZZ_ZUONR",
+			CUR_INVC.CC_ZZ_XBLNR,
+		    CUR_INVC.CC_ZZ_PRE_POST,
+			CUR_INVC."VALUE_RELEVANT",
+			CURRENT_ERROR,
+		    :CURRENT_ERROR,
+			LV_CUR_UTC
+		);
+			
+-- All erroneous records are inserted into Order Condition EH Table for SSP(Standalone Selling Price) 
+INSERT INTO "RAI_MOBILITY"."IFRS_R1.MOBILITY.RAI_MOBILITY::MOBL_PREPAID_ORDR_COND_EH"
+		   (
+		        "SRCDOC_COMP",
+                "SRCDOC_LOGSYS",
+				"SRCDOC_TYPE",
+				"SRCDOC_ID",
+				"TIMESTAMP_UTC",
+				"CONDITION_TYPE",
+				"PL_ACCOUNT",				
+				"BETRW",
+				"WAERS",				
+				"CATEGORY",
+				"MAIN_COND_TYPE",
+				"ERROR_CODE",
+				"TECHNICAL_MESSAGE",
+				"ERROR_CREATE_TS")					
+			VALUES(
+				 CUR_INVC."ORIGDOC_COMP",
+				 CUR_INVC."ORIGDOC_LOGSYS",
+				 CUR_INVC."ORIGDOC_TYPE",
+				 CUR_INVC."CC_SRCDOC_ID",
+				 CUR_INVC."JRNL_DT",
+				 CUR_INVC."CC_SSP",
+				 CUR_INVC."PL_ACCOUNT",
+				 CUR_INVC."AMOUNT" ,				
+				 CUR_INVC."WAERS",
+				 CUR_INVC."CC_CATEGORY",
+				 CUR_INVC."CC_MAIN_COND_TYPE",				
+		         CUR_INVC."ERROR_CODE",
+				 :CURRENT_ERROR,
+				 LV_CUR_UTC);		
+		
+--  All erroneous records are inserted into Order Condition EH Table for TP(Transaction Price) 
+	 	INSERT INTO "RAI_MOBILITY"."IFRS_R1.MOBILITY.RAI_MOBILITY::MOBL_PREPAID_ORDR_COND_EH"
+		   (
+		        "SRCDOC_COMP",
+                "SRCDOC_LOGSYS",
+				"SRCDOC_TYPE",
+				"SRCDOC_ID",
+				"TIMESTAMP_UTC",
+				"CONDITION_TYPE",
+				"PL_ACCOUNT",				
+				"BETRW",
+				"WAERS",				
+				"CATEGORY",
+				"MAIN_COND_TYPE",
+				"ERROR_CODE",
+				"ERROR_CREATE_TS")					
+			VALUES(
+				 CUR_INVC."ORIGDOC_COMP",
+				 CUR_INVC."ORIGDOC_LOGSYS",
+				 CUR_INVC."ORIGDOC_TYPE",
+				 CUR_INVC."CC_SRCDOC_ID",
+				 CUR_INVC."JRNL_DT",
+				 CUR_INVC."CC_TP",
+				 CUR_INVC."PL_ACCOUNT",
+				 CUR_INVC."AMOUNT" ,				
+				 CUR_INVC."WAERS",
+				 CUR_INVC."CC_CATEGORY",
+				 CUR_INVC."CC_MAIN_COND_TYPE",				
+		         :CURRENT_ERROR,
+				 LV_CUR_UTC);
+				 
+				   --  Insert record into  INVC main error table
+			INSERT INTO "RAI_MOBILITY"."IFRS_R1.MOBILITY.RAI_MOBILITY::MOBL_PREPAID_INVC_MAIN_EH"
+		(
+		    	"SRCDOC_COMP",
+					    "SRCDOC_LOGSYS",
+					    "SRCDOC_TYPE",
+					    "SRCDOC_ID",
+					    "TIMESTAMP_UTC",
+					    "HEADER_ID",
+					    "ITEM_ID",
+					    "KUNNR",	
+					    "BUKRS",
+						"WAERS",
+						"HWAER",
+						"QUANTITY",
+						"QUANTITY_UNIT",
+						"QUANTITY_REL",
+						"ORIGDOC_COMP",
+						"ORIGDOC_LOGSYS",
+						"ORIGDOC_TYPE",
+						"ORIGDOC_ID",
+						"DUE_DATE",
+						"POSTING_DATE",
+						"FINAL_INVOICE",
+						"EXCHANGE_RATE",
+						"BLDAT",
+						"ZZ_BUKRS",
+						"ZZ_BATCH_ID",
+						"ZZ_BKTXT",
+						"ZZ_BLDAT",
+						"ZZ_BUDAT",
+						--"ZZ_ICHKONT",
+						"ZZ_KOSTL",
+						"ZZ_LEGACY",
+						"ZZ_MWSKZ",
+						"ZZ_SGTXT",
+						"ZZ_TXJCD",
+						"ZZ_ZUONR",
+						"ZZ_XBLNR",
+						--"INVOICE_TYPE",
+						"ERROR_CODE",
+						"ERROR_CREATE_TS"	
+		)
+		VALUES( CUR_INVC."SRCDOC_COMP",
+						CUR_INVC."SRCDOC_LOGSYS",
+						CUR_INVC."SRCDOC_TYPE",
+						CUR_INVC."CC_SRCDOCID_INV",					 
+						CUR_INVC."JRNL_DT",
+						CUR_INVC."CC_HEADERID",
+						CUR_INVC."CC_RAI_ITEM_ID",
+						CUR_INVC."KUNNR_SID",					 					 
+						CUR_INVC."BUKRS", 
+						CUR_INVC."WAERS",
+						CUR_INVC."WAERS",
+						CUR_INVC."CC_QUANTITY",
+						CUR_INVC."CC_QUANTITY_UNIT",
+						CUR_INVC."CC_QUANTITY_REL",
+						CUR_INVC."ORIGDOC_COMP",
+						CUR_INVC."ORIGDOC_LOGSYS",
+						CUR_INVC."ORIGDOC_TYPE",					 					 
+						CUR_INVC."CC_SRCDOC_ID",					 
+						CUR_INVC."ZZ_BUDAT",
+						CUR_INVC."ZZ_BUDAT",
+						CUR_INVC."CC_MAIN_COND_TYPE",
+						CUR_INVC."CC_EXCHANGE_RATE",	
+						CUR_INVC."ZZ_BLDAT",
+						CUR_INVC."ZZ_BUKRS",
+						:LV_BATCH_ID,
+						CUR_INVC."ZZ_BKTXT_INVC",  
+						CUR_INVC."ZZ_BLDAT",
+						CUR_INVC."ZZ_BUDAT", 
+						--CUR_INVC."PL_ACCOUNT",
+						CUR_INVC."ZZ_KOSTL",
+						CUR_INVC."ZZ_LEGACY",  
+						CUR_INVC."ZZ_MWSKZ", 
+						CUR_INVC."ZZ_SGTXT",
+						CUR_INVC."ZZ_TXJCD",
+						CUR_INVC."ZZ_ZUONR",
+						CUR_INVC.CC_ZZ_XBLNR,
+						--CUR_INVC."INVOICE_TYPE", 
+			:CURRENT_ERROR,
+			LV_CUR_UTC	);	
+	
+
+/* Insert into Invoice Condition Table for TP(Transaction Price) 	*/
+INSERT INTO "RAI_MOBILITY"."IFRS_R1.MOBILITY.RAI_MOBILITY::MOBL_PREPAID_INVC_COND_EH"
+	(
+		"SRCDOC_COMP",
+		"SRCDOC_LOGSYS",
+		"SRCDOC_TYPE",
+		"SRCDOC_ID",
+		"TIMESTAMP_UTC",
+		"CONDITION_TYPE",	
+		"PL_ACCOUNT",
+		"BETRW",
+		"WAERS",
+		"BETRH",
+		"HWAER",
+		"CATEGORY",
+		"MAIN_COND_TYPE",
+		"ERROR_CODE",
+		"ERROR_CREATE_TS"
+	)
+	VALUES(	CUR_INVC."SRCDOC_COMP",
+			CUR_INVC."SRCDOC_LOGSYS",
+			CUR_INVC."SRCDOC_TYPE",
+			CUR_INVC."CC_SRCDOCID_INV",
+			CUR_INVC."JRNL_DT",
+			CUR_INVC.CC_TP,
+			CUR_INVC."PL_ACCOUNT",
+			CUR_INVC."AMOUNT",
+			CUR_INVC."WAERS",
+			CUR_INVC."AMOUNT",
+			CUR_INVC."WAERS",
+			CUR_INVC.CC_CATEGORY,
+			CUR_INVC."CC_MAIN_COND_TYPE",
+			:CURRENT_ERROR,
+			LV_CUR_UTC); 
+				 
+           --  Set Error Flag				        
+		        LV_ERROR_FLAG := 'Y';
+					
+			END FOR;	
+			
+	--  Processing for Successful Records 
+	
+		ELSEIF CUR_INVC.CC_IS_SIBLING_ERROR = '0' 
+		   AND CUR_INVC.ERROR_STATUS     = '0' 
+		  THEN
+			BEGIN AUTONOMOUS TRANSACTION
+
+	--  All valid records are inserted into Order Main Temp table	
+	INSERT INTO "RAI_MOBILITY"."IFRS_R1.MOBILITY.RAI_MOBILITY::MOBL_PREPAID_ORDR_MAIN_TT"
+		(
+			"SRCDOC_COMP",			
+			"SRCDOC_LOGSYS",
+			"SRCDOC_TYPE",
+			"SRCDOC_ID",
+			"TIMESTAMP_UTC",
+			"HEADER_ID",
+			"ITEM_ID",
+			"REFERENCE_TYPE",
+			"REFERENCE_ID",
+			"KUNNR",
+			"BUKRS",
+			"WAERS",
+			"BILREL",
+			"QUANTITY",
+			"QUANTITY_UNIT",
+			"START_DATE",
+			"END_DATE",
+			"RECEIV_ACCOUNT",
+			"INCEPTION_DATE",
+			"ZZ_BATCH_ID",
+			"ZZ_BILLER",
+			"ZZ_BKTXT",
+			"ZZ_BRANDACT",
+			"ZZ_BUKRS",
+			"ZZ_BU_VIEW",
+			"ZZ_KOSTL",
+			"ZZ_LEGACY",
+			"ZZ_MATNR",
+			"ZZ_MATNR_GRP",
+			"ZZ_MWSKZ",
+			"ZZ_PAOBJNR",
+			"ZZ_SGTXT",
+			"ZZ_TXJCD",
+			"ZZ_ZUONR",
+			"VALUE_RELEVANT",
+			"ZZ_XBLNR",
+			"ZZ_PRE_POST"
+			)		 		         		
+	VALUES (CUR_INVC."ORIGDOC_COMP",
+			CUR_INVC."ORIGDOC_LOGSYS",
+			CUR_INVC."ORIGDOC_TYPE",
+			CUR_INVC."CC_SRCDOC_ID",
+			CUR_INVC."JRNL_DT",
+			CUR_INVC."CC_HEADERID",
+			CUR_INVC."CC_RAI_ITEM_ID",
+			CUR_INVC."REFERENCE_TYPE",
+			CUR_INVC."CC_REFERENCE_ID",
+			CUR_INVC."KUNNR_SID",
+			CUR_INVC."BUKRS",
+			CUR_INVC."WAERS",
+			CUR_INVC."CC_QUANTITY_REL",
+			CUR_INVC."CC_QUANTITY",
+			CUR_INVC."CC_QUANTITY_UNIT",
+			CUR_INVC."CC_START_DATE_NEW",
+			CUR_INVC."CC_END_DATE_NEW",
+			CUR_INVC."RECEIV_ACCOUNT",
+			CUR_INVC."CC_INCEPTION_DATE",
+			LV_BATCH_ID,
+			CUR_INVC."ZZ_BILLER",
+			CUR_INVC."ZZ_BKTXT_ORDR",
+			CUR_INVC."ZZ_BRANDACT",
+			CUR_INVC."ZZ_BUKRS",
+			CUR_INVC."ZZ_BU_VIEW",
+			CUR_INVC."ZZ_KOSTL",
+			CUR_INVC."ZZ_LEGACY",
+			CUR_INVC."CC_CHARGE_TYPE",
+			CUR_INVC."POB_TYPE",
+			CUR_INVC."ZZ_MWSKZ",
+			CUR_INVC."ZZ_PAOBJNR",
+			CUR_INVC."ZZ_SGTXT",
+			CUR_INVC."ZZ_TXJCD",
+			CUR_INVC."ZZ_ZUONR",
+			CUR_INVC."VALUE_RELEVANT",
+			CUR_INVC."CC_ZZ_XBLNR",
+	        CUR_INVC."CC_ZZ_PRE_POST"
+		);
+			
+--  All valid records are inserted ORDER Condition table for SSP(Standalone Selling Price) 
+INSERT INTO "RAI_MOBILITY"."IFRS_R1.MOBILITY.RAI_MOBILITY::MOBL_PREPAID_ORDR_COND_TT"
+		   (
+		        "SRCDOC_COMP",
+                "SRCDOC_LOGSYS",
+				"SRCDOC_TYPE",
+				"SRCDOC_ID",
+				"TIMESTAMP_UTC",
+				"CONDITION_TYPE",
+				"PL_ACCOUNT",				
+				"BETRW",
+				"WAERS",				
+				"CATEGORY",
+				"MAIN_COND_TYPE",
+				"BATCH_ID")					
+			VALUES(
+				 CUR_INVC."ORIGDOC_COMP",
+				 CUR_INVC."ORIGDOC_LOGSYS",
+				 CUR_INVC."ORIGDOC_TYPE",
+				 CUR_INVC."CC_SRCDOC_ID",
+				 CUR_INVC."JRNL_DT",
+				 CUR_INVC."CC_SSP",
+				 CUR_INVC."PL_ACCOUNT",
+				 CUR_INVC."AMOUNT" ,				
+				 CUR_INVC."WAERS",
+				 CUR_INVC."CC_CATEGORY",
+				 CUR_INVC."CC_MAIN_COND_TYPE",
+				 LV_BATCH_ID);		
+		
+--  All valid records are inserted ORDER Condition table for TP(Transaction Price) 
+	 	INSERT INTO "RAI_MOBILITY"."IFRS_R1.MOBILITY.RAI_MOBILITY::MOBL_PREPAID_ORDR_COND_TT"
+		   (
+		        "SRCDOC_COMP",
+                "SRCDOC_LOGSYS",
+				"SRCDOC_TYPE",
+				"SRCDOC_ID",
+				"TIMESTAMP_UTC",
+				"CONDITION_TYPE",
+				"PL_ACCOUNT",				
+				"BETRW",
+				"WAERS",				
+				"CATEGORY",
+				"MAIN_COND_TYPE",
+				"BATCH_ID")					
+			VALUES(
+				 CUR_INVC."ORIGDOC_COMP",
+				 CUR_INVC."ORIGDOC_LOGSYS",
+				 CUR_INVC."ORIGDOC_TYPE",
+				 CUR_INVC."CC_SRCDOC_ID",
+				 CUR_INVC."JRNL_DT",
+				 CUR_INVC."CC_TP",
+				 CUR_INVC."PL_ACCOUNT",
+				 CUR_INVC."AMOUNT" ,				
+				 CUR_INVC."WAERS",
+				 CUR_INVC."CC_CATEGORY",
+				 CUR_INVC."CC_MAIN_COND_TYPE",
+				 :LV_BATCH_ID);        
+				
+				
+	   	       
+            --  All valid records are inserted into Invoice Main Temp table 
+       INSERT INTO "RAI_MOBILITY"."IFRS_R1.MOBILITY.RAI_MOBILITY::MOBL_PREPAID_INVC_MAIN_TT"
+		(
+		    	"SRCDOC_COMP",
+					    "SRCDOC_LOGSYS",
+					    "SRCDOC_TYPE",
+					    "SRCDOC_ID",
+					    "TIMESTAMP_UTC",
+					    "HEADER_ID",
+					    "ITEM_ID",
+					    "KUNNR",			
+					    "BUKRS",
+						"WAERS",
+						"HWAER",
+						"QUANTITY",
+						"QUANTITY_UNIT",
+						"QUANTITY_REL",
+						"ORIGDOC_COMP",
+						"ORIGDOC_LOGSYS",
+						"ORIGDOC_TYPE",
+						"ORIGDOC_ID",
+						"DUE_DATE",
+						"POSTING_DATE",
+						"FINAL_INVOICE",
+						"EXCHANGE_RATE",
+						"BLDAT",
+						"ZZ_BUKRS",
+						"ZZ_BATCH_ID",
+						"ZZ_BKTXT",
+						"ZZ_BLDAT",
+						"ZZ_BUDAT",
+						----"ZZ_ICHKONT",
+						"ZZ_KOSTL",
+						"ZZ_LEGACY",
+						"ZZ_MWSKZ",
+						"ZZ_SGTXT",
+						"ZZ_TXJCD",
+						"ZZ_ZUONR",
+						"INVOICE_TYPE",
+						"ZZ_XBLNR"
+								
+		)
+		VALUES( CUR_INVC."SRCDOC_COMP",
+						CUR_INVC."SRCDOC_LOGSYS",
+						CUR_INVC."SRCDOC_TYPE",
+						CUR_INVC."CC_SRCDOCID_INV",					 
+						CUR_INVC."JRNL_DT",
+						CUR_INVC."CC_HEADERID",
+						CUR_INVC."CC_RAI_ITEM_ID",
+						CUR_INVC."KUNNR_SID",					 					 
+						CUR_INVC."BUKRS", 
+						CUR_INVC."WAERS",
+						CUR_INVC."WAERS",
+						CUR_INVC."CC_QUANTITY",
+						CUR_INVC."CC_QUANTITY_UNIT",
+						CUR_INVC."CC_QUANTITY_REL",
+						CUR_INVC."ORIGDOC_COMP",
+						CUR_INVC."ORIGDOC_LOGSYS",
+						CUR_INVC."ORIGDOC_TYPE",					 					 
+						CUR_INVC."CC_SRCDOC_ID",					 
+						CUR_INVC."ZZ_BUDAT",
+						CUR_INVC."ZZ_BUDAT",
+						CUR_INVC."CC_MAIN_COND_TYPE",
+						CUR_INVC."CC_EXCHANGE_RATE",	
+						CUR_INVC."ZZ_BLDAT",
+						CUR_INVC."ZZ_BUKRS",
+						:LV_BATCH_ID,
+						CUR_INVC."ZZ_BKTXT_INVC",  
+						CUR_INVC."ZZ_BLDAT",
+						CUR_INVC."ZZ_BUDAT", 
+						--CUR_INVC."PL_ACCOUNT",
+						CUR_INVC."ZZ_KOSTL",
+						CUR_INVC."ZZ_LEGACY",  
+						CUR_INVC."ZZ_MWSKZ", 
+						CUR_INVC."ZZ_SGTXT",
+						CUR_INVC."ZZ_TXJCD",
+						CUR_INVC."ZZ_ZUONR",
+						CUR_INVC."INVOICE_TYPE",
+						CUR_INVC.CC_ZZ_XBLNR
+						);	
+						
+--  All valid records are inserted into Invoice Main Temp table for TP(Transaction Price) 	
+INSERT INTO "RAI_MOBILITY"."IFRS_R1.MOBILITY.RAI_MOBILITY::MOBL_PREPAID_INVC_COND_TT"
+	(
+		"SRCDOC_COMP",
+		"SRCDOC_LOGSYS",
+		"SRCDOC_TYPE",
+		"SRCDOC_ID",
+		"TIMESTAMP_UTC",
+		"CONDITION_TYPE",	
+		"PL_ACCOUNT",
+		"BETRW",
+		"WAERS",
+		"BETRH",
+		"HWAER",
+		"CATEGORY",
+		"BATCH_ID",
+		"MAIN_COND_TYPE"
+	)
+	VALUES(	CUR_INVC."SRCDOC_COMP",
+			CUR_INVC."SRCDOC_LOGSYS",
+			CUR_INVC."SRCDOC_TYPE",
+			CUR_INVC."CC_SRCDOCID_INV",
+			CUR_INVC."JRNL_DT",
+			CUR_INVC.CC_TP,
+			CUR_INVC."PL_ACCOUNT",
+			CUR_INVC."AMOUNT",
+			CUR_INVC."WAERS",
+			CUR_INVC."AMOUNT",
+			CUR_INVC."WAERS",
+			CUR_INVC.CC_CATEGORY,
+			:LV_BATCH_ID,
+			CUR_INVC."CC_MAIN_COND_TYPE"); 
+			 
+ 	         END;
+	        
+		END IF;
+		
+	END FOR;
+
+	FOR CUR_INVC_PARENT AS C_RAI_INVC_ORDR_PARENT DO
+	
+	--  Define Exit Handler
+		DECLARE EXIT HANDLER FOR SQLEXCEPTION 
+		BEGIN AUTONOMOUS TRANSACTION 
+	
+	  --  Define Exit Handler
+		  DECLARE EXIT HANDLER FOR SQLEXCEPTION 
+		  BEGIN AUTONOMOUS TRANSACTION 
+		
+	  --  Do Nothing. Exception Handled to ensure SP does not get terminated
+	      
+	      END;
+	      
+	    --  All records of the corresponding parent is inserted into ORDER main error table   
+	   INSERT INTO "RAI_MOBILITY"."IFRS_R1.MOBILITY.RAI_MOBILITY::MOBL_PREPAID_ORDR_MAIN_EH"
+		(
+			"SRCDOC_COMP",			
+			"SRCDOC_LOGSYS",
+			"SRCDOC_TYPE",
+			"SRCDOC_ID",
+			"TIMESTAMP_UTC",
+			"HEADER_ID",
+			"ITEM_ID",
+			"REFERENCE_TYPE",
+			"REFERENCE_ID",
+			"KUNNR",
+			"BUKRS",
+			"WAERS",
+			"BILREL",
+			"QUANTITY",
+			"QUANTITY_UNIT",
+			"START_DATE",
+			"END_DATE",
+			"RECEIV_ACCOUNT",
+			"INCEPTION_DATE",
+			"ZZ_BATCH_ID",
+			"ZZ_BILLER",
+			"ZZ_BKTXT",
+			"ZZ_BRANDACT",
+			"ZZ_BUKRS",
+			"ZZ_BU_VIEW",
+			"ZZ_KOSTL",
+			"ZZ_LEGACY",
+			"ZZ_MATNR",
+			"ZZ_MATNR_GRP",
+			"ZZ_MOD_TYPE",
+			"ZZ_MWSKZ",
+			"ZZ_PAOBJNR",
+			"ZZ_SGTXT",
+			"ZZ_TXJCD",
+			"ZZ_ZUONR",
+			"ZZ_XBLNR",
+			"ZZ_PRE_POST",
+			"VALUE_RELEVANT",
+			"ERROR_CODE",
+			"TECHNICAL_MESSAGE",
+			"ERROR_CREATE_TS"		 		         		
+		)
+		SELECT   SRCDOC_COMP,
+				 SRCDOC_LOGSYS,
+                 SRCDOC_TYPE,
+                 SRCDOC_ID,
+                 TIMESTAMP_UTC,
+                 HEADER_ID,
+                 ITEM_ID,
+                 REFERENCE_TYPE,
+                 REFERENCE_ID,
+                 KUNNR,
+                 BUKRS,
+                 WAERS,
+                 BILREL,
+                 QUANTITY,
+                 QUANTITY_UNIT,
+                 START_DATE,
+                 END_DATE,
+                 RECEIV_ACCOUNT,
+                 INCEPTION_DATE,
+                 ZZ_BATCH_ID,
+                 ZZ_BILLER,
+                 ZZ_BKTXT,
+                 ZZ_BRANDACT,
+                 ZZ_BUKRS,
+                 ZZ_BU_VIEW,
+                 ZZ_KOSTL,
+                 ZZ_LEGACY,
+                 ZZ_MATNR,
+                 ZZ_MATNR_GRP,
+                 ZZ_MOD_TYPE,
+                 ZZ_MWSKZ,
+                 ZZ_PAOBJNR,
+                 ZZ_SGTXT,
+                 ZZ_TXJCD,
+                 ZZ_ZUONR,
+                 ZZ_XBLNR,
+	             ZZ_PRE_POST, 
+                 VALUE_RELEVANT,
+                 ::SQL_ERROR_CODE,
+				 ::SQL_ERROR_MESSAGE,
+				 LV_CUR_UTC			
+				FROM "RAI_MOBILITY"."IFRS_R1.MOBILITY.RAI_MOBILITY::MOBL_PREPAID_ORDR_MAIN_TT" AS TT
+                  WHERE TT."HEADER_ID" = CUR_INVC_PARENT."CC_HEADERID"
+                    AND "ZZ_BATCH_ID" = LV_BATCH_ID;
+
+		--  All records of the corresponding parent is inserted into Order Condition EH Table for 
+		--  SSP(Standalone Selling Price) and TP(Transaction Price) 
+		INSERT INTO "RAI_MOBILITY"."IFRS_R1.MOBILITY.RAI_MOBILITY::MOBL_PREPAID_ORDR_COND_EH"(
+						"SRCDOC_COMP",
+                        "SRCDOC_LOGSYS",
+				        "SRCDOC_TYPE",
+				        "SRCDOC_ID",
+				        "TIMESTAMP_UTC",
+				        "CONDITION_TYPE",
+				        "PL_ACCOUNT",				
+				        "BETRW",
+				        "WAERS",				
+				        "CATEGORY",
+				        "MAIN_COND_TYPE",
+				        "ERROR_CODE",
+						"TECHNICAL_MESSAGE",
+						"ERROR_CREATE_TS")
+				 SELECT COND."SRCDOC_COMP",
+                        COND."SRCDOC_LOGSYS",
+				        COND."SRCDOC_TYPE",
+				        COND."SRCDOC_ID",
+				        COND."TIMESTAMP_UTC",
+				        COND."CONDITION_TYPE",
+				        COND."PL_ACCOUNT",				
+				        COND."BETRW",
+				        COND."WAERS",				
+				        COND."CATEGORY",
+				        "MAIN_COND_TYPE",
+						::SQL_ERROR_CODE,
+					    ::SQL_ERROR_MESSAGE,
+						LV_CUR_UTC
+				   FROM (SELECT * 
+				           FROM "RAI_MOBILITY"."IFRS_R1.MOBILITY.RAI_MOBILITY::MOBL_PREPAID_ORDR_COND_TT"
+				          WHERE "BATCH_ID" = LV_BATCH_ID) COND,
+					    (SELECT "SRCDOC_ID" 
+					       FROM "RAI_MOBILITY"."IFRS_R1.MOBILITY.RAI_MOBILITY::MOBL_PREPAID_ORDR_MAIN_TT" 
+					      WHERE "HEADER_ID" = CUR_INVC_PARENT."CC_HEADERID"
+					        AND "ZZ_BATCH_ID" = LV_BATCH_ID) MAIN 
+				  WHERE COND."SRCDOC_ID" = MAIN."SRCDOC_ID";
+				
+						--	All erraneous records of the corresponding parent is inserted into INVC main error table
+	 INSERT INTO "RAI_MOBILITY"."IFRS_R1.MOBILITY.RAI_MOBILITY::MOBL_PREPAID_INVC_MAIN_EH"
+		(
+		    	"SRCDOC_COMP",
+					    "SRCDOC_LOGSYS",
+					    "SRCDOC_TYPE",
+					    "SRCDOC_ID",
+					    "TIMESTAMP_UTC",
+					    "HEADER_ID",
+					    "ITEM_ID",
+					    "KUNNR",				
+					    "BUKRS",
+						"WAERS",
+						"HWAER",
+						"QUANTITY",
+						"QUANTITY_UNIT",
+						"QUANTITY_REL",
+						"ORIGDOC_COMP",
+						"ORIGDOC_LOGSYS",
+						"ORIGDOC_TYPE",
+						"ORIGDOC_ID",
+						"DUE_DATE",
+						"POSTING_DATE",
+						"FINAL_INVOICE",
+						"EXCHANGE_RATE",
+						"BLDAT",
+						"ZZ_BUKRS",
+						"ZZ_BATCH_ID",
+						"ZZ_BKTXT",
+						"ZZ_BLDAT",
+						"ZZ_BUDAT",
+						--"ZZ_ICHKONT",
+						"ZZ_KOSTL",
+						"ZZ_LEGACY",
+						"ZZ_MWSKZ",
+						"ZZ_SGTXT",
+						"ZZ_TXJCD",
+						"ZZ_ZUONR",
+						"INVOICE_TYPE",
+						"ZZ_XBLNR",
+						"ERROR_CODE",
+						"TECHNICAL_MESSAGE",
+						"ERROR_CREATE_TS"		
+		)
+		SELECT 
+		   "SRCDOC_COMP",
+					    "SRCDOC_LOGSYS",
+					    "SRCDOC_TYPE",
+					    "SRCDOC_ID",
+					    "TIMESTAMP_UTC",
+					    "HEADER_ID",
+					    "ITEM_ID",
+					    "KUNNR",				
+					    "BUKRS",
+						"WAERS",
+						"HWAER",
+						"QUANTITY",
+						"QUANTITY_UNIT",
+						"QUANTITY_REL",
+						"ORIGDOC_COMP",
+						"ORIGDOC_LOGSYS",
+						"ORIGDOC_TYPE",
+						"ORIGDOC_ID",
+						"DUE_DATE",
+						"POSTING_DATE",
+						"FINAL_INVOICE",
+						"EXCHANGE_RATE",
+						"BLDAT",
+						"ZZ_BUKRS",
+						"ZZ_BATCH_ID",
+						"ZZ_BKTXT",
+						"ZZ_BLDAT",
+						"ZZ_BUDAT",
+						--"ZZ_ICHKONT",
+						"ZZ_KOSTL",
+						"ZZ_LEGACY",
+						"ZZ_MWSKZ",
+						"ZZ_SGTXT",
+						"ZZ_TXJCD",
+						"ZZ_ZUONR",
+						"INVOICE_TYPE",
+						"ZZ_XBLNR",
+			::SQL_ERROR_CODE,
+			::SQL_ERROR_MESSAGE,
+			LV_CUR_UTC
+            FROM "RAI_MOBILITY"."IFRS_R1.MOBILITY.RAI_MOBILITY::MOBL_PREPAID_INVC_MAIN_TT" 
+            WHERE "HEADER_ID" = CUR_INVC_PARENT."CC_HEADERID"
+            AND "ZZ_BATCH_ID" = LV_BATCH_ID;	
+	
+--	All erraneous records of the corresponding parent is inserted into INVC cond error table
+--  SSP(Standalone Selling Price) and TP(Transaction Price) 
+ INSERT INTO "RAI_MOBILITY"."IFRS_R1.MOBILITY.RAI_MOBILITY::MOBL_PREPAID_INVC_COND_EH"
+	(
+		"SRCDOC_COMP",
+		"SRCDOC_LOGSYS",
+		"SRCDOC_TYPE",
+		"SRCDOC_ID",
+		"TIMESTAMP_UTC",
+		"CONDITION_TYPE",	
+		"PL_ACCOUNT",
+		"BETRW",
+		"WAERS",
+		"BETRH",		
+		"HWAER",
+		"CATEGORY",
+		"MAIN_COND_TYPE",
+		"ERROR_CODE",
+		"TECHNICAL_MESSAGE",
+		"ERROR_CREATE_TS")
+	SELECT 
+	    COND."SRCDOC_COMP",
+		COND."SRCDOC_LOGSYS",
+		COND."SRCDOC_TYPE",
+		COND."SRCDOC_ID",
+		COND."TIMESTAMP_UTC",
+		COND."CONDITION_TYPE",	
+		COND."PL_ACCOUNT",
+		COND."BETRW",
+		COND."WAERS",
+		COND."BETRH",		
+		COND."HWAER",
+		COND."CATEGORY",
+		"MAIN_COND_TYPE",
+		::SQL_ERROR_CODE,
+		::SQL_ERROR_MESSAGE,
+		LV_CUR_UTC 
+		FROM (SELECT * FROM "RAI_MOBILITY"."IFRS_R1.MOBILITY.RAI_MOBILITY::MOBL_PREPAID_INVC_COND_TT"
+				          WHERE"BATCH_ID" = LV_BATCH_ID) COND,
+					    (SELECT "SRCDOC_ID" 
+					       FROM  "RAI_MOBILITY"."IFRS_R1.MOBILITY.RAI_MOBILITY::MOBL_PREPAID_INVC_MAIN_TT"
+					      WHERE "HEADER_ID" = CUR_INVC_PARENT."CC_HEADERID"
+					        AND "ZZ_BATCH_ID" = LV_BATCH_ID) MAIN 
+				  WHERE COND."SRCDOC_ID" = MAIN."SRCDOC_ID";
+				  	
+			LV_ERROR_FLAG := 'Y';
+	    
+	    END; 
+
+    --  Check if any siblings of the parent is in ORDR MAIN Error table.
+    --  If Yes move the entire dataset of the corresponding parent into MAIN error and COND error tables.
+		SELECT COUNT(*) INTO LV_COUNT_ORDR 
+		  FROM "RAI_MOBILITY"."IFRS_R1.MOBILITY.RAI_MOBILITY::MOBL_PREPAID_ORDR_MAIN_EH"
+	     WHERE "HEADER_ID" = CUR_INVC_PARENT."CC_HEADERID"
+	       AND "ZZ_BATCH_ID" = LV_BATCH_ID;
+	     
+	    SELECT COUNT(*) INTO LV_COUNT_INVC 
+	      FROM "RAI_MOBILITY"."IFRS_R1.MOBILITY.RAI_MOBILITY::MOBL_PREPAID_INVC_MAIN_EH"
+	     WHERE "HEADER_ID" = CUR_INVC_PARENT."CC_HEADERID"
+	       AND "ZZ_BATCH_ID" = LV_BATCH_ID;
+		
+		IF LV_COUNT_ORDR > 0 OR LV_COUNT_INVC > 0  THEN	
+		
+		--  All records of the corresponding parent is inserted into Order Main error table 
+ INSERT INTO "RAI_MOBILITY"."IFRS_R1.MOBILITY.RAI_MOBILITY::MOBL_PREPAID_ORDR_MAIN_EH"
+		(
+			"SRCDOC_COMP",			
+						"SRCDOC_LOGSYS",
+						"SRCDOC_TYPE",
+						"SRCDOC_ID",
+						"TIMESTAMP_UTC",
+						"HEADER_ID",
+						"ITEM_ID",
+						"REFERENCE_TYPE",
+						"REFERENCE_ID",
+						"KUNNR",
+						"BUKRS",
+						"WAERS",
+						"QUANTITY",
+						"QUANTITY_UNIT",
+						"BILREL",
+						"START_DATE",
+						"END_DATE",
+						"XNEGATIVE_ITEM",
+						"RECEIV_ACCOUNT",
+						"INCEPTION_DATE",
+						"ZZ_ALLOCATE",
+						"ZZ_AUFNR",
+						"ZZ_BATCH_ID",
+						"ZZ_BILLER",
+						"ZZ_BKTXT",
+						"ZZ_BRANDACT",
+						"ZZ_BUKRS",
+						"ZZ_BU_VIEW",
+						"ZZ_CATRANSFER",
+						"ZZ_KOSTL",
+						"ZZ_LEGACY",
+						"ZZ_MATNR",
+						"ZZ_MATNR_GRP",
+						"ZZ_MWSKZ",
+						"ZZ_PAOBJNR",
+						"ZZ_PRE_POST",
+						"ZZ_SGTXT",
+						"ZZ_TXJCD",
+						"ZZ_UPFFLG",
+						"ZZ_VBUND",
+						"ZZ_XBLNR",
+						"ZZ_ZUONR",
+						"VALUE_RELEVANT",
+						--"ERROR_CODE",
+						"ERROR_CREATE_TS")
+				 SELECT "SRCDOC_COMP",			
+						"SRCDOC_LOGSYS",
+						"SRCDOC_TYPE",
+						"SRCDOC_ID",
+						"TIMESTAMP_UTC",
+						"HEADER_ID",
+						"ITEM_ID",
+						"REFERENCE_TYPE",
+						"REFERENCE_ID",
+						"KUNNR",
+						"BUKRS",
+						"WAERS",
+						"QUANTITY",
+						"QUANTITY_UNIT",
+						"BILREL",
+						"START_DATE",
+						"END_DATE",
+						"XNEGATIVE_ITEM",
+						"RECEIV_ACCOUNT",
+						"INCEPTION_DATE",
+						"ZZ_ALLOCATE",
+						"ZZ_AUFNR",
+						"ZZ_BATCH_ID",
+						"ZZ_BILLER",
+						"ZZ_BKTXT",
+						"ZZ_BRANDACT",
+						"ZZ_BUKRS",
+						"ZZ_BU_VIEW",
+						"ZZ_CATRANSFER",
+						"ZZ_KOSTL",
+						"ZZ_LEGACY",
+						"ZZ_MATNR",
+						"ZZ_MATNR_GRP",
+						"ZZ_MWSKZ",
+						"ZZ_PAOBJNR",
+						"ZZ_PRE_POST",
+						"ZZ_SGTXT",
+						"ZZ_TXJCD",
+						"ZZ_UPFFLG",
+						"ZZ_VBUND",
+						"ZZ_XBLNR",
+						"ZZ_ZUONR",
+						"VALUE_RELEVANT",
+						--:LC_SQL_ERROR,
+						:LV_CUR_UTC				
+				FROM "RAI_MOBILITY"."IFRS_R1.MOBILITY.RAI_MOBILITY::MOBL_PREPAID_ORDR_MAIN_TT" AS TT
+                  WHERE TT."HEADER_ID" = CUR_INVC_PARENT."CC_HEADERID"
+                    AND "ZZ_BATCH_ID" = LV_BATCH_ID;
+
+		--  All records of the corresponding parent is inserted into Order Condition EH Table for 
+		--  SSP(Standalone Selling Price) and TP(Transaction Price) 
+		INSERT INTO "RAI_MOBILITY"."IFRS_R1.MOBILITY.RAI_MOBILITY::MOBL_PREPAID_ORDR_COND_EH"(
+						"SRCDOC_COMP",
+                        "SRCDOC_LOGSYS",
+				        "SRCDOC_TYPE",
+				        "SRCDOC_ID",
+				        "TIMESTAMP_UTC",
+				        "CONDITION_TYPE",
+				        "PL_ACCOUNT",				
+				        "BETRW",
+				        "WAERS",				
+				        "CATEGORY",
+				        "MAIN_COND_TYPE",
+				        "ERROR_CODE",
+						"ERROR_CREATE_TS")
+				 SELECT COND."SRCDOC_COMP",
+                        COND."SRCDOC_LOGSYS",
+				        COND."SRCDOC_TYPE",
+				        COND."SRCDOC_ID",
+				        COND."TIMESTAMP_UTC",
+				        COND."CONDITION_TYPE",
+				        COND."PL_ACCOUNT",				
+				        COND."BETRW",
+				        COND."WAERS",				
+				        COND."CATEGORY",
+				        "MAIN_COND_TYPE",
+						:LC_SQL_ERROR,
+						:LV_CUR_UTC
+				   FROM (SELECT * 
+				           FROM "RAI_MOBILITY"."IFRS_R1.MOBILITY.RAI_MOBILITY::MOBL_PREPAID_ORDR_COND_TT"
+				          WHERE "BATCH_ID" = LV_BATCH_ID) COND,
+					    (SELECT "SRCDOC_ID" 
+					       FROM "RAI_MOBILITY"."IFRS_R1.MOBILITY.RAI_MOBILITY::MOBL_PREPAID_ORDR_MAIN_TT" 
+					      WHERE "HEADER_ID" = CUR_INVC_PARENT."CC_HEADERID"
+					        AND "ZZ_BATCH_ID" = LV_BATCH_ID) MAIN 
+				  WHERE COND."SRCDOC_ID" = MAIN."SRCDOC_ID";
+		  		
+		  			
+	--  All records of the corresponding parent is inserted into INVC Main error table 
+	 INSERT INTO "RAI_MOBILITY"."IFRS_R1.MOBILITY.RAI_MOBILITY::MOBL_PREPAID_INVC_MAIN_EH"
+		(
+		   		"SRCDOC_COMP",
+					    "SRCDOC_LOGSYS",
+					    "SRCDOC_TYPE",
+					    "SRCDOC_ID",
+					    "TIMESTAMP_UTC",
+					    "HEADER_ID",
+					    "ITEM_ID",
+					    "KUNNR",				
+					    "BUKRS",
+						"WAERS",
+						"HWAER",
+						"QUANTITY",
+						"QUANTITY_UNIT",
+						"QUANTITY_REL",
+						"ORIGDOC_COMP",
+						"ORIGDOC_LOGSYS",
+						"ORIGDOC_TYPE",
+						"ORIGDOC_ID",
+						"DUE_DATE",
+						"POSTING_DATE",
+						"FINAL_INVOICE",
+						"EXCHANGE_RATE",
+						"BLDAT",
+						"ZZ_BUKRS",
+						"ZZ_BATCH_ID",
+						"ZZ_BKTXT",
+						"ZZ_BLDAT",
+						"ZZ_BUDAT",
+						--"ZZ_ICHKONT",
+						"ZZ_KOSTL",
+						"ZZ_LEGACY",
+						"ZZ_MWSKZ",
+						"ZZ_SGTXT",
+						"ZZ_TXJCD",
+						"ZZ_ZUONR",
+						"ZZ_XBLNR",
+						"INVOICE_TYPE",
+						"ERROR_CODE",
+						"ERROR_CREATE_TS"		
+		)
+		SELECT 
+		    "SRCDOC_COMP",
+					    "SRCDOC_LOGSYS",
+					    "SRCDOC_TYPE",
+					    "SRCDOC_ID",
+					    "TIMESTAMP_UTC",
+					    "HEADER_ID",
+					    "ITEM_ID",
+					    "KUNNR",			
+					    "BUKRS",
+						"WAERS",
+						"HWAER",
+						"QUANTITY",
+						"QUANTITY_UNIT",
+						"QUANTITY_REL",
+						"ORIGDOC_COMP",
+						"ORIGDOC_LOGSYS",
+						"ORIGDOC_TYPE",
+						"ORIGDOC_ID",
+						"DUE_DATE",
+						"POSTING_DATE",
+						"FINAL_INVOICE",
+						"EXCHANGE_RATE",
+						"BLDAT",
+						"ZZ_BUKRS",
+						"ZZ_BATCH_ID",
+						"ZZ_BKTXT",
+						"ZZ_BLDAT",
+						"ZZ_BUDAT",
+						--"ZZ_ICHKONT",
+						"ZZ_KOSTL",
+						"ZZ_LEGACY",
+						"ZZ_MWSKZ",
+						"ZZ_SGTXT",
+						"ZZ_TXJCD",
+						"ZZ_ZUONR",
+						"ZZ_XBLNR",
+						"INVOICE_TYPE",
+					    :LC_SQL_ERROR,
+						LV_CUR_UTC
+            FROM "RAI_MOBILITY"."IFRS_R1.MOBILITY.RAI_MOBILITY::MOBL_PREPAID_INVC_MAIN_TT" 
+            WHERE "HEADER_ID" = CUR_INVC_PARENT."CC_HEADERID"
+            AND "ZZ_BATCH_ID" = LV_BATCH_ID;	
+	
+--	All erraneous records of the corresponding parent is inserted into INVC cond error table
+--  SSP(Standalone Selling Price) and TP(Transaction Price) 
+ INSERT INTO "RAI_MOBILITY"."IFRS_R1.MOBILITY.RAI_MOBILITY::MOBL_PREPAID_INVC_COND_EH"
+	(
+		"SRCDOC_COMP",
+		"SRCDOC_LOGSYS",
+		"SRCDOC_TYPE",
+		"SRCDOC_ID",
+		"TIMESTAMP_UTC",
+		"CONDITION_TYPE",	
+		"PL_ACCOUNT",
+		"BETRW",
+		"WAERS",
+		"BETRH",		
+		"HWAER",
+		"CATEGORY",
+		"MAIN_COND_TYPE",
+		"ERROR_CODE",
+		"ERROR_CREATE_TS")
+	SELECT 
+	    COND."SRCDOC_COMP",
+		COND."SRCDOC_LOGSYS",
+		COND."SRCDOC_TYPE",
+		COND."SRCDOC_ID",
+		COND."TIMESTAMP_UTC",
+		COND."CONDITION_TYPE",	
+		COND."PL_ACCOUNT",
+		COND."BETRW",
+		COND."WAERS",
+		COND."BETRH",		
+		COND."HWAER",
+		COND."CATEGORY",
+		"MAIN_COND_TYPE",
+		:LC_SQL_ERROR,
+		LV_CUR_UTC 
+		FROM (SELECT * FROM "RAI_MOBILITY"."IFRS_R1.MOBILITY.RAI_MOBILITY::MOBL_PREPAID_INVC_COND_TT"
+				          WHERE"BATCH_ID" = LV_BATCH_ID) COND,
+					    (SELECT "SRCDOC_ID" 
+					       FROM  "RAI_MOBILITY"."IFRS_R1.MOBILITY.RAI_MOBILITY::MOBL_PREPAID_INVC_MAIN_TT"
+					      WHERE "HEADER_ID" = CUR_INVC_PARENT."CC_HEADERID"
+					        AND "ZZ_BATCH_ID" = LV_BATCH_ID) MAIN 
+				  WHERE COND."SRCDOC_ID" = MAIN."SRCDOC_ID";
+		  		  
+		--  Set Error Flag				        
+			LV_ERROR_FLAG := 'Y';	  
+	
+	--	Processing of successful records(none of the siblings of a corresponding parent are in error)
+		ELSEIF LV_COUNT_ORDR = 0 THEN
+		
+			BEGIN AUTONOMOUS TRANSACTION
+			
+		--  All valid records are inserted into Order Main table 
+        INSERT INTO "RAI_MOBILITY"."IFRS_R1.MOBILITY.RAI_MOBILITY::MOBL_PREPAID_ORDR_MAIN"
+		(
+							"SRCDOC_COMP",			
+							"SRCDOC_LOGSYS",
+							"SRCDOC_TYPE",
+							"SRCDOC_ID",
+							"TIMESTAMP_UTC",
+							"HEADER_ID",
+							"ITEM_ID",
+							"REFERENCE_TYPE",
+							"REFERENCE_ID",
+							"KUNNR",
+							"BUKRS",
+							"WAERS",
+							"QUANTITY",
+							"QUANTITY_UNIT",
+							"BILREL",
+							"START_DATE",
+							"END_DATE",
+							"XNEGATIVE_ITEM",
+							"RECEIV_ACCOUNT",
+							"INCEPTION_DATE",
+							"ZZ_ALLOCATE",
+							"ZZ_AUFNR",
+							"ZZ_BATCH_ID",
+							"ZZ_BILLER",
+							"ZZ_BKTXT",
+							"ZZ_BRANDACT",
+							"ZZ_BUKRS",
+							"ZZ_BU_VIEW",
+							"ZZ_CATRANSFER",
+							"ZZ_KOSTL",
+							"ZZ_LEGACY",
+							"ZZ_MATNR",
+							"ZZ_MATNR_GRP",
+							"ZZ_MWSKZ",
+							"ZZ_PAOBJNR",
+							"ZZ_PRE_POST",
+							"ZZ_SGTXT",
+							"ZZ_TXJCD",
+							"ZZ_UPFFLG",
+							"ZZ_VBUND",
+							"ZZ_ZUONR",
+							ZZ_XBLNR,
+							"VALUE_RELEVANT",
+							"RAI_TS")
+					SELECT 	"SRCDOC_COMP",			
+							"SRCDOC_LOGSYS",
+							"SRCDOC_TYPE",
+							"SRCDOC_ID",
+							"TIMESTAMP_UTC",
+							"HEADER_ID",
+							"ITEM_ID",
+							"REFERENCE_TYPE",
+							"REFERENCE_ID",
+							"KUNNR",
+							"BUKRS",
+							"WAERS",
+							"QUANTITY",
+							"QUANTITY_UNIT",
+							"BILREL",
+							"START_DATE",
+							"END_DATE",
+							"XNEGATIVE_ITEM",
+							"RECEIV_ACCOUNT",
+							"INCEPTION_DATE",
+							"ZZ_ALLOCATE",
+							"ZZ_AUFNR",
+							"ZZ_BATCH_ID",
+							"ZZ_BILLER",
+							"ZZ_BKTXT",
+							"ZZ_BRANDACT",
+							"ZZ_BUKRS",
+							"ZZ_BU_VIEW",
+							"ZZ_CATRANSFER",
+							"ZZ_KOSTL",
+							"ZZ_LEGACY",
+							"ZZ_MATNR",
+							"ZZ_MATNR_GRP",
+							"ZZ_MWSKZ",
+							"ZZ_PAOBJNR",
+							"ZZ_PRE_POST",
+							"ZZ_SGTXT",
+							"ZZ_TXJCD",
+							"ZZ_UPFFLG",
+							"ZZ_VBUND",
+							"ZZ_ZUONR",
+							ZZ_XBLNR,
+							"VALUE_RELEVANT",
+							:LV_CUR_UTC			
+				FROM "RAI_MOBILITY"."IFRS_R1.MOBILITY.RAI_MOBILITY::MOBL_PREPAID_ORDR_MAIN_TT" 
+                  WHERE "HEADER_ID" = CUR_INVC_PARENT."CC_HEADERID"
+                    AND "ZZ_BATCH_ID" = LV_BATCH_ID;
+
+		--  All valid records are inserted ORDER Condition table for SSP(Standalone Selling Price) and TP(Transaction Price)         
+ 		INSERT INTO "RAI_MOBILITY"."IFRS_R1.MOBILITY.RAI_MOBILITY::MOBL_PREPAID_ORDR_COND"(
+						"SRCDOC_COMP",
+                        "SRCDOC_LOGSYS",
+				        "SRCDOC_TYPE",
+				        "SRCDOC_ID",
+				        "TIMESTAMP_UTC",
+				        "CONDITION_TYPE",
+				        "PL_ACCOUNT",				
+				        "BETRW",
+				        "WAERS",				
+				        "CATEGORY",
+				        "MAIN_COND_TYPE")
+				 SELECT COND."SRCDOC_COMP",
+                        COND."SRCDOC_LOGSYS",
+				        COND."SRCDOC_TYPE",
+				        COND."SRCDOC_ID",
+				        COND."TIMESTAMP_UTC",
+				        COND."CONDITION_TYPE",
+				        COND."PL_ACCOUNT",				
+				        COND."BETRW",
+				        COND."WAERS",				
+				        COND."CATEGORY",
+				        COND."MAIN_COND_TYPE"
+				   FROM (SELECT * 
+				           FROM "RAI_MOBILITY"."IFRS_R1.MOBILITY.RAI_MOBILITY::MOBL_PREPAID_ORDR_COND_TT"
+				          WHERE "BATCH_ID" = LV_BATCH_ID) COND,
+					    (SELECT "SRCDOC_ID" 
+					       FROM "RAI_MOBILITY"."IFRS_R1.MOBILITY.RAI_MOBILITY::MOBL_PREPAID_ORDR_MAIN_TT" 
+					      WHERE "HEADER_ID" = CUR_INVC_PARENT."CC_HEADERID"
+					        AND "ZZ_BATCH_ID" = LV_BATCH_ID) MAIN 
+				  WHERE COND."SRCDOC_ID" = MAIN."SRCDOC_ID";
+				  
+				  
+            --  All valid records are inserted into Invoice Main table
+		 INSERT INTO "RAI_MOBILITY"."IFRS_R1.MOBILITY.RAI_MOBILITY::MOBL_PREPAID_INVC_MAIN"
+		(
+						"SRCDOC_COMP",
+						"SRCDOC_LOGSYS",
+						"SRCDOC_TYPE",
+						"SRCDOC_ID",
+						"TIMESTAMP_UTC",
+						"HEADER_ID",
+						"ITEM_ID",	
+						"KUNNR",			
+						"BUKRS",
+						"WAERS",
+						"HWAER",
+						"QUANTITY",
+						"QUANTITY_UNIT",
+						"QUANTITY_REL",
+						"ORIGDOC_COMP",
+						"ORIGDOC_LOGSYS",
+						"ORIGDOC_TYPE",
+						"ORIGDOC_ID",
+						"DUE_DATE",
+						"POSTING_DATE",
+						"FINAL_INVOICE",
+						"EXCHANGE_RATE",
+						"BLDAT",
+						"ZZ_BUKRS",
+						"ZZ_BATCH_ID",
+						"ZZ_BKTXT",
+						"ZZ_BLDAT",
+						"ZZ_BUDAT",
+						--"ZZ_ICHKONT",
+						"ZZ_KOSTL",
+						"ZZ_LEGACY",
+						"ZZ_MWSKZ",
+						"ZZ_SGTXT",
+						"ZZ_TXJCD",
+						"ZZ_XBLNR",
+						"ZZ_ZUONR",
+						"INVOICE_TYPE",
+						"RAI_TS")    
+                     SELECT 
+                     	"SRCDOC_COMP",
+						"SRCDOC_LOGSYS",
+						"SRCDOC_TYPE",
+						"SRCDOC_ID",
+						"TIMESTAMP_UTC",
+						"HEADER_ID",
+						"ITEM_ID",
+						"KUNNR",				
+						"BUKRS",
+						"WAERS",
+						"HWAER",
+						"QUANTITY",
+						"QUANTITY_UNIT",
+						"QUANTITY_REL",
+						"ORIGDOC_COMP",
+						"ORIGDOC_LOGSYS",
+						"ORIGDOC_TYPE",
+						"ORIGDOC_ID",
+						"DUE_DATE",
+						"POSTING_DATE",
+						"FINAL_INVOICE",
+						"EXCHANGE_RATE",
+						"BLDAT",
+						"ZZ_BUKRS",
+						"ZZ_BATCH_ID",
+						"ZZ_BKTXT",
+						"ZZ_BLDAT",
+						"ZZ_BUDAT",
+						--"ZZ_ICHKONT",
+						"ZZ_KOSTL",
+						"ZZ_LEGACY",
+						"ZZ_MWSKZ",
+						"ZZ_SGTXT",
+						"ZZ_TXJCD",
+						"ZZ_XBLNR",
+						"ZZ_ZUONR",
+						"INVOICE_TYPE",
+						:LV_CUR_UTC
+            FROM "RAI_MOBILITY"."IFRS_R1.MOBILITY.RAI_MOBILITY::MOBL_PREPAID_INVC_MAIN_TT" 
+            WHERE "HEADER_ID" = CUR_INVC_PARENT."CC_HEADERID"
+            AND "ZZ_BATCH_ID" = LV_BATCH_ID;	
+	
+            --  All valid records are inserted into Invoice Cond table 
+            --  for SSP(Standalone Selling Price) and TP(Transaction Price) 
+ INSERT INTO "RAI_MOBILITY"."IFRS_R1.MOBILITY.RAI_MOBILITY::MOBL_PREPAID_INVC_COND"
+	(
+		"SRCDOC_COMP",
+		"SRCDOC_LOGSYS",
+		"SRCDOC_TYPE",
+		"SRCDOC_ID",
+		"TIMESTAMP_UTC",
+		"CONDITION_TYPE",	
+		"PL_ACCOUNT",
+		"BETRW",
+		"WAERS",
+		"BETRH",		
+		"HWAER",
+		"CATEGORY",
+		"MAIN_COND_TYPE")
+	SELECT 
+	    COND."SRCDOC_COMP",
+		COND."SRCDOC_LOGSYS",
+		COND."SRCDOC_TYPE",
+		COND."SRCDOC_ID",
+		COND."TIMESTAMP_UTC",
+		COND."CONDITION_TYPE",	
+		COND."PL_ACCOUNT",
+		COND."BETRW",
+		COND."WAERS",
+		COND."BETRH",		
+		COND."HWAER",
+		COND."CATEGORY",
+		COND."MAIN_COND_TYPE"
+		FROM (SELECT * FROM "RAI_MOBILITY"."IFRS_R1.MOBILITY.RAI_MOBILITY::MOBL_PREPAID_INVC_COND_TT"
+				          WHERE"BATCH_ID" = LV_BATCH_ID) COND,
+					    (SELECT "SRCDOC_ID" 
+					       FROM  "RAI_MOBILITY"."IFRS_R1.MOBILITY.RAI_MOBILITY::MOBL_PREPAID_INVC_MAIN_TT"
+					      WHERE "HEADER_ID" = CUR_INVC_PARENT."CC_HEADERID"
+					        AND "ZZ_BATCH_ID" = LV_BATCH_ID) MAIN 
+				  WHERE COND."SRCDOC_ID" = MAIN."SRCDOC_ID";
+				  
+				  	    END;				      
+								
+
+--          Updating RAI_TS and other custom RAI fields in corresponding NDB Tables 
+
+	
+	 		INSERT INTO #UPDATE_INVC(
+			   		    SRCDOC_ID,                
+			   		    REFERENCE_ID,
+			   		    RAI_ITEM_ID,   
+			   		    BATCH_ID,          
+			   		    HEADER_ID,
+			   		    MDN,
+			   		    PRODUCT_ID,
+			   		    CUSTOMER_ID,
+			   		    REFERENCE_FIELD,
+			   		    INVOICE_NO,
+			   		    POSTING_DATE,
+			   		    START_DATE,
+			   		    END_DATE,
+			   		    GL_ACCOUNT
+			   		    )	   			    
+			     SELECT A.CC_SRCDOCID_INV,                
+			   		    A.CC_REFERENCE_ID,
+			   		    A.CC_RAI_ITEM_ID,   
+			   		    B.ZZ_BATCH_ID,          
+			   		    A.CC_HEADERID,
+			   		    A.MDN,
+			   		    A.PRODUCT_ID,
+			   		    A.CUSTOMER_ID,
+			   		    A.REFERENCE_FIELD,
+			   		    A.INVOICE_NO, 
+			   		    A.POSTING_DATE,
+			   		    A.CC_START_DATE_NEW,
+			   		    A.CC_END_DATE_NEW,
+			   		    A.GL_ACCOUNT     		        		   		        
+		   		  FROM :RAI_ORDR_INVC_NODE  A, 
+   		    	       (SELECT "HEADER_ID","ZZ_BATCH_ID" 
+   		    	          FROM "RAI_MOBILITY"."IFRS_R1.MOBILITY.RAI_MOBILITY::MOBL_PREPAID_INVC_MAIN"
+   		    	         WHERE "HEADER_ID" =  CUR_INVC_PARENT."CC_HEADERID"
+   		    	           AND "ZZ_BATCH_ID" = LV_BATCH_ID) B 
+		          WHERE B."HEADER_ID" = A."CC_HEADERID";
+			   		             
+	        INSERT INTO	#UPDATE_EH_DELETION_ORDR_MAIN_INVC(SRCDOC_ID) 
+	        	 SELECT "SRCDOC_ID" 
+	        	   FROM "RAI_MOBILITY"."IFRS_R1.MOBILITY.RAI_MOBILITY::MOBL_PREPAID_INVC_MAIN"
+				  WHERE "HEADER_ID" = CUR_INVC_PARENT."CC_HEADERID"
+				    AND "ZZ_BATCH_ID" = LV_BATCH_ID;
+			   		
+			INSERT INTO	 #UPDATE_EH_DELETION_ORDR_COND_INVC (SRCDOC_ID)				
+			     SELECT COND."SRCDOC_ID" 
+			       FROM  "RAI_MOBILITY"."IFRS_R1.MOBILITY.RAI_MOBILITY::MOBL_PREPAID_INVC_COND" COND,
+	                	(SELECT "SRCDOC_ID" 
+	                	   FROM "RAI_MOBILITY"."IFRS_R1.MOBILITY.RAI_MOBILITY::MOBL_PREPAID_INVC_MAIN"
+					  	  WHERE "HEADER_ID" = CUR_INVC_PARENT."CC_HEADERID"
+					  	    AND "ZZ_BATCH_ID" = LV_BATCH_ID) MAIN 
+				  WHERE MAIN."SRCDOC_ID"=COND."SRCDOC_ID";
+				 				
+	
+	--      for Updating the deleted flag in corresponding Error Tables records
+				   		      
+			INSERT INTO	#UPDATE_EH_DELETION_ORDR_MAIN(SRCDOC_ID) 
+				 SELECT "SRCDOC_ID" 
+				   FROM "RAI_MOBILITY"."IFRS_R1.MOBILITY.RAI_MOBILITY::MOBL_PREPAID_ORDR_MAIN"
+				  WHERE "HEADER_ID" = CUR_INVC_PARENT."CC_HEADERID"
+				    AND "ZZ_BATCH_ID" = LV_BATCH_ID;
+			   		
+			INSERT INTO	#UPDATE_EH_DELETION_ORDR_COND(SRCDOC_ID) 
+				 SELECT COND."SRCDOC_ID" 
+				   FROM "RAI_MOBILITY"."IFRS_R1.MOBILITY.RAI_MOBILITY::MOBL_PREPAID_ORDR_COND" COND,
+	                	(SELECT "SRCDOC_ID" 
+	                	   FROM "RAI_MOBILITY"."IFRS_R1.MOBILITY.RAI_MOBILITY::MOBL_PREPAID_ORDR_MAIN" 
+					  	  WHERE "HEADER_ID" = CUR_INVC_PARENT."CC_HEADERID") MAIN 
+				  WHERE MAIN."SRCDOC_ID"=COND."SRCDOC_ID";
+							          												 		   		        		   	   
+		END IF;
+	
+	END FOR;		    
+		 
+--  Update Order Main Error Table
+
+    UPDATE "RAI_MOBILITY"."IFRS_R1.MOBILITY.RAI_MOBILITY::MOBL_PREPAID_ORDR_MAIN_EH" A
+   	  FROM "RAI_MOBILITY"."IFRS_R1.MOBILITY.RAI_MOBILITY::MOBL_PREPAID_ORDR_MAIN_EH" A
+	 INNER JOIN #UPDATE_EH_DELETION_ORDR_MAIN B
+	    ON A.SRCDOC_ID=B.SRCDOC_ID
+	   SET (DELETE_DATE, DELETED) = (CURRENT_DATE, 1); 
+
+--  Update Order Cond Error Table
+
+    UPDATE "RAI_MOBILITY"."IFRS_R1.MOBILITY.RAI_MOBILITY::MOBL_PREPAID_ORDR_COND_EH" A
+      FROM "RAI_MOBILITY"."IFRS_R1.MOBILITY.RAI_MOBILITY::MOBL_PREPAID_ORDR_COND_EH" A
+	 INNER JOIN #UPDATE_EH_DELETION_ORDR_COND B
+	    ON A.SRCDOC_ID=B.SRCDOC_ID
+	   SET (DELETE_DATE, DELETED) = (CURRENT_DATE, 1);
+			
+		  
+	--------------------------------------------------------------------------------------------------
+	-- Update NDB Tables
+	-------------------------------------------------------------------------------------------------- 
+			
+	--  Updating the Source document Id, Reference Id, Header Id, RAI Item ID,Batch id 
+	--  and RAI Timestamp in NDB INVOICE table for M2M Contracts
+--Monthly,Handset,Sim	
+	UPDATE "NDB_MOBILITY"."IFRS_R1.MOBILITY.NDB_MOBILITY::PPD_BILLING" A
+	  FROM "NDB_MOBILITY"."IFRS_R1.MOBILITY.NDB_MOBILITY::PPD_BILLING" A
+     INNER JOIN #UPDATE_INVC B
+	    ON A."PRODUCT_ID"      	= B."PRODUCT_ID"
+       AND A."CUSTOMER_ID"      = B."CUSTOMER_ID"
+       AND A."REFERENCE_FIELD"  = B."REFERENCE_FIELD"
+       AND A.INVOICE_NO         = B."INVOICE_NO"
+       AND A.POSTING_DATE       = B."POSTING_DATE" 
+	   SET "SRCDOC_ID"     = B."SRCDOC_ID",
+		   "REFERENCE_ID"  = B."REFERENCE_ID",			
+		   "HEADER_ID"     = B."HEADER_ID",			
+		   "RAI_ITEM_ID"   = B."RAI_ITEM_ID",
+		   "BATCH_ID"      = B."BATCH_ID",			
+		   "RAI_TS"        = LV_CUR_UTC
+	 WHERE A."RAI_TS" IS NULL
+	 AND (A.TERM_INDICATOR = 'MONTH'
+	  OR  A.HANDSET_FLAG = 'H' OR A.ORDER_TYPE = 'Service Activation' or 
+	  A.PRODUCT_ID LIKE '10-S%');
+
+--Daily 
+	UPDATE "NDB_MOBILITY"."IFRS_R1.MOBILITY.NDB_MOBILITY::PPD_BILLING" A
+	  FROM "NDB_MOBILITY"."IFRS_R1.MOBILITY.NDB_MOBILITY::PPD_BILLING" A
+     INNER JOIN #UPDATE_INVC B
+	    ON A."MDN"      	  = B."MDN"
+       AND A."PRODUCT_ID"     = B."PRODUCT_ID"
+       AND A."CUSTOMER_ID"    = B."CUSTOMER_ID"
+       AND A."GL_ACCOUNT"     = B."GL_ACCOUNT"
+	   SET "SRCDOC_ID"        = B."SRCDOC_ID",
+		   "REFERENCE_ID"     = B."REFERENCE_ID",			
+		   "HEADER_ID"        = B."HEADER_ID",			
+		   "RAI_ITEM_ID"      = B."RAI_ITEM_ID",
+		   "BATCH_ID"         = B."BATCH_ID",			
+		   "RAI_TS"           = LV_CUR_UTC 
+	 WHERE A."RAI_TS" IS NULL
+	   AND A."POSTING_DATE" 
+   BETWEEN B."START_DATE" AND B."END_DATE"
+   AND (A.TERM_INDICATOR = 'DAILY' OR A."TERM_INDICATOR" = 'PPU');
+
+
+--Accessories
+	UPDATE "NDB_MOBILITY"."IFRS_R1.MOBILITY.NDB_MOBILITY::PPD_BILLING" A
+	  FROM "NDB_MOBILITY"."IFRS_R1.MOBILITY.NDB_MOBILITY::PPD_BILLING" A
+     INNER JOIN #UPDATE_INVC B
+	    ON A."MDN"      	  = B."MDN"
+       AND A."PRODUCT_ID"     = B."PRODUCT_ID"
+       AND A."CUSTOMER_ID"    = B."CUSTOMER_ID"
+       AND A."POSTING_DATE"   = B."POSTING_DATE" 
+       AND A.GL_ACCOUNT       = B."GL_ACCOUNT"       
+	   SET "SRCDOC_ID"        = B."SRCDOC_ID",
+		   "REFERENCE_ID"     = B."REFERENCE_ID",			
+		   "HEADER_ID"        = B."HEADER_ID",			
+		   "RAI_ITEM_ID"      = B."RAI_ITEM_ID",
+		   "BATCH_ID"         = B."BATCH_ID",			
+		   "RAI_TS"           = LV_CUR_UTC
+	 WHERE A."RAI_TS" IS NULL
+	 AND A.HANDSET_FLAG = 'A';								
+																	 
+	--  Update INVOICE Main Error Table
+	
+	UPDATE "RAI_MOBILITY"."IFRS_R1.MOBILITY.RAI_MOBILITY::MOBL_PREPAID_INVC_MAIN_EH" A
+	  FROM "RAI_MOBILITY"."IFRS_R1.MOBILITY.RAI_MOBILITY::MOBL_PREPAID_INVC_MAIN_EH" A
+	 INNER JOIN #UPDATE_EH_DELETION_ORDR_MAIN_INVC B
+	    ON A.SRCDOC_ID=B.SRCDOC_ID
+	   SET (DELETE_DATE, DELETED) = (CURRENT_DATE, 1); 
+
+	--  Update Order Cond Error Table
+	
+	UPDATE "RAI_MOBILITY"."IFRS_R1.MOBILITY.RAI_MOBILITY::MOBL_PREPAID_INVC_COND_EH" A
+	  FROM "RAI_MOBILITY"."IFRS_R1.MOBILITY.RAI_MOBILITY::MOBL_PREPAID_INVC_COND_EH" A
+	 INNER JOIN #UPDATE_EH_DELETION_ORDR_COND_INVC B
+		ON A.SRCDOC_ID=B.SRCDOC_ID
+	   SET (DELETE_DATE, DELETED) = (CURRENT_DATE, 1);									           
+	
+	-------------------------------------------------------------------------------------------------
+	--  Set Overall Status
+	-------------------------------------------------------------------------------------------------- 
+	
+	--  STATUS 0: Send the success message to scheduling tool to confirm this procedure has been
+	--  executed successfully
+	    IF(LV_ERROR_FLAG = 'Y') THEN		
+	
+	     OP_STATUS := LC_ERROR_TEXT; 
+				
+	    ELSE
+	
+	  	 OP_STATUS := LC_SUCCESS_TEXT; 	
+					
+		END IF;	
+	END;
+END;       

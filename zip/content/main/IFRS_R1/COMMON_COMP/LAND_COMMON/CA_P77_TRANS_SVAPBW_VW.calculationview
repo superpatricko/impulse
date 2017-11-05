@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:AccessControl="http://www.sap.com/ndb/SQLCoreModelAccessControl.ecore" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" xmlns:Variable="http://www.sap.com/ndb/BiModelVariable.ecore" schemaVersion="2.3" id="CA_P77_TRANS_SVAPBW_VW" applyPrivilegeType="ANALYTIC_PRIVILEGE" checkAnalyticPrivileges="true" defaultClient="$$client$$" defaultLanguage="$$language$$" hierarchiesSQLEnabled="false" translationRelevant="true" visibility="internal" calculationScenarioType="TREE_BASED" dataCategory="DIMENSION" enforceSqlExecution="false" executionSemantic="UNDEFINED" outputViewType="Projection">
+  <descriptions defaultDescription="CA_P77_TRANS_SVAPBW_VW"/>
+  <localVariables>
+    <variable id="IP_CYCL_ID" parameter="true">
+      <descriptions defaultDescription="IP_CYCL_ID"/>
+      <variableProperties datatype="NVARCHAR" defaultValue="C99" length="3" mandatory="false">
+        <valueDomain type="empty"/>
+        <selection multiLine="false" type="SingleValue"/>
+      </variableProperties>
+    </variable>
+    <variable id="IP_JOB_ID" parameter="true">
+      <descriptions defaultDescription="IP_JOB_ID"/>
+      <variableProperties datatype="NVARCHAR" length="20" mandatory="false">
+        <valueDomain type="empty"/>
+        <selection multiLine="true" type="SingleValue"/>
+      </variableProperties>
+    </variable>
+  </localVariables>
+  <variableMappings>
+    <mapping xsi:type="Variable:VariableMapping" dataSource="#CA_EH_ERROR_TABLE_MULTI_JOBS">
+      <targetVariable name="IP_JOB_ID" resourceUri="/IFRS_R1.LAND.EH/calculationviews/CA_EH_ERROR_TABLE_MULTI_JOBS"/>
+      <localVariable>#IP_JOB_ID</localVariable>
+    </mapping>
+  </variableMappings>
+  <informationModelLayout relativeWidthScenario="50"/>
+  <dataSources>
+    <DataSource id="IFRS_R1.LAND::P77_TRANS_SVAPBW" type="DATA_BASE_TABLE">
+      <viewAttributes allViewAttributes="true"/>
+      <columnObject schemaName="LAND" columnObjectName="IFRS_R1.LAND::P77_TRANS_SVAPBW"/>
+    </DataSource>
+    <DataSource id="CA_EH_ERROR_TABLE_MULTI_JOBS" type="CALCULATION_VIEW">
+      <viewAttributes allViewAttributes="true"/>
+      <resourceUri>/IFRS_R1.LAND.EH/calculationviews/CA_EH_ERROR_TABLE_MULTI_JOBS</resourceUri>
+    </DataSource>
+  </dataSources>
+  <calculationViews>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_TRANS_SVAPBW" filterExpressionLanguage="COLUMN_ENGINE">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="GLBL_UNQ_ID"/>
+        <viewAttribute id="DVC_SER_NUM"/>
+        <viewAttribute id="JRNL_DT"/>
+        <viewAttribute id="DELIVERY_DOC_NUM"/>
+        <viewAttribute id="DELIVERY_DOC_LN_ITEM"/>
+        <viewAttribute id="ACTIVATION_FLG"/>
+        <viewAttribute id="CYCL_ID"/>
+        <viewAttribute id="NDB_TS"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CC_VERSION_CHECK" length="50" expressionLanguage="COLUMN_ENGINE">
+          <formula>&quot;GLBL_UNQ_ID&quot;+&quot;DVC_SER_NUM&quot;</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#IFRS_R1.LAND::P77_TRANS_SVAPBW">
+        <mapping xsi:type="Calculation:AttributeMapping" target="GLBL_UNQ_ID" source="GLBL_UNQ_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DVC_SER_NUM" source="DVC_SER_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="JRNL_DT" source="JRNL_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DELIVERY_DOC_NUM" source="DELIVERY_DOC_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DELIVERY_DOC_LN_ITEM" source="DELIVERY_DOC_LN_ITEM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACTIVATION_FLG" source="ACTIVATION_FLG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NDB_TS" source="NDB_TS"/>
+      </input>
+      <filter>(isNull(&quot;NDB_TS&quot;)) AND (&quot;CYCL_ID&quot;&lt;='$$IP_CYCL_ID$$')</filter>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PRO_ERR_TABLE">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="PARENT_KEY"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#CA_EH_ERROR_TABLE_MULTI_JOBS">
+        <mapping xsi:type="Calculation:AttributeMapping" target="PARENT_KEY" source="PARENT_KEY"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="JOIN_SVA_BW" joinOrder="OUTSIDE_IN" joinType="leftOuter">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="GLBL_UNQ_ID"/>
+        <viewAttribute id="DVC_SER_NUM"/>
+        <viewAttribute id="JRNL_DT"/>
+        <viewAttribute id="DELIVERY_DOC_NUM"/>
+        <viewAttribute id="DELIVERY_DOC_LN_ITEM"/>
+        <viewAttribute id="ACTIVATION_FLG"/>
+        <viewAttribute id="CYCL_ID"/>
+        <viewAttribute id="NDB_TS"/>
+        <viewAttribute id="CC_VERSION_CHECK"/>
+        <viewAttribute id="PARENT_KEY_ERROR"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#PROJ_TRANS_SVAPBW">
+        <mapping xsi:type="Calculation:AttributeMapping" target="GLBL_UNQ_ID" source="GLBL_UNQ_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DVC_SER_NUM" source="DVC_SER_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="JRNL_DT" source="JRNL_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DELIVERY_DOC_NUM" source="DELIVERY_DOC_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DELIVERY_DOC_LN_ITEM" source="DELIVERY_DOC_LN_ITEM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACTIVATION_FLG" source="ACTIVATION_FLG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NDB_TS" source="NDB_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_VERSION_CHECK" source="CC_VERSION_CHECK"/>
+      </input>
+      <input node="#PRO_ERR_TABLE">
+        <mapping xsi:type="Calculation:AttributeMapping" target="PARENT_KEY_ERROR" source="PARENT_KEY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_VERSION_CHECK" source="PARENT_KEY"/>
+      </input>
+      <joinAttribute name="CC_VERSION_CHECK"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_TRANS_SVABW_P77">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="GLBL_UNQ_ID"/>
+        <viewAttribute id="DVC_SER_NUM"/>
+        <viewAttribute id="JRNL_DT"/>
+        <viewAttribute id="DELIVERY_DOC_NUM"/>
+        <viewAttribute id="DELIVERY_DOC_LN_ITEM"/>
+        <viewAttribute id="ACTIVATION_FLG"/>
+        <viewAttribute id="CYCL_ID"/>
+        <viewAttribute id="NDB_TS"/>
+        <viewAttribute id="CC_VERSION_CHECK"/>
+        <viewAttribute id="PARENT_KEY_ERROR">
+          <filter xsi:type="AccessControl:SingleValueFilter" operator="NL" including="true"/>
+        </viewAttribute>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#JOIN_SVA_BW">
+        <mapping xsi:type="Calculation:AttributeMapping" target="GLBL_UNQ_ID" source="GLBL_UNQ_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DVC_SER_NUM" source="DVC_SER_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="JRNL_DT" source="JRNL_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DELIVERY_DOC_NUM" source="DELIVERY_DOC_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DELIVERY_DOC_LN_ITEM" source="DELIVERY_DOC_LN_ITEM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACTIVATION_FLG" source="ACTIVATION_FLG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NDB_TS" source="NDB_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_VERSION_CHECK" source="CC_VERSION_CHECK"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PARENT_KEY_ERROR" source="PARENT_KEY_ERROR"/>
+      </input>
+    </calculationView>
+  </calculationViews>
+  <logicalModel id="PROJ_TRANS_SVABW_P77">
+    <descriptions/>
+    <attributes>
+      <attribute id="GLBL_UNQ_ID" order="1" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="GLBL_UNQ_ID"/>
+        <keyMapping columnObjectName="PROJ_TRANS_SVABW_P77" columnName="GLBL_UNQ_ID"/>
+      </attribute>
+      <attribute id="DVC_SER_NUM" order="2" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="DVC_SER_NUM"/>
+        <keyMapping columnObjectName="PROJ_TRANS_SVABW_P77" columnName="DVC_SER_NUM"/>
+      </attribute>
+      <attribute id="JRNL_DT" order="3" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="JRNL_DT"/>
+        <keyMapping columnObjectName="PROJ_TRANS_SVABW_P77" columnName="JRNL_DT"/>
+      </attribute>
+      <attribute id="DELIVERY_DOC_NUM" order="4" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="DELIVERY_DOC_NUM"/>
+        <keyMapping columnObjectName="PROJ_TRANS_SVABW_P77" columnName="DELIVERY_DOC_NUM"/>
+      </attribute>
+      <attribute id="DELIVERY_DOC_LN_ITEM" order="5" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="DELIVERY_DOC_LN_ITEM"/>
+        <keyMapping columnObjectName="PROJ_TRANS_SVABW_P77" columnName="DELIVERY_DOC_LN_ITEM"/>
+      </attribute>
+      <attribute id="ACTIVATION_FLG" order="6" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ACTIVATION_FLG"/>
+        <keyMapping columnObjectName="PROJ_TRANS_SVABW_P77" columnName="ACTIVATION_FLG"/>
+      </attribute>
+      <attribute id="CYCLE_NUM" order="7" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CYCLE_NUM"/>
+        <keyMapping columnObjectName="PROJ_TRANS_SVABW_P77" columnName="CYCL_ID"/>
+      </attribute>
+      <attribute id="NDB_TS" order="8" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="NDB_TS"/>
+        <keyMapping columnObjectName="PROJ_TRANS_SVABW_P77" columnName="NDB_TS"/>
+      </attribute>
+      <attribute id="CC_VERSION_CHECK" order="9" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CC_VERSION_CHECK"/>
+        <keyMapping columnObjectName="PROJ_TRANS_SVABW_P77" columnName="CC_VERSION_CHECK"/>
+      </attribute>
+    </attributes>
+    <calculatedAttributes/>
+    <privateDataFoundation>
+      <tableProxies/>
+      <joins/>
+      <layout>
+        <shapes/>
+      </layout>
+    </privateDataFoundation>
+    <baseMeasures/>
+    <calculatedMeasures/>
+    <restrictedMeasures/>
+    <localDimensions/>
+  </logicalModel>
+  <layout>
+    <shapes>
+      <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+        <upperLeftCorner x="99" y="87"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_TRANS_SVAPBW" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="22" y="339"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PRO_ERR_TABLE" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="176" y="339"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="JOIN_SVA_BW" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="99" y="243"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_TRANS_SVABW_P77" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="99" y="165"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+    </shapes>
+  </layout>
+</Calculation:scenario>

@@ -1,0 +1,1314 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:AccessControl="http://www.sap.com/ndb/SQLCoreModelAccessControl.ecore" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" xmlns:Variable="http://www.sap.com/ndb/BiModelVariable.ecore" schemaVersion="2.3" id="CA_HP_ORDR_ZLOGIC" applyPrivilegeType="NONE" checkAnalyticPrivileges="false" defaultClient="$$client$$" defaultLanguage="$$language$$" hierarchiesSQLEnabled="false" historyEnabled="false" translationRelevant="true" visibility="internal" calculationScenarioType="TREE_BASED" dataCategory="DIMENSION" enforceSqlExecution="false" executionSemantic="UNDEFINED" outputViewType="Projection">
+  <descriptions defaultDescription="CA_HP_ORDR_ZLOGIC"/>
+  <localVariables>
+    <variable id="IP_BILL_DAY" parameter="true">
+      <descriptions defaultDescription="IP_BILL_DAY"/>
+      <variableProperties datatype="DATE" defaultValue="" mandatory="false">
+        <valueDomain type="empty"/>
+        <selection multiLine="false" type="SingleValue"/>
+      </variableProperties>
+    </variable>
+  </localVariables>
+  <variableMappings>
+    <mapping xsi:type="Variable:VariableMapping" dataSource="#CA_HP_ORDR_BASE_FILTER">
+      <targetVariable name="IP_BILL_DAY" resourceUri="/IFRS_R1.HP.RAI_HP/calculationviews/CA_HP_ORDR_BASE_FILTER"/>
+      <localVariable>#IP_BILL_DAY</localVariable>
+    </mapping>
+  </variableMappings>
+  <informationModelLayout relativeWidthScenario="46"/>
+  <dataSources>
+    <DataSource id="IFRS_R1.HP.NDB_HP::HP_CUSTOMER" type="DATA_BASE_TABLE">
+      <viewAttributes allViewAttributes="true"/>
+      <columnObject schemaName="NDB_HP" columnObjectName="IFRS_R1.HP.NDB_HP::HP_CUSTOMER"/>
+    </DataSource>
+    <DataSource id="CA_HP_ORDR_BASE_FILTER" type="CALCULATION_VIEW">
+      <viewAttributes allViewAttributes="true"/>
+      <resourceUri>/IFRS_R1.HP.RAI_HP/calculationviews/CA_HP_ORDR_BASE_FILTER</resourceUri>
+    </DataSource>
+    <DataSource id="ZCONVACCT" type="DATA_BASE_TABLE">
+      <viewAttributes allViewAttributes="true"/>
+      <columnObject schemaName="SDA" columnObjectName="ZCONVACCT"/>
+    </DataSource>
+    <DataSource id="ZACCT" type="DATA_BASE_TABLE">
+      <viewAttributes allViewAttributes="true"/>
+      <columnObject schemaName="SDA" columnObjectName="ZACCT"/>
+    </DataSource>
+  </dataSources>
+  <calculationViews>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_HP_CUSTOMER">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="PRIMARY_TELEPHONE_NUMBER"/>
+        <viewAttribute id="CUSTOMER_SEG_TYP_CD"/>
+        <viewAttribute id="CUSTOMER_LOCATION_ID"/>
+        <viewAttribute id="SYSTEM_REGION"/>
+        <viewAttribute id="CONTRACT_UNIQUE_IDENTIFIER"/>
+        <viewAttribute id="SUBSCRIBER_NUMBER"/>
+        <viewAttribute id="SUBSCRIBER_ACTION"/>
+        <viewAttribute id="REF_EXPIRY_DATE">
+          <filter xsi:type="AccessControl:SingleValueFilter" including="true" value="99991231"/>
+        </viewAttribute>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#IFRS_R1.HP.NDB_HP::HP_CUSTOMER">
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRIMARY_TELEPHONE_NUMBER" source="PRIMARY_TELEPHONE_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_SEG_TYP_CD" source="CUSTOMER_SEG_TYP_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_LOCATION_ID" source="CUSTOMER_LOCATION_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SYSTEM_REGION" source="SYSTEM_REGION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTRACT_UNIQUE_IDENTIFIER" source="CONTRACT_UNIQUE_IDENTIFIER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBSCRIBER_NUMBER" source="SUBSCRIBER_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBSCRIBER_ACTION" source="SUBSCRIBER_ACTION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REF_EXPIRY_DATE" source="REF_EXPIRY_DATE"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_HP_ORDR_BASE_FILTER">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="PRIMARY_TELEPHONE_NUMBER"/>
+        <viewAttribute id="WORKING_TELEPHONE_NUMBER"/>
+        <viewAttribute id="ITEM_CODE"/>
+        <viewAttribute id="RAC_CODE"/>
+        <viewAttribute id="INSERT_TS"/>
+        <viewAttribute id="SOURCE_SYSTEM_CODE"/>
+        <viewAttribute id="ITEM_TYPE"/>
+        <viewAttribute id="IS_30200101"/>
+        <viewAttribute id="IS_30200102"/>
+        <viewAttribute id="IS_30200103"/>
+        <viewAttribute id="IS_30200201"/>
+        <viewAttribute id="IS_30200202"/>
+        <viewAttribute id="IS_30200203"/>
+        <viewAttribute id="IS_30200204"/>
+        <viewAttribute id="CONTRACT_UNIQUE_IDENTIFIER"/>
+        <viewAttribute id="POB_END_DATE"/>
+        <viewAttribute id="SUBSCRIBER_NUMBER"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#CA_HP_ORDR_BASE_FILTER">
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRIMARY_TELEPHONE_NUMBER" source="PRIMARY_TELEPHONE_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WORKING_TELEPHONE_NUMBER" source="WORKING_TELEPHONE_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_CODE" source="ITEM_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RAC_CODE" source="RAC_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INSERT_TS" source="INSERT_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SOURCE_SYSTEM_CODE" source="SOURCE_SYSTEM_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_TYPE" source="ITEM_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30200101" source="IS_30200101"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30200102" source="IS_30200102"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30200103" source="IS_30200103"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30200201" source="IS_30200201"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30200202" source="IS_30200202"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30200203" source="IS_30200203"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30200204" source="IS_30200204"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTRACT_UNIQUE_IDENTIFIER" source="CONTRACT_UNIQUE_IDENTIFIER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="POB_END_DATE" source="POB_END_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBSCRIBER_NUMBER" source="SUBSCRIBER_NUMBER"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="JOIN_ORDER_CUSTOMER" joinType="leftOuter">
+      <descriptions>
+        <comment text="Value error on CUSTOMER_LOCATION_ID  will be raised as 30200301.&#xD;&#xA;Value error on CUSTOMER_SEG_TYP_CD will be raised as 30200302.&#xD;&#xA;Join errors will be raised as 30200303."/>
+      </descriptions>
+      <viewAttributes>
+        <viewAttribute id="PRIMARY_TELEPHONE_NUMBER_RIGHT"/>
+        <viewAttribute id="CUSTOMER_SEG_TYP_CD"/>
+        <viewAttribute id="CUSTOMER_LOCATION_ID"/>
+        <viewAttribute id="SYSTEM_REGION"/>
+        <viewAttribute id="PRIMARY_TELEPHONE_NUMBER"/>
+        <viewAttribute id="WORKING_TELEPHONE_NUMBER"/>
+        <viewAttribute id="ITEM_CODE"/>
+        <viewAttribute id="RAC_CODE"/>
+        <viewAttribute id="INSERT_TS"/>
+        <viewAttribute id="SOURCE_SYSTEM_CODE"/>
+        <viewAttribute id="ITEM_TYPE"/>
+        <viewAttribute id="IS_30200101"/>
+        <viewAttribute id="IS_30200102"/>
+        <viewAttribute id="IS_30200103"/>
+        <viewAttribute id="IS_30200201"/>
+        <viewAttribute id="IS_30200202"/>
+        <viewAttribute id="IS_30200203"/>
+        <viewAttribute id="IS_30200204"/>
+        <viewAttribute id="CONTRACT_UNIQUE_IDENTIFIER"/>
+        <viewAttribute id="POB_END_DATE"/>
+        <viewAttribute hidden="true" id="JOIN$SUBSCRIBER_NUMBER$SUBSCRIBER_NUMBER"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="IS_30200301" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>if((isNull(&quot;CUSTOMER_LOCATION_ID&quot;) or (not in (&quot;CUSTOMER_LOCATION_ID&quot; ,'ON', 'QC'))),'1','0')&#xD;
+&#xD;
+&#xD;
+&#xD;
+</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="IS_30200302" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isNull(&quot;CUSTOMER_LOCATION_ID&quot;) or (&quot;CUSTOMER_LOCATION_ID&quot;= 'ON' and (&#xD;
+isNull(&quot;CUSTOMER_SEG_TYP_CD&quot;) or (not in (&quot;CUSTOMER_SEG_TYP_CD&quot; ,'RESIDENTIAL','BUSINESS'))&#xD;
+)),'1','0')</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="IS_30200303" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isNull(&quot;PRIMARY_TELEPHONE_NUMBER_RIGHT&quot;),'1','0')</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#PROJ_HP_ORDR_BASE_FILTER">
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRIMARY_TELEPHONE_NUMBER" source="PRIMARY_TELEPHONE_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WORKING_TELEPHONE_NUMBER" source="WORKING_TELEPHONE_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_CODE" source="ITEM_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RAC_CODE" source="RAC_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INSERT_TS" source="INSERT_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SOURCE_SYSTEM_CODE" source="SOURCE_SYSTEM_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_TYPE" source="ITEM_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30200101" source="IS_30200101"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30200102" source="IS_30200102"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30200103" source="IS_30200103"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30200201" source="IS_30200201"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30200202" source="IS_30200202"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30200203" source="IS_30200203"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30200204" source="IS_30200204"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTRACT_UNIQUE_IDENTIFIER" source="CONTRACT_UNIQUE_IDENTIFIER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="POB_END_DATE" source="POB_END_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$SUBSCRIBER_NUMBER$SUBSCRIBER_NUMBER" source="SUBSCRIBER_NUMBER"/>
+      </input>
+      <input node="#PROJ_HP_CUSTOMER">
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRIMARY_TELEPHONE_NUMBER_RIGHT" source="PRIMARY_TELEPHONE_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_SEG_TYP_CD" source="CUSTOMER_SEG_TYP_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_LOCATION_ID" source="CUSTOMER_LOCATION_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SYSTEM_REGION" source="SYSTEM_REGION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$SUBSCRIBER_NUMBER$SUBSCRIBER_NUMBER" source="SUBSCRIBER_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTRACT_UNIQUE_IDENTIFIER" source="CONTRACT_UNIQUE_IDENTIFIER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRIMARY_TELEPHONE_NUMBER" source="PRIMARY_TELEPHONE_NUMBER"/>
+      </input>
+      <joinAttribute name="JOIN$SUBSCRIBER_NUMBER$SUBSCRIBER_NUMBER"/>
+      <joinAttribute name="CONTRACT_UNIQUE_IDENTIFIER"/>
+      <joinAttribute name="PRIMARY_TELEPHONE_NUMBER"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_ZFIELDS_CALC">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="CUSTOMER_SEG_TYP_CD"/>
+        <viewAttribute id="CUSTOMER_LOCATION_ID"/>
+        <viewAttribute id="SYSTEM_REGION"/>
+        <viewAttribute id="PRIMARY_TELEPHONE_NUMBER"/>
+        <viewAttribute id="WORKING_TELEPHONE_NUMBER"/>
+        <viewAttribute id="ITEM_CODE"/>
+        <viewAttribute id="RAC_CODE"/>
+        <viewAttribute id="INSERT_TS"/>
+        <viewAttribute id="SOURCE_SYSTEM_CODE"/>
+        <viewAttribute id="ITEM_TYPE"/>
+        <viewAttribute id="IS_30200301"/>
+        <viewAttribute id="IS_30200302"/>
+        <viewAttribute id="IS_30200303"/>
+        <viewAttribute id="IS_30200101"/>
+        <viewAttribute id="IS_30200102"/>
+        <viewAttribute id="IS_30200103"/>
+        <viewAttribute id="IS_30200201"/>
+        <viewAttribute id="IS_30200202"/>
+        <viewAttribute id="IS_30200203"/>
+        <viewAttribute id="IS_30200204"/>
+        <viewAttribute id="CONTRACT_UNIQUE_IDENTIFIER"/>
+        <viewAttribute id="POB_END_DATE"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="DATE" id="CC_ZZ_BLDAT" expressionLanguage="COLUMN_ENGINE">
+          <formula>NULL</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="DATE" id="CC_ZZ_BUDAT" expressionLanguage="COLUMN_ENGINE">
+          <formula>NULL</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CC_ZZ_BURKS" length="4" expressionLanguage="COLUMN_ENGINE">
+          <formula>'1000'</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CC_ZZ_VBUND" length="10" expressionLanguage="COLUMN_ENGINE">
+          <formula>NULL</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CC_ZZ_XBLNR" length="10" expressionLanguage="COLUMN_ENGINE">
+          <formula>NULL</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CC_ZZ_MWSKZ" length="10" expressionLanguage="COLUMN_ENGINE">
+          <formula>NULL</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CC_ZZ_TXJCD" length="10" expressionLanguage="COLUMN_ENGINE">
+          <formula>NULL</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CC_ZZ_AUFNR" length="10" expressionLanguage="COLUMN_ENGINE">
+          <formula>NULL</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CC_ZZ_SGTXT" length="15" expressionLanguage="COLUMN_ENGINE">
+          <formula>&quot;RAC_CODE&quot;+ '' + &quot;CUSTOMER_LOCATION_ID&quot;</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CC_ZZ_BKTXT" length="20" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(&quot;CUSTOMER_LOCATION_ID&quot;= 'ON',(&#xD;
+if(&quot;CUSTOMER_SEG_TYP_CD&quot;='RESIDENTIAL','CBSB2B'+' '+format(&quot;INSERT_TS&quot;,'YYYYMMDD')+' ',&#xD;
+if(&quot;CUSTOMER_SEG_TYP_CD&quot;='BUSINESS','CBSB2A'+' '+format(&quot;INSERT_TS&quot;,'YYYYMMDD')+' ',''))&#xD;
+),&#xD;
+if(&quot;CUSTOMER_LOCATION_ID&quot;='QC','CBSB2C'+' '+format(&quot;INSERT_TS&quot;,'YYYYMMDD')+' ',''))</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CC_ZZ_KOSTL" length="10" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(&quot;CUSTOMER_LOCATION_ID&quot;='ON','10009','10053')</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CC_ZZ_ZUONR" length="10" expressionLanguage="COLUMN_ENGINE">
+          <formula>'RRCBSS'</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CC_ZZ_LEGACY" length="14" expressionLanguage="COLUMN_ENGINE">
+          <formula>if((strlen(&quot;RAC_CODE&quot;)&lt;7),rpad(&quot;RAC_CODE&quot;, 7,'0'),&quot;RAC_CODE&quot;)</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#JOIN_ORDER_CUSTOMER">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_SEG_TYP_CD" source="CUSTOMER_SEG_TYP_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_LOCATION_ID" source="CUSTOMER_LOCATION_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SYSTEM_REGION" source="SYSTEM_REGION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRIMARY_TELEPHONE_NUMBER" source="PRIMARY_TELEPHONE_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WORKING_TELEPHONE_NUMBER" source="WORKING_TELEPHONE_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_CODE" source="ITEM_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RAC_CODE" source="RAC_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INSERT_TS" source="INSERT_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SOURCE_SYSTEM_CODE" source="SOURCE_SYSTEM_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_TYPE" source="ITEM_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30200301" source="IS_30200301"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30200302" source="IS_30200302"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30200303" source="IS_30200303"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30200101" source="IS_30200101"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30200102" source="IS_30200102"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30200103" source="IS_30200103"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30200201" source="IS_30200201"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30200202" source="IS_30200202"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30200203" source="IS_30200203"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30200204" source="IS_30200204"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTRACT_UNIQUE_IDENTIFIER" source="CONTRACT_UNIQUE_IDENTIFIER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="POB_END_DATE" source="POB_END_DATE"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_SDA_ZCONCACCT" filterExpressionLanguage="COLUMN_ENGINE">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="ZOLD_ACCT"/>
+        <viewAttribute id="ZNEW_ACCT"/>
+        <viewAttribute id="ZSOURCE_SYS"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#ZCONVACCT">
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZOLD_ACCT" source="ZOLD_ACCT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZNEW_ACCT" source="ZNEW_ACCT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZSOURCE_SYS" source="ZSOURCE_SYS"/>
+      </input>
+      <filter>(&quot;ZSOURCE_SYS&quot; ='CBSS')</filter>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="JOIN_ZFIELDS_ZCON" joinType="leftOuter">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="CC_ZZ_BLDAT"/>
+        <viewAttribute id="CC_ZZ_BUDAT"/>
+        <viewAttribute id="CC_ZZ_BURKS"/>
+        <viewAttribute id="CC_ZZ_VBUND"/>
+        <viewAttribute id="CC_ZZ_XBLNR"/>
+        <viewAttribute id="CC_ZZ_MWSKZ"/>
+        <viewAttribute id="CC_ZZ_TXJCD"/>
+        <viewAttribute id="CC_ZZ_AUFNR"/>
+        <viewAttribute id="CC_ZZ_SGTXT"/>
+        <viewAttribute id="CC_ZZ_BKTXT"/>
+        <viewAttribute id="CC_ZZ_KOSTL"/>
+        <viewAttribute id="CC_ZZ_ZUONR"/>
+        <viewAttribute id="CC_ZZ_LEGACY"/>
+        <viewAttribute id="CUSTOMER_SEG_TYP_CD"/>
+        <viewAttribute id="CUSTOMER_LOCATION_ID"/>
+        <viewAttribute id="SYSTEM_REGION"/>
+        <viewAttribute id="PRIMARY_TELEPHONE_NUMBER"/>
+        <viewAttribute id="WORKING_TELEPHONE_NUMBER"/>
+        <viewAttribute id="ITEM_CODE"/>
+        <viewAttribute id="RAC_CODE"/>
+        <viewAttribute id="INSERT_TS"/>
+        <viewAttribute id="SOURCE_SYSTEM_CODE"/>
+        <viewAttribute id="ITEM_TYPE"/>
+        <viewAttribute id="ZNEW_ACCT"/>
+        <viewAttribute id="IS_30200301"/>
+        <viewAttribute id="IS_30200302"/>
+        <viewAttribute id="IS_30200303"/>
+        <viewAttribute id="IS_30200101"/>
+        <viewAttribute id="IS_30200102"/>
+        <viewAttribute id="IS_30200103"/>
+        <viewAttribute id="IS_30200201"/>
+        <viewAttribute id="IS_30200202"/>
+        <viewAttribute id="IS_30200203"/>
+        <viewAttribute id="IS_30200204"/>
+        <viewAttribute id="CONTRACT_UNIQUE_IDENTIFIER"/>
+        <viewAttribute id="POB_END_DATE"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#PROJ_ZFIELDS_CALC">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_ZZ_BLDAT" source="CC_ZZ_BLDAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_ZZ_BUDAT" source="CC_ZZ_BUDAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_ZZ_BURKS" source="CC_ZZ_BURKS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_ZZ_VBUND" source="CC_ZZ_VBUND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_ZZ_XBLNR" source="CC_ZZ_XBLNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_ZZ_MWSKZ" source="CC_ZZ_MWSKZ"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_ZZ_TXJCD" source="CC_ZZ_TXJCD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_ZZ_AUFNR" source="CC_ZZ_AUFNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_ZZ_SGTXT" source="CC_ZZ_SGTXT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_ZZ_BKTXT" source="CC_ZZ_BKTXT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_ZZ_KOSTL" source="CC_ZZ_KOSTL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_ZZ_ZUONR" source="CC_ZZ_ZUONR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_ZZ_LEGACY" source="CC_ZZ_LEGACY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_SEG_TYP_CD" source="CUSTOMER_SEG_TYP_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_LOCATION_ID" source="CUSTOMER_LOCATION_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SYSTEM_REGION" source="SYSTEM_REGION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRIMARY_TELEPHONE_NUMBER" source="PRIMARY_TELEPHONE_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WORKING_TELEPHONE_NUMBER" source="WORKING_TELEPHONE_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_CODE" source="ITEM_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RAC_CODE" source="RAC_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INSERT_TS" source="INSERT_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SOURCE_SYSTEM_CODE" source="SOURCE_SYSTEM_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_TYPE" source="ITEM_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30200301" source="IS_30200301"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30200302" source="IS_30200302"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30200303" source="IS_30200303"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30200101" source="IS_30200101"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30200102" source="IS_30200102"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30200103" source="IS_30200103"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30200201" source="IS_30200201"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30200202" source="IS_30200202"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30200203" source="IS_30200203"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30200204" source="IS_30200204"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTRACT_UNIQUE_IDENTIFIER" source="CONTRACT_UNIQUE_IDENTIFIER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="POB_END_DATE" source="POB_END_DATE"/>
+      </input>
+      <input node="#PROJ_SDA_ZCONCACCT">
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZNEW_ACCT" source="ZNEW_ACCT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_ZZ_LEGACY" source="ZOLD_ACCT"/>
+      </input>
+      <joinAttribute name="CC_ZZ_LEGACY"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_ZNEW_ACCT_NULL" filterExpressionLanguage="COLUMN_ENGINE">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="CC_ZZ_BLDAT"/>
+        <viewAttribute id="CC_ZZ_BUDAT"/>
+        <viewAttribute id="CC_ZZ_BURKS"/>
+        <viewAttribute id="CC_ZZ_VBUND"/>
+        <viewAttribute id="CC_ZZ_XBLNR"/>
+        <viewAttribute id="CC_ZZ_MWSKZ"/>
+        <viewAttribute id="CC_ZZ_TXJCD"/>
+        <viewAttribute id="CC_ZZ_AUFNR"/>
+        <viewAttribute id="CC_ZZ_SGTXT"/>
+        <viewAttribute id="CC_ZZ_BKTXT"/>
+        <viewAttribute id="CC_ZZ_KOSTL"/>
+        <viewAttribute id="CC_ZZ_ZUONR"/>
+        <viewAttribute id="CC_ZZ_LEGACY"/>
+        <viewAttribute id="CUSTOMER_SEG_TYP_CD"/>
+        <viewAttribute id="CUSTOMER_LOCATION_ID"/>
+        <viewAttribute id="SYSTEM_REGION"/>
+        <viewAttribute id="PRIMARY_TELEPHONE_NUMBER"/>
+        <viewAttribute id="WORKING_TELEPHONE_NUMBER"/>
+        <viewAttribute id="ITEM_CODE"/>
+        <viewAttribute id="RAC_CODE"/>
+        <viewAttribute id="INSERT_TS"/>
+        <viewAttribute id="SOURCE_SYSTEM_CODE"/>
+        <viewAttribute id="ITEM_TYPE"/>
+        <viewAttribute id="ZNEW_ACCT"/>
+        <viewAttribute id="IS_30200301"/>
+        <viewAttribute id="IS_30200302"/>
+        <viewAttribute id="IS_30200303"/>
+        <viewAttribute id="IS_30200101"/>
+        <viewAttribute id="IS_30200102"/>
+        <viewAttribute id="IS_30200103"/>
+        <viewAttribute id="IS_30200201"/>
+        <viewAttribute id="IS_30200202"/>
+        <viewAttribute id="IS_30200203"/>
+        <viewAttribute id="IS_30200204"/>
+        <viewAttribute id="CONTRACT_UNIQUE_IDENTIFIER"/>
+        <viewAttribute id="POB_END_DATE"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#JOIN_ZFIELDS_ZCON">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_ZZ_BLDAT" source="CC_ZZ_BLDAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_ZZ_BUDAT" source="CC_ZZ_BUDAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_ZZ_BURKS" source="CC_ZZ_BURKS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_ZZ_VBUND" source="CC_ZZ_VBUND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_ZZ_XBLNR" source="CC_ZZ_XBLNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_ZZ_MWSKZ" source="CC_ZZ_MWSKZ"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_ZZ_TXJCD" source="CC_ZZ_TXJCD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_ZZ_AUFNR" source="CC_ZZ_AUFNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_ZZ_SGTXT" source="CC_ZZ_SGTXT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_ZZ_BKTXT" source="CC_ZZ_BKTXT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_ZZ_KOSTL" source="CC_ZZ_KOSTL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_ZZ_ZUONR" source="CC_ZZ_ZUONR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_ZZ_LEGACY" source="CC_ZZ_LEGACY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_SEG_TYP_CD" source="CUSTOMER_SEG_TYP_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_LOCATION_ID" source="CUSTOMER_LOCATION_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SYSTEM_REGION" source="SYSTEM_REGION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRIMARY_TELEPHONE_NUMBER" source="PRIMARY_TELEPHONE_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WORKING_TELEPHONE_NUMBER" source="WORKING_TELEPHONE_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_CODE" source="ITEM_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RAC_CODE" source="RAC_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INSERT_TS" source="INSERT_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SOURCE_SYSTEM_CODE" source="SOURCE_SYSTEM_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_TYPE" source="ITEM_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZNEW_ACCT" source="ZNEW_ACCT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30200301" source="IS_30200301"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30200302" source="IS_30200302"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30200303" source="IS_30200303"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30200101" source="IS_30200101"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30200102" source="IS_30200102"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30200103" source="IS_30200103"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30200201" source="IS_30200201"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30200202" source="IS_30200202"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30200203" source="IS_30200203"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30200204" source="IS_30200204"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTRACT_UNIQUE_IDENTIFIER" source="CONTRACT_UNIQUE_IDENTIFIER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="POB_END_DATE" source="POB_END_DATE"/>
+      </input>
+      <filter>isNull(&quot;ZNEW_ACCT&quot;)</filter>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_ZNEW_ACCT_NOT_NULL" filterExpressionLanguage="COLUMN_ENGINE">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="CC_ZZ_BLDAT"/>
+        <viewAttribute id="CC_ZZ_BUDAT"/>
+        <viewAttribute id="CC_ZZ_BURKS"/>
+        <viewAttribute id="CC_ZZ_VBUND"/>
+        <viewAttribute id="CC_ZZ_XBLNR"/>
+        <viewAttribute id="CC_ZZ_MWSKZ"/>
+        <viewAttribute id="CC_ZZ_TXJCD"/>
+        <viewAttribute id="CC_ZZ_AUFNR"/>
+        <viewAttribute id="CC_ZZ_SGTXT"/>
+        <viewAttribute id="CC_ZZ_BKTXT"/>
+        <viewAttribute id="CC_ZZ_KOSTL"/>
+        <viewAttribute id="CC_ZZ_ZUONR"/>
+        <viewAttribute id="CC_ZZ_LEGACY"/>
+        <viewAttribute id="CUSTOMER_SEG_TYP_CD"/>
+        <viewAttribute id="CUSTOMER_LOCATION_ID"/>
+        <viewAttribute id="SYSTEM_REGION"/>
+        <viewAttribute id="PRIMARY_TELEPHONE_NUMBER"/>
+        <viewAttribute id="RAC_CODE"/>
+        <viewAttribute id="INSERT_TS"/>
+        <viewAttribute id="SOURCE_SYSTEM_CODE"/>
+        <viewAttribute id="ITEM_TYPE"/>
+        <viewAttribute id="WORKING_TELEPHONE_NUMBER"/>
+        <viewAttribute id="ITEM_CODE"/>
+        <viewAttribute id="ZNEW_ACCT"/>
+        <viewAttribute id="IS_30200301"/>
+        <viewAttribute id="IS_30200302"/>
+        <viewAttribute id="IS_30200303"/>
+        <viewAttribute id="IS_30200101"/>
+        <viewAttribute id="IS_30200102"/>
+        <viewAttribute id="IS_30200103"/>
+        <viewAttribute id="IS_30200201"/>
+        <viewAttribute id="IS_30200202"/>
+        <viewAttribute id="IS_30200203"/>
+        <viewAttribute id="IS_30200204"/>
+        <viewAttribute id="CONTRACT_UNIQUE_IDENTIFIER"/>
+        <viewAttribute id="POB_END_DATE"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#JOIN_ZFIELDS_ZCON">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_ZZ_BLDAT" source="CC_ZZ_BLDAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_ZZ_BUDAT" source="CC_ZZ_BUDAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_ZZ_BURKS" source="CC_ZZ_BURKS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_ZZ_VBUND" source="CC_ZZ_VBUND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_ZZ_XBLNR" source="CC_ZZ_XBLNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_ZZ_MWSKZ" source="CC_ZZ_MWSKZ"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_ZZ_TXJCD" source="CC_ZZ_TXJCD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_ZZ_AUFNR" source="CC_ZZ_AUFNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_ZZ_SGTXT" source="CC_ZZ_SGTXT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_ZZ_BKTXT" source="CC_ZZ_BKTXT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_ZZ_KOSTL" source="CC_ZZ_KOSTL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_ZZ_ZUONR" source="CC_ZZ_ZUONR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_ZZ_LEGACY" source="CC_ZZ_LEGACY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_SEG_TYP_CD" source="CUSTOMER_SEG_TYP_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_LOCATION_ID" source="CUSTOMER_LOCATION_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SYSTEM_REGION" source="SYSTEM_REGION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRIMARY_TELEPHONE_NUMBER" source="PRIMARY_TELEPHONE_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RAC_CODE" source="RAC_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INSERT_TS" source="INSERT_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SOURCE_SYSTEM_CODE" source="SOURCE_SYSTEM_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_TYPE" source="ITEM_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WORKING_TELEPHONE_NUMBER" source="WORKING_TELEPHONE_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_CODE" source="ITEM_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZNEW_ACCT" source="ZNEW_ACCT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30200301" source="IS_30200301"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30200302" source="IS_30200302"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30200303" source="IS_30200303"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30200101" source="IS_30200101"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30200102" source="IS_30200102"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30200103" source="IS_30200103"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30200201" source="IS_30200201"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30200202" source="IS_30200202"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30200203" source="IS_30200203"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30200204" source="IS_30200204"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTRACT_UNIQUE_IDENTIFIER" source="CONTRACT_UNIQUE_IDENTIFIER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="POB_END_DATE" source="POB_END_DATE"/>
+      </input>
+      <filter>(not isNull(&quot;ZNEW_ACCT&quot;))</filter>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_SDA_ZACCT">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="OLDACCT"/>
+        <viewAttribute id="NEWACCT"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#ZACCT">
+        <mapping xsi:type="Calculation:AttributeMapping" target="OLDACCT" source="OLDACCT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NEWACCT" source="NEWACCT"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="JOIN_ZNEW_NULL_ZACC" joinType="leftOuter">
+      <descriptions>
+        <comment text="Value error on NEWACCT will be raised as 30200304.&#xD;&#xA;Join errors will be raised as 30200305."/>
+      </descriptions>
+      <viewAttributes>
+        <viewAttribute id="NEWACCT"/>
+        <viewAttribute id="OLDACCT_RIGHT"/>
+        <viewAttribute id="CC_ZZ_BLDAT"/>
+        <viewAttribute id="CC_ZZ_BUDAT"/>
+        <viewAttribute id="CC_ZZ_BURKS"/>
+        <viewAttribute id="CC_ZZ_VBUND"/>
+        <viewAttribute id="CC_ZZ_XBLNR"/>
+        <viewAttribute id="CC_ZZ_MWSKZ"/>
+        <viewAttribute id="CC_ZZ_TXJCD"/>
+        <viewAttribute id="CC_ZZ_AUFNR"/>
+        <viewAttribute id="CC_ZZ_SGTXT"/>
+        <viewAttribute id="CC_ZZ_BKTXT"/>
+        <viewAttribute id="CC_ZZ_KOSTL"/>
+        <viewAttribute id="CC_ZZ_ZUONR"/>
+        <viewAttribute id="CC_ZZ_LEGACY"/>
+        <viewAttribute id="CUSTOMER_SEG_TYP_CD"/>
+        <viewAttribute id="CUSTOMER_LOCATION_ID"/>
+        <viewAttribute id="SYSTEM_REGION"/>
+        <viewAttribute id="PRIMARY_TELEPHONE_NUMBER"/>
+        <viewAttribute id="WORKING_TELEPHONE_NUMBER"/>
+        <viewAttribute id="ITEM_CODE"/>
+        <viewAttribute id="RAC_CODE"/>
+        <viewAttribute id="INSERT_TS"/>
+        <viewAttribute id="SOURCE_SYSTEM_CODE"/>
+        <viewAttribute id="ITEM_TYPE"/>
+        <viewAttribute id="ZNEW_ACCT"/>
+        <viewAttribute id="IS_30200301"/>
+        <viewAttribute id="IS_30200302"/>
+        <viewAttribute id="IS_30200303"/>
+        <viewAttribute id="IS_30200101"/>
+        <viewAttribute id="IS_30200102"/>
+        <viewAttribute id="IS_30200103"/>
+        <viewAttribute id="IS_30200201"/>
+        <viewAttribute id="IS_30200202"/>
+        <viewAttribute id="IS_30200203"/>
+        <viewAttribute id="IS_30200204"/>
+        <viewAttribute id="CONTRACT_UNIQUE_IDENTIFIER"/>
+        <viewAttribute id="POB_END_DATE"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CC_ZZ_HKONT" length="14" expressionLanguage="COLUMN_ENGINE">
+          <formula>&quot;NEWACCT&quot;</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="IS_30200304" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isNull(&quot;NEWACCT&quot;) or  string(leftstr(ltrim(&quot;NEWACCT&quot;,'0'),1)) !='4','1','0')</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="IS_30200305" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isNull(&quot;OLDACCT_RIGHT&quot;),'1','0')</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#PROJ_ZNEW_ACCT_NULL">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_ZZ_BLDAT" source="CC_ZZ_BLDAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_ZZ_BUDAT" source="CC_ZZ_BUDAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_ZZ_BURKS" source="CC_ZZ_BURKS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_ZZ_VBUND" source="CC_ZZ_VBUND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_ZZ_XBLNR" source="CC_ZZ_XBLNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_ZZ_MWSKZ" source="CC_ZZ_MWSKZ"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_ZZ_TXJCD" source="CC_ZZ_TXJCD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_ZZ_AUFNR" source="CC_ZZ_AUFNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_ZZ_SGTXT" source="CC_ZZ_SGTXT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_ZZ_BKTXT" source="CC_ZZ_BKTXT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_ZZ_KOSTL" source="CC_ZZ_KOSTL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_ZZ_ZUONR" source="CC_ZZ_ZUONR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_ZZ_LEGACY" source="CC_ZZ_LEGACY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_SEG_TYP_CD" source="CUSTOMER_SEG_TYP_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_LOCATION_ID" source="CUSTOMER_LOCATION_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SYSTEM_REGION" source="SYSTEM_REGION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRIMARY_TELEPHONE_NUMBER" source="PRIMARY_TELEPHONE_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WORKING_TELEPHONE_NUMBER" source="WORKING_TELEPHONE_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_CODE" source="ITEM_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RAC_CODE" source="RAC_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INSERT_TS" source="INSERT_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SOURCE_SYSTEM_CODE" source="SOURCE_SYSTEM_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_TYPE" source="ITEM_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZNEW_ACCT" source="ZNEW_ACCT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30200301" source="IS_30200301"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30200302" source="IS_30200302"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30200303" source="IS_30200303"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30200101" source="IS_30200101"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30200102" source="IS_30200102"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30200103" source="IS_30200103"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30200201" source="IS_30200201"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30200202" source="IS_30200202"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30200203" source="IS_30200203"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30200204" source="IS_30200204"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTRACT_UNIQUE_IDENTIFIER" source="CONTRACT_UNIQUE_IDENTIFIER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="POB_END_DATE" source="POB_END_DATE"/>
+      </input>
+      <input node="#PROJ_SDA_ZACCT">
+        <mapping xsi:type="Calculation:AttributeMapping" target="NEWACCT" source="NEWACCT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OLDACCT_RIGHT" source="OLDACCT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_ZZ_LEGACY" source="OLDACCT"/>
+      </input>
+      <joinAttribute name="CC_ZZ_LEGACY"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="JOIN_ZNEW_NOT_NULL_ZACC" joinType="leftOuter">
+      <descriptions>
+        <comment text="Value error on NEWACCT will be raised as 30200306.&#xD;&#xA;Join errors will be raised as 30200307."/>
+      </descriptions>
+      <viewAttributes>
+        <viewAttribute id="NEWACCT"/>
+        <viewAttribute id="OLDACCT_RIGHT"/>
+        <viewAttribute id="CC_ZZ_BLDAT"/>
+        <viewAttribute id="CC_ZZ_BUDAT"/>
+        <viewAttribute id="CC_ZZ_BURKS"/>
+        <viewAttribute id="CC_ZZ_VBUND"/>
+        <viewAttribute id="CC_ZZ_XBLNR"/>
+        <viewAttribute id="CC_ZZ_MWSKZ"/>
+        <viewAttribute id="CC_ZZ_TXJCD"/>
+        <viewAttribute id="CC_ZZ_AUFNR"/>
+        <viewAttribute id="CC_ZZ_SGTXT"/>
+        <viewAttribute id="CC_ZZ_BKTXT"/>
+        <viewAttribute id="CC_ZZ_KOSTL"/>
+        <viewAttribute id="CC_ZZ_ZUONR"/>
+        <viewAttribute id="CC_ZZ_LEGACY"/>
+        <viewAttribute id="CUSTOMER_SEG_TYP_CD"/>
+        <viewAttribute id="CUSTOMER_LOCATION_ID"/>
+        <viewAttribute id="SYSTEM_REGION"/>
+        <viewAttribute id="PRIMARY_TELEPHONE_NUMBER"/>
+        <viewAttribute id="RAC_CODE"/>
+        <viewAttribute id="INSERT_TS"/>
+        <viewAttribute id="SOURCE_SYSTEM_CODE"/>
+        <viewAttribute id="ITEM_TYPE"/>
+        <viewAttribute id="WORKING_TELEPHONE_NUMBER"/>
+        <viewAttribute id="ITEM_CODE"/>
+        <viewAttribute id="ZNEW_ACCT"/>
+        <viewAttribute id="IS_30200301"/>
+        <viewAttribute id="IS_30200302"/>
+        <viewAttribute id="IS_30200303"/>
+        <viewAttribute id="IS_30200101"/>
+        <viewAttribute id="IS_30200102"/>
+        <viewAttribute id="IS_30200103"/>
+        <viewAttribute id="IS_30200201"/>
+        <viewAttribute id="IS_30200202"/>
+        <viewAttribute id="IS_30200203"/>
+        <viewAttribute id="IS_30200204"/>
+        <viewAttribute id="CONTRACT_UNIQUE_IDENTIFIER"/>
+        <viewAttribute id="POB_END_DATE"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CC_ZZ_HKONT" length="14" expressionLanguage="COLUMN_ENGINE">
+          <formula>&quot;NEWACCT&quot;</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="IS_30200306" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isNull(&quot;NEWACCT&quot;) or  string(leftstr(ltrim(&quot;NEWACCT&quot;,'0'),1)) !='4','1','0')</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="IS_30200307" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isNull(&quot;OLDACCT_RIGHT&quot;),'1','0')</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#PROJ_ZNEW_ACCT_NOT_NULL">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_ZZ_BLDAT" source="CC_ZZ_BLDAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_ZZ_BUDAT" source="CC_ZZ_BUDAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_ZZ_BURKS" source="CC_ZZ_BURKS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_ZZ_VBUND" source="CC_ZZ_VBUND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_ZZ_XBLNR" source="CC_ZZ_XBLNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_ZZ_MWSKZ" source="CC_ZZ_MWSKZ"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_ZZ_TXJCD" source="CC_ZZ_TXJCD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_ZZ_AUFNR" source="CC_ZZ_AUFNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_ZZ_SGTXT" source="CC_ZZ_SGTXT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_ZZ_BKTXT" source="CC_ZZ_BKTXT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_ZZ_KOSTL" source="CC_ZZ_KOSTL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_ZZ_ZUONR" source="CC_ZZ_ZUONR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_ZZ_LEGACY" source="CC_ZZ_LEGACY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_SEG_TYP_CD" source="CUSTOMER_SEG_TYP_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_LOCATION_ID" source="CUSTOMER_LOCATION_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SYSTEM_REGION" source="SYSTEM_REGION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRIMARY_TELEPHONE_NUMBER" source="PRIMARY_TELEPHONE_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RAC_CODE" source="RAC_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INSERT_TS" source="INSERT_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SOURCE_SYSTEM_CODE" source="SOURCE_SYSTEM_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_TYPE" source="ITEM_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WORKING_TELEPHONE_NUMBER" source="WORKING_TELEPHONE_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_CODE" source="ITEM_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZNEW_ACCT" source="ZNEW_ACCT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30200301" source="IS_30200301"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30200302" source="IS_30200302"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30200303" source="IS_30200303"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30200101" source="IS_30200101"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30200102" source="IS_30200102"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30200103" source="IS_30200103"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30200201" source="IS_30200201"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30200202" source="IS_30200202"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30200203" source="IS_30200203"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30200204" source="IS_30200204"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTRACT_UNIQUE_IDENTIFIER" source="CONTRACT_UNIQUE_IDENTIFIER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="POB_END_DATE" source="POB_END_DATE"/>
+      </input>
+      <input node="#PROJ_SDA_ZACCT">
+        <mapping xsi:type="Calculation:AttributeMapping" target="NEWACCT" source="NEWACCT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="OLDACCT_RIGHT" source="OLDACCT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ZNEW_ACCT" source="OLDACCT"/>
+      </input>
+      <joinAttribute name="ZNEW_ACCT"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:UnionView" id="UNION">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="CC_ZZ_HKONT"/>
+        <viewAttribute id="CC_ZZ_BLDAT"/>
+        <viewAttribute id="CC_ZZ_BUDAT"/>
+        <viewAttribute id="CC_ZZ_BURKS"/>
+        <viewAttribute id="CC_ZZ_VBUND"/>
+        <viewAttribute id="CC_ZZ_XBLNR"/>
+        <viewAttribute id="CC_ZZ_MWSKZ"/>
+        <viewAttribute id="CC_ZZ_TXJCD"/>
+        <viewAttribute id="CC_ZZ_AUFNR"/>
+        <viewAttribute id="CC_ZZ_SGTXT"/>
+        <viewAttribute id="CC_ZZ_BKTXT"/>
+        <viewAttribute id="CC_ZZ_KOSTL"/>
+        <viewAttribute id="CC_ZZ_ZUONR"/>
+        <viewAttribute id="CC_ZZ_LEGACY"/>
+        <viewAttribute id="CUSTOMER_SEG_TYP_CD"/>
+        <viewAttribute id="CUSTOMER_LOCATION_ID"/>
+        <viewAttribute id="SYSTEM_REGION"/>
+        <viewAttribute id="PRIMARY_TELEPHONE_NUMBER"/>
+        <viewAttribute id="WORKING_TELEPHONE_NUMBER"/>
+        <viewAttribute id="ITEM_CODE"/>
+        <viewAttribute id="RAC_CODE"/>
+        <viewAttribute id="INSERT_TS"/>
+        <viewAttribute id="SOURCE_SYSTEM_CODE"/>
+        <viewAttribute id="ITEM_TYPE"/>
+        <viewAttribute datatype="NVARCHAR" id="IS_30200301" length="1" scale="0"/>
+        <viewAttribute datatype="NVARCHAR" id="IS_30200302" length="1" scale="0"/>
+        <viewAttribute datatype="NVARCHAR" id="IS_30200303" length="1" scale="0"/>
+        <viewAttribute datatype="NVARCHAR" id="IS_30200304" length="1" scale="0"/>
+        <viewAttribute datatype="NVARCHAR" id="IS_30200305" length="1" scale="0"/>
+        <viewAttribute datatype="NVARCHAR" id="IS_30200306" length="1" scale="0"/>
+        <viewAttribute datatype="NVARCHAR" id="IS_30200307" length="1" scale="0"/>
+        <viewAttribute datatype="NVARCHAR" id="IS_30200101" length="1" scale="0"/>
+        <viewAttribute datatype="NVARCHAR" id="IS_30200102" length="1" scale="0"/>
+        <viewAttribute datatype="NVARCHAR" id="IS_30200103" length="1" scale="0"/>
+        <viewAttribute datatype="NVARCHAR" id="IS_30200201" length="1" scale="0"/>
+        <viewAttribute datatype="NVARCHAR" id="IS_30200202" length="1" scale="0"/>
+        <viewAttribute datatype="NVARCHAR" id="IS_30200203" length="1" scale="0"/>
+        <viewAttribute datatype="NVARCHAR" id="IS_30200204" length="1" scale="0"/>
+        <viewAttribute id="CONTRACT_UNIQUE_IDENTIFIER"/>
+        <viewAttribute id="POB_END_DATE"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input emptyUnionBehavior="NO_ROW" node="#JOIN_ZNEW_NULL_ZACC">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_ZZ_HKONT" source="CC_ZZ_HKONT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_ZZ_BLDAT" source="CC_ZZ_BLDAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_ZZ_BUDAT" source="CC_ZZ_BUDAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_ZZ_BURKS" source="CC_ZZ_BURKS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_ZZ_VBUND" source="CC_ZZ_VBUND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_ZZ_XBLNR" source="CC_ZZ_XBLNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_ZZ_MWSKZ" source="CC_ZZ_MWSKZ"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_ZZ_TXJCD" source="CC_ZZ_TXJCD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_ZZ_AUFNR" source="CC_ZZ_AUFNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_ZZ_SGTXT" source="CC_ZZ_SGTXT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_ZZ_BKTXT" source="CC_ZZ_BKTXT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_ZZ_KOSTL" source="CC_ZZ_KOSTL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_ZZ_ZUONR" source="CC_ZZ_ZUONR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_ZZ_LEGACY" source="CC_ZZ_LEGACY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_SEG_TYP_CD" source="CUSTOMER_SEG_TYP_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_LOCATION_ID" source="CUSTOMER_LOCATION_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SYSTEM_REGION" source="SYSTEM_REGION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRIMARY_TELEPHONE_NUMBER" source="PRIMARY_TELEPHONE_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WORKING_TELEPHONE_NUMBER" source="WORKING_TELEPHONE_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_CODE" source="ITEM_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RAC_CODE" source="RAC_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INSERT_TS" source="INSERT_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SOURCE_SYSTEM_CODE" source="SOURCE_SYSTEM_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_TYPE" source="ITEM_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30200301" source="IS_30200301"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30200302" source="IS_30200302"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30200303" source="IS_30200303"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30200304" source="IS_30200304"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30200305" source="IS_30200305"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="IS_30200306" null="false" value="0"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="IS_30200307" null="false" value="0"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30200101" source="IS_30200101"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30200102" source="IS_30200102"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30200103" source="IS_30200103"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30200201" source="IS_30200201"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30200202" source="IS_30200202"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30200203" source="IS_30200203"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30200204" source="IS_30200204"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTRACT_UNIQUE_IDENTIFIER" source="CONTRACT_UNIQUE_IDENTIFIER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="POB_END_DATE" source="POB_END_DATE"/>
+      </input>
+      <input emptyUnionBehavior="NO_ROW" node="#JOIN_ZNEW_NOT_NULL_ZACC">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_ZZ_HKONT" source="CC_ZZ_HKONT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_ZZ_BLDAT" source="CC_ZZ_BLDAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_ZZ_BUDAT" source="CC_ZZ_BUDAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_ZZ_BURKS" source="CC_ZZ_BURKS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_ZZ_VBUND" source="CC_ZZ_VBUND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_ZZ_XBLNR" source="CC_ZZ_XBLNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_ZZ_MWSKZ" source="CC_ZZ_MWSKZ"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_ZZ_TXJCD" source="CC_ZZ_TXJCD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_ZZ_AUFNR" source="CC_ZZ_AUFNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_ZZ_SGTXT" source="CC_ZZ_SGTXT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_ZZ_BKTXT" source="CC_ZZ_BKTXT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_ZZ_KOSTL" source="CC_ZZ_KOSTL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_ZZ_ZUONR" source="CC_ZZ_ZUONR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_ZZ_LEGACY" source="CC_ZZ_LEGACY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_SEG_TYP_CD" source="CUSTOMER_SEG_TYP_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_LOCATION_ID" source="CUSTOMER_LOCATION_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SYSTEM_REGION" source="SYSTEM_REGION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRIMARY_TELEPHONE_NUMBER" source="PRIMARY_TELEPHONE_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WORKING_TELEPHONE_NUMBER" source="WORKING_TELEPHONE_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_CODE" source="ITEM_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RAC_CODE" source="RAC_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INSERT_TS" source="INSERT_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SOURCE_SYSTEM_CODE" source="SOURCE_SYSTEM_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_TYPE" source="ITEM_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30200301" source="IS_30200301"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30200302" source="IS_30200302"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30200303" source="IS_30200303"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="IS_30200304" null="false" value="0"/>
+        <mapping xsi:type="Calculation:ConstantAttributeMapping" target="IS_30200305" null="false" value="0"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30200306" source="IS_30200306"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30200307" source="IS_30200307"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30200101" source="IS_30200101"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30200102" source="IS_30200102"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30200103" source="IS_30200103"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30200201" source="IS_30200201"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30200202" source="IS_30200202"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30200203" source="IS_30200203"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30200204" source="IS_30200204"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTRACT_UNIQUE_IDENTIFIER" source="CONTRACT_UNIQUE_IDENTIFIER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="POB_END_DATE" source="POB_END_DATE"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_CALC_COLS">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="CC_ZZ_HKONT"/>
+        <viewAttribute id="CC_ZZ_BLDAT"/>
+        <viewAttribute id="CC_ZZ_BUDAT"/>
+        <viewAttribute id="CC_ZZ_BURKS"/>
+        <viewAttribute id="CC_ZZ_VBUND"/>
+        <viewAttribute id="CC_ZZ_XBLNR"/>
+        <viewAttribute id="CC_ZZ_MWSKZ"/>
+        <viewAttribute id="CC_ZZ_TXJCD"/>
+        <viewAttribute id="CC_ZZ_AUFNR"/>
+        <viewAttribute id="CC_ZZ_SGTXT"/>
+        <viewAttribute id="CC_ZZ_BKTXT"/>
+        <viewAttribute id="CC_ZZ_KOSTL"/>
+        <viewAttribute id="CC_ZZ_ZUONR"/>
+        <viewAttribute id="CC_ZZ_LEGACY"/>
+        <viewAttribute id="CUSTOMER_SEG_TYP_CD"/>
+        <viewAttribute id="CUSTOMER_LOCATION_ID"/>
+        <viewAttribute id="SYSTEM_REGION"/>
+        <viewAttribute id="PRIMARY_TELEPHONE_NUMBER"/>
+        <viewAttribute id="WORKING_TELEPHONE_NUMBER"/>
+        <viewAttribute id="ITEM_CODE"/>
+        <viewAttribute id="RAC_CODE"/>
+        <viewAttribute id="INSERT_TS"/>
+        <viewAttribute id="SOURCE_SYSTEM_CODE"/>
+        <viewAttribute id="ITEM_TYPE"/>
+        <viewAttribute id="IS_30200301"/>
+        <viewAttribute id="IS_30200302"/>
+        <viewAttribute id="IS_30200303"/>
+        <viewAttribute id="IS_30200304"/>
+        <viewAttribute id="IS_30200305"/>
+        <viewAttribute id="IS_30200306"/>
+        <viewAttribute id="IS_30200307"/>
+        <viewAttribute id="IS_30200101"/>
+        <viewAttribute id="IS_30200102"/>
+        <viewAttribute id="IS_30200103"/>
+        <viewAttribute id="IS_30200201"/>
+        <viewAttribute id="IS_30200202"/>
+        <viewAttribute id="IS_30200203"/>
+        <viewAttribute id="IS_30200204"/>
+        <viewAttribute id="CONTRACT_UNIQUE_IDENTIFIER"/>
+        <viewAttribute id="POB_END_DATE"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CC_ZZ_MATNR" length="40" expressionLanguage="COLUMN_ENGINE">
+          <formula>'TBD'</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CC_ZZ_MATNR_GRP" length="18" expressionLanguage="COLUMN_ENGINE">
+          <formula>'TBD'</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CC_ZZ_ALLOCATE" length="6" expressionLanguage="COLUMN_ENGINE">
+          <formula>'TBD'</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CC_ZZ_CATRANSFER" length="10" expressionLanguage="COLUMN_ENGINE">
+          <formula>NULL</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CC_ZZ_UPFFLG" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>NULL</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="DECIMAL" id="CC_ZZ_MINPRICE" length="23" scale="2" expressionLanguage="COLUMN_ENGINE">
+          <formula>NULL</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CC_ZZ_PRE_POST" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>NULL</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CC_ZZ_BRANDACT" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>NULL</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CC_ZZ_PAOBJNR" length="12" expressionLanguage="COLUMN_ENGINE">
+          <formula>leftstr(&quot;CUSTOMER_SEG_TYP_CD&quot;,10)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CC_ZZ_BILLER" length="4" expressionLanguage="COLUMN_ENGINE">
+          <formula>&quot;SOURCE_SYSTEM_CODE&quot;</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CC_ZZ_BU_VIEW" length="3" expressionLanguage="COLUMN_ENGINE">
+          <formula>'HP'</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CC_ZZ_ADJ_RSN_CD" length="9" expressionLanguage="COLUMN_ENGINE">
+          <formula>NULL</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CC_ZZ_MOD_TYPE" length="10" expressionLanguage="COLUMN_ENGINE">
+          <formula>NULL</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CC_ZZ_ICHKONT" length="10" expressionLanguage="COLUMN_ENGINE">
+          <formula>&quot;CC_ZZ_HKONT&quot;</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CC_ZZ_CONVERSION" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>NULL</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#UNION">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_ZZ_HKONT" source="CC_ZZ_HKONT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_ZZ_BLDAT" source="CC_ZZ_BLDAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_ZZ_BUDAT" source="CC_ZZ_BUDAT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_ZZ_BURKS" source="CC_ZZ_BURKS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_ZZ_VBUND" source="CC_ZZ_VBUND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_ZZ_XBLNR" source="CC_ZZ_XBLNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_ZZ_MWSKZ" source="CC_ZZ_MWSKZ"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_ZZ_TXJCD" source="CC_ZZ_TXJCD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_ZZ_AUFNR" source="CC_ZZ_AUFNR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_ZZ_SGTXT" source="CC_ZZ_SGTXT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_ZZ_BKTXT" source="CC_ZZ_BKTXT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_ZZ_KOSTL" source="CC_ZZ_KOSTL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_ZZ_ZUONR" source="CC_ZZ_ZUONR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_ZZ_LEGACY" source="CC_ZZ_LEGACY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_SEG_TYP_CD" source="CUSTOMER_SEG_TYP_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_LOCATION_ID" source="CUSTOMER_LOCATION_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SYSTEM_REGION" source="SYSTEM_REGION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRIMARY_TELEPHONE_NUMBER" source="PRIMARY_TELEPHONE_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WORKING_TELEPHONE_NUMBER" source="WORKING_TELEPHONE_NUMBER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_CODE" source="ITEM_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RAC_CODE" source="RAC_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INSERT_TS" source="INSERT_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SOURCE_SYSTEM_CODE" source="SOURCE_SYSTEM_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_TYPE" source="ITEM_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30200301" source="IS_30200301"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30200302" source="IS_30200302"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30200303" source="IS_30200303"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30200304" source="IS_30200304"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30200305" source="IS_30200305"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30200306" source="IS_30200306"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30200307" source="IS_30200307"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30200101" source="IS_30200101"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30200102" source="IS_30200102"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30200103" source="IS_30200103"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30200201" source="IS_30200201"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30200202" source="IS_30200202"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30200203" source="IS_30200203"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30200204" source="IS_30200204"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTRACT_UNIQUE_IDENTIFIER" source="CONTRACT_UNIQUE_IDENTIFIER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="POB_END_DATE" source="POB_END_DATE"/>
+      </input>
+    </calculationView>
+  </calculationViews>
+  <logicalModel id="PROJ_CALC_COLS">
+    <descriptions/>
+    <attributes>
+      <attribute id="CC_ZZ_HKONT" order="1" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CC_ZZ_HKONT"/>
+        <keyMapping columnObjectName="PROJ_CALC_COLS" columnName="CC_ZZ_HKONT"/>
+      </attribute>
+      <attribute id="CC_ZZ_BLDAT" order="2" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CC_ZZ_BLDAT"/>
+        <keyMapping columnObjectName="PROJ_CALC_COLS" columnName="CC_ZZ_BLDAT"/>
+      </attribute>
+      <attribute id="CC_ZZ_BUDAT" order="3" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CC_ZZ_BUDAT"/>
+        <keyMapping columnObjectName="PROJ_CALC_COLS" columnName="CC_ZZ_BUDAT"/>
+      </attribute>
+      <attribute id="CC_ZZ_BURKS" order="4" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CC_ZZ_BURKS"/>
+        <keyMapping columnObjectName="PROJ_CALC_COLS" columnName="CC_ZZ_BURKS"/>
+      </attribute>
+      <attribute id="CC_ZZ_VBUND" order="5" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CC_ZZ_VBUND"/>
+        <keyMapping columnObjectName="PROJ_CALC_COLS" columnName="CC_ZZ_VBUND"/>
+      </attribute>
+      <attribute id="CC_ZZ_XBLNR" order="6" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CC_ZZ_XBLNR"/>
+        <keyMapping columnObjectName="PROJ_CALC_COLS" columnName="CC_ZZ_XBLNR"/>
+      </attribute>
+      <attribute id="CC_ZZ_MWSKZ" order="7" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CC_ZZ_MWSKZ"/>
+        <keyMapping columnObjectName="PROJ_CALC_COLS" columnName="CC_ZZ_MWSKZ"/>
+      </attribute>
+      <attribute id="CC_ZZ_TXJCD" order="8" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CC_ZZ_TXJCD"/>
+        <keyMapping columnObjectName="PROJ_CALC_COLS" columnName="CC_ZZ_TXJCD"/>
+      </attribute>
+      <attribute id="CC_ZZ_AUFNR" order="9" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CC_ZZ_AUFNR"/>
+        <keyMapping columnObjectName="PROJ_CALC_COLS" columnName="CC_ZZ_AUFNR"/>
+      </attribute>
+      <attribute id="CC_ZZ_SGTXT" order="10" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CC_ZZ_SGTXT"/>
+        <keyMapping columnObjectName="PROJ_CALC_COLS" columnName="CC_ZZ_SGTXT"/>
+      </attribute>
+      <attribute id="CC_ZZ_BKTXT" order="11" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CC_ZZ_BKTXT"/>
+        <keyMapping columnObjectName="PROJ_CALC_COLS" columnName="CC_ZZ_BKTXT"/>
+      </attribute>
+      <attribute id="CC_ZZ_KOSTL" order="12" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CC_ZZ_KOSTL"/>
+        <keyMapping columnObjectName="PROJ_CALC_COLS" columnName="CC_ZZ_KOSTL"/>
+      </attribute>
+      <attribute id="CC_ZZ_ZUONR" order="13" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CC_ZZ_ZUONR"/>
+        <keyMapping columnObjectName="PROJ_CALC_COLS" columnName="CC_ZZ_ZUONR"/>
+      </attribute>
+      <attribute id="CC_ZZ_LEGACY" order="14" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CC_ZZ_LEGACY"/>
+        <keyMapping columnObjectName="PROJ_CALC_COLS" columnName="CC_ZZ_LEGACY"/>
+      </attribute>
+      <attribute id="CUSTOMER_SEG_TYP_CD" order="15" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CUSTOMER_SEG_TYP_CD"/>
+        <keyMapping columnObjectName="PROJ_CALC_COLS" columnName="CUSTOMER_SEG_TYP_CD"/>
+      </attribute>
+      <attribute id="CUSTOMER_LOCATION_ID" order="16" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CUSTOMER_LOCATION_ID"/>
+        <keyMapping columnObjectName="PROJ_CALC_COLS" columnName="CUSTOMER_LOCATION_ID"/>
+      </attribute>
+      <attribute id="SYSTEM_REGION" order="17" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SYSTEM_REGION"/>
+        <keyMapping columnObjectName="PROJ_CALC_COLS" columnName="SYSTEM_REGION"/>
+      </attribute>
+      <attribute id="PRIMARY_TELEPHONE_NUMBER" order="18" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="PRIMARY_TELEPHONE_NUMBER"/>
+        <keyMapping columnObjectName="PROJ_CALC_COLS" columnName="PRIMARY_TELEPHONE_NUMBER"/>
+      </attribute>
+      <attribute id="WORKING_TELEPHONE_NUMBER" order="19" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="WORKING_TELEPHONE_NUMBER"/>
+        <keyMapping columnObjectName="PROJ_CALC_COLS" columnName="WORKING_TELEPHONE_NUMBER"/>
+      </attribute>
+      <attribute id="ITEM_CODE" order="20" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ITEM_CODE"/>
+        <keyMapping columnObjectName="PROJ_CALC_COLS" columnName="ITEM_CODE"/>
+      </attribute>
+      <attribute id="RAC_CODE" order="21" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="RAC_CODE"/>
+        <keyMapping columnObjectName="PROJ_CALC_COLS" columnName="RAC_CODE"/>
+      </attribute>
+      <attribute id="INSERT_TS" order="22" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="INSERT_TS"/>
+        <keyMapping columnObjectName="PROJ_CALC_COLS" columnName="INSERT_TS"/>
+      </attribute>
+      <attribute id="SOURCE_SYSTEM_CODE" order="23" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SOURCE_SYSTEM_CODE"/>
+        <keyMapping columnObjectName="PROJ_CALC_COLS" columnName="SOURCE_SYSTEM_CODE"/>
+      </attribute>
+      <attribute id="ITEM_TYPE" order="24" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ITEM_TYPE"/>
+        <keyMapping columnObjectName="PROJ_CALC_COLS" columnName="ITEM_TYPE"/>
+      </attribute>
+      <attribute id="CC_ZZ_MATNR" order="25" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CC_ZZ_MATNR"/>
+        <keyMapping columnObjectName="PROJ_CALC_COLS" columnName="CC_ZZ_MATNR"/>
+      </attribute>
+      <attribute id="CC_ZZ_MATNR_GRP" order="26" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CC_ZZ_MATNR_GRP"/>
+        <keyMapping columnObjectName="PROJ_CALC_COLS" columnName="CC_ZZ_MATNR_GRP"/>
+      </attribute>
+      <attribute id="CC_ZZ_ALLOCATE" order="27" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CC_ZZ_ALLOCATE"/>
+        <keyMapping columnObjectName="PROJ_CALC_COLS" columnName="CC_ZZ_ALLOCATE"/>
+      </attribute>
+      <attribute id="CC_ZZ_CATRANSFER" order="28" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CC_ZZ_CATRANSFER"/>
+        <keyMapping columnObjectName="PROJ_CALC_COLS" columnName="CC_ZZ_CATRANSFER"/>
+      </attribute>
+      <attribute id="CC_ZZ_UPFFLG" order="29" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CC_ZZ_UPFFLG"/>
+        <keyMapping columnObjectName="PROJ_CALC_COLS" columnName="CC_ZZ_UPFFLG"/>
+      </attribute>
+      <attribute id="CC_ZZ_MINPRICE" order="30" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CC_ZZ_MINPRICE"/>
+        <keyMapping columnObjectName="PROJ_CALC_COLS" columnName="CC_ZZ_MINPRICE"/>
+      </attribute>
+      <attribute id="CC_ZZ_PRE_POST" order="31" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CC_ZZ_PRE_POST"/>
+        <keyMapping columnObjectName="PROJ_CALC_COLS" columnName="CC_ZZ_PRE_POST"/>
+      </attribute>
+      <attribute id="CC_ZZ_CONVERSION" order="32" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CC_ZZ_CONVERSION"/>
+        <keyMapping columnObjectName="PROJ_CALC_COLS" columnName="CC_ZZ_CONVERSION"/>
+      </attribute>
+      <attribute id="CC_ZZ_ICHKONT" order="33" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CC_ZZ_ICHKONT"/>
+        <keyMapping columnObjectName="PROJ_CALC_COLS" columnName="CC_ZZ_ICHKONT"/>
+      </attribute>
+      <attribute id="CC_ZZ_MOD_TYPE" order="34" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CC_ZZ_MOD_TYPE"/>
+        <keyMapping columnObjectName="PROJ_CALC_COLS" columnName="CC_ZZ_MOD_TYPE"/>
+      </attribute>
+      <attribute id="CC_ZZ_ADJ_RSN_CD" order="35" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CC_ZZ_ADJ_RSN_CD"/>
+        <keyMapping columnObjectName="PROJ_CALC_COLS" columnName="CC_ZZ_ADJ_RSN_CD"/>
+      </attribute>
+      <attribute id="CC_ZZ_BU_VIEW" order="36" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CC_ZZ_BU_VIEW"/>
+        <keyMapping columnObjectName="PROJ_CALC_COLS" columnName="CC_ZZ_BU_VIEW"/>
+      </attribute>
+      <attribute id="CC_ZZ_BILLER" order="37" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CC_ZZ_BILLER"/>
+        <keyMapping columnObjectName="PROJ_CALC_COLS" columnName="CC_ZZ_BILLER"/>
+      </attribute>
+      <attribute id="CC_ZZ_PAOBJNR" order="38" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CC_ZZ_PAOBJNR"/>
+        <keyMapping columnObjectName="PROJ_CALC_COLS" columnName="CC_ZZ_PAOBJNR"/>
+      </attribute>
+      <attribute id="CC_ZZ_BRANDACT" order="39" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CC_ZZ_BRANDACT"/>
+        <keyMapping columnObjectName="PROJ_CALC_COLS" columnName="CC_ZZ_BRANDACT"/>
+      </attribute>
+      <attribute id="IS_30200301" hidden="false" order="40" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="IS_30200301"/>
+        <keyMapping columnObjectName="PROJ_CALC_COLS" columnName="IS_30200301"/>
+      </attribute>
+      <attribute id="IS_30200302" hidden="false" order="41" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="IS_30200302"/>
+        <keyMapping columnObjectName="PROJ_CALC_COLS" columnName="IS_30200302"/>
+      </attribute>
+      <attribute id="IS_30200303" hidden="false" order="42" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="IS_30200303"/>
+        <keyMapping columnObjectName="PROJ_CALC_COLS" columnName="IS_30200303"/>
+      </attribute>
+      <attribute id="IS_30200304" order="43" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="IS_30200304"/>
+        <keyMapping columnObjectName="PROJ_CALC_COLS" columnName="IS_30200304"/>
+      </attribute>
+      <attribute id="IS_30200305" order="44" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="IS_30200305"/>
+        <keyMapping columnObjectName="PROJ_CALC_COLS" columnName="IS_30200305"/>
+      </attribute>
+      <attribute id="IS_30200306" order="45" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="IS_30200306"/>
+        <keyMapping columnObjectName="PROJ_CALC_COLS" columnName="IS_30200306"/>
+      </attribute>
+      <attribute id="IS_30200307" order="46" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="IS_30200307"/>
+        <keyMapping columnObjectName="PROJ_CALC_COLS" columnName="IS_30200307"/>
+      </attribute>
+      <attribute id="IS_30200101" hidden="false" order="47" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="IS_30200101"/>
+        <keyMapping columnObjectName="PROJ_CALC_COLS" columnName="IS_30200101"/>
+      </attribute>
+      <attribute id="IS_30200102" hidden="false" order="48" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="IS_30200102"/>
+        <keyMapping columnObjectName="PROJ_CALC_COLS" columnName="IS_30200102"/>
+      </attribute>
+      <attribute id="IS_30200103" hidden="false" order="49" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="IS_30200103"/>
+        <keyMapping columnObjectName="PROJ_CALC_COLS" columnName="IS_30200103"/>
+      </attribute>
+      <attribute id="IS_30200201" hidden="false" order="50" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="IS_30200201"/>
+        <keyMapping columnObjectName="PROJ_CALC_COLS" columnName="IS_30200201"/>
+      </attribute>
+      <attribute id="IS_30200202" hidden="false" order="51" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="IS_30200202"/>
+        <keyMapping columnObjectName="PROJ_CALC_COLS" columnName="IS_30200202"/>
+      </attribute>
+      <attribute id="IS_30200203" hidden="false" order="52" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="IS_30200203"/>
+        <keyMapping columnObjectName="PROJ_CALC_COLS" columnName="IS_30200203"/>
+      </attribute>
+      <attribute id="IS_30200204" hidden="false" order="53" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="IS_30200204"/>
+        <keyMapping columnObjectName="PROJ_CALC_COLS" columnName="IS_30200204"/>
+      </attribute>
+      <attribute id="CONTRACT_UNIQUE_IDENTIFIER" order="54" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CONTRACT_UNIQUE_IDENTIFIER"/>
+        <keyMapping columnObjectName="PROJ_CALC_COLS" columnName="CONTRACT_UNIQUE_IDENTIFIER"/>
+      </attribute>
+      <attribute id="POB_END_DATE" order="55" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="POB_END_DATE"/>
+        <keyMapping columnObjectName="PROJ_CALC_COLS" columnName="POB_END_DATE"/>
+      </attribute>
+    </attributes>
+    <calculatedAttributes/>
+    <privateDataFoundation>
+      <tableProxies/>
+      <joins/>
+      <layout>
+        <shapes/>
+      </layout>
+    </privateDataFoundation>
+    <baseMeasures/>
+    <calculatedMeasures/>
+    <restrictedMeasures/>
+    <localDimensions/>
+  </logicalModel>
+  <layout>
+    <shapes>
+      <shape expanded="false" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+        <upperLeftCorner x="175" y="87"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_HP_CUSTOMER" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="179" y="785"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_HP_ORDR_BASE_FILTER" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="25" y="785"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="JOIN_ORDER_CUSTOMER" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="102" y="689"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_ZFIELDS_CALC" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="102" y="611"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_SDA_ZCONCACCT" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="256" y="611"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="JOIN_ZFIELDS_ZCON" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="178" y="515"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_ZNEW_ACCT_NULL" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="22" y="437"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_ZNEW_ACCT_NOT_NULL" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="330" y="437"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_SDA_ZACCT" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="176" y="437"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="JOIN_ZNEW_NULL_ZACC" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="98" y="341"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="JOIN_ZNEW_NOT_NULL_ZACC" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="252" y="341"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="UNION" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="175" y="225"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_CALC_COLS" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="175" y="147"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+    </shapes>
+  </layout>
+</Calculation:scenario>

@@ -1,0 +1,325 @@
+PROCEDURE "NDB_COMMON"."IFRS_R1.COMMON_COMP.NDB_COMMON::SP_OB_MARKET"
+( IN IP_EFF_DT DATE,
+ OUT OP_STATUS NVARCHAR(100)) 
+	LANGUAGE SQLSCRIPT
+	SQL SECURITY INVOKER
+	AS
+
+BEGIN
+----------------------------------------------------------------------
+-- Procedure Title : SP_OB_MARKET
+-- Created By      : BC_EY96110 (Arpit)       
+-- Create Date     : 15-03-2017
+-- Description     : Data Inserted using Calculation View - CA_IFRS_OB_MARKET
+--                   To NDB Table - OB_MARKET Using this stored procedure.
+--                   OB_MARKET includes data from table LANDING OB_MARKET			
+-- Project         : Bell Canada
+-- Release         : R1 / IFRS
+--------------------------------------------------------------------------------------------------
+--   M O D I F I C A T I O N   H I S T O R Y
+--------------------------------------------------------------------------------------------------
+-- Date        | User ID          | Modification History/Release
+--------------------------------------------------------------------------------------------------
+--             |                  | 
+--------------------------------------------------------------------------------------------------
+-- Description Of the changes 
+--------------------------------------------------------------------------------------------------
+-- Modification Number          : <Assign Some Number> 
+-- Description of Changes Made> : <Description of Changes>       
+--------------------------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------------------------
+-- Local Variables Declaration
+--------------------------------------------------------------------------------------------------
+
+DECLARE LC_ERROR_TEXT 		NVARCHAR(70) DEFAULT 'OUT STATUS IS 1 : INSERT/UPDATE FOR ONE OR MORE RECORD FAILED';
+DECLARE LC_SUCCESS_TEXT 	NVARCHAR(70) DEFAULT 'OUT STATUS IS 0 : INSERT/UPDATE EXECUTION SUCCESSFUL';
+DECLARE LV_ERROR_FLAG 		NVARCHAR(1) := 'N';
+DECLARE LV_CUR_UTC 			TIMESTAMP := CURRENT_TIMESTAMP;
+DECLARE ERROR_TAB 			TABLE (ERROR_CODE NVARCHAR(100));
+DECLARE i					INTEGER;
+DECLARE RECORD_COUNT		INTEGER;
+DECLARE CURRENT_ERROR		NVARCHAR(100);
+
+-- New variables for version sequence check
+DECLARE LV_LOOP_ERROR_FLAG        INTEGER := 0;
+DECLARE LV_PREV_RECORD		  NVARCHAR(16) := NULL;
+
+--------------------------------------------------------------------------------------------------
+-- Cursors Declaration
+--------------------------------------------------------------------------------------------------   
+DECLARE CURSOR OB_MARKET FOR
+		      SELECT "MARKET_CODE",
+					 "MARKET_NAME",
+					 "ALT_MARKET_NAME",
+					 "RELATED_MARKET",
+					 "EFF_DT",
+					 "REFERENCE_EFFECTIVE_DT",
+					 "REFERENCE_EXPIRY_DT",
+					 "FLAG_EXISTING_RECORD",
+					 "EFFECTIVE_DATE_PREV_DAY",
+					 "ERROR_CODE",
+					 "ERROR_STATUS"
+		       FROM  "_SYS_BIC"."IFRS_R1.COMMON_COMP.NDB_COMMON/CA_IFRS_OB_MARKET"
+					 (PLACEHOLDER."$$IP_EFF_DT$$" => :IP_EFF_DT)
+		   ORDER BY  "MARKET_CODE","REFERENCE_EFFECTIVE_DT";
+		    
+			
+----------------------------------------------------------------------------------------------------
+-- Local Temporary Tables Declaration
+-----------------------------------------------------------------------------------------------------
+
+CREATE LOCAL TEMPORARY TABLE #UPDATE_IFRS_OB_MARKET (MARKET_CODE NVARCHAR(3),EFF_DT DATE);
+CREATE LOCAL TEMPORARY TABLE #UPDATE_EH_DELETION (MARKET_CODE NVARCHAR(100),REFERENCE_EFFECTIVE_DT NVARCHAR(100));
+ 
+--------------------------------------------------------------------------------------------------
+-- Cursors Loop
+-------------------------------------------------------------------------------------------------- 
+FOR MARKET AS OB_MARKET DO
+
+--  Define Exit Handler
+	DECLARE EXIT HANDLER FOR SQLEXCEPTION 
+	BEGIN AUTONOMOUS TRANSACTION 
+	
+--    Define Exit Handler
+	  DECLARE EXIT HANDLER FOR SQLEXCEPTION 
+	  BEGIN AUTONOMOUS TRANSACTION 	
+	   
+	-- Do Nothing. Exception Handled to ensure SP does not get terminated 
+	
+ 	  END;
+ 	  
+	 -- Insert record into error table
+	 
+	     INSERT INTO "NDB_COMMON"."IFRS_R1.COMMON_COMP.NDB_COMMON::OB_MARKET_EH"(
+		             "MARKET_CODE",
+					 "MARKET_NAME",
+					 "ALT_MARKET_NAME",
+					 "RELATED_MARKET",
+					 "REFERENCE_EFFECTIVE_DT",
+					 "REFERENCE_EXPIRY_DT",
+					 "ERROR_CODE",
+					 "TECHNICAL_MESSAGE",
+					 "ERROR_CREATE_TS")
+		      VALUES (MARKET."MARKET_CODE",
+					 MARKET."MARKET_NAME",
+					 MARKET."ALT_MARKET_NAME",
+					 MARKET."RELATED_MARKET",
+					 MARKET."EFF_DT",
+					 MARKET."REFERENCE_EXPIRY_DT",
+					 ::SQL_ERROR_CODE,
+		             ::SQL_ERROR_MESSAGE,
+		             LV_CUR_UTC);
+		             
+	  	LV_ERROR_FLAG := 'Y';   
+		LV_LOOP_ERROR_FLAG := 1;
+	  	
+         
+    END;
+    
+    -- FOR CLEARING THE VARIABLES
+
+	IF ((LV_PREV_RECORD IS NULL ) OR (MARKET."MARKET_CODE" != LV_PREV_RECORD)) THEN
+
+		LV_LOOP_ERROR_FLAG := 0;
+		LV_PREV_RECORD := "MARKET"."MARKET_CODE";
+					 	   
+    END IF;
+    
+   
+   --  Check the Error Status of the Record. If Record is with Error, then send to Error Table
+	IF MARKET.ERROR_STATUS = '1'  THEN
+	
+	
+	--  Call the Stored Procedure to split the concatenated Error Messages into Error Rows
+		CALL "NDB_COMMON"."IFRS_R1.COMMON_COMP.EH::SP_EH_SPLIT_ERRORS"(MARKET."ERROR_CODE", ERROR_TAB, RECORD_COUNT);
+
+     -- Loop through the Error Records
+		FOR i IN 1 .. :RECORD_COUNT DO
+			
+		 -- Fetch the Error Code
+			CURRENT_ERROR = :ERROR_TAB."ERROR_CODE"[:i];
+			
+		 -- Insert into the Error Table
+   
+    INSERT INTO "NDB_COMMON"."IFRS_R1.COMMON_COMP.NDB_COMMON::OB_MARKET_EH"(
+		             "MARKET_CODE",
+					 "MARKET_NAME",
+					 "ALT_MARKET_NAME",
+					 "RELATED_MARKET",
+					 "REFERENCE_EFFECTIVE_DT",
+					 "REFERENCE_EXPIRY_DT",
+					 "INSERT_TS",
+					 "ERROR_CODE",
+					 "ERROR_CREATE_TS")
+		      VALUES (MARKET."MARKET_CODE",
+					 MARKET."MARKET_NAME",
+					 MARKET."ALT_MARKET_NAME",
+					 MARKET."RELATED_MARKET",
+					 MARKET."EFF_DT",
+					 MARKET."REFERENCE_EXPIRY_DT",
+					 LV_CUR_UTC,
+					 :CURRENT_ERROR,
+		             LV_CUR_UTC);
+   
+    END FOR ;
+    
+    -- Set Error Flag				        
+			LV_ERROR_FLAG := 'Y';
+		    LV_LOOP_ERROR_FLAG := 1;
+	    
+    
+    ELSE 
+         IF MARKET.ERROR_STATUS = '0' THEN
+	    
+	        IF LV_LOOP_ERROR_FLAG = 1 THEN
+	        
+	         INSERT INTO "NDB_COMMON"."IFRS_R1.COMMON_COMP.NDB_COMMON::OB_MARKET_EH"(
+		             "MARKET_CODE",
+					 "MARKET_NAME",
+					 "ALT_MARKET_NAME",
+					 "RELATED_MARKET",
+					 "REFERENCE_EFFECTIVE_DT",
+					 "REFERENCE_EXPIRY_DT",
+					 "INSERT_TS",
+					 "ERROR_CODE",
+					 "ERROR_CREATE_TS")
+		      VALUES (MARKET."MARKET_CODE",
+					 MARKET."MARKET_NAME",
+					 MARKET."ALT_MARKET_NAME",
+					 MARKET."RELATED_MARKET",
+					 MARKET."EFF_DT",
+					 MARKET."REFERENCE_EXPIRY_DT",
+					 LV_CUR_UTC,
+					 'PREVIOUS VERSION IN ERROR',
+		             LV_CUR_UTC);
+   
+    		             
+--   Processing for Successful Records   
+
+--   If Record exists in the Target NDB Table
+     ELSE IF MARKET.FLAG_EXISTING_RECORD = 'U' THEN
+       BEGIN AUTONOMOUS TRANSACTION 
+
+	--     Update the target NDB table
+		   UPDATE "NDB_COMMON"."IFRS_R1.COMMON_COMP.NDB_COMMON::OB_MARKET" NDB 
+			  SET  NDB.REFERENCE_EXPIRY_DT          = MARKET.EFFECTIVE_DATE_PREV_DAY,
+		 		   NDB.MODIFIED_TS                  = LV_CUR_UTC 
+			WHERE  MARKET."MARKET_CODE"             = NDB."MARKET_CODE" AND 
+				   NDB.REFERENCE_EXPIRY_DT          = '99991231';	
+				   
+		 --    Insert the Incoming new record
+		        INSERT INTO  "NDB_COMMON"."IFRS_R1.COMMON_COMP.NDB_COMMON::OB_MARKET"(
+				             "MARKET_CODE",
+							 "MARKET_NAME",
+							 "ALT_MARKET_NAME",
+							 "RELATED_MARKET",
+							 "REFERENCE_EFFECTIVE_DT",
+							 "REFERENCE_EXPIRY_DT",
+							 "INSERT_TS"
+		                     )
+				     VALUES (MARKET."MARKET_CODE",
+				             MARKET."MARKET_NAME",
+							 MARKET."ALT_MARKET_NAME",
+							 MARKET."RELATED_MARKET",
+							 MARKET."EFF_DT",
+							 MARKET."REFERENCE_EXPIRY_DT",
+							 LV_CUR_UTC
+		                     );
+		                     
+       END;	
+  
+--         Insert PK of successfully processed Records into Local Temp Tables 
+--         for Updating NDB_TS in corresponding Landing Tables records
+		   INSERT INTO #UPDATE_IFRS_OB_MARKET
+					   ("MARKET_CODE",  
+					    "EFF_DT") 
+			    VALUES (MARKET."MARKET_CODE", 
+				 		MARKET."EFF_DT");
+					   					   	    		
+		   INSERT INTO #UPDATE_EH_DELETION
+					   ("MARKET_CODE",  
+					    "REFERENCE_EFFECTIVE_DT") 
+			    VALUES (MARKET."MARKET_CODE", 
+				 		MARKET."EFF_DT");
+					   	
+     ELSEIF MARKET.FLAG_EXISTING_RECORD = 'I' THEN
+     BEGIN AUTONOMOUS TRANSACTION
+     	 --    Insert Records into the target NDB table
+		        INSERT INTO  "NDB_COMMON"."IFRS_R1.COMMON_COMP.NDB_COMMON::OB_MARKET"(
+				             "MARKET_CODE",
+							 "MARKET_NAME",
+							 "ALT_MARKET_NAME",
+							 "RELATED_MARKET",
+							 "REFERENCE_EFFECTIVE_DT",
+							 "REFERENCE_EXPIRY_DT",
+							 "INSERT_TS")
+				     VALUES (MARKET."MARKET_CODE",
+				             MARKET."MARKET_NAME",
+							 MARKET."ALT_MARKET_NAME",
+							 MARKET."RELATED_MARKET",
+							 MARKET."REFERENCE_EFFECTIVE_DT",
+							 MARKET."REFERENCE_EXPIRY_DT",
+							 LV_CUR_UTC);
+		         END;            
+--         Insert PK of successfully processed Records into Local Temp Tables 
+--         for Updating NDB_TS in corresponding Landing Tables records
+		   INSERT INTO #UPDATE_IFRS_OB_MARKET
+					   ("MARKET_CODE",  
+					    "EFF_DT") 
+			    VALUES (MARKET."MARKET_CODE", 
+				 		MARKET."EFF_DT");
+					   					   	    		
+		   INSERT INTO #UPDATE_EH_DELETION
+					   ("MARKET_CODE",  
+					    "REFERENCE_EFFECTIVE_DT") 
+			    VALUES (MARKET."MARKET_CODE", 
+				 		MARKET."EFF_DT");
+					   	
+      END IF;    
+     END IF;
+    END IF;
+   END IF;  
+END FOR;	
+
+--------------------------------------------------------------------------------------------------
+-- Update Landing Tables
+-------------------------------------------------------------------------------------------------- 
+
+-- Update Landing Table IFRS_R1.LAND::OB_MARKET
+UPDATE "LAND"."IFRS_R1.LAND::IFRS_OB_MARKET"  A
+  FROM "LAND"."IFRS_R1.LAND::IFRS_OB_MARKET"  A 
+ INNER JOIN #UPDATE_IFRS_OB_MARKET B 
+    ON A."MARKET_CODE"   = B."MARKET_CODE"
+   AND A.EFF_DT          = B."EFF_DT"
+   SET NDB_TS            = LV_CUR_UTC
+ WHERE A.NDB_TS IS NULL;
+
+--------------------------------------------------------------------------------------------------
+-- Update Error Table
+--------------------------------------------------------------------------------------------------
+
+  UPDATE "NDB_COMMON"."IFRS_R1.COMMON_COMP.NDB_COMMON::OB_MARKET_EH"A
+    FROM "NDB_COMMON"."IFRS_R1.COMMON_COMP.NDB_COMMON::OB_MARKET_EH" A 
+   INNER JOIN #UPDATE_EH_DELETION B
+      ON A."MARKET_CODE"             = B."MARKET_CODE"
+     AND A."REFERENCE_EFFECTIVE_DT"  = B."REFERENCE_EFFECTIVE_DT"
+     SET (DELETE_DATE, DELETED)      = (CURRENT_DATE, 1);
+
+--------------------------------------------------------------------------------------------------
+-- Set Overall Status
+-------------------------------------------------------------------------------------------------- 
+
+--  STATUS 0: Send the success message to scheduling tool to confirm this procedure has been
+--  executed successfully
+    IF(LV_ERROR_FLAG = 'Y') THEN		
+
+     OP_STATUS := LC_ERROR_TEXT; 
+			
+    ELSE
+
+  	 OP_STATUS := LC_SUCCESS_TEXT; 	
+				
+	END IF;
+	
+END;

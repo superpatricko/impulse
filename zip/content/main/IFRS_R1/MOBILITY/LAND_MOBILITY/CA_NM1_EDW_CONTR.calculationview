@@ -1,0 +1,459 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:AccessControl="http://www.sap.com/ndb/SQLCoreModelAccessControl.ecore" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" xmlns:Variable="http://www.sap.com/ndb/BiModelVariable.ecore" schemaVersion="2.3" id="CA_NM1_EDW_CONTR" applyPrivilegeType="NONE" checkAnalyticPrivileges="false" defaultClient="$$client$$" defaultLanguage="$$language$$" hierarchiesSQLEnabled="false" translationRelevant="true" visibility="internal" calculationScenarioType="TREE_BASED" dataCategory="DIMENSION" enforceSqlExecution="false" executionSemantic="UNDEFINED" outputViewType="Projection">
+  <descriptions defaultDescription="Landing View – Table NM1_EDW_CONTR"/>
+  <localVariables>
+    <variable id="IP_EFF_DT" parameter="true">
+      <descriptions defaultDescription="IP_EFF_DT"/>
+      <variableProperties datatype="DATE" defaultValue="99991231" mandatory="false">
+        <valueDomain type="Date"/>
+        <selection multiLine="false" type="SingleValue"/>
+      </variableProperties>
+    </variable>
+  </localVariables>
+  <variableMappings>
+    <mapping xsi:type="Variable:ConstantVariableMapping" dataSource="#CA_EH_ERROR_TABLE" value="1209">
+      <targetVariable name="IP_JOB_ID" resourceUri="/IFRS_R1.LAND.EH/calculationviews/CA_EH_ERROR_TABLE"/>
+    </mapping>
+  </variableMappings>
+  <informationModelLayout relativeWidthScenario="48"/>
+  <dataSources>
+    <DataSource id="IFRS_R1.LAND::NM1_EDW_CONTR" type="DATA_BASE_TABLE">
+      <viewAttributes allViewAttributes="true"/>
+      <columnObject schemaName="LAND" columnObjectName="IFRS_R1.LAND::NM1_EDW_CONTR"/>
+    </DataSource>
+    <DataSource id="CA_EH_ERROR_TABLE" type="CALCULATION_VIEW">
+      <viewAttributes allViewAttributes="true"/>
+      <resourceUri>/IFRS_R1.LAND.EH/calculationviews/CA_EH_ERROR_TABLE</resourceUri>
+    </DataSource>
+  </dataSources>
+  <calculationViews>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_NM1_EDW_CONTR" filterExpressionLanguage="COLUMN_ENGINE">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="ODS_SYST_CD"/>
+        <viewAttribute id="EFF_DT"/>
+        <viewAttribute id="EXPY_DT"/>
+        <viewAttribute id="BAN"/>
+        <viewAttribute id="SUBSCRIBER_NO"/>
+        <viewAttribute id="TRX_SEQ_NO"/>
+        <viewAttribute id="ACTIVITY_CODE"/>
+        <viewAttribute id="ACTIVITY_REASON_CODE"/>
+        <viewAttribute id="CONTRACT_START_DATE"/>
+        <viewAttribute id="CONTRACT_END_DATE"/>
+        <viewAttribute id="CONTRACT_TERM"/>
+        <viewAttribute id="CONTRACT_TYPE"/>
+        <viewAttribute id="CONTRACT_TIER"/>
+        <viewAttribute id="EI_GRP_SEQ_NO"/>
+        <viewAttribute id="INSTAL_PLAN_ID"/>
+        <viewAttribute id="DSAPA_EXEMPT_IND"/>
+        <viewAttribute id="HUG_ELIGIBILITY_OVERRIDE"/>
+        <viewAttribute id="EHUG_ELIGIBILITY_OVERRIDE"/>
+        <viewAttribute id="TRANSACTION_GROUP_ID"/>
+        <viewAttribute id="CURRENT_IMEI"/>
+        <viewAttribute id="BUYERS_REMORSE"/>
+        <viewAttribute id="DEALER_CODE"/>
+        <viewAttribute id="CYCL_ID"/>
+        <viewAttribute id="INSRT_TS"/>
+        <viewAttribute id="SP_ORDER_BYOD_CONTR_TS"/>
+        <viewAttribute id="SP_ORDER_COAM_CONTR_TS"/>
+        <viewAttribute id="SP_ORDER_SUBSIDY_CONTR_TS"/>
+        <viewAttribute id="SP_ORDER_AGREE_CONTR_TS"/>
+        <viewAttribute id="SP_ORDER_CONTR_TS"/>
+        <viewAttribute id="NDB_MART"/>
+        <viewAttribute id="SEQ_ID"/>
+        <viewAttribute id="SRC_TS"/>
+        <viewAttribute id="PROCESS_ID"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CC_VERSION_CHECK" length="200" expressionLanguage="COLUMN_ENGINE">
+          <formula>&quot;BAN&quot;+ '|'+&quot;SUBSCRIBER_NO&quot;+'|'+&quot;TRX_SEQ_NO&quot;</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#IFRS_R1.LAND::NM1_EDW_CONTR">
+        <mapping xsi:type="Calculation:AttributeMapping" target="ODS_SYST_CD" source="ODS_SYST_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFF_DT" source="EFF_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXPY_DT" source="EXPY_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BAN" source="BAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBSCRIBER_NO" source="SUBSCRIBER_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRX_SEQ_NO" source="TRX_SEQ_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACTIVITY_CODE" source="ACTIVITY_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACTIVITY_REASON_CODE" source="ACTIVITY_REASON_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTRACT_START_DATE" source="CONTRACT_START_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTRACT_END_DATE" source="CONTRACT_END_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTRACT_TERM" source="CONTRACT_TERM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTRACT_TYPE" source="CONTRACT_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTRACT_TIER" source="CONTRACT_TIER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EI_GRP_SEQ_NO" source="EI_GRP_SEQ_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INSTAL_PLAN_ID" source="INSTAL_PLAN_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DSAPA_EXEMPT_IND" source="DSAPA_EXEMPT_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="HUG_ELIGIBILITY_OVERRIDE" source="HUG_ELIGIBILITY_OVERRIDE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EHUG_ELIGIBILITY_OVERRIDE" source="EHUG_ELIGIBILITY_OVERRIDE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRANSACTION_GROUP_ID" source="TRANSACTION_GROUP_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CURRENT_IMEI" source="CURRENT_IMEI"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUYERS_REMORSE" source="BUYERS_REMORSE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DEALER_CODE" source="DEALER_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INSRT_TS" source="INSRT_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SP_ORDER_BYOD_CONTR_TS" source="SP_ORDER_BYOD_CONTR_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SP_ORDER_COAM_CONTR_TS" source="SP_ORDER_COAM_CONTR_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SP_ORDER_SUBSIDY_CONTR_TS" source="SP_ORDER_SUBSIDY_CONTR_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SP_ORDER_AGREE_CONTR_TS" source="SP_ORDER_AGREE_CONTR_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SP_ORDER_CONTR_TS" source="SP_ORDER_CONTR_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NDB_MART" source="NDB_MART"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SEQ_ID" source="SEQ_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SRC_TS" source="SRC_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROCESS_ID" source="PROCESS_ID"/>
+      </input>
+      <filter>&quot;EFF_DT&quot; &lt;= '$$IP_EFF_DT$$'</filter>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_ERROR_TABLE">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="PARENT_KEY"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#CA_EH_ERROR_TABLE">
+        <mapping xsi:type="Calculation:AttributeMapping" target="PARENT_KEY" source="PARENT_KEY"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="JOIN" joinOrder="OUTSIDE_IN" joinType="leftOuter">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="ODS_SYST_CD"/>
+        <viewAttribute id="EFF_DT"/>
+        <viewAttribute id="EXPY_DT"/>
+        <viewAttribute id="BAN"/>
+        <viewAttribute id="SUBSCRIBER_NO"/>
+        <viewAttribute id="TRX_SEQ_NO"/>
+        <viewAttribute id="ACTIVITY_CODE"/>
+        <viewAttribute id="ACTIVITY_REASON_CODE"/>
+        <viewAttribute id="CONTRACT_START_DATE"/>
+        <viewAttribute id="CONTRACT_END_DATE"/>
+        <viewAttribute id="CONTRACT_TERM"/>
+        <viewAttribute id="CONTRACT_TYPE"/>
+        <viewAttribute id="CONTRACT_TIER"/>
+        <viewAttribute id="EI_GRP_SEQ_NO"/>
+        <viewAttribute id="INSTAL_PLAN_ID"/>
+        <viewAttribute id="DSAPA_EXEMPT_IND"/>
+        <viewAttribute id="HUG_ELIGIBILITY_OVERRIDE"/>
+        <viewAttribute id="EHUG_ELIGIBILITY_OVERRIDE"/>
+        <viewAttribute id="TRANSACTION_GROUP_ID"/>
+        <viewAttribute id="CURRENT_IMEI"/>
+        <viewAttribute id="BUYERS_REMORSE"/>
+        <viewAttribute id="DEALER_CODE"/>
+        <viewAttribute id="CYCL_ID"/>
+        <viewAttribute id="INSRT_TS"/>
+        <viewAttribute id="SP_ORDER_BYOD_CONTR_TS"/>
+        <viewAttribute id="SP_ORDER_COAM_CONTR_TS"/>
+        <viewAttribute id="SP_ORDER_SUBSIDY_CONTR_TS"/>
+        <viewAttribute id="SP_ORDER_AGREE_CONTR_TS"/>
+        <viewAttribute id="SP_ORDER_CONTR_TS"/>
+        <viewAttribute id="NDB_MART"/>
+        <viewAttribute id="SEQ_ID"/>
+        <viewAttribute id="SRC_TS"/>
+        <viewAttribute id="PROCESS_ID"/>
+        <viewAttribute id="CC_VERSION_CHECK"/>
+        <viewAttribute id="PARENT_KEY_ERROR"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#PROJ_NM1_EDW_CONTR">
+        <mapping xsi:type="Calculation:AttributeMapping" target="ODS_SYST_CD" source="ODS_SYST_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFF_DT" source="EFF_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXPY_DT" source="EXPY_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BAN" source="BAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBSCRIBER_NO" source="SUBSCRIBER_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRX_SEQ_NO" source="TRX_SEQ_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACTIVITY_CODE" source="ACTIVITY_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACTIVITY_REASON_CODE" source="ACTIVITY_REASON_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTRACT_START_DATE" source="CONTRACT_START_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTRACT_END_DATE" source="CONTRACT_END_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTRACT_TERM" source="CONTRACT_TERM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTRACT_TYPE" source="CONTRACT_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTRACT_TIER" source="CONTRACT_TIER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EI_GRP_SEQ_NO" source="EI_GRP_SEQ_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INSTAL_PLAN_ID" source="INSTAL_PLAN_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DSAPA_EXEMPT_IND" source="DSAPA_EXEMPT_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="HUG_ELIGIBILITY_OVERRIDE" source="HUG_ELIGIBILITY_OVERRIDE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EHUG_ELIGIBILITY_OVERRIDE" source="EHUG_ELIGIBILITY_OVERRIDE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRANSACTION_GROUP_ID" source="TRANSACTION_GROUP_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CURRENT_IMEI" source="CURRENT_IMEI"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUYERS_REMORSE" source="BUYERS_REMORSE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DEALER_CODE" source="DEALER_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INSRT_TS" source="INSRT_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SP_ORDER_BYOD_CONTR_TS" source="SP_ORDER_BYOD_CONTR_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SP_ORDER_COAM_CONTR_TS" source="SP_ORDER_COAM_CONTR_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SP_ORDER_SUBSIDY_CONTR_TS" source="SP_ORDER_SUBSIDY_CONTR_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SP_ORDER_AGREE_CONTR_TS" source="SP_ORDER_AGREE_CONTR_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SP_ORDER_CONTR_TS" source="SP_ORDER_CONTR_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NDB_MART" source="NDB_MART"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SEQ_ID" source="SEQ_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SRC_TS" source="SRC_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROCESS_ID" source="PROCESS_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_VERSION_CHECK" source="CC_VERSION_CHECK"/>
+      </input>
+      <input node="#PROJ_ERROR_TABLE">
+        <mapping xsi:type="Calculation:AttributeMapping" target="PARENT_KEY_ERROR" source="PARENT_KEY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_VERSION_CHECK" source="PARENT_KEY"/>
+      </input>
+      <joinAttribute name="CC_VERSION_CHECK"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_ERROR_FILTER">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="ODS_SYST_CD"/>
+        <viewAttribute id="EFF_DT"/>
+        <viewAttribute id="EXPY_DT"/>
+        <viewAttribute id="BAN"/>
+        <viewAttribute id="SUBSCRIBER_NO"/>
+        <viewAttribute id="TRX_SEQ_NO"/>
+        <viewAttribute id="ACTIVITY_CODE"/>
+        <viewAttribute id="ACTIVITY_REASON_CODE"/>
+        <viewAttribute id="CONTRACT_START_DATE"/>
+        <viewAttribute id="CONTRACT_END_DATE"/>
+        <viewAttribute id="CONTRACT_TERM"/>
+        <viewAttribute id="CONTRACT_TYPE"/>
+        <viewAttribute id="CONTRACT_TIER"/>
+        <viewAttribute id="EI_GRP_SEQ_NO"/>
+        <viewAttribute id="INSTAL_PLAN_ID"/>
+        <viewAttribute id="DSAPA_EXEMPT_IND"/>
+        <viewAttribute id="HUG_ELIGIBILITY_OVERRIDE"/>
+        <viewAttribute id="EHUG_ELIGIBILITY_OVERRIDE"/>
+        <viewAttribute id="TRANSACTION_GROUP_ID"/>
+        <viewAttribute id="CURRENT_IMEI"/>
+        <viewAttribute id="BUYERS_REMORSE"/>
+        <viewAttribute id="DEALER_CODE"/>
+        <viewAttribute id="CYCL_ID"/>
+        <viewAttribute id="INSRT_TS"/>
+        <viewAttribute id="SP_ORDER_BYOD_CONTR_TS"/>
+        <viewAttribute id="SP_ORDER_COAM_CONTR_TS"/>
+        <viewAttribute id="SP_ORDER_SUBSIDY_CONTR_TS"/>
+        <viewAttribute id="SP_ORDER_AGREE_CONTR_TS"/>
+        <viewAttribute id="SP_ORDER_CONTR_TS"/>
+        <viewAttribute id="NDB_MART"/>
+        <viewAttribute id="SEQ_ID"/>
+        <viewAttribute id="SRC_TS"/>
+        <viewAttribute id="PROCESS_ID"/>
+        <viewAttribute id="CC_VERSION_CHECK"/>
+        <viewAttribute id="PARENT_KEY_ERROR">
+          <filter xsi:type="AccessControl:SingleValueFilter" operator="NL" including="true"/>
+        </viewAttribute>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#JOIN">
+        <mapping xsi:type="Calculation:AttributeMapping" target="ODS_SYST_CD" source="ODS_SYST_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFF_DT" source="EFF_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXPY_DT" source="EXPY_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BAN" source="BAN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SUBSCRIBER_NO" source="SUBSCRIBER_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRX_SEQ_NO" source="TRX_SEQ_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACTIVITY_CODE" source="ACTIVITY_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACTIVITY_REASON_CODE" source="ACTIVITY_REASON_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTRACT_START_DATE" source="CONTRACT_START_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTRACT_END_DATE" source="CONTRACT_END_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTRACT_TERM" source="CONTRACT_TERM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTRACT_TYPE" source="CONTRACT_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTRACT_TIER" source="CONTRACT_TIER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EI_GRP_SEQ_NO" source="EI_GRP_SEQ_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INSTAL_PLAN_ID" source="INSTAL_PLAN_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DSAPA_EXEMPT_IND" source="DSAPA_EXEMPT_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="HUG_ELIGIBILITY_OVERRIDE" source="HUG_ELIGIBILITY_OVERRIDE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EHUG_ELIGIBILITY_OVERRIDE" source="EHUG_ELIGIBILITY_OVERRIDE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="TRANSACTION_GROUP_ID" source="TRANSACTION_GROUP_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CURRENT_IMEI" source="CURRENT_IMEI"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUYERS_REMORSE" source="BUYERS_REMORSE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DEALER_CODE" source="DEALER_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INSRT_TS" source="INSRT_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SP_ORDER_BYOD_CONTR_TS" source="SP_ORDER_BYOD_CONTR_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SP_ORDER_COAM_CONTR_TS" source="SP_ORDER_COAM_CONTR_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SP_ORDER_SUBSIDY_CONTR_TS" source="SP_ORDER_SUBSIDY_CONTR_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SP_ORDER_AGREE_CONTR_TS" source="SP_ORDER_AGREE_CONTR_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SP_ORDER_CONTR_TS" source="SP_ORDER_CONTR_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NDB_MART" source="NDB_MART"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SEQ_ID" source="SEQ_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SRC_TS" source="SRC_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROCESS_ID" source="PROCESS_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_VERSION_CHECK" source="CC_VERSION_CHECK"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PARENT_KEY_ERROR" source="PARENT_KEY_ERROR"/>
+      </input>
+    </calculationView>
+  </calculationViews>
+  <logicalModel id="PROJ_ERROR_FILTER">
+    <descriptions/>
+    <attributes>
+      <attribute id="ODS_SYST_CD" order="1" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ODS_SYST_CD"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="ODS_SYST_CD"/>
+      </attribute>
+      <attribute id="EFF_DT" order="2" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="EFF_DT"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="EFF_DT"/>
+      </attribute>
+      <attribute id="EXPY_DT" order="3" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="EXPY_DT"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="EXPY_DT"/>
+      </attribute>
+      <attribute id="BAN" order="4" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="BAN"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="BAN"/>
+      </attribute>
+      <attribute id="SUBSCRIBER_NO" order="5" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SUBSCRIBER_NO"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="SUBSCRIBER_NO"/>
+      </attribute>
+      <attribute id="TRX_SEQ_NO" order="6" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="TRX_SEQ_NO"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="TRX_SEQ_NO"/>
+      </attribute>
+      <attribute id="ACTIVITY_CODE" order="7" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ACTIVITY_CODE"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="ACTIVITY_CODE"/>
+      </attribute>
+      <attribute id="ACTIVITY_REASON_CODE" order="8" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ACTIVITY_REASON_CODE"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="ACTIVITY_REASON_CODE"/>
+      </attribute>
+      <attribute id="CONTRACT_START_DATE" order="9" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CONTRACT_START_DATE"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="CONTRACT_START_DATE"/>
+      </attribute>
+      <attribute id="CONTRACT_END_DATE" order="10" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CONTRACT_END_DATE"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="CONTRACT_END_DATE"/>
+      </attribute>
+      <attribute id="CONTRACT_TERM" order="11" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CONTRACT_TERM"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="CONTRACT_TERM"/>
+      </attribute>
+      <attribute id="CONTRACT_TYPE" order="12" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CONTRACT_TYPE"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="CONTRACT_TYPE"/>
+      </attribute>
+      <attribute id="CONTRACT_TIER" order="13" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CONTRACT_TIER"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="CONTRACT_TIER"/>
+      </attribute>
+      <attribute id="EI_GRP_SEQ_NO" order="14" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="EI_GRP_SEQ_NO"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="EI_GRP_SEQ_NO"/>
+      </attribute>
+      <attribute id="INSTAL_PLAN_ID" order="15" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="INSTAL_PLAN_ID"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="INSTAL_PLAN_ID"/>
+      </attribute>
+      <attribute id="DSAPA_EXEMPT_IND" order="16" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="DSAPA_EXEMPT_IND"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="DSAPA_EXEMPT_IND"/>
+      </attribute>
+      <attribute id="HUG_ELIGIBILITY_OVERRIDE" order="17" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="HUG_ELIGIBILITY_OVERRIDE"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="HUG_ELIGIBILITY_OVERRIDE"/>
+      </attribute>
+      <attribute id="EHUG_ELIGIBILITY_OVERRIDE" order="18" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="EHUG_ELIGIBILITY_OVERRIDE"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="EHUG_ELIGIBILITY_OVERRIDE"/>
+      </attribute>
+      <attribute id="TRANSACTION_GROUP_ID" order="19" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="TRANSACTION_GROUP_ID"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="TRANSACTION_GROUP_ID"/>
+      </attribute>
+      <attribute id="CURRENT_IMEI" order="20" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CURRENT_IMEI"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="CURRENT_IMEI"/>
+      </attribute>
+      <attribute id="BUYERS_REMORSE" order="21" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="BUYERS_REMORSE"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="BUYERS_REMORSE"/>
+      </attribute>
+      <attribute id="DEALER_CODE" order="22" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="DEALER_CODE"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="DEALER_CODE"/>
+      </attribute>
+      <attribute id="CYCL_ID" order="23" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CYCL_ID"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="CYCL_ID"/>
+      </attribute>
+      <attribute id="INSRT_TS" order="24" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="INSRT_TS"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="INSRT_TS"/>
+      </attribute>
+      <attribute id="SP_ORDER_BYOD_CONTR_TS" order="25" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SP_ORDER_BYOD_CONTR_TS"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="SP_ORDER_BYOD_CONTR_TS"/>
+      </attribute>
+      <attribute id="SP_ORDER_COAM_CONTR_TS" order="26" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SP_ORDER_COAM_CONTR_TS"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="SP_ORDER_COAM_CONTR_TS"/>
+      </attribute>
+      <attribute id="SP_ORDER_SUBSIDY_CONTR_TS" order="27" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SP_ORDER_SUBSIDY_CONTR_TS"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="SP_ORDER_SUBSIDY_CONTR_TS"/>
+      </attribute>
+      <attribute id="SP_ORDER_AGREE_CONTR_TS" order="28" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SP_ORDER_AGREE_CONTR_TS"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="SP_ORDER_AGREE_CONTR_TS"/>
+      </attribute>
+      <attribute id="SP_ORDER_CONTR_TS" order="29" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SP_ORDER_CONTR_TS"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="SP_ORDER_CONTR_TS"/>
+      </attribute>
+      <attribute id="NDB_MART" order="30" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="NDB_MART"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="NDB_MART"/>
+      </attribute>
+      <attribute id="SEQ_ID" order="31" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SEQ_ID"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="SEQ_ID"/>
+      </attribute>
+      <attribute id="SRC_TS" order="32" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SRC_TS"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="SRC_TS"/>
+      </attribute>
+      <attribute id="PROCESS_ID" order="33" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="PROCESS_ID"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="PROCESS_ID"/>
+      </attribute>
+      <attribute id="PARENT_KEY" order="34" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="PARENT_KEY"/>
+        <keyMapping columnObjectName="PROJ_ERROR_FILTER" columnName="CC_VERSION_CHECK"/>
+      </attribute>
+    </attributes>
+    <calculatedAttributes/>
+    <privateDataFoundation>
+      <tableProxies/>
+      <joins/>
+      <layout>
+        <shapes/>
+      </layout>
+    </privateDataFoundation>
+    <baseMeasures/>
+    <calculatedMeasures/>
+    <restrictedMeasures/>
+    <localDimensions/>
+  </logicalModel>
+  <layout>
+    <shapes>
+      <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+        <upperLeftCorner x="164" y="87"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_NM1_EDW_CONTR" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="22" y="339"/>
+        <rectangleSize height="64" width="211"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_ERROR_TABLE" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="247" y="339"/>
+        <rectangleSize height="66" width="191"/>
+      </shape>
+      <shape expanded="true" modelObjectName="JOIN" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="164" y="243"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_ERROR_FILTER" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="164" y="165"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+    </shapes>
+  </layout>
+</Calculation:scenario>
