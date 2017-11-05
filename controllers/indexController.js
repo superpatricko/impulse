@@ -19,7 +19,7 @@ exports.index = function(req, res) {
 			console.log('Setting origin...')
 				// Running this comamnd assuming there is already a remote called 'origin' already set
 				// If no such remote exist, use `git remote add origin REPO_NAME` before running this program
-			exec('cd zip && git remote set-url origin ' + REPO);
+			exec('cd zip && git remote set-url origin ' + remote);
 			cb();
 		},
 		zero: function(cb) {
