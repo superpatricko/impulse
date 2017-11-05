@@ -7,17 +7,21 @@ const git = require('simple-git')('./zip');
 var USER = 'superpatricko@gmail.com';
 var PASS = 'RGHRX9gXbrcnNjuhDuWtFTzK';
 var REPO = 'github.com/superpatricko/impulse'
-const remote = `https://${USER}:${PASS}@${REPO}`;
+const remote = `https://${USER}:${PASS}@${REPO}`; // The remote where you want the git diffs to be located
 // https://github.com/superpatricko/impulse.git
 
 exports.index = function(req, res) {
 	var DEVzip = new AdmZip("./zip/DEV.zip");
 	var QAzip = new AdmZip("./zip/QA.zip");
 
-
-
-	// TODO check and and `git add remote origin`
 	async.series({
+		setOrigin: function(cb) {
+			console.log('Setting origin...')
+				// Running this comamnd assuming there is already a remote called 'origin' already set
+				// If no such remote exist, use `git remote add origin REPO_NAME` before running this program
+			exec('git remote set-url origin ' + REPO);
+			cb();
+		},
 		zero: function(cb) {
 			exec('rm -rf zip/content');
 			console.log('0. Remove old content folder')
@@ -131,15 +135,41 @@ exports.index = function(req, res) {
 		var result = exec('cd zip && git diff --name-only --diff-filter=M DEV..QA ', {
 			maxBuffer: 1024 * 1000000
 		});
-		
+
 		// Split into an array and filter
 		result = result.toString().replace(/content\/main\//g, '/').split('\n');
-		result = result.filter(function(n){ return n.length !== 0 });
+		result = result.filter(function(n) {
+			return n.length !== 0
+		});
+
+		console.log('Writing to txt file');
+		exec('cd zip/content && git diff --name-only --diff-filter=M DEV..QA > diff.txt', {
+			maxBuffer: 1024 * 1000000
+		});
 
 		// Final output
 		console.log('Finished: render final result');
 		res.render('index', {
-			data: result
+			data: result,
+			birthDate: new Date()
 		});
 	});
 };
+
+exports.view = function(req, res) {
+	fs.stat('./zip/content/diff.txt', function(err, data) {
+		var birthDate = new Date(data.birthtime);
+		var filesChanged = exec('cd zip/content && cat diff.txt')
+
+		// Split into an array and filter
+		filesChanged = filesChanged.toString().replace(/content\/main\//g, '/').split('\n');
+		filesChanged = filesChanged.filter(function(n) {
+			return n.length !== 0
+		});
+
+		res.render('index', {
+			birthDate: birthDate,
+			data: filesChanged
+		});
+	});
+}
