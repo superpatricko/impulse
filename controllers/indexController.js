@@ -4,9 +4,9 @@ var async = require('async');
 
 var AdmZip = require('adm-zip');
 const git = require('simple-git')('./zip');
-var USER = 'superpatricko@gmail.com';
+var USER = 'superpatricko'; // CANNOT BE EMAIL (due to parsing issues...)
 var PASS = 'RGHRX9gXbrcnNjuhDuWtFTzK';
-var REPO = 'github.com/superpatricko/impulse'
+var REPO = 'github.com/superpatricko/impulse.git'
 const remote = `https://${USER}:${PASS}@${REPO}`; // The remote where you want the git diffs to be located
 // https://github.com/superpatricko/impulse.git
 
@@ -18,9 +18,15 @@ exports.index = function(req, res) {
 		setOrigin: function(cb) {
 			console.log('Setting origin...')
 				// Running this comamnd assuming there is already a remote called 'origin' already set
-				// If no such remote exist, use `git remote add origin REPO_NAME` before running this program
-			exec('cd zip && git remote set-url origin ' + remote);
-			cb();
+				// If no such remote exist, use `git remote add origin REMOTE_NAME` before running this program
+			git.raw([
+				'remote',
+				'set-url',
+				'origin',
+				remote
+			], function() {
+				cb();
+			})
 		},
 		zero: function(cb) {
 			exec('rm -rf zip/content');
