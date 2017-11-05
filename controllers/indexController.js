@@ -131,9 +131,15 @@ exports.index = function(req, res) {
 		var result = exec('cd zip && git diff --name-only --diff-filter=M DEV..QA ', {
 			maxBuffer: 1024 * 1000000
 		});
+		
+		// Split into an array and filter
+		result = result.toString().replace(/content\/main\//g, '/').split('\n');
+		result = result.filter(function(n){ return n.length !== 0 });
+
+		// Final output
 		console.log('Finished: render final result');
 		res.render('index', {
-			data: result.toString().replace(/content\/main\//g, '/')
+			data: result
 		});
 	});
 };
