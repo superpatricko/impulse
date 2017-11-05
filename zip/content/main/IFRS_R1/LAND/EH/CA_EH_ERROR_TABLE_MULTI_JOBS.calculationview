@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" schemaVersion="2.3" id="CA_EH_ERROR_TABLE_MULTI_JOBS" applyPrivilegeType="ANALYTIC_PRIVILEGE" checkAnalyticPrivileges="true" defaultClient="$$client$$" defaultLanguage="$$language$$" hierarchiesSQLEnabled="false" translationRelevant="true" visibility="reportingEnabled" calculationScenarioType="TREE_BASED" dataCategory="CUBE" enforceSqlExecution="false" executionSemantic="UNDEFINED" outputViewType="Aggregation">
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:AccessControl="http://www.sap.com/ndb/SQLCoreModelAccessControl.ecore" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" schemaVersion="2.3" id="CA_EH_ERROR_TABLE_MULTI_JOBS" applyPrivilegeType="ANALYTIC_PRIVILEGE" checkAnalyticPrivileges="true" defaultClient="$$client$$" defaultLanguage="$$language$$" hierarchiesSQLEnabled="false" translationRelevant="true" visibility="reportingEnabled" calculationScenarioType="TREE_BASED" dataCategory="CUBE" enforceSqlExecution="false" executionSemantic="UNDEFINED" outputViewType="Aggregation">
   <descriptions defaultDescription="Private view on top the error table"/>
   <localVariables>
     <variable id="IP_JOB_ID" parameter="true">
@@ -11,7 +11,7 @@
     </variable>
   </localVariables>
   <variableMappings/>
-  <informationModelLayout relativeWidthScenario="38"/>
+  <informationModelLayout relativeWidthScenario="34"/>
   <dataSources>
     <DataSource id="IFRS_R1.LAND::ETL_ERROR_DATA" type="DATA_BASE_TABLE">
       <viewAttributes allViewAttributes="true"/>
@@ -19,12 +19,18 @@
     </DataSource>
   </dataSources>
   <calculationViews>
-    <calculationView xsi:type="Calculation:ProjectionView" id="Projection_1" filterExpressionLanguage="COLUMN_ENGINE">
+    <calculationView xsi:type="Calculation:ProjectionView" id="Projection_1">
       <descriptions/>
       <viewAttributes>
-        <viewAttribute id="DELETE_DATE"/>
+        <viewAttribute id="DELETE_DATE">
+          <filter xsi:type="AccessControl:SingleValueFilter" operator="NL" including="true"/>
+        </viewAttribute>
         <viewAttribute id="PARENT_KEY"/>
-        <viewAttribute id="JOB_ID"/>
+        <viewAttribute id="JOB_ID">
+          <filter xsi:type="AccessControl:ListValueFilter" operator="IN" including="true">
+            <operands value="$$IP_JOB_ID$$"/>
+          </filter>
+        </viewAttribute>
       </viewAttributes>
       <calculatedViewAttributes/>
       <input node="#IFRS_R1.LAND::ETL_ERROR_DATA">
@@ -32,7 +38,6 @@
         <mapping xsi:type="Calculation:AttributeMapping" target="PARENT_KEY" source="PARENT_KEY"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="JOB_ID" source="JOB_ID"/>
       </input>
-      <filter>(isNull(&quot;DELETE_DATE&quot;)) AND (in (&quot;JOB_ID&quot;,$$IP_JOB_ID$$))</filter>
     </calculationView>
   </calculationViews>
   <logicalModel id="Projection_1">

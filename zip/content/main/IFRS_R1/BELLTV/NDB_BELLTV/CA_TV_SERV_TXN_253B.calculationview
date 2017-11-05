@@ -16,7 +16,7 @@
       <localVariable>#IP_CYCL_ID</localVariable>
     </mapping>
   </variableMappings>
-  <informationModelLayout relativeWidthScenario="56"/>
+  <informationModelLayout relativeWidthScenario="44"/>
   <dataSources>
     <DataSource id="CA_TV_SERV_TXN_FILTER" type="CALCULATION_VIEW">
       <viewAttributes allViewAttributes="true"/>
@@ -155,7 +155,7 @@
         <mapping xsi:type="Calculation:AttributeMapping" target="NONDIST" source="NONDIST"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="DESCRIPTION" source="DESCRIPTION"/>
       </input>
-      <filter>(&quot;SOURCE_SYSTEM&quot; ='CSG') AND (&quot;LOB&quot; ='BTV') AND (&quot;MANDT&quot;='100') AND (&quot;NONDIST&quot; = '')</filter>
+      <filter>(&quot;SOURCE_SYSTEM&quot; ='CSG') AND (&quot;LOB&quot; ='BTV') AND (&quot;MANDT&quot;='100') AND (&quot;NONDIST&quot; = '') AND (&quot;DESCRIPTION&quot;='INSTALLATION CHARGE')</filter>
     </calculationView>
     <calculationView xsi:type="Calculation:JoinView" id="JOIN_CA_TV_SERV_TXN_FILTER_AND_ZNON_DISCTINCT" joinOrder="OUTSIDE_IN" joinType="leftOuter">
       <descriptions/>
@@ -375,7 +375,9 @@
       <filter>in (&quot;REC_TY_ID&quot;,'ADJUST_RSN_CD_01','ADJUST_RSN_CD_10')</filter>
     </calculationView>
     <calculationView xsi:type="Calculation:JoinView" id="ADJ_RSN_CD_RIGHT" joinOrder="OUTSIDE_IN" joinType="leftOuter">
-      <descriptions/>
+      <descriptions>
+        <comment text="Reference Version check will be raised as IS_20100701&#xD;&#xA;Null error will be raised as IS_20100705"/>
+      </descriptions>
       <viewAttributes>
         <viewAttribute id="ARTCL_NUM"/>
         <viewAttribute id="EXTR_DT"/>
@@ -430,6 +432,12 @@
         </calculatedViewAttribute>
         <calculatedViewAttribute datatype="DATE" id="CC_REFERENCE_EFFECTIVE_DT" expressionLanguage="COLUMN_ENGINE">
           <formula>if(isNull(&quot;REFERENCE_EFFECTIVE_DT&quot;),date('19000101'),date(&quot;REFERENCE_EFFECTIVE_DT&quot;))</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="IS_20100701" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isNull(&quot;CC_VERSION_CHECK&quot;),'0',if(&quot;CC_VERSION_CHECK&quot; = '0','0','1'))</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="IS_20100705" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>if((not isNull(&quot;ADJ_RSN_CD_RIGHT&quot;)) and isNull(&quot;ARTCL_NUM&quot;),'1','0')</formula>
         </calculatedViewAttribute>
       </calculatedViewAttributes>
       <input node="#PROJ_CA_TV_SERV_TXN_FILTER">
@@ -534,6 +542,8 @@
         <viewAttribute id="CC_REFERENCE_EFFECTIVE_DT"/>
         <viewAttribute id="CC_REFERENCE_EXPIRY_DT"/>
         <viewAttribute id="IS_20100201"/>
+        <viewAttribute id="IS_20100701"/>
+        <viewAttribute id="IS_20100705"/>
         <viewAttribute id="IS_20100901"/>
       </viewAttributes>
       <calculatedViewAttributes/>
@@ -582,6 +592,8 @@
         <mapping xsi:type="Calculation:AttributeMapping" target="CC_REFERENCE_EFFECTIVE_DT" source="CC_REFERENCE_EFFECTIVE_DT"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="CC_REFERENCE_EXPIRY_DT" source="CC_REFERENCE_EXPIRY_DT"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="IS_20100201" source="IS_20100201"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20100701" source="IS_20100701"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20100705" source="IS_20100705"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="IS_20100901" source="IS_20100901"/>
       </input>
       <filter>(&quot;EXTR_DT&quot; >=&quot;CC_REFERENCE_EFFECTIVE_DT&quot;AND &quot;EXTR_DT&quot;&lt;=&quot;CC_REFERENCE_EXPIRY_DT&quot;)</filter>
@@ -607,7 +619,9 @@
       </input>
     </calculationView>
     <calculationView xsi:type="Calculation:JoinView" id="JOIN_MDM_FIBE_SAT" joinOrder="OUTSIDE_IN" joinType="leftOuter">
-      <descriptions/>
+      <descriptions>
+        <comment text="Reference Version check will be raised as IS_20100702&#xD;&#xA;Join error will be raised as IS_20100704"/>
+      </descriptions>
       <viewAttributes>
         <viewAttribute id="CD_NM_RIGHT"/>
         <viewAttribute id="ARTCL_NUM"/>
@@ -654,7 +668,9 @@
         <viewAttribute id="REFERENCE_EFFECTIVE_DT"/>
         <viewAttribute id="IS_20100201"/>
         <viewAttribute id="CC_VERSION_CHECK"/>
+        <viewAttribute id="IS_20100701"/>
         <viewAttribute id="PROD_SHRT_NM"/>
+        <viewAttribute id="IS_20100705"/>
         <viewAttribute id="IS_20100901"/>
       </viewAttributes>
       <calculatedViewAttributes>
@@ -668,6 +684,12 @@
         </calculatedViewAttribute>
         <calculatedViewAttribute datatype="DATE" id="CC_REFERENCE_EFFECTIVE_DT" expressionLanguage="COLUMN_ENGINE">
           <formula>if(isNull(&quot;REFERENCE_EFFECTIVE_DT&quot;),date('19000101'),&quot;REFERENCE_EFFECTIVE_DT&quot;)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="IS_20100702" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isNull(&quot;ADJ_RSN_CD_RIGHT&quot;),'0',if(isNull(&quot;CC_VERSION_CHECK&quot;),'0',if(&quot;CC_VERSION_CHECK&quot; = '0','0','1')))</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="IS_20100704" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isNull(&quot;ADJ_RSN_CD_RIGHT&quot;),'0',if(isNull(&quot;CD_NM_RIGHT&quot;),'1','0'))</formula>
         </calculatedViewAttribute>
       </calculatedViewAttributes>
       <input node="#PROJ_FILTER_EXTR_DT">
@@ -711,6 +733,8 @@
         <mapping xsi:type="Calculation:AttributeMapping" target="ADJ_RSN_CD" source="ADJ_RSN_CD"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="ADJ_RSN_CD_RIGHT" source="ADJ_RSN_CD_RIGHT"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="IS_20100201" source="IS_20100201"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20100701" source="IS_20100701"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20100705" source="IS_20100705"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="IS_20100901" source="IS_20100901"/>
       </input>
       <input node="#PROJ_TV_MDM_FIBE_SAT">
@@ -772,6 +796,10 @@
         <viewAttribute id="CC_REFERENCE_EXPIRY_DT"/>
         <viewAttribute id="CC_REFERENCE_EFFECTIVE_DT"/>
         <viewAttribute id="IS_20100201"/>
+        <viewAttribute id="IS_20100701"/>
+        <viewAttribute id="IS_20100702"/>
+        <viewAttribute id="IS_20100704"/>
+        <viewAttribute id="IS_20100705"/>
         <viewAttribute id="IS_20100901"/>
       </viewAttributes>
       <calculatedViewAttributes>
@@ -825,6 +853,10 @@
         <mapping xsi:type="Calculation:AttributeMapping" target="CC_REFERENCE_EXPIRY_DT" source="CC_REFERENCE_EXPIRY_DT"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="CC_REFERENCE_EFFECTIVE_DT" source="CC_REFERENCE_EFFECTIVE_DT"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="IS_20100201" source="IS_20100201"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20100701" source="IS_20100701"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20100702" source="IS_20100702"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20100704" source="IS_20100704"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20100705" source="IS_20100705"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="IS_20100901" source="IS_20100901"/>
       </input>
       <filter>(&quot;EXTR_DT&quot; >=&quot;CC_REFERENCE_EFFECTIVE_DT&quot; and &quot;EXTR_DT&quot;&lt;=&quot;CC_REFERENCE_EXPIRY_DT&quot;)</filter>
@@ -851,7 +883,9 @@
       <filter>(&quot;REC_TY_ID&quot; ='ADJUST_RSN_CD_02')</filter>
     </calculationView>
     <calculationView xsi:type="Calculation:JoinView" id="JOIN_ADJ_RSN_CD_ADJUST_RSN_CD_02" joinOrder="OUTSIDE_IN" joinType="leftOuter">
-      <descriptions/>
+      <descriptions>
+        <comment text="Reference Version check will be raised as IS_20100703"/>
+      </descriptions>
       <viewAttributes>
         <viewAttribute id="CD_NM"/>
         <viewAttribute id="ARTCL_NUM"/>
@@ -900,6 +934,10 @@
         <viewAttribute id="IS_20100201"/>
         <viewAttribute id="ADJ_SERV_CD_RIGHT"/>
         <viewAttribute id="CC_VERSION_CHECK"/>
+        <viewAttribute id="IS_20100701"/>
+        <viewAttribute id="IS_20100702"/>
+        <viewAttribute id="IS_20100704"/>
+        <viewAttribute id="IS_20100705"/>
         <viewAttribute id="REC_TY_ID"/>
         <viewAttribute id="IS_20100901"/>
       </viewAttributes>
@@ -909,6 +947,9 @@
         </calculatedViewAttribute>
         <calculatedViewAttribute datatype="DATE" id="CC_REFERENCE_EFFECTIVE_DT" expressionLanguage="COLUMN_ENGINE">
           <formula>if(isNull(&quot;REFERENCE_EFFECTIVE_DT&quot;),date('19000101'),&quot;REFERENCE_EFFECTIVE_DT&quot;)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="IS_20100703" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isNull(&quot;CC_VERSION_CHECK&quot;),'0',if(&quot;CC_VERSION_CHECK&quot; = '0','0','1'))</formula>
         </calculatedViewAttribute>
       </calculatedViewAttributes>
       <input node="#PROJ_FILTER_EXTR_DT_MDM">
@@ -955,6 +996,10 @@
         <mapping xsi:type="Calculation:AttributeMapping" target="SERVICE_CD" source="SERVICE_CD"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="ADJ_RSN_CD" source="ADJ_RSN_CD"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="IS_20100201" source="IS_20100201"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20100701" source="IS_20100701"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20100702" source="IS_20100702"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20100704" source="IS_20100704"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20100705" source="IS_20100705"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="IS_20100901" source="IS_20100901"/>
       </input>
       <input node="#PROJ_CA_TV_PROD_ADJ_RSN">
@@ -1018,6 +1063,11 @@
         <viewAttribute id="CC_REFERENCE_EFFECTIVE_DT"/>
         <viewAttribute id="IS_20100201"/>
         <viewAttribute id="ADJ_SERV_CD_RIGHT"/>
+        <viewAttribute id="IS_20100701"/>
+        <viewAttribute id="IS_20100702"/>
+        <viewAttribute id="IS_20100703"/>
+        <viewAttribute id="IS_20100704"/>
+        <viewAttribute id="IS_20100705"/>
         <viewAttribute id="IS_20100901"/>
       </viewAttributes>
       <calculatedViewAttributes/>
@@ -1068,6 +1118,11 @@
         <mapping xsi:type="Calculation:AttributeMapping" target="CC_REFERENCE_EFFECTIVE_DT" source="CC_REFERENCE_EFFECTIVE_DT"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="IS_20100201" source="IS_20100201"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="ADJ_SERV_CD_RIGHT" source="ADJ_SERV_CD_RIGHT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20100701" source="IS_20100701"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20100702" source="IS_20100702"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20100703" source="IS_20100703"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20100704" source="IS_20100704"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20100705" source="IS_20100705"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="IS_20100901" source="IS_20100901"/>
       </input>
       <filter>(&quot;EXTR_DT&quot; >=&quot;CC_REFERENCE_EFFECTIVE_DT&quot;AND &quot;EXTR_DT&quot;&lt;=&quot;CC_REFERENCE_EXPIRY_DT&quot;) AND (not(isNull(&quot;ADJ_SERV_CD_RIGHT&quot;)))</filter>
@@ -1147,6 +1202,11 @@
         <viewAttribute id="BILL_FROM_DT"/>
         <viewAttribute id="CONNECT_DATE"/>
         <viewAttribute id="IS_20100201"/>
+        <viewAttribute id="IS_20100701"/>
+        <viewAttribute id="IS_20100702"/>
+        <viewAttribute id="IS_20100703"/>
+        <viewAttribute id="IS_20100704"/>
+        <viewAttribute id="IS_20100705"/>
         <viewAttribute id="IS_20100901"/>
       </viewAttributes>
       <calculatedViewAttributes>
@@ -1201,6 +1261,11 @@
         <mapping xsi:type="Calculation:AttributeMapping" target="SERVICE_CD" source="SERVICE_CD"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="ADJ_RSN_CD" source="ADJ_RSN_CD"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="IS_20100201" source="IS_20100201"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20100701" source="IS_20100701"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20100702" source="IS_20100702"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20100703" source="IS_20100703"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20100704" source="IS_20100704"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20100705" source="IS_20100705"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="IS_20100901" source="IS_20100901"/>
       </input>
       <input node="#PROJ_TV_SUBSCRIBER_HIST">
@@ -1266,6 +1331,11 @@
         <viewAttribute id="CONNECT_DATE"/>
         <viewAttribute id="ACCT_NUM_RIGHT"/>
         <viewAttribute id="IS_20100201"/>
+        <viewAttribute id="IS_20100701"/>
+        <viewAttribute id="IS_20100702"/>
+        <viewAttribute id="IS_20100703"/>
+        <viewAttribute id="IS_20100704"/>
+        <viewAttribute id="IS_20100705"/>
         <viewAttribute id="CC_EXPIRY_DT"/>
         <viewAttribute id="CC_PRODUCT_TYPE"/>
         <viewAttribute id="IS_20100901"/>
@@ -1331,6 +1401,11 @@
         <mapping xsi:type="Calculation:AttributeMapping" target="CONNECT_DATE" source="CONNECT_DATE"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="ACCT_NUM_RIGHT" source="ACCT_NUM_RIGHT"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="IS_20100201" source="IS_20100201"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20100701" source="IS_20100701"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20100702" source="IS_20100702"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20100703" source="IS_20100703"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20100704" source="IS_20100704"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20100705" source="IS_20100705"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="CC_EXPIRY_DT" source="CC_EXPIRY_DT"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="CC_PRODUCT_TYPE" source="CC_PRODUCT_TYPE"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="IS_20100901" source="IS_20100901"/>
@@ -1389,6 +1464,11 @@
         <viewAttribute id="ADJ_SERV_CD_RIGHT"/>
         <viewAttribute id="CC_REFERENCE_EXPIRY_DT"/>
         <viewAttribute id="CC_REFERENCE_EFFECTIVE_DT"/>
+        <viewAttribute id="IS_20100701"/>
+        <viewAttribute id="IS_20100702"/>
+        <viewAttribute id="IS_20100703"/>
+        <viewAttribute id="IS_20100704"/>
+        <viewAttribute id="IS_20100705"/>
         <viewAttribute id="REC_TY_ID"/>
         <viewAttribute id="IS_20100901"/>
       </viewAttributes>
@@ -1453,6 +1533,11 @@
         <mapping xsi:type="Calculation:AttributeMapping" target="ADJ_SERV_CD_RIGHT" source="ADJ_SERV_CD_RIGHT"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="CC_REFERENCE_EXPIRY_DT" source="CC_REFERENCE_EXPIRY_DT"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="CC_REFERENCE_EFFECTIVE_DT" source="CC_REFERENCE_EFFECTIVE_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20100701" source="IS_20100701"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20100702" source="IS_20100702"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20100703" source="IS_20100703"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20100704" source="IS_20100704"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20100705" source="IS_20100705"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="REC_TY_ID" source="REC_TY_ID"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="IS_20100901" source="IS_20100901"/>
       </input>
@@ -1507,6 +1592,11 @@
         <viewAttribute id="CONNECT_DATE"/>
         <viewAttribute id="ACCT_NUM_RIGHT"/>
         <viewAttribute id="IS_20100201"/>
+        <viewAttribute id="IS_20100701"/>
+        <viewAttribute id="IS_20100702"/>
+        <viewAttribute id="IS_20100703"/>
+        <viewAttribute id="IS_20100704"/>
+        <viewAttribute id="IS_20100705"/>
         <viewAttribute id="CC_EXPIRY_DT"/>
         <viewAttribute id="CC_BILL_FROM_DT"/>
         <viewAttribute id="CC_BILL_TO_DT"/>
@@ -1566,6 +1656,11 @@
         <mapping xsi:type="Calculation:AttributeMapping" target="CONNECT_DATE" source="CONNECT_DATE"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="ACCT_NUM_RIGHT" source="ACCT_NUM_RIGHT"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="IS_20100201" source="IS_20100201"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20100701" source="IS_20100701"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20100702" source="IS_20100702"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20100703" source="IS_20100703"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20100704" source="IS_20100704"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20100705" source="IS_20100705"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="CC_EXPIRY_DT" source="CC_EXPIRY_DT"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="CC_BILL_FROM_DT" source="CC_BILL_FROM_DT"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="CC_BILL_TO_DT" source="CC_BILL_TO_DT"/>
@@ -1624,6 +1719,11 @@
         <mapping xsi:type="Calculation:ConstantAttributeMapping" target="CONNECT_DATE" null="true" value=""/>
         <mapping xsi:type="Calculation:ConstantAttributeMapping" target="ACCT_NUM_RIGHT" null="true" value=""/>
         <mapping xsi:type="Calculation:AttributeMapping" target="IS_20100201" source="IS_20100201"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20100701" source="IS_20100701"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20100702" source="IS_20100702"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20100703" source="IS_20100703"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20100704" source="IS_20100704"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20100705" source="IS_20100705"/>
         <mapping xsi:type="Calculation:ConstantAttributeMapping" target="CC_EXPIRY_DT" null="true" value=""/>
         <mapping xsi:type="Calculation:AttributeMapping" target="CC_BILL_FROM_DT" source="CC_BILL_FROM_DT"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="CC_BILL_TO_DT" source="CC_BILL_TO_DT"/>
@@ -1812,27 +1912,47 @@
         <descriptions defaultDescription="IS_20100201"/>
         <keyMapping columnObjectName="UNION_ALL" columnName="IS_20100201"/>
       </attribute>
-      <attribute id="BILL_FROM_DT" order="44" attributeHierarchyActive="false" displayAttribute="false">
+      <attribute id="IS_20100701" order="44" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="IS_20100701"/>
+        <keyMapping columnObjectName="UNION_ALL" columnName="IS_20100701"/>
+      </attribute>
+      <attribute id="IS_20100702" order="45" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="IS_20100702"/>
+        <keyMapping columnObjectName="UNION_ALL" columnName="IS_20100702"/>
+      </attribute>
+      <attribute id="IS_20100703" order="46" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="IS_20100703"/>
+        <keyMapping columnObjectName="UNION_ALL" columnName="IS_20100703"/>
+      </attribute>
+      <attribute id="IS_20100704" order="47" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="IS_20100704"/>
+        <keyMapping columnObjectName="UNION_ALL" columnName="IS_20100704"/>
+      </attribute>
+      <attribute id="IS_20100705" order="48" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="IS_20100705"/>
+        <keyMapping columnObjectName="UNION_ALL" columnName="IS_20100705"/>
+      </attribute>
+      <attribute id="BILL_FROM_DT" order="49" attributeHierarchyActive="false" displayAttribute="false">
         <descriptions defaultDescription="BILL_FROM_DT"/>
         <keyMapping columnObjectName="UNION_ALL" columnName="CC_BILL_FROM_DT"/>
       </attribute>
-      <attribute id="BILL_TO_DT" order="45" attributeHierarchyActive="false" displayAttribute="false">
+      <attribute id="BILL_TO_DT" order="50" attributeHierarchyActive="false" displayAttribute="false">
         <descriptions defaultDescription="BILL_TO_DT"/>
         <keyMapping columnObjectName="UNION_ALL" columnName="CC_BILL_TO_DT"/>
       </attribute>
-      <attribute id="PRODUCT_TYPE" order="46" attributeHierarchyActive="false" displayAttribute="false">
+      <attribute id="PRODUCT_TYPE" order="51" attributeHierarchyActive="false" displayAttribute="false">
         <descriptions defaultDescription="PRODUCT_TYPE"/>
         <keyMapping columnObjectName="UNION_ALL" columnName="CC_PRODUCT_TYPE"/>
       </attribute>
-      <attribute id="REFERENCE_EXPIRY_DT" order="47" attributeHierarchyActive="false" displayAttribute="false">
+      <attribute id="REFERENCE_EXPIRY_DT" order="52" attributeHierarchyActive="false" displayAttribute="false">
         <descriptions defaultDescription="REFERENCE_EXPIRY_DT"/>
         <keyMapping columnObjectName="UNION_ALL" columnName="REFERENCE_EXPIRY_DT"/>
       </attribute>
-      <attribute id="REFERENCE_EFFECTIVE_DT" order="48" attributeHierarchyActive="false" displayAttribute="false">
+      <attribute id="REFERENCE_EFFECTIVE_DT" order="53" attributeHierarchyActive="false" displayAttribute="false">
         <descriptions defaultDescription="REFERENCE_EFFECTIVE_DT"/>
         <keyMapping columnObjectName="UNION_ALL" columnName="REFERENCE_EFFECTIVE_DT"/>
       </attribute>
-      <attribute id="IS_20100901" order="49" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+      <attribute id="IS_20100901" order="54" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
         <descriptions/>
         <keyMapping columnObjectName="UNION_ALL" columnName="IS_20100901"/>
       </attribute>

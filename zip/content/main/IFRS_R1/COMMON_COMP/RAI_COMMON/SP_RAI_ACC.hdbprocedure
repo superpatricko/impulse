@@ -1,0 +1,526 @@
+PROCEDURE "RAI_COMMON"."IFRS_R1.COMMON_COMP.RAI_COMMON::SP_RAI_ACC"
+(OUT OT_STATUS NVARCHAR(1000))
+	LANGUAGE SQLSCRIPT
+	SQL SECURITY INVOKER 
+	--DEFAULT SCHEMA <default_schema_name>
+	--READS SQL DATA 
+	AS
+BEGIN
+----------------------------------------------------------------------------------------------------
+-- Procedure Title : IFRS_R1.COMMON_COMP.RAI_COMMON::SP_RAI_ACC
+----------------------------------------------------------------------------------------------------
+-- Created By      : BC_EY99601(Alagar)          Date :24/11/2016
+----------------------------------------------------------------------------------------------------
+-- Procedure Description : 
+--   This procedure will create  Order and Invoice for accessories 
+                         
+-- ERROR_LOG Table : will be used to trace the system error like transaction failed.
+
+-- Track Error/Process Control Table: This table will be used to tract the start and end
+-- time of the execution
+----------------------------------------------------------------------------------------------------
+
+
+/* Declaring Local Variables */
+DECLARE LV_BATCH_ID       NVARCHAR(10);
+DECLARE LV_STATUS 		  NVARCHAR(30);
+DECLARE LV_CUR_UTC 		  TIMESTAMP := CURRENT_TIMESTAMP;
+DECLARE LV_CUR_DATE       DATE := CURRENT_DATE;
+--DECLARE LV_RAI_ERROR 	  CONDITION FOR SQL_ERROR_CODE 10001;
+DECLARE LV_CUR_UTC_TIME DECIMAL(15,2) 
+                             :=TO_DECIMAL(TO_CHAR(CURRENT_UTCTIMESTAMP,'YYYYMMDDHHMISS'),15,2);
+                             
+/* Declaring Local Constant */
+DECLARE LC_TP             NVARCHAR(4)  DEFAULT 'PR00';
+DECLARE LC_SSP            NVARCHAR(3)  DEFAULT 'SSP';
+DECLARE LC_QUANTITY       NVARCHAR(1)  DEFAULT '1';
+DECLARE LC_QUANTITY_UNIT  NVARCHAR(2)  DEFAULT 'EA';    
+DECLARE LC_MATNRGRP		  NVARCHAR(9)  DEFAULT 'ACCESSORY';
+DECLARE LC_CATEGORY       NVARCHAR(1)  DEFAULT 'P'; 
+--DECLARE LC_ACTIVE_DT NVARCHAR(10)    DEFAULT '9999-12-31';
+DECLARE LC_ERROR          NVARCHAR(5)  DEFAULT 'ERROR';
+DECLARE LC_SUCCESS        NVARCHAR(7)  DEFAULT 'SUCCESS';
+DECLARE LC_STATUS         NVARCHAR(1)  DEFAULT 'E';
+DECLARE LC_INSERT         NVARCHAR(1)  DEFAULT 'I';
+DECLARE LC_ERROR_MSG      NVARCHAR(30) DEFAULT 'PREVIOUS BATCH STILL RUNNING';
+DECLARE LC_NODATA_ERR_MSG NVARCHAR(30) DEFAULT 'NO DATA FOUND FOR PROCESSING';
+DECLARE LC_BATCH_ERR_MSG  NVARCHAR(30) DEFAULT 'NO BATCH NUMBER FOUND';
+DECLARE LC_SUCCESS_MSG    NVARCHAR(30) DEFAULT 'EXECUTION SUCCESSFULL'; 
+DECLARE LC_EVENTID    	  NVARCHAR(30) DEFAULT 'RAI_MOBL_ORDER';
+DECLARE LC_START_TEXT 	  NVARCHAR(30) DEFAULT 'START_TIME';
+DECLARE LC_END_TEXT   	  NVARCHAR(30) DEFAULT 'END_TIME';
+DECLARE LC_LOB        	  NVARCHAR(3)  DEFAULT 'ZMO';
+DECLARE LC_TYPE			  NVARCHAR(3)  DEFAULT 'SSP';
+DECLARE LC_TYPE1		  NVARCHAR(4)  DEFAULT 'PR00';
+DECLARE LC_UPDATE 	  	  NVARCHAR(1)  DEFAULT 'U';
+DECLARE LC_SET		  	  NVARCHAR(1)  DEFAULT 'X';
+DECLARE LC_CURRENT_OBJECT NVARCHAR(100)DEFAULT'IFRS_R1.COMMON_COMP.RAI_COMMON::SP_RAI_ACC';
+DECLARE LC_ERROR_TEXT     NVARCHAR(120) 
+           DEFAULT 'OUT STATUS IS 1 : IFRS_R1.COMMON_COMP.RAI_COMMON::SP_RAI_ACC 
+INSERT EXECUTION FAILED';
+DECLARE LC_SUCCESS_TEXT NVARCHAR(120)DEFAULT 'OUT STATUS IS 0 : 
+PROCEDURE IFRS_R1.COMMON_COMP.RAI_COMMON::SP_RAI_ACC EXECUTION SUCCESSFULL';
+                                                         
+/* Exception handling: Capture standard error and rollback, if any error is encountered.  
+   The autonomous transaction is independent from the main procedure, if the error occurs
+   at any place in the procedure, then this part of the code will execute and roll back the 
+   updated records and insert into the error Log table with Standard error. */
+   
+DECLARE EXIT HANDLER FOR SQLEXCEPTION 
+BEGIN AUTONOMOUS TRANSACTION 
+	INSERT INTO "NDB_COMMON"."IFRS_R1.COMMON_COMP.NDB_COMMON::ERROR_LOG"
+	(
+		EVENT,
+		PROC_ID,
+		ERROR_CODE,
+		ERROR_MESSAGE,
+		START_END_TIME
+	)
+	VALUES
+	(
+		:LC_EVENTID,
+		:LC_CURRENT_OBJECT,
+		::SQL_ERROR_CODE,
+		::SQL_ERROR_MESSAGE,
+		LV_CUR_UTC
+	);
+		
+/* STATUS 1: Send the Error message to scheduling tool to confirm whether procedure success or not */
+	OT_STATUS := LC_ERROR_TEXT;
+		
+	COMMIT;
+	RESIGNAL;
+END;
+
+
+/* Process Control Table: It will track the start time with User Id. */
+
+CALL "NDB_COMMON"."IFRS_R1.COMMON_COMP.NDB_COMMON::SP_PROCESS_CONTROL" 
+						(
+							 :LC_EVENTID,					--IP:Event ID
+							 :LC_CURRENT_OBJECT,			--IP:Current Object 
+							 CURRENT_TIMESTAMP,				--IP:Current Timestamp
+							 LC_START_TEXT,					--IP:Start / endtime Text
+							 CURRENT_USER					--IP:Current User
+						 );											 
+
+/* Create a Batch Process ID based on LOB */
+CALL "RAI_COMMON"."IFRS_R1.COMMON_COMP.RAI_COMMON::SP_RAI_BATCHID_PROCESS" 
+						(
+							 LC_LOB,                        --IP: Lines of Buisness
+							 LV_STATUS,                     --OP: Error / Success
+							 LV_BATCH_ID                  --OP: Number of Runs
+						 );
+IF LV_STATUS = LC_STATUS THEN    -- Last Batch id is still running
+ 
+/* To update the Error Log table ERROR_LOG*/
+	CALL "NDB_COMMON"."IFRS_R1.COMMON_COMP.NDB_COMMON::SP_ERROR_LOG" 
+    (
+	    :LC_EVENTID,		  		    --IP: Event type 
+	    :LC_CURRENT_OBJECT,  			--IP: Current Object n
+	    LC_ERROR,--'ERROR',		    --IP: Error / Success
+	    LC_ERROR_MSG,--'PREVIOUS BATCH STILL RUNNING',--IP: Error Message
+	    LV_CUR_UTC					--IP : Timestamp
+	);
+	
+	OT_STATUS = LC_ERROR_TEXT;
+	
+ELSE
+	
+/* Inserting the Incremental Batch id */
+	IF LV_BATCH_ID IS NULL THEN  
+	
+/* To update the Error Log table ERROR_LOG*/
+		CALL "NDB_COMMON"."IFRS_R1.COMMON_COMP.NDB_COMMON::SP_ERROR_LOG" 
+		(
+			:LC_EVENTID,		  		    --IP: Event type 
+			:LC_CURRENT_OBJECT,  			--IP: Current Object n
+			LC_ERROR,--'ERROR',		    	--IP: Error / Success
+			LC_BATCH_ERR_MSG,--'NO BATCH NUMBER FOUND',--IP: Error Message
+			LV_CUR_UTC						--IP : Timestamp
+		);
+	ELSE
+/* insert the Batch Process ID with status RAI IN PROGRESS */	
+		CALL "RAI_COMMON"."IFRS_R1.COMMON_COMP.RAI_COMMON::SP_RAI_BATCHID_UPDATE" 
+		(
+			:LC_LOB,
+			:LC_INSERT ,   --'I',		--IP: Insert or Update
+			:LV_BATCH_ID				--OP: Number of Runs
+		);				
+		
+/*Getting  the data from view into the RAI_ORDR_NODE for data insertion*/
+--LV_IP_BILL_CYCLE := DAYOFMONTH(IP_DATE);
+
+RAI_ORDR_NODE = SELECT  
+					 "SRCDOC_COMP",
+					 "SRCDOC_LOGSYS",
+					 "SRCDOC_TYPE",
+					 "WAERS",
+					 "ORIGDOC_COMP",
+					 "ORIGDOC_LOGSYS",
+					 "ORIGDOC_TYPE",
+					 "REVNU_GL",
+					 "REFERENCE_TYPE",					 
+					 "CC_RAI_ITEM_ID",					 
+					 "CC_SRCDOC_ID_INV",
+					-- "SUB_MERC_CTGRY",
+					 "COMPANY_CD",
+					 "BUKRS",
+					 --"PROFIT_CENTRE",
+					 "FINAL_TRANS_PRC",
+					 "CURRN",
+					 --"CC_ITEM_ID",					 					 
+					 "CC_SRCDOC_ID",
+					 "CC_REFID" ,
+					 "ACT_POST_DT",
+					 "KUNNR_SID",
+					 "SCENARIO_IDENTIFIER",
+					 --"DIST_CHANNEL",
+					 "CC_ZZ_MATNR_GRP"		 					 					 					 
+	 FROM "_SYS_BIC"."IFRS_R1.COMMON_COMP.RAI_COMMON/CA_RAI_ACCESSORY";	 
+	 	
+		IF IS_EMPTY(:RAI_ORDR_NODE) THEN		
+		/* To update the Error Log table ERROR_LOG*/
+			CALL "NDB_COMMON"."IFRS_R1.COMMON_COMP.NDB_COMMON::SP_ERROR_LOG" 
+			(
+				:LC_EVENTID,		    --IP: Event type 
+				:LC_CURRENT_OBJECT,  	--IP: Current Object 
+				LC_ERROR,  				--IP: Error / Success   'ERROR',	
+				LC_NODATA_ERR_MSG, 		--IP: Error Message     'NO DATA FOUND FOR PROCESSING',
+				LV_CUR_UTC				--IP : Timestamp
+			);
+		ELSE
+			 						 
+/*  Inserting  into Order Main table */
+		INSERT INTO "RAI_COMMON"."IFRS_R1.COMMON_COMP.RAI_COMMON::RAI_ACC_ORDR_MAIN"
+		("SRCDOC_COMP",
+		"SRCDOC_LOGSYS",
+		"SRCDOC_TYPE",
+		"SRCDOC_ID",
+		"TIMESTAMP_UTC",
+		"HEADER_ID",
+		"ITEM_ID",
+		"REFERENCE_TYPE",
+		"REFERENCE_ID",
+		"KUNNR",
+		"BUKRS",
+		"WAERS",
+		"QUANTITY",
+		"QUANTITY_UNIT",
+		"BILREL",
+		"RECEIV_ACCOUNT",
+		"INCEPTION_DATE",
+		"XNEGATIVE_ITEM",
+		"ZZ_BATCH_ID",
+		"ZZ_MATNR_GRP")
+			
+		SELECT  "ORIGDOC_COMP",
+				"ORIGDOC_LOGSYS",
+				"ORIGDOC_TYPE",
+				"CC_SRCDOC_ID",
+				"LV_CUR_UTC_TIME",
+				"KUNNR_SID",
+				"CC_RAI_ITEM_ID",
+				"REFERENCE_TYPE",
+				"CC_REFID",
+				"KUNNR_SID",
+				"COMPANY_CD",
+				"WAERS",
+				LC_QUANTITY,
+				LC_QUANTITY_UNIT,
+				"LC_SET",--'X'				
+				"REVNU_GL",
+				"ACT_POST_DT",
+				"LC_SET",--'X',					
+ 				LV_BATCH_ID,
+ 				"CC_ZZ_MATNR_GRP" 								                		
+		FROM :RAI_ORDR_NODE;
+		--WHERE A.CC_ERR_IND IS NULL;
+		
+/* Insert into Order Condition Table for SSP(Standalone Saling Price) */
+		INSERT INTO "RAI_COMMON"."IFRS_R1.COMMON_COMP.RAI_COMMON::RAI_ACC_ORDR_COND"
+		   (
+		        "SRCDOC_COMP",
+                "SRCDOC_LOGSYS",
+				"SRCDOC_TYPE",
+				"SRCDOC_ID",
+				"TIMESTAMP_UTC",
+				"CONDITION_TYPE",
+				"PL_ACCOUNT",				
+				"BETRW",
+				"WAERS",				
+				"CATEGORY"				
+		   )	
+				SELECT 
+				"ORIGDOC_COMP",
+				"ORIGDOC_LOGSYS",
+				"ORIGDOC_TYPE",
+				"CC_SRCDOC_ID",
+				LV_CUR_UTC_TIME,
+				"LC_TYPE",--'SSP'
+				"REVNU_GL",
+				"FINAL_TRANS_PRC",	
+				"WAERS",
+				LC_CATEGORY				
+		    FROM :RAI_ORDR_NODE;		
+		
+/* Insert into Order Condition Table for TP(Transaction Price) */
+	 	INSERT INTO "RAI_COMMON"."IFRS_R1.COMMON_COMP.RAI_COMMON::RAI_ACC_ORDR_COND"
+		(
+			    "SRCDOC_COMP",
+                "SRCDOC_LOGSYS",
+				"SRCDOC_TYPE",
+				"SRCDOC_ID",
+				"TIMESTAMP_UTC",
+				"CONDITION_TYPE",
+				"PL_ACCOUNT",				
+				"BETRW",
+				"WAERS",				
+				"CATEGORY",
+				"MAIN_COND_TYPE",
+				"BETRH",
+				"HWAER"
+		)
+		 SELECT 
+				"ORIGDOC_COMP",
+				"ORIGDOC_LOGSYS",
+				"ORIGDOC_TYPE",
+				"CC_SRCDOC_ID",
+				LV_CUR_UTC_TIME,
+				"LC_TYPE1",--'PR00'
+				"REVNU_GL",
+				"FINAL_TRANS_PRC",				
+				"WAERS",
+				"LC_CATEGORY",
+				"LC_SET",--'X'
+				"FINAL_TRANS_PRC",
+				"WAERS"
+		 FROM :RAI_ORDR_NODE;		 			
+
+/* Batch control table update with the status RAI CREATED */
+	
+	    CALL "RAI_COMMON"."IFRS_R1.COMMON_COMP.RAI_COMMON::SP_RAI_BATCHID_UPDATE"
+	    (
+	        :LC_LOB,
+			:LC_UPDATE,--'U',				--IP: Update 
+		    :LV_BATCH_ID					--OP: Number of Runs
+		);
+		
+		
+		
+		
+--- Invoice RAI process started ---------------------------------------------------------	
+
+/* Create a Batch Process ID based on LOB  for invoice RAI*/
+		CALL "RAI_COMMON"."IFRS_R1.COMMON_COMP.RAI_COMMON::SP_RAI_BATCHID_PROCESS_INVC" 
+						(
+							 :LC_LOB,                        --IP: Lines of Buisness
+							 :LV_STATUS,                     --OP: Error / Success
+							 :LV_BATCH_ID                  --OP: Number of Runs
+						 );	    
+		
+	/* Inserting the Incremental Batch id */
+	IF LV_BATCH_ID IS NULL 	THEN
+	/* To update the Error Log table ERROR_LOG*/
+		CALL "NDB_COMMON"."IFRS_R1.COMMON_COMP.NDB_COMMON::SP_ERROR_LOG" 
+		(
+			:LC_EVENTID,		  		    --IP: Event type 
+			:LC_CURRENT_OBJECT,  			--IP: Current Object n
+			:LC_ERROR,--'ERROR',		    	--IP: Error / Success
+			:LC_BATCH_ERR_MSG,--'NO BATCH NUMBER FOUND',--IP: Error Message
+			:LV_CUR_UTC						--IP : Timestamp
+		);
+	ELSE
+	
+	CALL "RAI_COMMON"."IFRS_R1.COMMON_COMP.RAI_COMMON::SP_RAI_BATCHID_UPDATE_INVC" 
+							(
+							    :LC_LOB, 
+								:LC_INSERT ,          			--IP: Insert or Update
+								:LV_BATCH_ID					--OP: Number of Runs
+							 );
+						
+	
+	
+/*  inserting into Invoice main table */
+		INSERT INTO "RAI_COMMON"."IFRS_R1.COMMON_COMP.RAI_COMMON::RAI_ACC_INV_MAIN"
+		(
+		    "SRCDOC_COMP",
+			"SRCDOC_LOGSYS",
+			"SRCDOC_TYPE",
+			"SRCDOC_ID",
+			"TIMESTAMP_UTC",
+			"HEADER_ID",
+			"ITEM_ID",
+			"KUNNR",			
+			"BUKRS",
+			"WAERS",
+			"HWAER",
+			"QUANTITY",
+			"QUANTITY_UNIT",
+			"ORIGDOC_COMP",
+			"ORIGDOC_LOGSYS",
+			"ORIGDOC_TYPE",
+			"ORIGDOC_ID",
+			"DUE_DATE",
+			"FINAL_INVOICE",
+			"QUANTITY_REL",
+			"POSTING_DATE",	
+			--"INVOICE_TYPE",		
+			"EXCHANGE_RATE"	,
+			"ZZ_BATCH_ID"		
+		)
+		SELECT  "SRCDOC_COMP",
+			    "SRCDOC_LOGSYS",
+			    "SRCDOC_TYPE",			   			  
+		        "CC_SRCDOC_ID_INV",
+				"LV_CUR_UTC_TIME",
+				"KUNNR_SID",
+				"CC_RAI_ITEM_ID",
+				"KUNNR_SID",
+				"COMPANY_CD",
+				"WAERS",
+				"WAERS",
+				LC_QUANTITY,
+				LC_QUANTITY_UNIT,								           				
+				"ORIGDOC_COMP",
+				"ORIGDOC_LOGSYS",
+			    "ORIGDOC_TYPE",
+			    "CC_SRCDOC_ID",
+				"LV_CUR_DATE",
+				"LC_SET",
+				"LC_SET",
+				"LV_CUR_DATE",
+				"LC_QUANTITY",
+				LV_BATCH_ID
+		FROM :RAI_ORDR_NODE;	
+	
+	
+/* Insert into Invoice Condition Table for SSP(Standalone Saling Price) */	
+	
+	INSERT INTO "RAI_COMMON"."IFRS_R1.COMMON_COMP.RAI_COMMON::RAI_ACC_INV_COND"
+	(
+		"SRCDOC_COMP",
+		"SRCDOC_LOGSYS",
+		"SRCDOC_TYPE",
+		"SRCDOC_ID",
+		"TIMESTAMP_UTC",
+		"CONDITION_TYPE",	
+		"PL_ACCOUNT",
+		"BETRW",
+		"WAERS",
+		"BETRH",		
+		"HWAER",
+		"CATEGORY"	
+	)
+	
+	SELECT 	"SRCDOC_COMP",
+			"SRCDOC_LOGSYS",
+			"SRCDOC_TYPE",
+			"CC_SRCDOC_ID_INV",
+			"LV_CUR_UTC_TIME",
+			"LC_TYPE",--'PR00'
+			"REVNU_GL",
+			"FINAL_TRANS_PRC",
+			"WAERS",
+			"FINAL_TRANS_PRC",
+			"WAERS",
+			"LC_CATEGORY"--'P'
+	FROM :RAI_ORDR_NODE;
+	
+	
+/* Insert into Invoice Condition Table for TP(Transaction Price) */	
+	
+	INSERT INTO "RAI_COMMON"."IFRS_R1.COMMON_COMP.RAI_COMMON::RAI_ACC_INV_COND"
+	(
+		"SRCDOC_COMP",
+		"SRCDOC_LOGSYS",
+		"SRCDOC_TYPE",
+		"SRCDOC_ID",
+		"TIMESTAMP_UTC",
+		"CONDITION_TYPE",	
+		"PL_ACCOUNT",
+		"BETRW",
+		"WAERS",
+		"BETRH",
+		"HWAER",
+		"CATEGORY",
+		"MAIN_COND_TYPE"
+	)
+	
+	SELECT 	"SRCDOC_COMP",
+			"SRCDOC_LOGSYS",
+			"SRCDOC_TYPE",
+			"CC_SRCDOC_ID_INV",
+			"LV_CUR_UTC_TIME",
+			"LC_TYPE1",--'PR00'
+			"REVNU_GL",
+			"FINAL_TRANS_PRC",
+			"WAERS",
+			"FINAL_TRANS_PRC",
+			"WAERS",--'CAD'
+			"LC_CATEGORY",--'P'
+			"LC_SET"			
+	FROM :RAI_ORDR_NODE;
+	
+   	/* Updating the Source document id, Reference id, RAI Item ID and
+	   Batch id	in NDB invoice table update */
+		UPDATE  "NDB_COMMON"."IFRS_R1.COMMON_COMP.NDB_COMMON::P77_TRANS_ACSY" A
+		   SET 		   
+		   		 A."SRCDOC_ID"    = B."CC_SRCDOC_ID", 	   		 
+		         A."RAI_ITEM_ID"  = B."CC_RAI_ITEM_ID",
+		         A."REFERENCE_ID" = B."CC_REFID",
+		         A."HEADER_ID"    = B."KUNNR_SID",  		         
+		         A."BATCH_ID"     = LV_BATCH_ID 		   		   	          		   	          		              		             			         
+		         FROM "NDB_COMMON"."IFRS_R1.COMMON_COMP.NDB_COMMON::P77_TRANS_ACSY" A,
+		         	  :RAI_ORDR_NODE B
+		         WHERE A."BATCH_ID"     IS NULL
+		         AND   A."SRCDOC_ID"    IS NULL
+		         AND   A."REFERENCE_ID" IS NULL
+		         AND   A."RAI_ITEM_ID"  IS NULL		         
+		         AND   A."KUNNR_SID"        = B."KUNNR_SID" 
+		         AND   A."ACT_POST_DT"        = B."ACT_POST_DT"
+		         AND   A."SCENARIO_IDENTIFIER" = B."SCENARIO_IDENTIFIER";       
+	
+	/* Batch control table update with the status RAI CREATED */
+	
+	  CALL "RAI_COMMON"."IFRS_R1.COMMON_COMP.RAI_COMMON::SP_RAI_BATCHID_UPDATE_INVC"
+							(
+							    :LC_LOB,
+								:LC_UPDATE,--'U',				--IP: Update 
+							    :LV_BATCH_ID					--OP: Number of Runs
+							);	
+	
+	 
+/* Process Control Table:will track the end time*/
+	    CALL "NDB_COMMON"."IFRS_R1.COMMON_COMP.NDB_COMMON::SP_PROCESS_CONTROL" 
+		(
+			:LC_EVENTID,				--IP:Event ID
+			:LC_CURRENT_OBJECT,			--IP:Current Object 
+			CURRENT_TIMESTAMP,			--IP:Current Timestamp
+			LC_END_TEXT,				--IP:Start / endtime Text
+			CURRENT_USER				--IP:Current User
+	    );
+	                         
+/* STATUS 0: Send the success message to scheduling tool to confirm whether this procedure has been
+executed successfully. */
+		OT_STATUS := LC_SUCCESS_TEXT;
+
+/* Call the Error Log table ERROR_LOG for Success Massage*/
+		CALL "NDB_COMMON"."IFRS_R1.COMMON_COMP.NDB_COMMON::SP_ERROR_LOG"
+		(
+	        :LC_EVENTID,		  		--IP: Event type 
+	        :LC_CURRENT_OBJECT,  		--IP: Current Object n
+	        LC_SUCCESS,				    --IP: Error / Success
+	        LC_SUCCESS_MSG,				--'EXECUTION SUCCESSFULL',--IP: Error Message
+	        LV_CUR_UTC					--IP : Timestamp
+		);
+		
+	END IF;
+	
+	END IF;	
+	
+END IF;
+
+END IF;
+
+END;

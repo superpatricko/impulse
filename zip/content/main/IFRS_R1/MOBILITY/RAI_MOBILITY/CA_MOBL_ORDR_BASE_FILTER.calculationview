@@ -13,6 +13,10 @@
   </localVariables>
   <variableMappings>
     <mapping xsi:type="Variable:VariableMapping" dataSource="#CA_MOBL_ORDR">
+      <targetVariable name="IP_DATE" resourceUri="/IFRS_R1.MOBILITY.RAI_MOBILITY.PRIVATE/calculationviews/CA_MOBL_ORDR"/>
+      <localVariable>#IP_BILL_DATE</localVariable>
+    </mapping>
+    <mapping xsi:type="Variable:VariableMapping" dataSource="#CA_MOBL_ORDR">
       <targetVariable name="IP_BILL_DATE" resourceUri="/IFRS_R1.MOBILITY.RAI_MOBILITY.PRIVATE/calculationviews/CA_MOBL_ORDR"/>
       <localVariable>#IP_BILL_DATE</localVariable>
     </mapping>
@@ -49,7 +53,7 @@
       <localVariable>#IP_BILL_DATE</localVariable>
     </mapping>
   </variableMappings>
-  <informationModelLayout relativeWidthScenario="57"/>
+  <informationModelLayout relativeWidthScenario="48"/>
   <dataSources>
     <DataSource id="CA_MOBL_ORDR" type="CALCULATION_VIEW">
       <viewAttributes allViewAttributes="true"/>
@@ -173,7 +177,6 @@
         <viewAttribute id="RAI_TS"/>
         <viewAttribute id="SUBSCR_ST"/>
         <viewAttribute id="CONT_TREAT_CODE"/>
-        <viewAttribute id="FICO_CHG_IND"/>
       </viewAttributes>
       <calculatedViewAttributes/>
       <input node="#CA_MOBL_ORDR">
@@ -258,7 +261,6 @@
         <mapping xsi:type="Calculation:AttributeMapping" target="RAI_TS" source="RAI_TS"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="SUBSCR_ST" source="SUBSCR_ST"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="CONT_TREAT_CODE" source="CONT_TREAT_CODE"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="FICO_CHG_IND" source="FICO_CHG_IND"/>
       </input>
       <filter>isNull(&quot;MOD_IND&quot;) and (not isNull(&quot;BASE_OPT_SERV_IND&quot;) or (isNull(&quot;BASE_OPT_SERV_IND&quot;) and isNull(&quot;RAI_TS&quot;)))</filter>
     </calculationView>
@@ -346,7 +348,6 @@
         <viewAttribute id="ITEM_ID"/>
         <viewAttribute id="CONTR_TRANS_DT"/>
         <viewAttribute id="BAN"/>
-        <viewAttribute id="FICO_CHG_IND"/>
       </viewAttributes>
       <calculatedViewAttributes/>
       <input node="#PROJ_UNPROCESSED_NDB_ORDERS_NEW">
@@ -431,7 +432,6 @@
         <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_ID" source="ITEM_ID"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="CONTR_TRANS_DT" source="CONTR_TRANS_DT"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="BAN" source="BAN"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="FICO_CHG_IND" source="FICO_CHG_IND"/>
       </input>
       <filter>( isNull(&quot;RAI_TS&quot;) and&#xD;
 (((&quot;CONTR_STRT_DT&quot; = &quot;ITEM_STRT_DT&quot;) and (isNull(&quot;CONVERSION_IND&quot;))) or ((&quot;CONTR_STRT_DT&quot; != &quot;ITEM_STRT_DT&quot;) and (&quot;BASE_OPT_SERV_IND&quot; = 'OPT') ) or isNull(&quot;BASE_OPT_SERV_IND&quot;) or (not isNull(&quot;CONVERSION_IND&quot;))))</filter>
@@ -522,7 +522,6 @@
         <viewAttribute id="RAI_TS"/>
         <viewAttribute id="SUBSCR_ST"/>
         <viewAttribute id="CONT_TREAT_CODE"/>
-        <viewAttribute id="FICO_CHG_IND"/>
       </viewAttributes>
       <calculatedViewAttributes>
         <calculatedViewAttribute datatype="DATE" id="CC_BILL_DAY" expressionLanguage="COLUMN_ENGINE">
@@ -611,7 +610,6 @@
         <mapping xsi:type="Calculation:AttributeMapping" target="RAI_TS" source="RAI_TS"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="SUBSCR_ST" source="SUBSCR_ST"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="CONT_TREAT_CODE" source="CONT_TREAT_CODE"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="FICO_CHG_IND" source="FICO_CHG_IND"/>
       </input>
       <filter>(not isNull(&quot;BILL_DATE&quot;))and&#xD;
 (&quot;POB_END_DT&quot;  >='$$IP_BILL_DATE$$') and&#xD;
@@ -731,7 +729,6 @@
         <viewAttribute id="RAI_TS"/>
         <viewAttribute id="SUBSCR_ST"/>
         <viewAttribute id="CONT_TREAT_CODE"/>
-        <viewAttribute id="FICO_CHG_IND"/>
       </viewAttributes>
       <calculatedViewAttributes>
         <calculatedViewAttribute datatype="DATE" id="cc_date" expressionLanguage="COLUMN_ENGINE">
@@ -820,11 +817,10 @@
         <mapping xsi:type="Calculation:AttributeMapping" target="RAI_TS" source="RAI_TS"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="SUBSCR_ST" source="SUBSCR_ST"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="CONT_TREAT_CODE" source="CONT_TREAT_CODE"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="FICO_CHG_IND" source="FICO_CHG_IND"/>
       </input>
       <filter>(isNull(&quot;MOD_IND&quot; ) and not isNull(&quot;BASE_OPT_SERV_IND&quot;)) and not isnull(&quot;RAI_TS&quot;)</filter>
     </calculationView>
-    <calculationView xsi:type="Calculation:JoinView" id="JOIN_BILL_ORDER" joinOrder="OUTSIDE_IN" joinType="leftOuter">
+    <calculationView xsi:type="Calculation:JoinView" id="JOIN_BILL_ORDER" joinType="leftOuter" joinOrder="OUTSIDE_IN">
       <descriptions/>
       <viewAttributes>
         <viewAttribute id="BAN"/>
@@ -915,7 +911,6 @@
         <viewAttribute id="cc_date"/>
         <viewAttribute id="PRD_CVRG_END_DT"/>
         <viewAttribute id="PRD_CVRG_STRT_DT"/>
-        <viewAttribute id="FICO_CHG_IND"/>
       </viewAttributes>
       <calculatedViewAttributes/>
       <input node="#PROJ_NDB_ORDER">
@@ -1001,7 +996,6 @@
         <mapping xsi:type="Calculation:AttributeMapping" target="SUBSCR_ST" source="SUBSCR_ST"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="CONT_TREAT_CODE" source="CONT_TREAT_CODE"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="cc_date" source="cc_date"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="FICO_CHG_IND" source="FICO_CHG_IND"/>
       </input>
       <input node="#PROJ_BILL">
         <mapping xsi:type="Calculation:AttributeMapping" target="PRD_CVRG_END_DT_PRORATED" source="PRD_CVRG_END_DT_PRORATED"/>
@@ -1111,7 +1105,6 @@
         <viewAttribute id="cc_date"/>
         <viewAttribute id="PRD_CVRG_END_DT"/>
         <viewAttribute id="PRD_CVRG_STRT_DT"/>
-        <viewAttribute id="FICO_CHG_IND"/>
       </viewAttributes>
       <calculatedViewAttributes/>
       <input node="#JOIN_BILL_ORDER">
@@ -1203,7 +1196,6 @@
         <mapping xsi:type="Calculation:AttributeMapping" target="cc_date" source="cc_date"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="PRD_CVRG_END_DT" source="PRD_CVRG_END_DT"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="PRD_CVRG_STRT_DT" source="PRD_CVRG_STRT_DT"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="FICO_CHG_IND" source="FICO_CHG_IND"/>
       </input>
       <filter>(not isNull(&quot;BILL_DATE&quot;)) and (not isNull(&quot;CC_PRD_CVRG_STRT_DT&quot;)) and (&quot;BILL_DATE&quot; &lt;= &quot;CC_PRD_CVRG_STRT_DT&quot;)</filter>
     </calculationView>
@@ -1298,7 +1290,6 @@
         <viewAttribute id="cc_date"/>
         <viewAttribute id="PRD_CVRG_END_DT"/>
         <viewAttribute id="PRD_CVRG_STRT_DT"/>
-        <viewAttribute id="FICO_CHG_IND"/>
       </viewAttributes>
       <calculatedViewAttributes/>
       <input node="#JOIN_BILL_ORDER">
@@ -1390,7 +1381,6 @@
         <mapping xsi:type="Calculation:AttributeMapping" target="cc_date" source="cc_date"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="PRD_CVRG_END_DT" source="PRD_CVRG_END_DT"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="PRD_CVRG_STRT_DT" source="PRD_CVRG_STRT_DT"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="FICO_CHG_IND" source="FICO_CHG_IND"/>
       </input>
       <filter>(isNull(&quot;BILL_DATE&quot;)) OR (isNull(&quot;CC_PRD_CVRG_STRT_DT&quot;)) OR (&quot;BILL_DATE&quot; != &quot;CC_PRD_CVRG_STRT_DT&quot;)</filter>
     </calculationView>
@@ -1488,7 +1478,6 @@
         <viewAttribute id="PRD_CVRG_END_DT_PRORATED"/>
         <viewAttribute id="PRD_CVRG_STRT_DT_PRORATED"/>
         <viewAttribute id="cc_date"/>
-        <viewAttribute datatype="NVARCHAR" id="FICO_CHG_IND" length="1" scale="0"/>
       </viewAttributes>
       <calculatedViewAttributes/>
       <input emptyUnionBehavior="NO_ROW" node="#MDM_ADVANCE_BILL">
@@ -1583,7 +1572,6 @@
         <mapping xsi:type="Calculation:AttributeMapping" target="PRD_CVRG_END_DT_PRORATED" source="PRD_CVRG_END_DT_PRORATED"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="PRD_CVRG_STRT_DT_PRORATED" source="PRD_CVRG_STRT_DT_PRORATED"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="cc_date" source="cc_date"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="FICO_CHG_IND" source="FICO_CHG_IND"/>
       </input>
       <input emptyUnionBehavior="NO_ROW" node="#M2M_BILL">
         <mapping xsi:type="Calculation:AttributeMapping" target="BAN" source="BAN"/>
@@ -1677,7 +1665,6 @@
         <mapping xsi:type="Calculation:AttributeMapping" target="PRD_CVRG_END_DT_PRORATED" source="PRD_CVRG_END_DT_PRORATED"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="PRD_CVRG_STRT_DT_PRORATED" source="PRD_CVRG_STRT_DT_PRORATED"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="cc_date" source="cc_date"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="FICO_CHG_IND" source="FICO_CHG_IND"/>
       </input>
     </calculationView>
     <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_T00" filterExpressionLanguage="COLUMN_ENGINE">
@@ -1769,7 +1756,6 @@
         <viewAttribute id="CC_PRD_CVRG_STRT_DT"/>
         <viewAttribute id="SUBSCR_ST"/>
         <viewAttribute id="CONT_TREAT_CODE"/>
-        <viewAttribute id="FICO_CHG_IND"/>
       </viewAttributes>
       <calculatedViewAttributes>
         <calculatedViewAttribute datatype="DATE" id="CC_BILL_DAY" expressionLanguage="COLUMN_ENGINE">
@@ -1866,7 +1852,6 @@
         <mapping xsi:type="Calculation:AttributeMapping" target="CC_PRD_CVRG_STRT_DT" source="CC_PRD_CVRG_STRT_DT"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="SUBSCR_ST" source="SUBSCR_ST"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="CONT_TREAT_CODE" source="CONT_TREAT_CODE"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="FICO_CHG_IND" source="FICO_CHG_IND"/>
       </input>
       <filter>(not isNull(&quot;CC_PRD_CVRG_END_DT&quot;)) and (not isNull(&quot;RAI_TS&quot;)) and (isNull(&quot;BILL_DATE&quot;)) and (&quot;TIME_IND&quot; = 'T00') and (&quot;POB_END_DT&quot; >='$$IP_BILL_DATE$$')</filter>
     </calculationView>
@@ -1959,7 +1944,6 @@
         <viewAttribute id="CC_PRD_CVRG_STRT_DT"/>
         <viewAttribute id="SUBSCR_ST"/>
         <viewAttribute id="CONT_TREAT_CODE"/>
-        <viewAttribute id="FICO_CHG_IND"/>
       </viewAttributes>
       <calculatedViewAttributes>
         <calculatedViewAttribute datatype="DATE" id="CC_BILL_DAY" expressionLanguage="COLUMN_ENGINE">
@@ -2056,7 +2040,6 @@
         <mapping xsi:type="Calculation:AttributeMapping" target="CC_PRD_CVRG_STRT_DT" source="CC_PRD_CVRG_STRT_DT"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="SUBSCR_ST" source="SUBSCR_ST"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="CONT_TREAT_CODE" source="CONT_TREAT_CODE"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="FICO_CHG_IND" source="FICO_CHG_IND"/>
       </input>
       <filter>not isNull(&quot;CC_PRD_CVRG_END_DT&quot;) and &#xD;
 (not isNull(&quot;BILL_DATE&quot;)) and &#xD;
@@ -2153,7 +2136,6 @@ adddays(&quot;CC_PRD_CVRG_END_DT&quot;,1)!=&quot;BILL_DATE&quot; and&#xD;
         <viewAttribute id="CC_PRD_CVRG_STRT_DT"/>
         <viewAttribute id="SUBSCR_ST"/>
         <viewAttribute id="CONT_TREAT_CODE"/>
-        <viewAttribute id="FICO_CHG_IND"/>
       </viewAttributes>
       <calculatedViewAttributes>
         <calculatedViewAttribute datatype="DATE" id="CC_BILL_DAY" expressionLanguage="COLUMN_ENGINE">
@@ -2247,7 +2229,6 @@ adddays(&quot;CC_PRD_CVRG_END_DT&quot;,1)!=&quot;BILL_DATE&quot; and&#xD;
         <mapping xsi:type="Calculation:AttributeMapping" target="CC_PRD_CVRG_STRT_DT" source="CC_PRD_CVRG_STRT_DT"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="SUBSCR_ST" source="SUBSCR_ST"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="CONT_TREAT_CODE" source="CONT_TREAT_CODE"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="FICO_CHG_IND" source="FICO_CHG_IND"/>
       </input>
       <filter>(&quot;CC_ADVANCE_BILL&quot; ='Y') and (&quot;POB_END_DT&quot; >='$$IP_BILL_DATE$$')</filter>
     </calculationView>
@@ -2335,7 +2316,6 @@ adddays(&quot;CC_PRD_CVRG_END_DT&quot;,1)!=&quot;BILL_DATE&quot; and&#xD;
         <viewAttribute id="RAI_TS"/>
         <viewAttribute id="SUBSCR_ST"/>
         <viewAttribute id="CONT_TREAT_CODE"/>
-        <viewAttribute id="FICO_CHG_IND"/>
       </viewAttributes>
       <calculatedViewAttributes/>
       <input node="#PROJ_NEW_ORDERS_MODIFIED$$$$CA_MOBL_ORDR$$">
@@ -2420,7 +2400,6 @@ adddays(&quot;CC_PRD_CVRG_END_DT&quot;,1)!=&quot;BILL_DATE&quot; and&#xD;
         <mapping xsi:type="Calculation:AttributeMapping" target="RAI_TS" source="RAI_TS"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="SUBSCR_ST" source="SUBSCR_ST"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="CONT_TREAT_CODE" source="CONT_TREAT_CODE"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="FICO_CHG_IND" source="FICO_CHG_IND"/>
       </input>
       <filter>((isNull(&quot;RAI_TS&quot;)) and (&quot;POB_END_DT&quot; > date('$$IP_BILL_DATE$$')) and ((&quot;CONTR_STRT_DT&quot; != &quot;ITEM_STRT_DT&quot;) and (&quot;BASE_OPT_SERV_IND&quot; = 'BASE') and (not isNull(&quot;BASE_OPT_SERV_IND&quot;)) and (isNull(&quot;CONVERSION_IND&quot;))))</filter>
     </calculationView>
@@ -2508,7 +2487,6 @@ adddays(&quot;CC_PRD_CVRG_END_DT&quot;,1)!=&quot;BILL_DATE&quot; and&#xD;
         <viewAttribute id="RAI_TS"/>
         <viewAttribute id="SUBSCR_ST"/>
         <viewAttribute id="CONT_TREAT_CODE"/>
-        <viewAttribute id="FICO_CHG_IND"/>
       </viewAttributes>
       <calculatedViewAttributes/>
       <input node="#PROJ_EXISTING_MODIFIED$$$$CA_MOBL_ORDR$$">
@@ -2593,7 +2571,6 @@ adddays(&quot;CC_PRD_CVRG_END_DT&quot;,1)!=&quot;BILL_DATE&quot; and&#xD;
         <mapping xsi:type="Calculation:AttributeMapping" target="RAI_TS" source="RAI_TS"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="SUBSCR_ST" source="SUBSCR_ST"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="CONT_TREAT_CODE" source="CONT_TREAT_CODE"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="FICO_CHG_IND" source="FICO_CHG_IND"/>
       </input>
       <filter>(isNull(&quot;MOD_IND&quot;) and (not isNull(&quot;RAI_TS&quot;)) and (&quot;POB_END_DT&quot;&lt;= date('$$IP_BILL_DATE$$') or (not isNull(&quot;ITEM_END_DT&quot;) or in(&quot;CONT_TREAT_CODE&quot;, 'SUS','CAN'))))</filter>
     </calculationView>
@@ -2681,7 +2658,6 @@ adddays(&quot;CC_PRD_CVRG_END_DT&quot;,1)!=&quot;BILL_DATE&quot; and&#xD;
         <viewAttribute id="RAI_TS"/>
         <viewAttribute id="SUBSCR_ST"/>
         <viewAttribute id="CONT_TREAT_CODE"/>
-        <viewAttribute id="FICO_CHG_IND" transparentFilter="false"/>
       </viewAttributes>
       <calculatedViewAttributes/>
       <input emptyUnionBehavior="NO_ROW" node="#PROJ_NEW_ORDERS_MODIFIED">
@@ -2766,7 +2742,6 @@ adddays(&quot;CC_PRD_CVRG_END_DT&quot;,1)!=&quot;BILL_DATE&quot; and&#xD;
         <mapping xsi:type="Calculation:AttributeMapping" target="RAI_TS" source="RAI_TS"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="SUBSCR_ST" source="SUBSCR_ST"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="CONT_TREAT_CODE" source="CONT_TREAT_CODE"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="FICO_CHG_IND" source="FICO_CHG_IND"/>
       </input>
       <input emptyUnionBehavior="NO_ROW" node="#PROJ_EXISTING_MODIFIED">
         <mapping xsi:type="Calculation:AttributeMapping" target="BAN" source="BAN"/>
@@ -2850,10 +2825,9 @@ adddays(&quot;CC_PRD_CVRG_END_DT&quot;,1)!=&quot;BILL_DATE&quot; and&#xD;
         <mapping xsi:type="Calculation:AttributeMapping" target="RAI_TS" source="RAI_TS"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="SUBSCR_ST" source="SUBSCR_ST"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="CONT_TREAT_CODE" source="CONT_TREAT_CODE"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="FICO_CHG_IND" source="FICO_CHG_IND"/>
       </input>
     </calculationView>
-    <calculationView xsi:type="Calculation:JoinView" id="JOIN_MODIFIED_BILL" joinOrder="OUTSIDE_IN" joinType="leftOuter">
+    <calculationView xsi:type="Calculation:JoinView" id="JOIN_MODIFIED_BILL" joinType="leftOuter" joinOrder="OUTSIDE_IN">
       <descriptions/>
       <viewAttributes>
         <viewAttribute id="BAN"/>
@@ -2941,7 +2915,6 @@ adddays(&quot;CC_PRD_CVRG_END_DT&quot;,1)!=&quot;BILL_DATE&quot; and&#xD;
         <viewAttribute id="CC_PRD_CVRG_END_DT"/>
         <viewAttribute id="PRD_CVRG_STRT_DT_PRORATED"/>
         <viewAttribute id="PRD_CVRG_END_DT_PRORATED"/>
-        <viewAttribute id="FICO_CHG_IND" transparentFilter="false"/>
       </viewAttributes>
       <calculatedViewAttributes/>
       <input node="#UNION_MOD_RECORDS">
@@ -3026,7 +2999,6 @@ adddays(&quot;CC_PRD_CVRG_END_DT&quot;,1)!=&quot;BILL_DATE&quot; and&#xD;
         <mapping xsi:type="Calculation:AttributeMapping" target="RAI_TS" source="RAI_TS"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="SUBSCR_ST" source="SUBSCR_ST"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="CONT_TREAT_CODE" source="CONT_TREAT_CODE"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="FICO_CHG_IND" source="FICO_CHG_IND"/>
       </input>
       <input node="#JOIN_MODIFIED_BILL$$$$CA_MOBL_ALL_BILLING$$">
         <mapping xsi:type="Calculation:AttributeMapping" target="CC_PRD_CVRG_STRT_DT" source="CC_PRD_CVRG_STRT_DT"/>
@@ -3043,7 +3015,7 @@ adddays(&quot;CC_PRD_CVRG_END_DT&quot;,1)!=&quot;BILL_DATE&quot; and&#xD;
       <joinAttribute name="BAN"/>
       <joinAttribute name="ITEM_SUB_ID"/>
     </calculationView>
-    <calculationView xsi:type="Calculation:JoinView" id="JOIN_NEW_BILLING" joinOrder="OUTSIDE_IN" joinType="leftOuter">
+    <calculationView xsi:type="Calculation:JoinView" id="JOIN_NEW_BILLING" joinType="leftOuter" joinOrder="OUTSIDE_IN">
       <descriptions/>
       <viewAttributes>
         <viewAttribute id="CONT_TREAT_CODE"/>
@@ -3131,7 +3103,6 @@ adddays(&quot;CC_PRD_CVRG_END_DT&quot;,1)!=&quot;BILL_DATE&quot; and&#xD;
         <viewAttribute id="CC_PRD_CVRG_END_DT"/>
         <viewAttribute id="PRD_CVRG_STRT_DT_PRORATED"/>
         <viewAttribute id="PRD_CVRG_END_DT_PRORATED"/>
-        <viewAttribute id="FICO_CHG_IND"/>
       </viewAttributes>
       <calculatedViewAttributes>
         <calculatedViewAttribute datatype="DATE" id="CC_BILL_DAY" expressionLanguage="COLUMN_ENGINE">
@@ -3220,7 +3191,6 @@ adddays(&quot;CC_PRD_CVRG_END_DT&quot;,1)!=&quot;BILL_DATE&quot; and&#xD;
         <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_ID" source="ITEM_ID"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="CONTR_TRANS_DT" source="CONTR_TRANS_DT"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="BAN" source="BAN"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="FICO_CHG_IND" source="FICO_CHG_IND"/>
       </input>
       <input node="#JOIN_NEW_BILLING$$$$CA_MOBL_ALL_BILLING$$">
         <mapping xsi:type="Calculation:AttributeMapping" target="CC_PRD_CVRG_STRT_DT" source="CC_PRD_CVRG_STRT_DT"/>
@@ -3237,7 +3207,7 @@ adddays(&quot;CC_PRD_CVRG_END_DT&quot;,1)!=&quot;BILL_DATE&quot; and&#xD;
       <joinAttribute name="BAN"/>
       <joinAttribute name="ITEM_SUB_ID"/>
     </calculationView>
-    <calculationView xsi:type="Calculation:JoinView" id="JOIN_ORDER_BILLING" joinOrder="OUTSIDE_IN" joinType="leftOuter">
+    <calculationView xsi:type="Calculation:JoinView" id="JOIN_ORDER_BILLING" joinType="leftOuter" joinOrder="OUTSIDE_IN">
       <descriptions>
         <comment text="We join with the Billing to ensure that it isn't getting picked up by billing"/>
       </descriptions>
@@ -3325,7 +3295,6 @@ adddays(&quot;CC_PRD_CVRG_END_DT&quot;,1)!=&quot;BILL_DATE&quot; and&#xD;
         <viewAttribute datatype="NVARCHAR" id="SUBSCR_ST" length="1" scale="0"/>
         <viewAttribute datatype="NVARCHAR" id="CONT_TREAT_CODE" length="10" scale="0"/>
         <viewAttribute id="SUBSCR_NO_BILL"/>
-        <viewAttribute id="FICO_CHG_IND"/>
       </viewAttributes>
       <calculatedViewAttributes/>
       <input node="#PROJ_ACTIVE_BASED_ON_ORDER">
@@ -3411,7 +3380,6 @@ adddays(&quot;CC_PRD_CVRG_END_DT&quot;,1)!=&quot;BILL_DATE&quot; and&#xD;
         <mapping xsi:type="Calculation:AttributeMapping" target="RAI_TS" source="RAI_TS"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="SUBSCR_ST" source="SUBSCR_ST"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="CONT_TREAT_CODE" source="CONT_TREAT_CODE"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="FICO_CHG_IND" source="FICO_CHG_IND"/>
       </input>
       <input node="#JOIN_ORDER_BILLING$$$$CA_MOBL_ALL_BILLING$$">
         <mapping xsi:type="Calculation:AttributeMapping" target="SUBSCR_NO_BILL" source="SUBSCR_NO"/>
@@ -3513,7 +3481,6 @@ adddays(&quot;CC_PRD_CVRG_END_DT&quot;,1)!=&quot;BILL_DATE&quot; and&#xD;
         <viewAttribute id="SUBSCR_NO_BILL">
           <filter xsi:type="AccessControl:SingleValueFilter" operator="NL" including="true"/>
         </viewAttribute>
-        <viewAttribute id="FICO_CHG_IND"/>
       </viewAttributes>
       <calculatedViewAttributes/>
       <input node="#JOIN_ORDER_BILLING">
@@ -3600,7 +3567,6 @@ adddays(&quot;CC_PRD_CVRG_END_DT&quot;,1)!=&quot;BILL_DATE&quot; and&#xD;
         <mapping xsi:type="Calculation:AttributeMapping" target="CONTR_TRANS_DT" source="CONTR_TRANS_DT"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="BAN" source="BAN"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="SUBSCR_NO_BILL" source="SUBSCR_NO_BILL"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="FICO_CHG_IND" source="FICO_CHG_IND"/>
       </input>
     </calculationView>
     <calculationView xsi:type="Calculation:UnionView" id="UNION">
@@ -3698,7 +3664,6 @@ adddays(&quot;CC_PRD_CVRG_END_DT&quot;,1)!=&quot;BILL_DATE&quot; and&#xD;
         <viewAttribute id="CONTR_TRANS_DT"/>
         <viewAttribute id="BAN"/>
         <viewAttribute id="SUBSCR_NO_BILL"/>
-        <viewAttribute datatype="NVARCHAR" id="FICO_CHG_IND" length="1" scale="0"/>
       </viewAttributes>
       <calculatedViewAttributes>
         <calculatedViewAttribute datatype="NVARCHAR" id="CC_LAND_PARENT_KEY_CHECK" length="100" expressionLanguage="COLUMN_ENGINE">
@@ -3798,7 +3763,6 @@ adddays(&quot;CC_PRD_CVRG_END_DT&quot;,1)!=&quot;BILL_DATE&quot; and&#xD;
         <mapping xsi:type="Calculation:AttributeMapping" target="CONTR_TRANS_DT" source="CONTR_TRANS_DT"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="BAN" source="BAN"/>
         <mapping xsi:type="Calculation:ConstantAttributeMapping" target="SUBSCR_NO_BILL" null="true" value=""/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="FICO_CHG_IND" source="FICO_CHG_IND"/>
       </input>
       <input emptyUnionBehavior="NO_ROW" node="#PROJ_T00">
         <mapping xsi:type="Calculation:AttributeMapping" target="CC_OLD_UPDATE" source="CC_OLD_UPDATE"/>
@@ -3893,7 +3857,6 @@ adddays(&quot;CC_PRD_CVRG_END_DT&quot;,1)!=&quot;BILL_DATE&quot; and&#xD;
         <mapping xsi:type="Calculation:AttributeMapping" target="CONTR_TRANS_DT" source="CONTR_TRANS_DT"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="BAN" source="BAN"/>
         <mapping xsi:type="Calculation:ConstantAttributeMapping" target="SUBSCR_NO_BILL" null="true" value=""/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="FICO_CHG_IND" source="FICO_CHG_IND"/>
       </input>
       <input emptyUnionBehavior="NO_ROW" node="#PROJ_ORDER_UPDATE_FROM_BILL">
         <mapping xsi:type="Calculation:AttributeMapping" target="CC_OLD_UPDATE" source="CC_OLD_UPDATE"/>
@@ -3988,7 +3951,6 @@ adddays(&quot;CC_PRD_CVRG_END_DT&quot;,1)!=&quot;BILL_DATE&quot; and&#xD;
         <mapping xsi:type="Calculation:AttributeMapping" target="CONTR_TRANS_DT" source="CONTR_TRANS_DT"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="BAN" source="BAN"/>
         <mapping xsi:type="Calculation:ConstantAttributeMapping" target="SUBSCR_NO_BILL" null="true" value=""/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="FICO_CHG_IND" source="FICO_CHG_IND"/>
       </input>
       <input emptyUnionBehavior="NO_ROW" node="#JOIN_MODIFIED_BILL">
         <mapping xsi:type="Calculation:ConstantAttributeMapping" target="CC_OLD_UPDATE" null="true" value=""/>
@@ -4083,7 +4045,6 @@ adddays(&quot;CC_PRD_CVRG_END_DT&quot;,1)!=&quot;BILL_DATE&quot; and&#xD;
         <mapping xsi:type="Calculation:AttributeMapping" target="CONTR_TRANS_DT" source="CONTR_TRANS_DT"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="BAN" source="BAN"/>
         <mapping xsi:type="Calculation:ConstantAttributeMapping" target="SUBSCR_NO_BILL" null="true" value=""/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="FICO_CHG_IND" source="FICO_CHG_IND"/>
       </input>
       <input emptyUnionBehavior="NO_ROW" node="#JOIN_NEW_BILLING">
         <mapping xsi:type="Calculation:ConstantAttributeMapping" target="CC_OLD_UPDATE" null="true" value=""/>
@@ -4178,7 +4139,6 @@ adddays(&quot;CC_PRD_CVRG_END_DT&quot;,1)!=&quot;BILL_DATE&quot; and&#xD;
         <mapping xsi:type="Calculation:AttributeMapping" target="CONTR_TRANS_DT" source="CONTR_TRANS_DT"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="BAN" source="BAN"/>
         <mapping xsi:type="Calculation:ConstantAttributeMapping" target="SUBSCR_NO_BILL" null="true" value=""/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="FICO_CHG_IND" source="FICO_CHG_IND"/>
       </input>
       <input emptyUnionBehavior="NO_ROW" node="#PROJ_ACTIVE_ORDER_BASED">
         <mapping xsi:type="Calculation:ConstantAttributeMapping" target="CC_OLD_UPDATE" null="true" value=""/>
@@ -4273,7 +4233,6 @@ adddays(&quot;CC_PRD_CVRG_END_DT&quot;,1)!=&quot;BILL_DATE&quot; and&#xD;
         <mapping xsi:type="Calculation:AttributeMapping" target="CONTR_TRANS_DT" source="CONTR_TRANS_DT"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="BAN" source="BAN"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="SUBSCR_NO_BILL" source="SUBSCR_NO_BILL"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="FICO_CHG_IND" source="FICO_CHG_IND"/>
       </input>
     </calculationView>
   </calculationViews>
@@ -4636,10 +4595,6 @@ adddays(&quot;CC_PRD_CVRG_END_DT&quot;,1)!=&quot;BILL_DATE&quot; and&#xD;
         <descriptions defaultDescription="CC_MODIFICATION"/>
         <keyMapping columnObjectName="UNION" columnName="CC_MODIFICATION"/>
       </attribute>
-      <attribute id="FICO_CHG_IND" order="90" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
-        <descriptions defaultDescription="FICO CHG IND"/>
-        <keyMapping columnObjectName="UNION" columnName="FICO_CHG_IND"/>
-      </attribute>
     </attributes>
     <calculatedAttributes/>
     <privateDataFoundation>
@@ -4664,7 +4619,7 @@ adddays(&quot;CC_PRD_CVRG_END_DT&quot;,1)!=&quot;BILL_DATE&quot; and&#xD;
         <upperLeftCorner x="638" y="565"/>
         <rectangleSize height="-1" width="-1"/>
       </shape>
-      <shape expanded="true" modelObjectName="PROJ_NEW" modelObjectNameSpace="CalculationView">
+      <shape expanded="false" modelObjectName="PROJ_NEW" modelObjectNameSpace="CalculationView">
         <upperLeftCorner x="638" y="449"/>
         <rectangleSize height="-1" width="-1"/>
       </shape>

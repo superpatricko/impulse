@@ -479,10 +479,6 @@
         <viewAttribute id="CUST_ST"/>
         <viewAttribute id="PRIN_NUM"/>
         <viewAttribute id="AGNT_NUM"/>
-        <viewAttribute id="INST_CRD_IND"/>
-        <viewAttribute id="INST_CHRG_IND"/>
-        <viewAttribute id="MIN_SPD_CRE_IND"/>
-        <viewAttribute id="MIN_SPD_MOD_IND"/>
       </viewAttributes>
       <calculatedViewAttributes/>
       <input node="#IFRS_R1.BELLTV.NDB_BELLTV::TV_CUSTOMER">
@@ -496,10 +492,6 @@
         <mapping xsi:type="Calculation:AttributeMapping" target="CUST_ST" source="CUST_ST"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="PRIN_NUM" source="PRIN_NUM"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="AGNT_NUM" source="AGNT_NUM"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="INST_CRD_IND" source="INST_CRD_IND"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="INST_CHRG_IND" source="INST_CHRG_IND"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="MIN_SPD_CRE_IND" source="MIN_SPD_CRE_IND"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="MIN_SPD_MOD_IND" source="MIN_SPD_MOD_IND"/>
       </input>
       <filter>&quot;REFERENCE_EXPIRY_DT&quot; = '9999.12.31'</filter>
     </calculationView>
@@ -728,10 +720,6 @@
         <viewAttribute id="IS_20100102"/>
         <viewAttribute id="IS_20100103"/>
         <viewAttribute id="IS_20100104"/>
-        <viewAttribute id="INST_CRD_IND"/>
-        <viewAttribute id="INST_CHRG_IND"/>
-        <viewAttribute id="MIN_SPD_CRE_IND"/>
-        <viewAttribute id="MIN_SPD_MOD_IND"/>
       </viewAttributes>
       <calculatedViewAttributes>
         <calculatedViewAttribute datatype="INTEGER" id="CC_CONTR_TERM" expressionLanguage="COLUMN_ENGINE">
@@ -745,6 +733,9 @@
         </calculatedViewAttribute>
         <calculatedViewAttribute datatype="DATE" id="CC_REFERENCE_EXPIRY_DT" expressionLanguage="COLUMN_ENGINE">
           <formula>'9999.12.31'</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CC_MIN_SPD_CRE_IND" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(&quot;PROCESS_IND&quot; = 'R','X',string(null))</formula>
         </calculatedViewAttribute>
         <calculatedViewAttribute datatype="NVARCHAR" id="CC_CUST_ST" length="2" expressionLanguage="COLUMN_ENGINE">
           <formula>if(&quot;PROCESS_IND&quot; = 'P','P',if(isNull(&quot;EXTERNAL_STATUS_CD&quot;),'A','D'))</formula>
@@ -798,10 +789,6 @@
         <mapping xsi:type="Calculation:AttributeMapping" target="KUNNR_SID_RIGHT" source="KUNNR_SID"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="OB_BAN_RIGHT" source="OB_BAN"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="CUST_ST_RIGHT" source="CUST_ST"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="INST_CHRG_IND" source="INST_CHRG_IND"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="MIN_SPD_CRE_IND" source="MIN_SPD_CRE_IND"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="MIN_SPD_MOD_IND" source="MIN_SPD_MOD_IND"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="INST_CRD_IND" source="INST_CRD_IND"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="ACCT_NUM" source="ACCT_NUM"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="PRIN_NUM" source="PRIN_NUM"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="AGNT_NUM" source="AGNT_NUM"/>
@@ -820,6 +807,7 @@
         <viewAttribute id="REFERENCE_EXPIRY_DT_UPDATE"/>
         <viewAttribute id="TAX_JURISD_CD"/>
         <viewAttribute id="CUST_ST"/>
+        <viewAttribute id="MIN_SPD_CRE_IND"/>
         <viewAttribute id="REFERENCE_EXPIRY_DT"/>
         <viewAttribute id="COMIT_TY"/>
         <viewAttribute id="CONTR_END_DT"/>
@@ -848,10 +836,6 @@
         <viewAttribute id="IS_20100102"/>
         <viewAttribute id="IS_20100103"/>
         <viewAttribute id="IS_20100104"/>
-        <viewAttribute id="INST_CRD_IND"/>
-        <viewAttribute id="INST_CHRG_IND"/>
-        <viewAttribute id="MIN_SPD_CRE_IND"/>
-        <viewAttribute id="MIN_SPD_MOD_IND"/>
       </viewAttributes>
       <calculatedViewAttributes/>
       <input node="#JOIN_NDB">
@@ -862,6 +846,7 @@
         <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_EXPIRY_DT_UPDATE" source="CC_REFERENCE_EXPIRY_DT_UPDATE"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="TAX_JURISD_CD" source="CC_TAX_JURISD_CD"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="CUST_ST" source="CC_CUST_ST"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MIN_SPD_CRE_IND" source="CC_MIN_SPD_CRE_IND"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_EXPIRY_DT" source="CC_REFERENCE_EXPIRY_DT"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="COMIT_TY" source="CC_COMIT_TY"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="CONTR_END_DT" source="CC_CONTR_END_DT"/>
@@ -890,10 +875,6 @@
         <mapping xsi:type="Calculation:AttributeMapping" target="IS_20100102" source="IS_20100102"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="IS_20100103" source="IS_20100103"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="IS_20100104" source="IS_20100104"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="INST_CRD_IND" source="INST_CRD_IND"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="INST_CHRG_IND" source="INST_CHRG_IND"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="MIN_SPD_CRE_IND" source="MIN_SPD_CRE_IND"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="MIN_SPD_MOD_IND" source="MIN_SPD_MOD_IND"/>
       </input>
       <windowFunction>
         <partitionViewAttributeName>ACCT_NUM</partitionViewAttributeName>
@@ -912,6 +893,7 @@
         <viewAttribute id="REFERENCE_EXPIRY_DT_UPDATE"/>
         <viewAttribute id="TAX_JURISD_CD"/>
         <viewAttribute id="CUST_ST"/>
+        <viewAttribute id="MIN_SPD_CRE_IND"/>
         <viewAttribute id="REFERENCE_EXPIRY_DT"/>
         <viewAttribute id="COMIT_TY"/>
         <viewAttribute id="CONTR_END_DT"/>
@@ -943,10 +925,6 @@
         <viewAttribute id="IS_20100102"/>
         <viewAttribute id="IS_20100103"/>
         <viewAttribute id="IS_20100104"/>
-        <viewAttribute id="INST_CRD_IND"/>
-        <viewAttribute id="INST_CHRG_IND"/>
-        <viewAttribute id="MIN_SPD_CRE_IND"/>
-        <viewAttribute id="MIN_SPD_MOD_IND"/>
       </viewAttributes>
       <calculatedViewAttributes>
         <calculatedViewAttribute datatype="NVARCHAR" id="CC_EXISTING_RECORD" length="1" expressionLanguage="COLUMN_ENGINE">
@@ -974,6 +952,7 @@ if(&quot;IS_20100105&quot;='1', '20100105||','') &#xD;
         <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_EXPIRY_DT_UPDATE" source="REFERENCE_EXPIRY_DT_UPDATE"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="TAX_JURISD_CD" source="TAX_JURISD_CD"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="CUST_ST" source="CUST_ST"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MIN_SPD_CRE_IND" source="MIN_SPD_CRE_IND"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_EXPIRY_DT" source="REFERENCE_EXPIRY_DT"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="COMIT_TY" source="COMIT_TY"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="CONTR_END_DT" source="CONTR_END_DT"/>
@@ -1005,10 +984,6 @@ if(&quot;IS_20100105&quot;='1', '20100105||','') &#xD;
         <mapping xsi:type="Calculation:AttributeMapping" target="IS_20100102" source="IS_20100102"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="IS_20100103" source="IS_20100103"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="IS_20100104" source="IS_20100104"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="INST_CRD_IND" source="INST_CRD_IND"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="INST_CHRG_IND" source="INST_CHRG_IND"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="MIN_SPD_CRE_IND" source="MIN_SPD_CRE_IND"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="MIN_SPD_MOD_IND" source="MIN_SPD_MOD_IND"/>
       </input>
     </calculationView>
   </calculationViews>
@@ -1035,153 +1010,141 @@ if(&quot;IS_20100105&quot;='1', '20100105||','') &#xD;
         <descriptions defaultDescription="CUST_ST"/>
         <keyMapping columnObjectName="PROJ_ERROR_SEMANTICS" columnName="CUST_ST"/>
       </attribute>
-      <attribute id="REFERENCE_EXPIRY_DT" order="6" attributeHierarchyActive="false" displayAttribute="false">
-        <descriptions defaultDescription="REFERENCE_EXPIRY_DT"/>
-        <keyMapping columnObjectName="PROJ_ERROR_SEMANTICS" columnName="REFERENCE_EXPIRY_DT"/>
-      </attribute>
-      <attribute id="COMIT_TY" order="7" attributeHierarchyActive="false" displayAttribute="false">
-        <descriptions defaultDescription="COMIT_TY"/>
-        <keyMapping columnObjectName="PROJ_ERROR_SEMANTICS" columnName="COMIT_TY"/>
-      </attribute>
-      <attribute id="CONTR_END_DT" order="8" attributeHierarchyActive="false" displayAttribute="false">
-        <descriptions defaultDescription="CONTR_END_DT"/>
-        <keyMapping columnObjectName="PROJ_ERROR_SEMANTICS" columnName="CONTR_END_DT"/>
-      </attribute>
-      <attribute id="CONTR_TERM" order="9" attributeHierarchyActive="false" displayAttribute="false">
-        <descriptions defaultDescription="CONTR_TERM"/>
-        <keyMapping columnObjectName="PROJ_ERROR_SEMANTICS" columnName="CONTR_TERM"/>
-      </attribute>
-      <attribute id="EXTERNAL_STATUS_CD" order="10" attributeHierarchyActive="false" displayAttribute="false">
-        <descriptions defaultDescription="EXTERNAL_STATUS_CD"/>
-        <keyMapping columnObjectName="PROJ_ERROR_SEMANTICS" columnName="EXTERNAL_STATUS_CD"/>
-      </attribute>
-      <attribute id="PROCESS_IND" order="11" attributeHierarchyActive="false" displayAttribute="false">
-        <descriptions defaultDescription="PROCESS_IND"/>
-        <keyMapping columnObjectName="PROJ_ERROR_SEMANTICS" columnName="PROCESS_IND"/>
-      </attribute>
-      <attribute id="ORIGINAL_CAMPAIGN_CD" order="12" attributeHierarchyActive="false" displayAttribute="false">
-        <descriptions defaultDescription="ORIGINAL_CAMPAIGN_CD"/>
-        <keyMapping columnObjectName="PROJ_ERROR_SEMANTICS" columnName="ORIGINAL_CAMPAIGN_CD"/>
-      </attribute>
-      <attribute id="CO_CD" order="13" attributeHierarchyActive="false" displayAttribute="false">
-        <descriptions defaultDescription="CO_CD"/>
-        <keyMapping columnObjectName="PROJ_ERROR_SEMANTICS" columnName="CO_CD"/>
-      </attribute>
-      <attribute id="NETWK_TY" order="14" attributeHierarchyActive="false" displayAttribute="false">
-        <descriptions defaultDescription="NETWK_TY"/>
-        <keyMapping columnObjectName="PROJ_ERROR_SEMANTICS" columnName="NETWK_TY"/>
-      </attribute>
-      <attribute id="CUST_LOC_ID" order="15" attributeHierarchyActive="false" displayAttribute="false">
-        <descriptions defaultDescription="CUST_LOC_ID"/>
-        <keyMapping columnObjectName="PROJ_ERROR_SEMANTICS" columnName="CUST_LOC_ID"/>
-      </attribute>
-      <attribute id="CONTR_TY" order="16" attributeHierarchyActive="false" displayAttribute="false">
-        <descriptions defaultDescription="CONTR_TY"/>
-        <keyMapping columnObjectName="PROJ_ERROR_SEMANTICS" columnName="CONTR_TY"/>
-      </attribute>
-      <attribute id="SUBS_EFF_DT" order="17" attributeHierarchyActive="false" displayAttribute="false">
-        <descriptions defaultDescription="SUBS_EFF_DT"/>
-        <keyMapping columnObjectName="PROJ_ERROR_SEMANTICS" columnName="SUBS_EFF_DT"/>
-      </attribute>
-      <attribute id="CONTR_STRT_DT" order="18" attributeHierarchyActive="false" displayAttribute="false">
-        <descriptions defaultDescription="CONTR_STRT_DT"/>
-        <keyMapping columnObjectName="PROJ_ERROR_SEMANTICS" columnName="CONTR_STRT_DT"/>
-      </attribute>
-      <attribute id="CONNECT_DATE" order="19" attributeHierarchyActive="false" displayAttribute="false">
-        <descriptions defaultDescription="CONNECT_DATE"/>
-        <keyMapping columnObjectName="PROJ_ERROR_SEMANTICS" columnName="CONNECT_DATE"/>
-      </attribute>
-      <attribute id="CUST_NM" order="20" attributeHierarchyActive="false" displayAttribute="false">
-        <descriptions defaultDescription="CUST_NM"/>
-        <keyMapping columnObjectName="PROJ_ERROR_SEMANTICS" columnName="CUST_NM"/>
-      </attribute>
-      <attribute id="CUST_TY" order="21" attributeHierarchyActive="false" displayAttribute="false">
-        <descriptions defaultDescription="CUST_TY"/>
-        <keyMapping columnObjectName="PROJ_ERROR_SEMANTICS" columnName="CUST_TY"/>
-      </attribute>
-      <attribute id="AGNT_NUM" order="22" attributeHierarchyActive="false" displayAttribute="false">
-        <descriptions defaultDescription="AGNT_NUM"/>
-        <keyMapping columnObjectName="PROJ_ERROR_SEMANTICS" columnName="AGNT_NUM"/>
-      </attribute>
-      <attribute id="PRIN_NUM" order="23" attributeHierarchyActive="false" displayAttribute="false">
-        <descriptions defaultDescription="PRIN_NUM"/>
-        <keyMapping columnObjectName="PROJ_ERROR_SEMANTICS" columnName="PRIN_NUM"/>
-      </attribute>
-      <attribute id="BILL_CYCL" order="24" attributeHierarchyActive="false" displayAttribute="false">
-        <descriptions defaultDescription="BILL_CYCL"/>
-        <keyMapping columnObjectName="PROJ_ERROR_SEMANTICS" columnName="BILL_CYCL"/>
-      </attribute>
-      <attribute id="CUST_PSTL_CD" order="25" attributeHierarchyActive="false" displayAttribute="false">
-        <descriptions defaultDescription="CUST_PSTL_CD"/>
-        <keyMapping columnObjectName="PROJ_ERROR_SEMANTICS" columnName="CUST_PSTL_CD"/>
-      </attribute>
-      <attribute id="ACCT_NUM" order="26" attributeHierarchyActive="false" displayAttribute="false">
-        <descriptions defaultDescription="ACCT_NUM"/>
-        <keyMapping columnObjectName="PROJ_ERROR_SEMANTICS" columnName="ACCT_NUM"/>
-      </attribute>
-      <attribute id="PRM_ACCT_NUM" order="27" attributeHierarchyActive="false" displayAttribute="false">
-        <descriptions defaultDescription="PRM_ACCT_NUM"/>
-        <keyMapping columnObjectName="PROJ_ERROR_SEMANTICS" columnName="PRM_ACCT_NUM"/>
-      </attribute>
-      <attribute id="CAMPAIGN_CD" order="28" attributeHierarchyActive="false" displayAttribute="false">
-        <descriptions defaultDescription="CAMPAIGN_CD"/>
-        <keyMapping columnObjectName="PROJ_ERROR_SEMANTICS" columnName="CAMPAIGN_CD"/>
-      </attribute>
-      <attribute id="TERM_MONTHS" order="29" attributeHierarchyActive="false" displayAttribute="false">
-        <descriptions defaultDescription="TERM_MONTHS"/>
-        <keyMapping columnObjectName="PROJ_ERROR_SEMANTICS" columnName="TERM_MONTHS"/>
-      </attribute>
-      <attribute id="FLAG_EXISTING_RECORD" order="30" attributeHierarchyActive="false" displayAttribute="false">
-        <descriptions defaultDescription="FLAG_EXISTING_RECORD"/>
-        <keyMapping columnObjectName="PROJ_ERROR_SEMANTICS" columnName="CC_EXISTING_RECORD"/>
-      </attribute>
-      <attribute id="ERROR_STATUS" order="31" attributeHierarchyActive="false" displayAttribute="false">
-        <descriptions defaultDescription="ERROR_STATUS"/>
-        <keyMapping columnObjectName="PROJ_ERROR_SEMANTICS" columnName="ERROR_STATUS"/>
-      </attribute>
-      <attribute id="ERROR_CODE" order="32" attributeHierarchyActive="false" displayAttribute="false">
-        <descriptions defaultDescription="ERROR_CODE"/>
-        <keyMapping columnObjectName="PROJ_ERROR_SEMANTICS" columnName="ERROR_CODE"/>
-      </attribute>
-      <attribute id="IS_20100101" order="33" attributeHierarchyActive="false" displayAttribute="false">
-        <descriptions defaultDescription="IS_20100101"/>
-        <keyMapping columnObjectName="PROJ_ERROR_SEMANTICS" columnName="IS_20100101"/>
-      </attribute>
-      <attribute id="REFERENCE_EFFECTIVE_DT" hidden="false" order="34" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
-        <descriptions/>
-        <keyMapping columnObjectName="PROJ_ERROR_SEMANTICS" columnName="CC_REFERENCE_EFFECTIVE_DT"/>
-      </attribute>
-      <attribute id="IS_20100105" hidden="false" order="35" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
-        <descriptions/>
-        <keyMapping columnObjectName="PROJ_ERROR_SEMANTICS" columnName="IS_20100105"/>
-      </attribute>
-      <attribute id="IS_20100102" order="36" attributeHierarchyActive="false" displayAttribute="false">
-        <descriptions defaultDescription="IS_20100102"/>
-        <keyMapping columnObjectName="PROJ_ERROR_SEMANTICS" columnName="IS_20100102"/>
-      </attribute>
-      <attribute id="IS_20100103" order="37" attributeHierarchyActive="false" displayAttribute="false">
-        <descriptions defaultDescription="IS_20100103"/>
-        <keyMapping columnObjectName="PROJ_ERROR_SEMANTICS" columnName="IS_20100103"/>
-      </attribute>
-      <attribute id="IS_20100104" order="38" attributeHierarchyActive="false" displayAttribute="false">
-        <descriptions defaultDescription="IS_20100104"/>
-        <keyMapping columnObjectName="PROJ_ERROR_SEMANTICS" columnName="IS_20100104"/>
-      </attribute>
-      <attribute id="INST_CRD_IND" order="39" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
-        <descriptions defaultDescription="INST_CRD_IND"/>
-        <keyMapping columnObjectName="PROJ_ERROR_SEMANTICS" columnName="INST_CRD_IND"/>
-      </attribute>
-      <attribute id="INST_CHRG_IND" order="40" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
-        <descriptions defaultDescription="INST_CHRG_IND"/>
-        <keyMapping columnObjectName="PROJ_ERROR_SEMANTICS" columnName="INST_CHRG_IND"/>
-      </attribute>
-      <attribute id="MIN_SPD_CRE_IND" order="41" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+      <attribute id="MIN_SPD_CRE_IND" order="6" attributeHierarchyActive="false" displayAttribute="false">
         <descriptions defaultDescription="MIN_SPD_CRE_IND"/>
         <keyMapping columnObjectName="PROJ_ERROR_SEMANTICS" columnName="MIN_SPD_CRE_IND"/>
       </attribute>
-      <attribute id="MIN_SPD_MOD_IND" order="42" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
-        <descriptions defaultDescription="MIN_SPD_MOD_IND "/>
-        <keyMapping columnObjectName="PROJ_ERROR_SEMANTICS" columnName="MIN_SPD_MOD_IND"/>
+      <attribute id="REFERENCE_EXPIRY_DT" order="7" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="REFERENCE_EXPIRY_DT"/>
+        <keyMapping columnObjectName="PROJ_ERROR_SEMANTICS" columnName="REFERENCE_EXPIRY_DT"/>
+      </attribute>
+      <attribute id="COMIT_TY" order="8" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="COMIT_TY"/>
+        <keyMapping columnObjectName="PROJ_ERROR_SEMANTICS" columnName="COMIT_TY"/>
+      </attribute>
+      <attribute id="CONTR_END_DT" order="9" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CONTR_END_DT"/>
+        <keyMapping columnObjectName="PROJ_ERROR_SEMANTICS" columnName="CONTR_END_DT"/>
+      </attribute>
+      <attribute id="CONTR_TERM" order="10" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CONTR_TERM"/>
+        <keyMapping columnObjectName="PROJ_ERROR_SEMANTICS" columnName="CONTR_TERM"/>
+      </attribute>
+      <attribute id="EXTERNAL_STATUS_CD" order="11" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="EXTERNAL_STATUS_CD"/>
+        <keyMapping columnObjectName="PROJ_ERROR_SEMANTICS" columnName="EXTERNAL_STATUS_CD"/>
+      </attribute>
+      <attribute id="PROCESS_IND" order="12" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="PROCESS_IND"/>
+        <keyMapping columnObjectName="PROJ_ERROR_SEMANTICS" columnName="PROCESS_IND"/>
+      </attribute>
+      <attribute id="ORIGINAL_CAMPAIGN_CD" order="13" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ORIGINAL_CAMPAIGN_CD"/>
+        <keyMapping columnObjectName="PROJ_ERROR_SEMANTICS" columnName="ORIGINAL_CAMPAIGN_CD"/>
+      </attribute>
+      <attribute id="CO_CD" order="14" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CO_CD"/>
+        <keyMapping columnObjectName="PROJ_ERROR_SEMANTICS" columnName="CO_CD"/>
+      </attribute>
+      <attribute id="NETWK_TY" order="15" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="NETWK_TY"/>
+        <keyMapping columnObjectName="PROJ_ERROR_SEMANTICS" columnName="NETWK_TY"/>
+      </attribute>
+      <attribute id="CUST_LOC_ID" order="16" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CUST_LOC_ID"/>
+        <keyMapping columnObjectName="PROJ_ERROR_SEMANTICS" columnName="CUST_LOC_ID"/>
+      </attribute>
+      <attribute id="CONTR_TY" order="17" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CONTR_TY"/>
+        <keyMapping columnObjectName="PROJ_ERROR_SEMANTICS" columnName="CONTR_TY"/>
+      </attribute>
+      <attribute id="SUBS_EFF_DT" order="18" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SUBS_EFF_DT"/>
+        <keyMapping columnObjectName="PROJ_ERROR_SEMANTICS" columnName="SUBS_EFF_DT"/>
+      </attribute>
+      <attribute id="CONTR_STRT_DT" order="19" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CONTR_STRT_DT"/>
+        <keyMapping columnObjectName="PROJ_ERROR_SEMANTICS" columnName="CONTR_STRT_DT"/>
+      </attribute>
+      <attribute id="CONNECT_DATE" order="20" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CONNECT_DATE"/>
+        <keyMapping columnObjectName="PROJ_ERROR_SEMANTICS" columnName="CONNECT_DATE"/>
+      </attribute>
+      <attribute id="CUST_NM" order="21" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CUST_NM"/>
+        <keyMapping columnObjectName="PROJ_ERROR_SEMANTICS" columnName="CUST_NM"/>
+      </attribute>
+      <attribute id="CUST_TY" order="22" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CUST_TY"/>
+        <keyMapping columnObjectName="PROJ_ERROR_SEMANTICS" columnName="CUST_TY"/>
+      </attribute>
+      <attribute id="AGNT_NUM" order="23" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="AGNT_NUM"/>
+        <keyMapping columnObjectName="PROJ_ERROR_SEMANTICS" columnName="AGNT_NUM"/>
+      </attribute>
+      <attribute id="PRIN_NUM" order="24" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="PRIN_NUM"/>
+        <keyMapping columnObjectName="PROJ_ERROR_SEMANTICS" columnName="PRIN_NUM"/>
+      </attribute>
+      <attribute id="BILL_CYCL" order="25" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="BILL_CYCL"/>
+        <keyMapping columnObjectName="PROJ_ERROR_SEMANTICS" columnName="BILL_CYCL"/>
+      </attribute>
+      <attribute id="CUST_PSTL_CD" order="26" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CUST_PSTL_CD"/>
+        <keyMapping columnObjectName="PROJ_ERROR_SEMANTICS" columnName="CUST_PSTL_CD"/>
+      </attribute>
+      <attribute id="ACCT_NUM" order="27" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ACCT_NUM"/>
+        <keyMapping columnObjectName="PROJ_ERROR_SEMANTICS" columnName="ACCT_NUM"/>
+      </attribute>
+      <attribute id="PRM_ACCT_NUM" order="28" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="PRM_ACCT_NUM"/>
+        <keyMapping columnObjectName="PROJ_ERROR_SEMANTICS" columnName="PRM_ACCT_NUM"/>
+      </attribute>
+      <attribute id="CAMPAIGN_CD" order="29" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CAMPAIGN_CD"/>
+        <keyMapping columnObjectName="PROJ_ERROR_SEMANTICS" columnName="CAMPAIGN_CD"/>
+      </attribute>
+      <attribute id="TERM_MONTHS" order="30" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="TERM_MONTHS"/>
+        <keyMapping columnObjectName="PROJ_ERROR_SEMANTICS" columnName="TERM_MONTHS"/>
+      </attribute>
+      <attribute id="FLAG_EXISTING_RECORD" order="31" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="FLAG_EXISTING_RECORD"/>
+        <keyMapping columnObjectName="PROJ_ERROR_SEMANTICS" columnName="CC_EXISTING_RECORD"/>
+      </attribute>
+      <attribute id="ERROR_STATUS" order="32" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ERROR_STATUS"/>
+        <keyMapping columnObjectName="PROJ_ERROR_SEMANTICS" columnName="ERROR_STATUS"/>
+      </attribute>
+      <attribute id="ERROR_CODE" order="33" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ERROR_CODE"/>
+        <keyMapping columnObjectName="PROJ_ERROR_SEMANTICS" columnName="ERROR_CODE"/>
+      </attribute>
+      <attribute id="IS_20100101" order="34" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="IS_20100101"/>
+        <keyMapping columnObjectName="PROJ_ERROR_SEMANTICS" columnName="IS_20100101"/>
+      </attribute>
+      <attribute id="REFERENCE_EFFECTIVE_DT" hidden="false" order="35" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions/>
+        <keyMapping columnObjectName="PROJ_ERROR_SEMANTICS" columnName="CC_REFERENCE_EFFECTIVE_DT"/>
+      </attribute>
+      <attribute id="IS_20100105" hidden="false" order="36" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions/>
+        <keyMapping columnObjectName="PROJ_ERROR_SEMANTICS" columnName="IS_20100105"/>
+      </attribute>
+      <attribute id="IS_20100102" order="37" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="IS_20100102"/>
+        <keyMapping columnObjectName="PROJ_ERROR_SEMANTICS" columnName="IS_20100102"/>
+      </attribute>
+      <attribute id="IS_20100103" order="38" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="IS_20100103"/>
+        <keyMapping columnObjectName="PROJ_ERROR_SEMANTICS" columnName="IS_20100103"/>
+      </attribute>
+      <attribute id="IS_20100104" order="39" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="IS_20100104"/>
+        <keyMapping columnObjectName="PROJ_ERROR_SEMANTICS" columnName="IS_20100104"/>
       </attribute>
     </attributes>
     <calculatedAttributes/>

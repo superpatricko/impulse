@@ -17,7 +17,7 @@
       <localVariable>#IP_BILL_DATE</localVariable>
     </mapping>
   </variableMappings>
-  <informationModelLayout relativeWidthScenario="46"/>
+  <informationModelLayout relativeWidthScenario="13"/>
   <dataSources>
     <DataSource id="ZFENSDFLACC" type="DATA_BASE_TABLE">
       <viewAttributes allViewAttributes="true"/>
@@ -62,10 +62,6 @@
     <DataSource id="ZDEALER_CODES" type="DATA_BASE_TABLE">
       <viewAttributes allViewAttributes="true"/>
       <columnObject schemaName="SDA" columnObjectName="ZDEALER_CODES"/>
-    </DataSource>
-    <DataSource id="IFRS_R1.MOBILITY.NDB_MOBILITY::MOBL_POST_ORDER" type="DATA_BASE_TABLE">
-      <viewAttributes allViewAttributes="true"/>
-      <columnObject schemaName="NDB_MOBILITY" columnObjectName="IFRS_R1.MOBILITY.NDB_MOBILITY::MOBL_POST_ORDER"/>
     </DataSource>
     <DataSource id="SKB1" type="DATA_BASE_TABLE">
       <viewAttributes allViewAttributes="true"/>
@@ -4374,30 +4370,7 @@
         <mapping xsi:type="Calculation:AttributeMapping" target="UPUSERID" source="UPUSERID"/>
       </input>
     </calculationView>
-    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_MOBL_ORDER" filterExpressionLanguage="COLUMN_ENGINE">
-      <descriptions/>
-      <viewAttributes>
-        <viewAttribute id="CHRG_TY_CLASSIF"/>
-        <viewAttribute id="ITEM_ID"/>
-        <viewAttribute id="BAN"/>
-        <viewAttribute id="SUBSCR_NO"/>
-        <viewAttribute id="ITEM_SUB_ID"/>
-        <viewAttribute id="MANUFACTURE_CODE"/>
-        <viewAttribute id="ORIGINAL_DEALER"/>
-      </viewAttributes>
-      <calculatedViewAttributes/>
-      <input node="#IFRS_R1.MOBILITY.NDB_MOBILITY::MOBL_POST_ORDER">
-        <mapping xsi:type="Calculation:AttributeMapping" target="CHRG_TY_CLASSIF" source="CHRG_TY_CLASSIF"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_ID" source="ITEM_ID"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="BAN" source="BAN"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="SUBSCR_NO" source="SUBSCR_NO"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_SUB_ID" source="ITEM_SUB_ID"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="MANUFACTURE_CODE" source="MANUFACTURE_CODE"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="ORIGINAL_DEALER" source="ORIGINAL_DEALER"/>
-      </input>
-      <filter>&quot;CHRG_TY_CLASSIF&quot;='APLBB'</filter>
-    </calculationView>
-    <calculationView xsi:type="Calculation:AggregationView" id="AGGR_MOBL_DATA_SEL">
+    <calculationView xsi:type="Calculation:JoinView" id="JOIN_INVC_ZDEALER" joinOrder="OUTSIDE_IN" joinType="leftOuter">
       <descriptions/>
       <viewAttributes>
         <viewAttribute id="JOURN_DT"/>
@@ -4441,10 +4414,17 @@
         <viewAttribute id="BILL_PRIMARY_KEY"/>
         <viewAttribute id="DEALER"/>
         <viewAttribute id="CHRG_TY_CLASSIF"/>
+        <viewAttribute id="BUKRS"/>
+        <viewAttribute id="MWSKZ"/>
         <viewAttribute id="GL_JURISD_CD"/>
+        <viewAttribute id="DEALER_CD_RIGHT"/>
         <viewAttribute id="CC_ZZ_BKTXT"/>
       </viewAttributes>
-      <calculatedViewAttributes/>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="IS_30401525" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isNull(&quot;DEALER_CD_RIGHT&quot;),'1','0')</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
       <input node="#PROJ_MOBL_INVC_DATA">
         <mapping xsi:type="Calculation:AttributeMapping" target="JOURN_DT" source="JOURN_DT"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="SUBSCR_NO" source="SUBSCR_NO"/>
@@ -4490,228 +4470,13 @@
         <mapping xsi:type="Calculation:AttributeMapping" target="GL_JURISD_CD" source="GL_JURISD_CD"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="CC_ZZ_BKTXT" source="CC_ZZ_BKTXT"/>
       </input>
-    </calculationView>
-    <calculationView xsi:type="Calculation:JoinView" id="JOIN_ORDER_INVC_DATA_" joinOrder="OUTSIDE_IN" joinType="leftOuter">
-      <descriptions/>
-      <viewAttributes>
-        <viewAttribute id="MANUFACTURE_CODE"/>
-        <viewAttribute id="ORIGINAL_DEALER"/>
-        <viewAttribute id="JOURN_DT"/>
-        <viewAttribute id="SUBSCR_NO"/>
-        <viewAttribute id="GL_ACCT_NO"/>
-        <viewAttribute id="GL_COST_CENTRE"/>
-        <viewAttribute id="AMT"/>
-        <viewAttribute id="EXECUTION_ID"/>
-        <viewAttribute id="INSERT_TS"/>
-        <viewAttribute id="HEADER_ID"/>
-        <viewAttribute id="ITEM_ID"/>
-        <viewAttribute id="ITEM_SUB_ID"/>
-        <viewAttribute id="GL_PRICE_PLAN_GRP"/>
-        <viewAttribute id="PROV"/>
-        <viewAttribute id="COMP_CODE"/>
-        <viewAttribute id="BAN"/>
-        <viewAttribute id="CONVERSION_IND"/>
-        <viewAttribute id="CYCL_ID"/>
-        <viewAttribute id="ACCT_SUB_TY"/>
-        <viewAttribute id="ACCT_TY"/>
-        <viewAttribute id="BAN_PROV_CD"/>
-        <viewAttribute id="LGL_ENTT"/>
-        <viewAttribute id="MKT_SEG"/>
-        <viewAttribute id="AR_ACTV"/>
-        <viewAttribute id="IS_30401501"/>
-        <viewAttribute id="IS_30401502"/>
-        <viewAttribute id="IS_30401503"/>
-        <viewAttribute id="IS_30401504"/>
-        <viewAttribute id="IS_30401507"/>
-        <viewAttribute id="IS_30401508"/>
-        <viewAttribute id="IS_30401509"/>
-        <viewAttribute id="IS_30401510"/>
-        <viewAttribute id="IS_30401511"/>
-        <viewAttribute id="IS_30401512"/>
-        <viewAttribute id="IS_30401513"/>
-        <viewAttribute id="IS_30401514"/>
-        <viewAttribute id="ENT_SEQ_NO"/>
-        <viewAttribute id="TRANS_TY"/>
-        <viewAttribute id="CR_DR_IND"/>
-        <viewAttribute id="BRND"/>
-        <viewAttribute id="BILL_PRIMARY_KEY"/>
-        <viewAttribute id="DEALER"/>
-        <viewAttribute id="CHRG_TY_CLASSIF"/>
-        <viewAttribute id="GL_JURISD_CD"/>
-        <viewAttribute id="CC_ZZ_BKTXT"/>
-      </viewAttributes>
-      <calculatedViewAttributes/>
-      <input node="#AGGR_MOBL_DATA_SEL">
-        <mapping xsi:type="Calculation:AttributeMapping" target="CC_ZZ_BKTXT" source="CC_ZZ_BKTXT"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="GL_JURISD_CD" source="GL_JURISD_CD"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="CHRG_TY_CLASSIF" source="CHRG_TY_CLASSIF"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="DEALER" source="DEALER"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_PRIMARY_KEY" source="BILL_PRIMARY_KEY"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="BRND" source="BRND"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="CR_DR_IND" source="CR_DR_IND"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="TRANS_TY" source="TRANS_TY"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="ENT_SEQ_NO" source="ENT_SEQ_NO"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30401514" source="IS_30401514"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30401513" source="IS_30401513"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30401512" source="IS_30401512"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30401511" source="IS_30401511"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30401510" source="IS_30401510"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30401509" source="IS_30401509"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30401508" source="IS_30401508"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30401507" source="IS_30401507"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30401504" source="IS_30401504"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30401503" source="IS_30401503"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30401502" source="IS_30401502"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30401501" source="IS_30401501"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="AR_ACTV" source="AR_ACTV"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="MKT_SEG" source="MKT_SEG"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="LGL_ENTT" source="LGL_ENTT"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="BAN_PROV_CD" source="BAN_PROV_CD"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="ACCT_TY" source="ACCT_TY"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="ACCT_SUB_TY" source="ACCT_SUB_TY"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="CONVERSION_IND" source="CONVERSION_IND"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="BAN" source="BAN"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="COMP_CODE" source="COMP_CODE"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="PROV" source="PROV"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="GL_PRICE_PLAN_GRP" source="GL_PRICE_PLAN_GRP"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_SUB_ID" source="ITEM_SUB_ID"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_ID" source="ITEM_ID"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="HEADER_ID" source="HEADER_ID"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="INSERT_TS" source="INSERT_TS"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="EXECUTION_ID" source="EXECUTION_ID"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="AMT" source="AMT"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="GL_COST_CENTRE" source="GL_COST_CENTRE"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="GL_ACCT_NO" source="GL_ACCT_NO"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="SUBSCR_NO" source="SUBSCR_NO"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="JOURN_DT" source="JOURN_DT"/>
-      </input>
-      <input node="#PROJ_MOBL_ORDER">
-        <mapping xsi:type="Calculation:AttributeMapping" target="MANUFACTURE_CODE" source="MANUFACTURE_CODE"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="ORIGINAL_DEALER" source="ORIGINAL_DEALER"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_ID" source="ITEM_ID"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="BAN" source="BAN"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="SUBSCR_NO" source="SUBSCR_NO"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_SUB_ID" source="ITEM_SUB_ID"/>
-      </input>
-      <joinAttribute name="ITEM_ID"/>
-      <joinAttribute name="BAN"/>
-      <joinAttribute name="SUBSCR_NO"/>
-      <joinAttribute name="ITEM_SUB_ID"/>
-    </calculationView>
-    <calculationView xsi:type="Calculation:JoinView" id="JOIN_INVC_ZDEALER" joinOrder="OUTSIDE_IN" joinType="leftOuter">
-      <descriptions/>
-      <viewAttributes>
-        <viewAttribute id="BUKRS"/>
-        <viewAttribute id="MWSKZ"/>
-        <viewAttribute id="DEALER_CD_RIGHT"/>
-        <viewAttribute id="JOURN_DT"/>
-        <viewAttribute id="SUBSCR_NO"/>
-        <viewAttribute id="GL_ACCT_NO"/>
-        <viewAttribute id="GL_COST_CENTRE"/>
-        <viewAttribute id="AMT"/>
-        <viewAttribute id="EXECUTION_ID"/>
-        <viewAttribute id="INSERT_TS"/>
-        <viewAttribute id="HEADER_ID"/>
-        <viewAttribute id="ITEM_ID"/>
-        <viewAttribute id="ITEM_SUB_ID"/>
-        <viewAttribute id="GL_PRICE_PLAN_GRP"/>
-        <viewAttribute id="PROV"/>
-        <viewAttribute id="COMP_CODE"/>
-        <viewAttribute id="BAN"/>
-        <viewAttribute id="CONVERSION_IND"/>
-        <viewAttribute id="CYCL_ID"/>
-        <viewAttribute id="ACCT_SUB_TY"/>
-        <viewAttribute id="ACCT_TY"/>
-        <viewAttribute id="BAN_PROV_CD"/>
-        <viewAttribute id="LGL_ENTT"/>
-        <viewAttribute id="MKT_SEG"/>
-        <viewAttribute id="AR_ACTV"/>
-        <viewAttribute id="IS_30401501"/>
-        <viewAttribute id="IS_30401502"/>
-        <viewAttribute id="IS_30401503"/>
-        <viewAttribute id="IS_30401504"/>
-        <viewAttribute id="IS_30401507"/>
-        <viewAttribute id="IS_30401508"/>
-        <viewAttribute id="IS_30401509"/>
-        <viewAttribute id="IS_30401510"/>
-        <viewAttribute id="IS_30401511"/>
-        <viewAttribute id="IS_30401512"/>
-        <viewAttribute id="IS_30401513"/>
-        <viewAttribute id="IS_30401514"/>
-        <viewAttribute id="ENT_SEQ_NO"/>
-        <viewAttribute id="TRANS_TY"/>
-        <viewAttribute id="CR_DR_IND"/>
-        <viewAttribute id="BRND"/>
-        <viewAttribute id="BILL_PRIMARY_KEY"/>
-        <viewAttribute id="DEALER"/>
-        <viewAttribute id="CHRG_TY_CLASSIF"/>
-        <viewAttribute id="GL_JURISD_CD"/>
-        <viewAttribute id="CC_ZZ_BKTXT"/>
-        <viewAttribute hidden="true" id="JOIN$ORIGINAL_DEALER$DEALER_CD"/>
-        <viewAttribute hidden="true" id="JOIN$MANUFACTURE_CODE$MANUF_CD"/>
-      </viewAttributes>
-      <calculatedViewAttributes>
-        <calculatedViewAttribute datatype="NVARCHAR" id="IS_30401525" length="1" expressionLanguage="COLUMN_ENGINE">
-          <formula>if(isNull(&quot;DEALER_CD_RIGHT&quot;),'1','0')</formula>
-        </calculatedViewAttribute>
-      </calculatedViewAttributes>
-      <input node="#JOIN_ORDER_INVC_DATA_">
-        <mapping xsi:type="Calculation:AttributeMapping" target="JOURN_DT" source="JOURN_DT"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="SUBSCR_NO" source="SUBSCR_NO"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="GL_ACCT_NO" source="GL_ACCT_NO"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="GL_COST_CENTRE" source="GL_COST_CENTRE"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="AMT" source="AMT"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="EXECUTION_ID" source="EXECUTION_ID"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="INSERT_TS" source="INSERT_TS"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="HEADER_ID" source="HEADER_ID"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_ID" source="ITEM_ID"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_SUB_ID" source="ITEM_SUB_ID"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="GL_PRICE_PLAN_GRP" source="GL_PRICE_PLAN_GRP"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="PROV" source="PROV"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="COMP_CODE" source="COMP_CODE"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="BAN" source="BAN"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="CONVERSION_IND" source="CONVERSION_IND"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="ACCT_SUB_TY" source="ACCT_SUB_TY"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="ACCT_TY" source="ACCT_TY"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="BAN_PROV_CD" source="BAN_PROV_CD"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="LGL_ENTT" source="LGL_ENTT"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="MKT_SEG" source="MKT_SEG"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="AR_ACTV" source="AR_ACTV"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30401501" source="IS_30401501"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30401502" source="IS_30401502"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30401503" source="IS_30401503"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30401504" source="IS_30401504"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30401507" source="IS_30401507"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30401508" source="IS_30401508"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30401509" source="IS_30401509"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30401510" source="IS_30401510"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30401511" source="IS_30401511"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30401512" source="IS_30401512"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30401513" source="IS_30401513"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30401514" source="IS_30401514"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="ENT_SEQ_NO" source="ENT_SEQ_NO"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="TRANS_TY" source="TRANS_TY"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="CR_DR_IND" source="CR_DR_IND"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="BRND" source="BRND"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="BILL_PRIMARY_KEY" source="BILL_PRIMARY_KEY"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="DEALER" source="DEALER"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="CHRG_TY_CLASSIF" source="CHRG_TY_CLASSIF"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="GL_JURISD_CD" source="GL_JURISD_CD"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="CC_ZZ_BKTXT" source="CC_ZZ_BKTXT"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$MANUFACTURE_CODE$MANUF_CD" source="MANUFACTURE_CODE"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$ORIGINAL_DEALER$DEALER_CD" source="ORIGINAL_DEALER"/>
-      </input>
       <input node="#PROJ_SDA_ZDEALERS_CODE">
         <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="MWSKZ" source="MWSKZ"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="DEALER_CD_RIGHT" source="DEALER_CD"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$MANUFACTURE_CODE$MANUF_CD" source="MANUF_CD"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$ORIGINAL_DEALER$DEALER_CD" source="DEALER_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DEALER" source="DEALER_CD"/>
       </input>
-      <joinAttribute name="JOIN$MANUFACTURE_CODE$MANUF_CD"/>
-      <joinAttribute name="JOIN$ORIGINAL_DEALER$DEALER_CD"/>
+      <joinAttribute name="DEALER"/>
     </calculationView>
     <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_INVC_ZDEALER">
       <descriptions/>
@@ -5880,119 +5645,119 @@ if(&quot;MWSKZ&quot;='_' or &quot;MWSKZ&quot;='*','2','0')))</formula>
         <rectangleSize height="0" width="0"/>
       </shape>
       <shape expanded="true" modelObjectName="PROJ_ZFENSDFLACC" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="591" y="2349"/>
+        <upperLeftCorner x="591" y="2347"/>
         <rectangleSize height="-1" width="-1"/>
       </shape>
       <shape expanded="true" modelObjectName="PROJ_MOBL_INVC_BASE" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="437" y="2349"/>
+        <upperLeftCorner x="437" y="2347"/>
         <rectangleSize height="-1" width="-1"/>
       </shape>
       <shape expanded="true" modelObjectName="JOIN_MOBL_INVC_ZFENSDFLACC" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="514" y="2253"/>
+        <upperLeftCorner x="514" y="2251"/>
         <rectangleSize height="-1" width="-1"/>
       </shape>
       <shape expanded="true" modelObjectName="PROJ_GL_COST_CENTRE" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="514" y="2175"/>
+        <upperLeftCorner x="514" y="2173"/>
         <rectangleSize height="-1" width="-1"/>
       </shape>
       <shape expanded="true" modelObjectName="PROJ_NULL_COST_CENTRE" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="273" y="2097"/>
+        <upperLeftCorner x="273" y="2095"/>
         <rectangleSize height="-1" width="-1"/>
       </shape>
       <shape expanded="true" modelObjectName="PROJ_NOT_NULL_COST_CENTRE" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="514" y="2001"/>
+        <upperLeftCorner x="514" y="1999"/>
         <rectangleSize height="-1" width="-1"/>
       </shape>
       <shape expanded="true" modelObjectName="PROJ_ZFENSDFCST_VM" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="427" y="2097"/>
+        <upperLeftCorner x="427" y="2095"/>
         <rectangleSize height="-1" width="-1"/>
       </shape>
       <shape expanded="true" modelObjectName="PROJ_NULL_COST_SDA" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="360" y="2001"/>
+        <upperLeftCorner x="360" y="1999"/>
         <rectangleSize height="-1" width="-1"/>
       </shape>
       <shape expanded="true" modelObjectName="UNION_COST_CENTRE" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="438" y="1885"/>
+        <upperLeftCorner x="438" y="1883"/>
         <rectangleSize height="-1" width="-1"/>
       </shape>
       <shape expanded="true" modelObjectName="PROJ_UNION_COST_CENTRE" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="438" y="1807"/>
+        <upperLeftCorner x="438" y="1805"/>
         <rectangleSize height="-1" width="-1"/>
       </shape>
       <shape expanded="true" modelObjectName="PROJ_COMP_CODE_10" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="351" y="1729"/>
+        <upperLeftCorner x="351" y="1727"/>
         <rectangleSize height="-1" width="-1"/>
       </shape>
       <shape expanded="true" modelObjectName="PROJ_MKT_SEG_0" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="176" y="1651"/>
+        <upperLeftCorner x="176" y="1649"/>
         <rectangleSize height="-1" width="-1"/>
       </shape>
       <shape expanded="true" modelObjectName="PROJ_LINEITEM_MRKT" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="197" y="1729"/>
+        <upperLeftCorner x="197" y="1727"/>
         <rectangleSize height="-1" width="-1"/>
       </shape>
       <shape expanded="true" modelObjectName="PROJ_SDA_MKTSEGMNT" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="176" y="1555"/>
+        <upperLeftCorner x="176" y="1553"/>
         <rectangleSize height="-1" width="-1"/>
       </shape>
       <shape expanded="true" modelObjectName="PROJ_SDA_ZPROVDT" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="351" y="1343"/>
+        <upperLeftCorner x="351" y="1341"/>
         <rectangleSize height="-1" width="-1"/>
       </shape>
       <shape expanded="true" modelObjectName="PROJ_MKT_SEG_NOT_NULL_NOT_0" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="351" y="1651"/>
+        <upperLeftCorner x="351" y="1649"/>
         <rectangleSize height="-1" width="-1"/>
       </shape>
       <shape expanded="true" modelObjectName="PROJ_MKT_AMDOCS_FLITER" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="22" y="1651"/>
+        <upperLeftCorner x="22" y="1649"/>
         <rectangleSize height="0" width="0"/>
       </shape>
       <shape expanded="true" modelObjectName="JOIN_MKT_SEG_0_LINEITEM" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="22" y="1555"/>
+        <upperLeftCorner x="22" y="1553"/>
         <rectangleSize height="-1" width="-1"/>
       </shape>
       <shape expanded="true" modelObjectName="JOIN_MKT_SEG_VALIDATION_1" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="106" y="1459"/>
+        <upperLeftCorner x="106" y="1457"/>
         <rectangleSize height="-1" width="-1"/>
       </shape>
       <shape expanded="true" modelObjectName="JOIN_MKT_SEG_NOT_NULL_NOT_0_LINEITEM" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="330" y="1555"/>
+        <upperLeftCorner x="330" y="1553"/>
         <rectangleSize height="-1" width="-1"/>
       </shape>
       <shape expanded="true" modelObjectName="JOIN_MKT_SEG_VALIDATION_2" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="260" y="1459"/>
+        <upperLeftCorner x="260" y="1457"/>
         <rectangleSize height="-1" width="-1"/>
       </shape>
       <shape expanded="true" modelObjectName="UNION_MKT_SEGMNT" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="197" y="1343"/>
+        <upperLeftCorner x="197" y="1341"/>
         <rectangleSize height="-1" width="-1"/>
       </shape>
       <shape expanded="true" modelObjectName="PROJ_LINEITEM_PROV" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="220" y="1169"/>
+        <upperLeftCorner x="220" y="1167"/>
         <rectangleSize height="-1" width="-1"/>
       </shape>
       <shape expanded="true" modelObjectName="JOIN_MKTSEGMNT_ZPROVDT" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="307" y="1247"/>
+        <upperLeftCorner x="307" y="1245"/>
         <rectangleSize height="-1" width="-1"/>
       </shape>
       <shape expanded="true" modelObjectName="JOIN_NULL_WWPRV" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="66" y="1169"/>
+        <upperLeftCorner x="66" y="1167"/>
         <rectangleSize height="-1" width="-1"/>
       </shape>
       <shape expanded="true" modelObjectName="JOIN_PRVC_NULL_WWPRV" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="153" y="1073"/>
+        <upperLeftCorner x="153" y="1071"/>
         <rectangleSize height="-1" width="-1"/>
       </shape>
       <shape expanded="true" modelObjectName="JOIN_NOT_NULL_WWPRV" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="307" y="1073"/>
+        <upperLeftCorner x="307" y="1071"/>
         <rectangleSize height="-1" width="-1"/>
       </shape>
       <shape expanded="true" modelObjectName="UNION_PRVC_WWPRV" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="263" y="957"/>
+        <upperLeftCorner x="263" y="955"/>
         <rectangleSize height="-1" width="-1"/>
       </shape>
       <shape expanded="true" modelObjectName="PROJ_LINEITEM_PLAN" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="176" y="879"/>
+        <upperLeftCorner x="176" y="877"/>
         <rectangleSize height="-1" width="-1"/>
       </shape>
       <shape expanded="true" modelObjectName="PROJ_PRICE_PLAN_NULL" modelObjectNameSpace="CalculationView">
@@ -6000,15 +5765,15 @@ if(&quot;MWSKZ&quot;='_' or &quot;MWSKZ&quot;='*','2','0')))</formula>
         <rectangleSize height="-1" width="-1"/>
       </shape>
       <shape expanded="true" modelObjectName="PROJ_PRICE_PLAN_NOT_NULL" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="22" y="879"/>
+        <upperLeftCorner x="22" y="877"/>
         <rectangleSize height="-1" width="-1"/>
       </shape>
       <shape expanded="true" modelObjectName="JOIN_PLAN_PRICE_PLAN_GRP" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="22" y="783"/>
+        <upperLeftCorner x="22" y="781"/>
         <rectangleSize height="-1" width="-1"/>
       </shape>
       <shape expanded="true" modelObjectName="PROJ_ZRTPLNDT" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="176" y="783"/>
+        <upperLeftCorner x="176" y="781"/>
         <rectangleSize height="-1" width="-1"/>
       </shape>
       <shape expanded="true" modelObjectName="JOIN_PLAN_SDA" modelObjectNameSpace="CalculationView">
@@ -6032,18 +5797,10 @@ if(&quot;MWSKZ&quot;='_' or &quot;MWSKZ&quot;='*','2','0')))</formula>
         <rectangleSize height="-1" width="-1"/>
       </shape>
       <shape expanded="true" modelObjectName="PROJ_MOBL_INVC_DATA" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="751" y="860"/>
-        <rectangleSize height="-1" width="-1"/>
-      </shape>
-      <shape expanded="true" modelObjectName="PROJ_SDA_ZDEALERS_CODE" modelObjectNameSpace="CalculationView">
         <upperLeftCorner x="597" y="685"/>
         <rectangleSize height="-1" width="-1"/>
       </shape>
-      <shape expanded="true" modelObjectName="PROJ_MOBL_ORDER" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="581" y="782"/>
-        <rectangleSize height="-1" width="-1"/>
-      </shape>
-      <shape expanded="true" modelObjectName="JOIN_ORDER_INVC_DATA_" modelObjectNameSpace="CalculationView">
+      <shape expanded="true" modelObjectName="PROJ_SDA_ZDEALERS_CODE" modelObjectNameSpace="CalculationView">
         <upperLeftCorner x="751" y="685"/>
         <rectangleSize height="-1" width="-1"/>
       </shape>
@@ -6070,10 +5827,6 @@ if(&quot;MWSKZ&quot;='_' or &quot;MWSKZ&quot;='*','2','0')))</formula>
       <shape expanded="true" modelObjectName="JOIN" modelObjectNameSpace="CalculationView">
         <upperLeftCorner x="519" y="165"/>
         <rectangleSize height="-1" width="-1"/>
-      </shape>
-      <shape expanded="true" modelObjectName="AGGR_MOBL_DATA_SEL" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="760" y="789"/>
-        <rectangleSize height="0" width="0"/>
       </shape>
     </shapes>
   </layout>

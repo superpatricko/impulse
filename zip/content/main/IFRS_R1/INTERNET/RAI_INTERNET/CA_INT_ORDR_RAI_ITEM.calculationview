@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" xmlns:Variable="http://www.sap.com/ndb/BiModelVariable.ecore" schemaVersion="2.3" id="CA_INT_ORDR_RAI_ITEM" applyPrivilegeType="NONE" checkAnalyticPrivileges="false" defaultClient="$$client$$" defaultLanguage="$$language$$" hierarchiesSQLEnabled="false" translationRelevant="true" visibility="internal" calculationScenarioType="TREE_BASED" dataCategory="DIMENSION" enforceSqlExecution="false" executionSemantic="UNDEFINED" outputViewType="Projection">
   <descriptions defaultDescription="CA_INT_ORDR_RAI_ITEM"/>
+  <metadata changedAt="2017-07-30 01:06:49.976"/>
   <localVariables>
     <variable id="IP_BILL_DAY" parameter="true">
       <descriptions defaultDescription="IP_BILL_DAY"/>
@@ -24,9 +25,6 @@
       <targetVariable name="IP_BILL_DAY" resourceUri="/IFRS_R1.INTERNET.RAI_INTERNET/calculationviews/CA_INT_ORDR_PROD_MSTR"/>
       <localVariable>#IP_BILL_DAY</localVariable>
     </mapping>
-    <mapping xsi:type="Variable:ConstantVariableMapping" dataSource="#CA_EH_ERROR_TABLE" value="1183">
-      <targetVariable name="IP_JOB_ID" resourceUri="/IFRS_R1.LAND.EH/calculationviews/CA_EH_ERROR_TABLE"/>
-    </mapping>
   </variableMappings>
   <informationModelLayout relativeWidthScenario="43"/>
   <dataSources>
@@ -45,10 +43,6 @@
     <DataSource id="CA_INT_ORDR_PROD_MSTR" type="CALCULATION_VIEW">
       <viewAttributes allViewAttributes="true"/>
       <resourceUri>/IFRS_R1.INTERNET.RAI_INTERNET/calculationviews/CA_INT_ORDR_PROD_MSTR</resourceUri>
-    </DataSource>
-    <DataSource id="CA_EH_ERROR_TABLE" type="CALCULATION_VIEW">
-      <viewAttributes allViewAttributes="true"/>
-      <resourceUri>/IFRS_R1.LAND.EH/calculationviews/CA_EH_ERROR_TABLE</resourceUri>
     </DataSource>
   </dataSources>
   <calculationViews>
@@ -995,270 +989,6 @@
       <joinAttribute name="COMPOUND_KEY"/>
       <joinAttribute name="REFERENCE_EFFECTIVE_DT"/>
     </calculationView>
-    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_LANDING_ERRORS">
-      <descriptions>
-        <comment text="The parent key is BAN (same as ALTN_CONTR_NUM)"/>
-      </descriptions>
-      <viewAttributes>
-        <viewAttribute id="PARENT_KEY"/>
-      </viewAttributes>
-      <calculatedViewAttributes/>
-      <input node="#CA_EH_ERROR_TABLE">
-        <mapping xsi:type="Calculation:AttributeMapping" target="PARENT_KEY" source="PARENT_KEY"/>
-      </input>
-    </calculationView>
-    <calculationView xsi:type="Calculation:JoinView" id="JOIN_RAI_LANDING_ERRORS" cardinality="C1_N" joinType="leftOuter">
-      <descriptions>
-        <comment text="ALTN_CONTR_NUM is the same as BAN in Internet, joining with the PARENT_KEY"/>
-      </descriptions>
-      <viewAttributes>
-        <viewAttribute id="ADJ_RSN_CD"/>
-        <viewAttribute id="CST_CNTR"/>
-        <viewAttribute id="RAC_CD"/>
-        <viewAttribute id="MKT"/>
-        <viewAttribute id="LGL_ENTT"/>
-        <viewAttribute id="CONVERSION_IND"/>
-        <viewAttribute id="CC_ZZ_BKTXT"/>
-        <viewAttribute id="EXECUTION_ID"/>
-        <viewAttribute id="CC_ZZ_XBLNR"/>
-        <viewAttribute id="CC_ZZ_ZUONR"/>
-        <viewAttribute id="CC_ZZ_LEGACY"/>
-        <viewAttribute id="CC_ZZ_AUFNR"/>
-        <viewAttribute id="CC_ZZ_UPFLAG"/>
-        <viewAttribute id="CC_ZZ_MINPRICE"/>
-        <viewAttribute id="CC_ZZ_ADJ_RSN_CD"/>
-        <viewAttribute id="CC_ZZ_BILLER"/>
-        <viewAttribute id="CC_ZZ_BRANDACT"/>
-        <viewAttribute id="CC_ZZ_BU_VIEW"/>
-        <viewAttribute id="CC_ZZ_CONVERSION"/>
-        <viewAttribute id="CC_ZZ_MOD_TYPE"/>
-        <viewAttribute id="CC_ZZ_PAOBJNR"/>
-        <viewAttribute id="ACCT_TY"/>
-        <viewAttribute id="ACCT_SUB_TY"/>
-        <viewAttribute id="CC_ZZ_PRE_POST"/>
-        <viewAttribute id="CC_ZZ_VBUND"/>
-        <viewAttribute id="CC_ZZ_BUKRS"/>
-        <viewAttribute id="NEWACCT"/>
-        <viewAttribute id="CC_GL_ACCOUNT_STR"/>
-        <viewAttribute id="CC_ZZ_ICHKONT"/>
-        <viewAttribute id="FSTAG"/>
-        <viewAttribute id="MWSKZ"/>
-        <viewAttribute id="CC_ZZ_MWSKZ"/>
-        <viewAttribute id="CC_ZZ_TXJCD"/>
-        <viewAttribute id="CUST_LOC_ID"/>
-        <viewAttribute id="INSERT_TS"/>
-        <viewAttribute id="CC_ZZ_SGTXT"/>
-        <viewAttribute id="KOSTL_QUE"/>
-        <viewAttribute id="KOSTL_ONT"/>
-        <viewAttribute id="CC_ZZ_KOSTL"/>
-        <viewAttribute id="LOB"/>
-        <viewAttribute id="SRCDOC_COMP"/>
-        <viewAttribute id="SRCDOC_LOGSYS"/>
-        <viewAttribute id="SRCDOC_TYPE"/>
-        <viewAttribute id="REFERENCE_TYPE"/>
-        <viewAttribute id="WAERS"/>
-        <viewAttribute id="RECEIV_ACCOUNT"/>
-        <viewAttribute id="KOSTL"/>
-        <viewAttribute id="CC_PL_ACCOUNT"/>
-        <viewAttribute id="BUKRS"/>
-        <viewAttribute id="PRM_CONTR_CUST"/>
-        <viewAttribute id="ALTN_CONTR_NUM"/>
-        <viewAttribute id="REFERENCE_ID"/>
-        <viewAttribute id="SRCDOC_ID"/>
-        <viewAttribute id="EXPIRY_DATE"/>
-        <viewAttribute id="PRIOD_CVRG_END_DT"/>
-        <viewAttribute id="PRIOD_CVRG_ST_DT"/>
-        <viewAttribute id="ITEM_STATE_RD"/>
-        <viewAttribute id="CONTR_IPTN_DT"/>
-        <viewAttribute id="KUNNR_SID"/>
-        <viewAttribute id="BATCH_ID"/>
-        <viewAttribute id="CC_REF_ID"/>
-        <viewAttribute id="CC_START_DATE"/>
-        <viewAttribute id="CC_TP"/>
-        <viewAttribute id="CC_SSP"/>
-        <viewAttribute id="CC_BILL_DAY"/>
-        <viewAttribute id="SOC"/>
-        <viewAttribute id="CC_X_NEGATIVE_ITEM"/>
-        <viewAttribute id="CC_QUANTITY"/>
-        <viewAttribute id="CC_QUANTITY_UNIT"/>
-        <viewAttribute id="CC_BILREL"/>
-        <viewAttribute id="CC_PARTNER"/>
-        <viewAttribute id="CC_SALES_ORG"/>
-        <viewAttribute id="CC_CATEGORY"/>
-        <viewAttribute id="CC_MAIN_COND_TYPE"/>
-        <viewAttribute id="CC_COND_TYPE_TP"/>
-        <viewAttribute id="CC_COND_TYPE_SSP"/>
-        <viewAttribute id="POB_TYPE"/>
-        <viewAttribute id="CC_CHARGE_TYPE"/>
-        <viewAttribute id="VALUE_RELEVANT"/>
-        <viewAttribute id="RAI_ITEM_ID"/>
-        <viewAttribute id="IS_30300501"/>
-        <viewAttribute id="IS_30300502"/>
-        <viewAttribute id="IS_30300503"/>
-        <viewAttribute id="IS_30300308"/>
-        <viewAttribute id="IS_30300309"/>
-        <viewAttribute id="IS_30300310"/>
-        <viewAttribute id="IS_30300302"/>
-        <viewAttribute id="IS_30300301"/>
-        <viewAttribute id="IS_30300303"/>
-        <viewAttribute id="IS_30300304"/>
-        <viewAttribute id="IS_30300305"/>
-        <viewAttribute id="IS_30300401"/>
-        <viewAttribute id="IS_30300101"/>
-        <viewAttribute id="IS_30300102"/>
-        <viewAttribute id="IS_30300601"/>
-        <viewAttribute id="ITEM_TRANS_PRICE"/>
-        <viewAttribute id="EFFECTIVE_DATE"/>
-        <viewAttribute id="MOD_IND"/>
-        <viewAttribute id="IS_30300602"/>
-        <viewAttribute id="CC_END_DT"/>
-        <viewAttribute id="TIM_IND"/>
-        <viewAttribute id="COMPOUND_KEY"/>
-        <viewAttribute id="PRDCT_TYP"/>
-        <viewAttribute id="TIMESTAMP_DT"/>
-        <viewAttribute id="CC_TIMESTAMP"/>
-        <viewAttribute id="IS_30300603"/>
-        <viewAttribute id="IS_30300604"/>
-        <viewAttribute id="IS_30300605"/>
-        <viewAttribute id="IS_30300606"/>
-        <viewAttribute id="IS_30300607"/>
-        <viewAttribute id="IS_30300608"/>
-        <viewAttribute id="IS_30300609"/>
-        <viewAttribute id="IS_30300610"/>
-        <viewAttribute id="IS_30300611"/>
-        <viewAttribute id="IS_30300612"/>
-        <viewAttribute id="REFERENCE_EFFECTIVE_DT"/>
-        <viewAttribute id="PARENT_KEY"/>
-      </viewAttributes>
-      <calculatedViewAttributes>
-        <calculatedViewAttribute datatype="NVARCHAR" id="IS_30300613" length="1" expressionLanguage="COLUMN_ENGINE">
-          <formula>if(isnull(&quot;PARENT_KEY&quot;),'0','1')</formula>
-        </calculatedViewAttribute>
-      </calculatedViewAttributes>
-      <input node="#JOIN_PRD_MSTR_FINAL_ORDR">
-        <mapping xsi:type="Calculation:AttributeMapping" target="ADJ_RSN_CD" source="ADJ_RSN_CD"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="CST_CNTR" source="CST_CNTR"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="RAC_CD" source="RAC_CD"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="MKT" source="MKT"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="LGL_ENTT" source="LGL_ENTT"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="CONVERSION_IND" source="CONVERSION_IND"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="CC_ZZ_BKTXT" source="CC_ZZ_BKTXT"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="EXECUTION_ID" source="EXECUTION_ID"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="CC_ZZ_XBLNR" source="CC_ZZ_XBLNR"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="CC_ZZ_ZUONR" source="CC_ZZ_ZUONR"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="CC_ZZ_LEGACY" source="CC_ZZ_LEGACY"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="CC_ZZ_AUFNR" source="CC_ZZ_AUFNR"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="CC_ZZ_UPFLAG" source="CC_ZZ_UPFLAG"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="CC_ZZ_MINPRICE" source="CC_ZZ_MINPRICE"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="CC_ZZ_ADJ_RSN_CD" source="CC_ZZ_ADJ_RSN_CD"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="CC_ZZ_BILLER" source="CC_ZZ_BILLER"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="CC_ZZ_BRANDACT" source="CC_ZZ_BRANDACT"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="CC_ZZ_BU_VIEW" source="CC_ZZ_BU_VIEW"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="CC_ZZ_CONVERSION" source="CC_ZZ_CONVERSION"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="CC_ZZ_MOD_TYPE" source="CC_ZZ_MOD_TYPE"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="CC_ZZ_PAOBJNR" source="CC_ZZ_PAOBJNR"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="ACCT_TY" source="ACCT_TY"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="ACCT_SUB_TY" source="ACCT_SUB_TY"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="CC_ZZ_PRE_POST" source="CC_ZZ_PRE_POST"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="CC_ZZ_VBUND" source="CC_ZZ_VBUND"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="CC_ZZ_BUKRS" source="CC_ZZ_BUKRS"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="NEWACCT" source="NEWACCT"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="CC_GL_ACCOUNT_STR" source="CC_GL_ACCOUNT_STR"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="CC_ZZ_ICHKONT" source="CC_ZZ_ICHKONT"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="FSTAG" source="FSTAG"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="MWSKZ" source="MWSKZ"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="CC_ZZ_MWSKZ" source="CC_ZZ_MWSKZ"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="CC_ZZ_TXJCD" source="CC_ZZ_TXJCD"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="CUST_LOC_ID" source="CUST_LOC_ID"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="INSERT_TS" source="INSERT_TS"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="CC_ZZ_SGTXT" source="CC_ZZ_SGTXT"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="KOSTL_QUE" source="KOSTL_QUE"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="KOSTL_ONT" source="KOSTL_ONT"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="CC_ZZ_KOSTL" source="CC_ZZ_KOSTL"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="LOB" source="LOB"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="SRCDOC_COMP" source="SRCDOC_COMP"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="SRCDOC_LOGSYS" source="SRCDOC_LOGSYS"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="SRCDOC_TYPE" source="SRCDOC_TYPE"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_TYPE" source="REFERENCE_TYPE"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="WAERS" source="WAERS"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="RECEIV_ACCOUNT" source="RECEIV_ACCOUNT"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="KOSTL" source="KOSTL"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="CC_PL_ACCOUNT" source="CC_PL_ACCOUNT"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="PRM_CONTR_CUST" source="PRM_CONTR_CUST"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="ALTN_CONTR_NUM" source="ALTN_CONTR_NUM"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_ID" source="REFERENCE_ID"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="SRCDOC_ID" source="SRCDOC_ID"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="EXPIRY_DATE" source="EXPIRY_DATE"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="PRIOD_CVRG_END_DT" source="PRIOD_CVRG_END_DT"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="PRIOD_CVRG_ST_DT" source="PRIOD_CVRG_ST_DT"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_STATE_RD" source="ITEM_STATE_RD"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="CONTR_IPTN_DT" source="CONTR_IPTN_DT"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="KUNNR_SID" source="KUNNR_SID"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="BATCH_ID" source="BATCH_ID"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="CC_REF_ID" source="CC_REF_ID"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="CC_START_DATE" source="CC_START_DATE"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="CC_TP" source="CC_TP"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="CC_SSP" source="CC_SSP"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="CC_BILL_DAY" source="CC_BILL_DAY"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="SOC" source="SOC"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="CC_X_NEGATIVE_ITEM" source="CC_X_NEGATIVE_ITEM"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="CC_QUANTITY" source="CC_QUANTITY"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="CC_QUANTITY_UNIT" source="CC_QUANTITY_UNIT"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="CC_BILREL" source="CC_BILREL"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="CC_PARTNER" source="CC_PARTNER"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="CC_SALES_ORG" source="CC_SALES_ORG"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="CC_CATEGORY" source="CC_CATEGORY"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="CC_MAIN_COND_TYPE" source="CC_MAIN_COND_TYPE"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="CC_COND_TYPE_TP" source="CC_COND_TYPE_TP"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="CC_COND_TYPE_SSP" source="CC_COND_TYPE_SSP"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="POB_TYPE" source="POB_TYPE"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="CC_CHARGE_TYPE" source="CC_CHARGE_TYPE"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="VALUE_RELEVANT" source="VALUE_RELEVANT"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="RAI_ITEM_ID" source="RAI_ITEM_ID"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30300501" source="IS_30300501"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30300502" source="IS_30300502"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30300503" source="IS_30300503"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30300308" source="IS_30300308"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30300309" source="IS_30300309"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30300310" source="IS_30300310"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30300302" source="IS_30300302"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30300301" source="IS_30300301"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30300303" source="IS_30300303"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30300304" source="IS_30300304"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30300305" source="IS_30300305"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30300401" source="IS_30300401"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30300101" source="IS_30300101"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30300102" source="IS_30300102"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30300601" source="IS_30300601"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_TRANS_PRICE" source="ITEM_TRANS_PRICE"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="EFFECTIVE_DATE" source="EFFECTIVE_DATE"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="MOD_IND" source="MOD_IND"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30300602" source="IS_30300602"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="CC_END_DT" source="CC_END_DT"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="TIM_IND" source="TIM_IND"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="COMPOUND_KEY" source="COMPOUND_KEY"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="PRDCT_TYP" source="PRDCT_TYP"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="TIMESTAMP_DT" source="TIMESTAMP_DT"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="CC_TIMESTAMP" source="CC_TIMESTAMP"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30300603" source="IS_30300603"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30300604" source="IS_30300604"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30300605" source="IS_30300605"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30300606" source="IS_30300606"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30300607" source="IS_30300607"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30300608" source="IS_30300608"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30300609" source="IS_30300609"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30300610" source="IS_30300610"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30300611" source="IS_30300611"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30300612" source="IS_30300612"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_EFFECTIVE_DT" source="REFERENCE_EFFECTIVE_DT"/>
-      </input>
-      <input node="#PROJ_LANDING_ERRORS">
-        <mapping xsi:type="Calculation:AttributeMapping" target="PARENT_KEY" source="PARENT_KEY"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="ALTN_CONTR_NUM" source="PARENT_KEY"/>
-      </input>
-      <joinAttribute name="ALTN_CONTR_NUM"/>
-    </calculationView>
     <calculationView xsi:type="Calculation:ProjectionView" id="ERROR_SEMANTICS">
       <descriptions/>
       <viewAttributes>
@@ -1378,7 +1108,6 @@
         <viewAttribute id="IS_30300611"/>
         <viewAttribute id="IS_30300612"/>
         <viewAttribute id="REFERENCE_EFFECTIVE_DT"/>
-        <viewAttribute id="IS_30300613"/>
       </viewAttributes>
       <calculatedViewAttributes>
         <calculatedViewAttribute datatype="NVARCHAR" id="ERROR_STATUS" length="1" expressionLanguage="COLUMN_ENGINE">
@@ -1407,8 +1136,7 @@
 (&quot;IS_30300609&quot; = '1')or &#xD;
  (&quot;IS_30300610&quot; = '1')or&#xD;
  (&quot;IS_30300611&quot; = '1')or&#xD;
- (&quot;IS_30300612&quot; = '1') or&#xD;
- (&quot;IS_30300613&quot; = '1') ,'1','0')</formula>
+ (&quot;IS_30300612&quot; = '1')  ,'1','0')</formula>
         </calculatedViewAttribute>
         <calculatedViewAttribute datatype="NVARCHAR" id="ERROR_CODE" length="500" expressionLanguage="COLUMN_ENGINE">
           <formula>if (&quot;IS_30300101&quot; ='1', '30300101||','')  + &#xD;
@@ -1436,11 +1164,10 @@ if (&quot;IS_30300608&quot; ='1', '30300608||','')  +&#xD;
 if (&quot;IS_30300609&quot; ='1', '30300609||','')+&#xD;
 if (&quot;IS_30300610&quot; ='1', '30300610||','')  +&#xD;
 if (&quot;IS_30300611&quot; ='1', '30300611||','')+&#xD;
-if (&quot;IS_30300612&quot; ='1', '30300612||','')+&#xD;
-if (&quot;IS_30300613&quot; ='1', '30300613||','')</formula>
+if (&quot;IS_30300612&quot; ='1', '30300612||','')</formula>
         </calculatedViewAttribute>
       </calculatedViewAttributes>
-      <input node="#JOIN_RAI_LANDING_ERRORS">
+      <input node="#JOIN_PRD_MSTR_FINAL_ORDR">
         <mapping xsi:type="Calculation:AttributeMapping" target="ADJ_RSN_CD" source="ADJ_RSN_CD"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="CST_CNTR" source="CST_CNTR"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="RAC_CD" source="RAC_CD"/>
@@ -1557,7 +1284,6 @@ if (&quot;IS_30300613&quot; ='1', '30300613||','')</formula>
         <mapping xsi:type="Calculation:AttributeMapping" target="IS_30300611" source="IS_30300611"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="IS_30300612" source="IS_30300612"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_EFFECTIVE_DT" source="REFERENCE_EFFECTIVE_DT"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30300613" source="IS_30300613"/>
       </input>
     </calculationView>
   </calculationViews>
@@ -2036,10 +1762,6 @@ if (&quot;IS_30300613&quot; ='1', '30300613||','')</formula>
         <descriptions defaultDescription="REFERENCE_EFFECTIVE_DT"/>
         <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="REFERENCE_EFFECTIVE_DT"/>
       </attribute>
-      <attribute id="IS_30300613" hidden="false" order="119" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
-        <descriptions/>
-        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="IS_30300613"/>
-      </attribute>
     </attributes>
     <calculatedAttributes/>
     <privateDataFoundation>
@@ -2057,47 +1779,39 @@ if (&quot;IS_30300613&quot; ='1', '30300613||','')</formula>
   <layout>
     <shapes>
       <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
-        <upperLeftCorner x="174" y="87"/>
+        <upperLeftCorner x="99" y="87"/>
         <rectangleSize height="0" width="0"/>
       </shape>
       <shape expanded="true" modelObjectName="PROJ_ORDR_PROCESS" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="22" y="627"/>
+        <upperLeftCorner x="22" y="531"/>
         <rectangleSize height="-1" width="-1"/>
       </shape>
       <shape expanded="true" modelObjectName="PROJ_ZFIELDS" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="176" y="627"/>
+        <upperLeftCorner x="176" y="531"/>
         <rectangleSize height="-1" width="-1"/>
       </shape>
       <shape expanded="true" modelObjectName="JOIN_PROCESS_ZFIELDS" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="99" y="531"/>
+        <upperLeftCorner x="99" y="435"/>
         <rectangleSize height="-1" width="-1"/>
       </shape>
       <shape expanded="true" modelObjectName="PROJ_RAI_ORDR_MAP" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="253" y="531"/>
+        <upperLeftCorner x="253" y="435"/>
         <rectangleSize height="-1" width="-1"/>
       </shape>
       <shape expanded="true" modelObjectName="JOIN_FINAL_ORDR_DATASET_MAP" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="175" y="435"/>
+        <upperLeftCorner x="176" y="339"/>
         <rectangleSize height="-1" width="-1"/>
       </shape>
       <shape expanded="true" modelObjectName="PROJ_PROD_MSTR" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="329" y="435"/>
+        <upperLeftCorner x="22" y="339"/>
         <rectangleSize height="-1" width="-1"/>
       </shape>
       <shape expanded="true" modelObjectName="JOIN_PRD_MSTR_FINAL_ORDR" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="251" y="339"/>
-        <rectangleSize height="0" width="0"/>
-      </shape>
-      <shape expanded="true" modelObjectName="PROJ_LANDING_ERRORS" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="97" y="339"/>
-        <rectangleSize height="-1" width="-1"/>
-      </shape>
-      <shape expanded="true" modelObjectName="JOIN_RAI_LANDING_ERRORS" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="174" y="243"/>
+        <upperLeftCorner x="99" y="243"/>
         <rectangleSize height="0" width="0"/>
       </shape>
       <shape expanded="true" modelObjectName="ERROR_SEMANTICS" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="174" y="165"/>
+        <upperLeftCorner x="99" y="165"/>
         <rectangleSize height="0" width="0"/>
       </shape>
     </shapes>

@@ -154,7 +154,7 @@
         <mapping xsi:type="Calculation:AttributeMapping" target="NONDIST" source="NONDIST"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="DESCRIPTION" source="DESCRIPTION"/>
       </input>
-      <filter>(not isNull(&quot;NONDIST&quot;)) AND (&quot;MANDT&quot; ='100') AND (&quot;SOURCE_SYSTEM&quot; ='CSG') AND (&quot;LOB&quot; ='BTV')</filter>
+      <filter>(not isNull(&quot;NONDIST&quot;)) AND (&quot;DESCRIPTION&quot; ='INSTALLATION CREDIT') AND (&quot;MANDT&quot; ='100') AND (&quot;SOURCE_SYSTEM&quot; ='CSG') AND (&quot;LOB&quot; ='BTV')</filter>
     </calculationView>
     <calculationView xsi:type="Calculation:JoinView" id="JOIN_CA_TV_SERV_TXN_FILTER_AND_ZNON_DISCTINCT" joinOrder="OUTSIDE_IN" joinType="leftOuter">
       <descriptions/>
@@ -374,7 +374,9 @@
       <filter>in (&quot;REC_TY_ID&quot;,'ADJUST_RSN_CD_01','ADJUST_RSN_CD_10')</filter>
     </calculationView>
     <calculationView xsi:type="Calculation:JoinView" id="ADJ_RSN_CD_RIGHT" joinOrder="OUTSIDE_IN" joinType="leftOuter">
-      <descriptions/>
+      <descriptions>
+        <comment text="Reference Version check will be raised as IS_20100301&#xD;&#xA;Null error will be raised as IS_20100305"/>
+      </descriptions>
       <viewAttributes>
         <viewAttribute id="ARTCL_NUM"/>
         <viewAttribute id="REC_TY_ID"/>
@@ -430,6 +432,12 @@
         </calculatedViewAttribute>
         <calculatedViewAttribute datatype="DATE" id="CC_REFERENCE_EFFECTIVE_DT" expressionLanguage="COLUMN_ENGINE">
           <formula>if(isNull(&quot;REFERENCE_EFFECTIVE_DT&quot;),date('19000101'),date(&quot;REFERENCE_EFFECTIVE_DT&quot;))</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="IS_20100301" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isNull(&quot;CC_VERSION_CHECK&quot;),'0',if(&quot;CC_VERSION_CHECK&quot; = '0','0','1'))</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="IS_20100305" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(Not isNull(&quot;ADJ_RSN_CD_RIGHT&quot;) and isNull(&quot;ARTCL_NUM&quot;),'1','0')</formula>
         </calculatedViewAttribute>
       </calculatedViewAttributes>
       <input node="#PROJ_CA_TV_SERV_TXN_FILTER">
@@ -536,6 +544,8 @@
         <viewAttribute id="CC_REFERENCE_EFFECTIVE_DT"/>
         <viewAttribute id="CC_REFERENCE_EXPIRY_DT"/>
         <viewAttribute id="IS_20100201"/>
+        <viewAttribute id="IS_20100301"/>
+        <viewAttribute id="IS_20100305"/>
         <viewAttribute id="IS_20100901"/>
       </viewAttributes>
       <calculatedViewAttributes/>
@@ -585,6 +595,8 @@
         <mapping xsi:type="Calculation:AttributeMapping" target="CC_REFERENCE_EFFECTIVE_DT" source="CC_REFERENCE_EFFECTIVE_DT"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="CC_REFERENCE_EXPIRY_DT" source="CC_REFERENCE_EXPIRY_DT"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="IS_20100201" source="IS_20100201"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20100301" source="IS_20100301"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20100305" source="IS_20100305"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="IS_20100901" source="IS_20100901"/>
       </input>
       <filter>(&quot;EXTR_DT&quot; >=&quot;CC_REFERENCE_EFFECTIVE_DT&quot;AND &quot;EXTR_DT&quot;&lt;=&quot;CC_REFERENCE_EXPIRY_DT&quot;)</filter>
@@ -608,7 +620,9 @@
       </input>
     </calculationView>
     <calculationView xsi:type="Calculation:JoinView" id="JOIN_MDM_FIBE_SAT" joinOrder="OUTSIDE_IN" joinType="leftOuter">
-      <descriptions/>
+      <descriptions>
+        <comment text="Reference Version check will be raised as IS_20100302&#xD;&#xA;Join error will be raised as IS_20100304"/>
+      </descriptions>
       <viewAttributes>
         <viewAttribute id="CD_NM_RIGHT"/>
         <viewAttribute id="ARTCL_NUM"/>
@@ -656,6 +670,8 @@
         <viewAttribute id="REFERENCE_EFFECTIVE_DT"/>
         <viewAttribute id="IS_20100201"/>
         <viewAttribute id="CC_VERSION_CHECK"/>
+        <viewAttribute id="IS_20100301"/>
+        <viewAttribute id="IS_20100305"/>
         <viewAttribute id="IS_20100901"/>
       </viewAttributes>
       <calculatedViewAttributes>
@@ -668,6 +684,12 @@
         <calculatedViewAttribute datatype="NVARCHAR" id="CC_DUO_TRIO_IND" length="5" expressionLanguage="COLUMN_ENGINE">
           <formula>if(isNull(&quot;ADJ_RSN_CD_RIGHT&quot;),string(null),if(&quot;ORDNG_OFFR_TY&quot;=2,'DUO',if(&quot;ORDNG_OFFR_TY&quot;=3,'TRIO',string(null))))&#xD;
 </formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="IS_20100302" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isNull(&quot;ADJ_RSN_CD_RIGHT&quot;),'0',if(isNull(&quot;CC_VERSION_CHECK&quot;),'0',if(&quot;CC_VERSION_CHECK&quot; = '0','0','1')))</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="IS_20100304" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isNull(&quot;ADJ_RSN_CD_RIGHT&quot;),'0',if(isNull(&quot;CD_NM_RIGHT&quot;),'1','0'))</formula>
         </calculatedViewAttribute>
       </calculatedViewAttributes>
       <input node="#PROJ_FILTER_EXTR_DT">
@@ -712,6 +734,8 @@
         <mapping xsi:type="Calculation:AttributeMapping" target="ADJ_RSN_CD" source="ADJ_RSN_CD"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="ADJ_RSN_CD_RIGHT" source="ADJ_RSN_CD_RIGHT"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="IS_20100201" source="IS_20100201"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20100301" source="IS_20100301"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20100305" source="IS_20100305"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="IS_20100901" source="IS_20100901"/>
       </input>
       <input node="#PROJ_TV_MDM_FIBE_SAT">
@@ -773,6 +797,10 @@
         <viewAttribute id="CC_REFERENCE_EFFECTIVE_DT"/>
         <viewAttribute id="IS_20100201"/>
         <viewAttribute id="CC_DUO_TRIO_IND"/>
+        <viewAttribute id="IS_20100301"/>
+        <viewAttribute id="IS_20100302"/>
+        <viewAttribute id="IS_20100304"/>
+        <viewAttribute id="IS_20100305"/>
         <viewAttribute id="IS_20100901"/>
       </viewAttributes>
       <calculatedViewAttributes>
@@ -827,6 +855,10 @@
         <mapping xsi:type="Calculation:AttributeMapping" target="CC_REFERENCE_EFFECTIVE_DT" source="CC_REFERENCE_EFFECTIVE_DT"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="IS_20100201" source="IS_20100201"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="CC_DUO_TRIO_IND" source="CC_DUO_TRIO_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20100301" source="IS_20100301"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20100302" source="IS_20100302"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20100304" source="IS_20100304"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20100305" source="IS_20100305"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="IS_20100901" source="IS_20100901"/>
       </input>
       <filter>(&quot;EXTR_DT&quot; >=&quot;CC_REFERENCE_EFFECTIVE_DT&quot; and &quot;EXTR_DT&quot;&lt;=&quot;CC_REFERENCE_EXPIRY_DT&quot;)</filter>
@@ -853,7 +885,9 @@
       <filter>(&quot;REC_TY_ID&quot; ='ADJUST_RSN_CD_02')</filter>
     </calculationView>
     <calculationView xsi:type="Calculation:JoinView" id="JOIN_ADJ_RSN_CD_ADJUST_RSN_CD_02" joinOrder="OUTSIDE_IN" joinType="leftOuter">
-      <descriptions/>
+      <descriptions>
+        <comment text="Reference Version check will be raised as IS_20100303"/>
+      </descriptions>
       <viewAttributes>
         <viewAttribute id="CD_NM"/>
         <viewAttribute id="ARTCL_NUM"/>
@@ -903,6 +937,10 @@
         <viewAttribute id="ADJ_SERV_CD_RIGHT"/>
         <viewAttribute id="CC_DUO_TRIO_IND"/>
         <viewAttribute id="CC_VERSION_CHECK"/>
+        <viewAttribute id="IS_20100301"/>
+        <viewAttribute id="IS_20100302"/>
+        <viewAttribute id="IS_20100304"/>
+        <viewAttribute id="IS_20100305"/>
         <viewAttribute id="IS_20100901"/>
       </viewAttributes>
       <calculatedViewAttributes>
@@ -911,6 +949,9 @@
         </calculatedViewAttribute>
         <calculatedViewAttribute datatype="DATE" id="CC_REFERENCE_EFFECTIVE_DT" expressionLanguage="COLUMN_ENGINE">
           <formula>if(isNull(&quot;REFERENCE_EFFECTIVE_DT&quot;),date('19000101'),&quot;REFERENCE_EFFECTIVE_DT&quot;)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="IS_20100303" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isNull(&quot;CC_VERSION_CHECK&quot;),'0',if(&quot;CC_VERSION_CHECK&quot; = '0','0','1'))</formula>
         </calculatedViewAttribute>
       </calculatedViewAttributes>
       <input node="#PROJ_FILTER_EXTR_DT_MDM">
@@ -958,6 +999,10 @@
         <mapping xsi:type="Calculation:AttributeMapping" target="ADJ_RSN_CD" source="ADJ_RSN_CD"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="IS_20100201" source="IS_20100201"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="CC_DUO_TRIO_IND" source="CC_DUO_TRIO_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20100301" source="IS_20100301"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20100302" source="IS_20100302"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20100304" source="IS_20100304"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20100305" source="IS_20100305"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="IS_20100901" source="IS_20100901"/>
       </input>
       <input node="#PROJ_CA_TV_PROD_ADJ_RSN">
@@ -1021,6 +1066,11 @@
         <viewAttribute id="IS_20100201"/>
         <viewAttribute id="ADJ_SERV_CD_RIGHT"/>
         <viewAttribute id="CC_DUO_TRIO_IND"/>
+        <viewAttribute id="IS_20100301"/>
+        <viewAttribute id="IS_20100302"/>
+        <viewAttribute id="IS_20100303"/>
+        <viewAttribute id="IS_20100304"/>
+        <viewAttribute id="IS_20100305"/>
         <viewAttribute id="IS_20100901"/>
       </viewAttributes>
       <calculatedViewAttributes/>
@@ -1072,6 +1122,11 @@
         <mapping xsi:type="Calculation:AttributeMapping" target="IS_20100201" source="IS_20100201"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="ADJ_SERV_CD_RIGHT" source="ADJ_SERV_CD_RIGHT"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="CC_DUO_TRIO_IND" source="CC_DUO_TRIO_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20100301" source="IS_20100301"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20100302" source="IS_20100302"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20100303" source="IS_20100303"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20100304" source="IS_20100304"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20100305" source="IS_20100305"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="IS_20100901" source="IS_20100901"/>
       </input>
       <filter>isNull(&quot;ADJ_SERV_CD_RIGHT&quot;) and (&quot;EXTR_DT&quot; >=&quot;CC_REFERENCE_EFFECTIVE_DT&quot;and &quot;EXTR_DT&quot;&lt;=&quot;CC_REFERENCE_EXPIRY_DT&quot;)</filter>
@@ -1153,6 +1208,11 @@
         <viewAttribute id="IS_20100201"/>
         <viewAttribute id="ADJ_SERV_CD_RIGHT"/>
         <viewAttribute id="CC_DUO_TRIO_IND"/>
+        <viewAttribute id="IS_20100301"/>
+        <viewAttribute id="IS_20100302"/>
+        <viewAttribute id="IS_20100303"/>
+        <viewAttribute id="IS_20100304"/>
+        <viewAttribute id="IS_20100305"/>
         <viewAttribute id="IS_20100901"/>
       </viewAttributes>
       <calculatedViewAttributes>
@@ -1209,6 +1269,11 @@
         <mapping xsi:type="Calculation:AttributeMapping" target="IS_20100201" source="IS_20100201"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="ADJ_SERV_CD_RIGHT" source="ADJ_SERV_CD_RIGHT"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="CC_DUO_TRIO_IND" source="CC_DUO_TRIO_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20100301" source="IS_20100301"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20100302" source="IS_20100302"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20100303" source="IS_20100303"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20100304" source="IS_20100304"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20100305" source="IS_20100305"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="IS_20100901" source="IS_20100901"/>
       </input>
       <input node="#PROJ_TV_SUBSCRIBER_HIST">
@@ -1278,6 +1343,11 @@
         <viewAttribute id="IS_20100201"/>
         <viewAttribute id="ADJ_SERV_CD_RIGHT"/>
         <viewAttribute id="CC_DUO_TRIO_IND"/>
+        <viewAttribute id="IS_20100301"/>
+        <viewAttribute id="IS_20100302"/>
+        <viewAttribute id="IS_20100303"/>
+        <viewAttribute id="IS_20100304"/>
+        <viewAttribute id="IS_20100305"/>
         <viewAttribute id="IS_20100901"/>
       </viewAttributes>
       <calculatedViewAttributes>
@@ -1352,6 +1422,11 @@ if(isNull(&quot;LAST_STMT_DATE&quot;) and (not isNull(&quot;CONNECT_DATE&quot;))
         <mapping xsi:type="Calculation:AttributeMapping" target="IS_20100201" source="IS_20100201"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="ADJ_SERV_CD_RIGHT" source="ADJ_SERV_CD_RIGHT"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="CC_DUO_TRIO_IND" source="CC_DUO_TRIO_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20100301" source="IS_20100301"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20100302" source="IS_20100302"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20100303" source="IS_20100303"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20100304" source="IS_20100304"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20100305" source="IS_20100305"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="IS_20100901" source="IS_20100901"/>
       </input>
       <filter>&quot;EXTR_DT&quot; >=&quot;CC_EFF_DT&quot; and &#xD;
@@ -1409,6 +1484,11 @@ if(isNull(&quot;LAST_STMT_DATE&quot;) and (not isNull(&quot;CONNECT_DATE&quot;))
         <viewAttribute id="CC_REFERENCE_EXPIRY_DT"/>
         <viewAttribute id="CC_REFERENCE_EFFECTIVE_DT"/>
         <viewAttribute id="CC_DUO_TRIO_IND"/>
+        <viewAttribute id="IS_20100301"/>
+        <viewAttribute id="IS_20100302"/>
+        <viewAttribute id="IS_20100303"/>
+        <viewAttribute id="IS_20100304"/>
+        <viewAttribute id="IS_20100305"/>
         <viewAttribute id="IS_20100901"/>
       </viewAttributes>
       <calculatedViewAttributes>
@@ -1473,6 +1553,11 @@ if(isNull(&quot;LAST_STMT_DATE&quot;) and (not isNull(&quot;CONNECT_DATE&quot;))
         <mapping xsi:type="Calculation:AttributeMapping" target="CC_REFERENCE_EXPIRY_DT" source="CC_REFERENCE_EXPIRY_DT"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="CC_REFERENCE_EFFECTIVE_DT" source="CC_REFERENCE_EFFECTIVE_DT"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="CC_DUO_TRIO_IND" source="CC_DUO_TRIO_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20100301" source="IS_20100301"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20100302" source="IS_20100302"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20100303" source="IS_20100303"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20100304" source="IS_20100304"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20100305" source="IS_20100305"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="IS_20100901" source="IS_20100901"/>
       </input>
       <filter>(not isNull(&quot;ADJ_SERV_CD_RIGHT&quot;)) and (&quot;EXTR_DT&quot; >=&quot;CC_REFERENCE_EFFECTIVE_DT&quot;and &quot;EXTR_DT&quot;&lt;=&quot;CC_REFERENCE_EXPIRY_DT&quot;)</filter>
@@ -1538,7 +1623,12 @@ if(isNull(&quot;LAST_STMT_DATE&quot;) and (not isNull(&quot;CONNECT_DATE&quot;))
         <viewAttribute id="CC_REFERENCE_EXPIRY_DT"/>
         <viewAttribute id="CC_REFERENCE_EFFECTIVE_DT"/>
         <viewAttribute id="CC_DUO_TRIO_IND"/>
+        <viewAttribute id="IS_20100301"/>
+        <viewAttribute datatype="NVARCHAR" id="IS_20100302" length="1" scale="0"/>
+        <viewAttribute datatype="NVARCHAR" id="IS_20100303" length="1" scale="0"/>
+        <viewAttribute datatype="NVARCHAR" id="IS_20100304" length="1" scale="0"/>
         <viewAttribute id="CC_EXPIRY_DT"/>
+        <viewAttribute id="IS_20100305"/>
         <viewAttribute id="IS_20100901"/>
       </viewAttributes>
       <calculatedViewAttributes/>
@@ -1601,7 +1691,12 @@ if(isNull(&quot;LAST_STMT_DATE&quot;) and (not isNull(&quot;CONNECT_DATE&quot;))
         <mapping xsi:type="Calculation:ConstantAttributeMapping" target="CC_REFERENCE_EXPIRY_DT" null="true" value=""/>
         <mapping xsi:type="Calculation:ConstantAttributeMapping" target="CC_REFERENCE_EFFECTIVE_DT" null="true" value=""/>
         <mapping xsi:type="Calculation:AttributeMapping" target="CC_DUO_TRIO_IND" source="CC_DUO_TRIO_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20100301" source="IS_20100301"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20100302" source="IS_20100302"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20100303" source="IS_20100303"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20100304" source="IS_20100304"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="CC_EXPIRY_DT" source="CC_EXPIRY_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20100305" source="IS_20100305"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="IS_20100901" source="IS_20100901"/>
       </input>
       <input emptyUnionBehavior="NO_ROW" node="#PROJ_SUCCESSFUL">
@@ -1663,7 +1758,12 @@ if(isNull(&quot;LAST_STMT_DATE&quot;) and (not isNull(&quot;CONNECT_DATE&quot;))
         <mapping xsi:type="Calculation:AttributeMapping" target="CC_REFERENCE_EXPIRY_DT" source="CC_REFERENCE_EXPIRY_DT"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="CC_REFERENCE_EFFECTIVE_DT" source="CC_REFERENCE_EFFECTIVE_DT"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="CC_DUO_TRIO_IND" source="CC_DUO_TRIO_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20100301" source="IS_20100301"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20100302" source="IS_20100302"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20100303" source="IS_20100303"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20100304" source="IS_20100304"/>
         <mapping xsi:type="Calculation:ConstantAttributeMapping" target="CC_EXPIRY_DT" null="true" value=""/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20100305" source="IS_20100305"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="IS_20100901" source="IS_20100901"/>
       </input>
     </calculationView>
@@ -1859,7 +1959,27 @@ if(isNull(&quot;LAST_STMT_DATE&quot;) and (not isNull(&quot;CONNECT_DATE&quot;))
         <descriptions defaultDescription="IS_20100202"/>
         <keyMapping columnObjectName="UNION_SERV_TXN_256" columnName="IS_20100202"/>
       </attribute>
-      <attribute id="IS_20100901" order="48" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+      <attribute id="IS_20100301" order="48" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="IS_20100301"/>
+        <keyMapping columnObjectName="UNION_SERV_TXN_256" columnName="IS_20100301"/>
+      </attribute>
+      <attribute id="IS_20100302" order="49" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="IS_20100302"/>
+        <keyMapping columnObjectName="UNION_SERV_TXN_256" columnName="IS_20100302"/>
+      </attribute>
+      <attribute id="IS_20100303" order="50" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="IS_20100303"/>
+        <keyMapping columnObjectName="UNION_SERV_TXN_256" columnName="IS_20100303"/>
+      </attribute>
+      <attribute id="IS_20100304" hidden="false" order="51" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="IS_20100304"/>
+        <keyMapping columnObjectName="UNION_SERV_TXN_256" columnName="IS_20100304"/>
+      </attribute>
+      <attribute id="IS_20100305" order="52" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="IS_20100305"/>
+        <keyMapping columnObjectName="UNION_SERV_TXN_256" columnName="IS_20100305"/>
+      </attribute>
+      <attribute id="IS_20100901" order="53" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
         <descriptions defaultDescription="IS_20100901"/>
         <keyMapping columnObjectName="UNION_SERV_TXN_256" columnName="IS_20100901"/>
       </attribute>

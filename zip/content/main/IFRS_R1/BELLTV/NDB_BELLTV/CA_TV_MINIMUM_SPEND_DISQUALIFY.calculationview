@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:AccessControl="http://www.sap.com/ndb/SQLCoreModelAccessControl.ecore" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" schemaVersion="2.3" id="CA_TV_MINIMUM_SPEND_DISQUALIFY" applyPrivilegeType="ANALYTIC_PRIVILEGE" checkAnalyticPrivileges="true" defaultClient="$$client$$" defaultLanguage="$$language$$" hierarchiesSQLEnabled="false" translationRelevant="true" visibility="internal" calculationScenarioType="TREE_BASED" dataCategory="DIMENSION" enforceSqlExecution="false" executionSemantic="UNDEFINED" outputViewType="Projection">
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:AccessControl="http://www.sap.com/ndb/SQLCoreModelAccessControl.ecore" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" schemaVersion="2.3" id="CA_TV_MINIMUM_SPEND_DISQUALIFY" applyPrivilegeType="ANALYTIC_PRIVILEGE" checkAnalyticPrivileges="true" defaultClient="$$client$$" defaultLanguage="$$language$$" hierarchiesSQLEnabled="false" historyEnabled="false" translationRelevant="true" visibility="internal" calculationScenarioType="TREE_BASED" dataCategory="DIMENSION" enforceSqlExecution="false" executionSemantic="UNDEFINED" outputViewType="Projection">
   <descriptions defaultDescription="CA_TV_MINIMUM_SPEND_DISQUALIFY"/>
   <localVariables>
     <variable id="IP_CYCL_ID" parameter="true">
@@ -71,7 +71,7 @@
           <formula>'BASE_SRVC'</formula>
         </calculatedViewAttribute>
         <calculatedViewAttribute datatype="NVARCHAR" id="CC_VTG_ROW_ID" length="18" expressionLanguage="COLUMN_ENGINE">
-          <formula>'Q'+&quot;ACCT_NUM&quot;</formula>
+          <formula>'MQ'+&quot;ACCT_NUM&quot;</formula>
         </calculatedViewAttribute>
       </calculatedViewAttributes>
       <input node="#CA_TV_CUSTOMER_NDB_EH">
@@ -92,7 +92,7 @@
         <mapping xsi:type="Calculation:AttributeMapping" target="CC_VERSION_CHECK" source="CC_VERSION_CHECK"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="MIN_SPD_MOD_IND" source="MIN_SPD_MOD_IND"/>
       </input>
-      <filter>(&quot;COMIT_TY&quot; ='TERM') AND (&quot;CUST_ST&quot; ='A') AND (not isNull(&quot;MIN_SPD_CRE_IND&quot;)) AND (isNull(&quot;MIN_SPD_MOD_IND&quot;))</filter>
+      <filter>(&quot;COMIT_TY&quot; ='TERM') and (&quot;CUST_ST&quot; ='A') and (not isNull(&quot;MIN_SPD_CRE_IND&quot;)) and (isNull(&quot;MIN_SPD_MOD_IND&quot;))</filter>
     </calculationView>
     <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_TV_ACCT_GENL" filterExpressionLanguage="COLUMN_ENGINE">
       <descriptions/>
@@ -117,7 +117,7 @@
         <mapping xsi:type="Calculation:AttributeMapping" target="CONTR_END_DT" source="CONTR_END_DT"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
       </input>
-      <filter>(isNull(&quot;SP_TV_ORDER_TS&quot;)) AND (&quot;CYCL_ID&quot; &lt;='$$IP_CYCL_ID$$')</filter>
+      <filter>(isNull(&quot;SP_TV_ORDER_TS&quot;)) and (&quot;CYCL_ID&quot; ='$$IP_CYCL_ID$$')</filter>
     </calculationView>
     <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_ZTV_PRIORITY">
       <descriptions/>
@@ -287,7 +287,7 @@
         <mapping xsi:type="Calculation:AttributeMapping" target="CONTR_END_DT_GENL" source="CONTR_END_DT_GENL"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
       </input>
-      <filter>(( (&quot;COMIT_TY&quot;='MONTH-TO-MONTH' or isNull(&quot;COMIT_TY&quot;))  and &quot;EVNT_EFF_DT&quot;&lt;&quot;CONTR_END_DT&quot;) &#xD;
+      <filter>(( (&quot;COMIT_TY&quot;='MONTH-TO-MONTH' or isNull(&quot;COMIT_TY&quot;))  and &quot;ORIG_EVNT_EFF_DT&quot;&lt;&quot;CONTR_END_DT&quot;) &#xD;
  or &#xD;
 (&quot;COMIT_TY&quot;='TERM') and (not isNull(&quot;CONTR_END_DT_GENL&quot;)) and &quot;CONTR_END_DT_GENL&quot;&lt;&quot;CONTR_END_DT&quot; )</filter>
     </calculationView>
@@ -656,13 +656,11 @@
       <viewAttributes>
         <viewAttribute aggregationType="min" id="PROCESS_SEQ"/>
         <viewAttribute id="ACCT_NUM_GL"/>
-        <viewAttribute aggregationType="min" id="EVNT_EFF_DT"/>
       </viewAttributes>
       <calculatedViewAttributes/>
       <input node="#JOIN_PRIORITY_MATRIX">
         <mapping xsi:type="Calculation:AttributeMapping" target="PROCESS_SEQ" source="PROCESS_SEQ"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="ACCT_NUM_GL" source="ACCT_NUM_GL"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="EVNT_EFF_DT" source="EVNT_EFF_DT"/>
       </input>
     </calculationView>
     <calculationView xsi:type="Calculation:JoinView" id="JOIN_GET_EVNT_EFF_DT" cardinality="C1_1" dynamic="false" joinOrder="OUTSIDE_IN" joinType="inner">
@@ -703,14 +701,12 @@
         <viewAttribute id="COMIT_TY_GENL"/>
         <viewAttribute id="CONTR_END_DT_GENL"/>
         <viewAttribute id="CYCL_ID"/>
-        <viewAttribute hidden="true" id="JOIN$EVNT_EFF_DT$EVNT_EFF_DT"/>
         <viewAttribute hidden="true" id="JOIN$ACCT_NUM_GL$ACCT_NUM_GL"/>
       </viewAttributes>
       <calculatedViewAttributes/>
       <input node="#AGGR_PRIORITY">
         <mapping xsi:type="Calculation:AttributeMapping" target="PROCESS_SEQ" source="PROCESS_SEQ"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$ACCT_NUM_GL$ACCT_NUM_GL" source="ACCT_NUM_GL"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$EVNT_EFF_DT$EVNT_EFF_DT" source="EVNT_EFF_DT"/>
       </input>
       <input node="#JOIN_PRIORITY_MATRIX">
         <mapping xsi:type="Calculation:AttributeMapping" target="CC_DATE" source="CC_DATE"/>
@@ -749,26 +745,18 @@
         <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="PROCESS_SEQ" source="PROCESS_SEQ"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$ACCT_NUM_GL$ACCT_NUM_GL" source="ACCT_NUM_GL"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$EVNT_EFF_DT$EVNT_EFF_DT" source="EVNT_EFF_DT"/>
       </input>
       <joinAttribute name="PROCESS_SEQ"/>
       <joinAttribute name="JOIN$ACCT_NUM_GL$ACCT_NUM_GL"/>
-      <joinAttribute name="JOIN$EVNT_EFF_DT$EVNT_EFF_DT"/>
     </calculationView>
-    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_TV_TRANS">
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_TV_TRANS" filterExpressionLanguage="COLUMN_ENGINE">
       <descriptions/>
       <viewAttributes>
         <viewAttribute id="ACCT_NUM"/>
         <viewAttribute id="AMT"/>
-        <viewAttribute id="SERVICE_CD">
-          <filter xsi:type="AccessControl:SingleValueFilter" including="true" value="MINSP"/>
-        </viewAttribute>
-        <viewAttribute id="TERM_DISQUALF_IND">
-          <filter xsi:type="AccessControl:SingleValueFilter" operator="NL" including="true"/>
-        </viewAttribute>
-        <viewAttribute id="CONTR_TERM_DT">
-          <filter xsi:type="AccessControl:SingleValueFilter" operator="NL" including="true"/>
-        </viewAttribute>
+        <viewAttribute id="SERVICE_CD"/>
+        <viewAttribute id="TERM_DISQUALF_IND"/>
+        <viewAttribute id="CONTR_TERM_DT"/>
       </viewAttributes>
       <calculatedViewAttributes/>
       <input node="#IFRS_R1.BELLTV.NDB_BELLTV::TV_TRANSACTIONS">
@@ -778,6 +766,7 @@
         <mapping xsi:type="Calculation:AttributeMapping" target="TERM_DISQUALF_IND" source="TERM_DISQUALF_IND"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="CONTR_TERM_DT" source="CONTR_TERM_DT"/>
       </input>
+      <filter>(&quot;SERVICE_CD&quot; ='MINSP') and (isNull(&quot;TERM_DISQUALF_IND&quot;)) and (isNull(&quot;CONTR_TERM_DT&quot;))</filter>
     </calculationView>
     <calculationView xsi:type="Calculation:JoinView" id="JOIN_TV_CUST_TRANS" dynamic="false" joinOrder="OUTSIDE_IN" joinType="leftOuter">
       <descriptions>
@@ -947,7 +936,7 @@
         <mapping xsi:type="Calculation:AttributeMapping" target="IS_20100601" source="IS_20100601"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="IS_20100603" source="IS_20100603"/>
       </input>
-      <filter>(&quot;IS_20100601&quot; ='1') OR (&quot;IS_20100603&quot; ='1')</filter>
+      <filter>(&quot;IS_20100601&quot; ='1') or (&quot;IS_20100603&quot; ='1')</filter>
     </calculationView>
     <calculationView xsi:type="Calculation:UnionView" id="UNION_GET_ACTG_CUST_JOIN_FAILURE_ERRORS">
       <descriptions/>

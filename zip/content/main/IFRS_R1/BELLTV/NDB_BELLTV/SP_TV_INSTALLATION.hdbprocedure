@@ -84,7 +84,8 @@ DECLARE CURSOR CUR_INSTALL FOR
 	             "ERROR_STATUS",
 	             "ERROR_CODE" 
             FROM "_SYS_BIC"."IFRS_R1.BELLTV.NDB_BELLTV/CA_TV_INSTALLATION"
-            (PLACEHOLDER."$$IP_CYCL_ID$$" => :IP_CYCLE_ID);
+            (PLACEHOLDER."$$IP_CYCL_ID$$" => :IP_CYCLE_ID)
+            WHERE "TRAN_CD" = '256';
                                    
 --------------------------------------------------------------------------------------------------
 -- Local Temporary Tables Declaration
@@ -432,18 +433,9 @@ END FOR;
 	     FROM "NDB_TV"."IFRS_R1.BELLTV.NDB_BELLTV::TV_CUSTOMER"  A
    INNER JOIN #UPDATE_TV_CUST  B
 	       ON A."ACCT_NUM"          =       B."ACCT_NUM"
-		  SET INST_CRD_IND          =       'X'
-		WHERE INST_CRD_IND  IS NULL
-		  AND B."TRAN_CD"           =       '256'; 
-		
-	
- 	   UPDATE "NDB_TV"."IFRS_R1.BELLTV.NDB_BELLTV::TV_CUSTOMER"  A 
-	     FROM "NDB_TV"."IFRS_R1.BELLTV.NDB_BELLTV::TV_CUSTOMER"  A
-   INNER JOIN #UPDATE_TV_CUST  B
-	       ON A."ACCT_NUM"          =       B."ACCT_NUM"
 		  SET INST_CHRG_IND         =       'X'
-		WHERE INST_CHRG_IND IS NULL
-	      AND B."TRAN_CD"           =       '253B'; 					
+		WHERE INST_CHRG_IND IS NULL; 
+								
 --------------------------------------------------------------------------------------------------
 -- Update Error Table
 --------------------------------------------------------------------------------------------------

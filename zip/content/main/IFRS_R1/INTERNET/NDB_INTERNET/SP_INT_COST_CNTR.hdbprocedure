@@ -4,7 +4,7 @@ PROCEDURE "NDB_INTERNET"."IFRS_R1.INTERNET.NDB_INTERNET::SP_INT_COST_CNTR"
 	SQL SECURITY INVOKER
 	AS
 
-BEGIN 
+BEGIN
 --------------------------------------------------------------------------------------------------
 -- Procedure Title : SP_INT_COST_CNTR
 -- Created By      : BC_EY94118 (Prakhar)       
@@ -58,7 +58,8 @@ DECLARE CURSOR C_CUST FOR
 -- Local Temporary Tables Declaration
 -------------------------------------------------------------------------------------------------- 
 
-CREATE LOCAL TEMPORARY TABLE #UPDATE_EH_DELETION (PRM_CONTR_CUST NVARCHAR(35), ALTN_CONTR_NUM NVARCHAR(35), REFERENCE_EFFECTIVE_DT DATE);    
+CREATE LOCAL TEMPORARY TABLE #UPDATE_EH_DELETION (PRM_CONTR_CUST NVARCHAR(35), ALTN_CONTR_NUM NVARCHAR(35), PRDCT_TYP NVARCHAR(1),
+												  REFERENCE_EFFECTIVE_DT DATE);    
     
 --------------------------------------------------------------------------------------------------
 -- Cursors Loop
@@ -106,16 +107,19 @@ FOR CUR_CUST AS C_CUST DO
 		 SET  NDB.CST_CNTR           = CUR_CUST.CST_CNTR
 	   WHERE  CUR_CUST."PRM_CONTR_CUST" = NDB."PRM_CONTR_CUST" AND
 	   	      CUR_CUST."ALTN_CONTR_NUM" = NDB."ALTN_CONTR_NUM" AND
+	   	      CUR_CUST."PRDCT_TYP" = NDB."PRDCT_TYP" AND
 	   	      CUR_CUST."REFERENCE_EFFECTIVE_DT" = NDB."REFERENCE_EFFECTIVE_DT" ;
 	   
 --    Insert PK of successfully processed Records into Error Temp Table 
 	  INSERT INTO #UPDATE_EH_DELETION
 		          ("PRM_CONTR_CUST",
 				   "ALTN_CONTR_NUM",
+				   "PRDCT_TYP",
 				   "REFERENCE_EFFECTIVE_DT"
 	   	           ) 
 		   VALUES (CUR_CUST."PRM_CONTR_CUST",
 	   	  	       CUR_CUST.ALTN_CONTR_NUM,
+	   	  	   	   CUR_CUST."PRDCT_TYP",
 	   	  	       CUR_CUST.REFERENCE_EFFECTIVE_DT
 	   	  	   	   );
 			           
@@ -130,6 +134,7 @@ UPDATE "NDB_INTERNET"."IFRS_R1.INTERNET.NDB_INTERNET::INT_CUST_EH" A
  INNER JOIN #UPDATE_EH_DELETION B
     ON  A."PRM_CONTR_CUST" 		   = B."PRM_CONTR_CUST" AND 
         A."ALTN_CONTR_NUM" 		   = B."ALTN_CONTR_NUM" AND
+	   	A."PRDCT_TYP" 			   = B."PRDCT_TYP" AND
 	   	A."REFERENCE_EFFECTIVE_DT" = B."REFERENCE_EFFECTIVE_DT" 
    SET  (DELETE_DATE, DELETED) = (CURRENT_DATE, 1);
 

@@ -23,7 +23,7 @@ BEGIN
 		ORDER BY index_position;
 	 
 	--- Get the table name from job_id
-	BEGIN		
+	BEGIN
 		DECLARE EXIT HANDLER FOR SQL_ERROR_CODE 1299 
 		BEGIN AUTONOMOUS TRANSACTION
 			DECLARE EXIT HANDLER FOR SQL_ERROR_CODE 1299
@@ -47,11 +47,6 @@ BEGIN
 	END IF;
 
 	IF LV_USE_HANA_CATALOG_ONLY = 0 THEN
-		DECLARE EXIT HANDLER FOR SQL_ERROR_CODE 303 
-		BEGIN
-			OP_STATUS = LC_ERROR_TEXT;
-			OP_ERROR_MESSAGE = 'FATAL Error - The date conversion failed, please check that the SAP DS insert statement equals the table definition.' || ::SQL_ERROR_MESSAGE;
-		END;
 		-- Extract the primary key, parent key, and amount from the error record
 		-- Fixed width records
 		error_fixed_width = SELECT "ROWID",
@@ -82,15 +77,11 @@ BEGIN
 								"CYCLE_ID",
 								"PROCESS_ID",
 								"SEQUENCE_OF_CONCAT",
-								CASE WHEN "SEQUENCE_OF_CONCAT" > 0 
-									THEN "FIELD_VALUE"
+								CASE WHEN "SEQUENCE_OF_CONCAT" > 0
+								THEN "FIELD_VALUE"
 								END AS "PRIMARY_KEY",
 								CASE WHEN "IS_PARENT_KEY" = 1
-									THEN 
-										CASE WHEN "DATA_TYPE_NAME" = 'DATE'
-										THEN to_nvarchar(to_date("FIELD_VALUE"))
-										ELSE "FIELD_VALUE"
-									END
+								THEN "FIELD_VALUE"
 								END AS "PARENT_KEY",
 								CASE WHEN "IS_AMOUNT" = 1
 								THEN TO_INTEGER("FIELD_VALUE")
@@ -113,7 +104,6 @@ BEGIN
 										 "END_POSITION",
 										 "SEPARATOR",
 										 "SEPARATOR_POSITION",
-										 "DATA_TYPE_NAME",
 										 "SEQUENCE_OF_CONCAT",
 										 TRIM(REPLACE(SUBSTRING("ERROR_RECORD",LOCATE("ERROR_RECORD",',',0,"SEPARATOR_POSITION")+1, LOCATE("ERROR_RECORD",',',0,"SEPARATOR_POSITION"+1) - LOCATE("ERROR_RECORD",',',0,"SEPARATOR_POSITION") -1),'''','')) AS "FIELD_VALUE",
 										 "AGING_LIMIT" 
@@ -149,9 +139,7 @@ BEGIN
 	
 	ERRORS_OF_CURRENT_PROCESS_ID = SELECT TOP 1 "PROCESS_ID" FROM "LAND"."IFRS_R1.LAND::ETL_ERROR_DATA" WHERE "PROCESS_ID" = :process_id;
 	-- :all_records can be empty even if process_id has error records since it joins with PK tables. If this happens, no PK has been defined for table
-	IF OP_STATUS = LC_ERROR_TEXT THEN
-		RETURN;
-	ELSEIF IS_EMPTY(:all_records) AND NOT IS_EMPTY(:ERRORS_OF_CURRENT_PROCESS_ID) THEN
+	IF IS_EMPTY(:all_records) AND NOT IS_EMPTY(:ERRORS_OF_CURRENT_PROCESS_ID) THEN
 		OP_STATUS = LC_ERROR_TEXT;
 		OP_ERROR_MESSAGE = 'There is no primary key defined in the HANA Catalog or in "LAND"."IFRS_R1.LAND.EH::EH_ERROR_PK_MAP" for table. In this case the error capture is not enabled for this table because the primary key is required for this.';
 	ELSEIF NOT IS_EMPTY(:all_records) THEN

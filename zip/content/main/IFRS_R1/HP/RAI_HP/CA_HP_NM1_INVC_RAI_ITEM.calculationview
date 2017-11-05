@@ -28,7 +28,7 @@
       <targetVariable name="IP_JOB_ID" resourceUri="/IFRS_R1.LAND.EH/calculationviews/CA_EH_ERROR_TABLE"/>
     </mapping>
   </variableMappings>
-  <informationModelLayout relativeWidthScenario="56"/>
+  <informationModelLayout relativeWidthScenario="59"/>
   <dataSources>
     <DataSource id="CA_HP_NM1_INVC_ZLOGIC" type="CALCULATION_VIEW">
       <viewAttributes allViewAttributes="true"/>
@@ -252,9 +252,16 @@
         <mapping xsi:type="Calculation:AttributeMapping" target="SRCDOC_TYPE" source="SRCDOC_TYPE"/>
       </input>
     </calculationView>
-    <calculationView xsi:type="Calculation:AggregationView" id="Aggregation_1">
-      <descriptions/>
+    <calculationView xsi:type="Calculation:JoinView" id="JOIN_BILLING_MAP" dynamic="false" joinType="leftOuter">
+      <descriptions>
+        <comment text="Join errors will be raised as IS_30202206."/>
+      </descriptions>
       <viewAttributes>
+        <viewAttribute id="BUKRS"/>
+        <viewAttribute id="WAERS"/>
+        <viewAttribute id="SRCDOC_COMP"/>
+        <viewAttribute id="SRCDOC_LOGSYS"/>
+        <viewAttribute id="SRCDOC_TYPE"/>
         <viewAttribute id="BAN"/>
         <viewAttribute id="SUBSCRIBER_NO"/>
         <viewAttribute id="AMOUNT"/>
@@ -276,6 +283,7 @@
         <viewAttribute id="ENTITY_SEQ_NO"/>
         <viewAttribute id="JOURNALIZATION_DATE"/>
         <viewAttribute id="GL_ACCOUNT_NUMBER"/>
+        <viewAttribute id="LOB_RIGHT"/>
         <viewAttribute id="IS_30202201"/>
         <viewAttribute id="IS_30202202"/>
         <viewAttribute id="IS_30202203"/>
@@ -318,7 +326,17 @@
         <viewAttribute id="CR_DR_IND"/>
         <viewAttribute id="HP_NM1_BILLING_PK"/>
       </viewAttributes>
-      <calculatedViewAttributes/>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="IS_30202206" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>if( isNull(&quot;LOB_RIGHT&quot;), '1', '0')</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CC_PRD_CVRG_START_DATE" length="8" expressionLanguage="COLUMN_ENGINE">
+          <formula>format(&quot;PRD_CVRG_STRT_DATE&quot;,'YYYYMMDD')</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CC_PRD_CVRG_END_DATE" length="8" expressionLanguage="COLUMN_ENGINE">
+          <formula>format(&quot;PRD_CVRG_END_DATE&quot;,'YYYYMMDD')</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
       <input node="#PROJ_BILLING">
         <mapping xsi:type="Calculation:AttributeMapping" target="BAN" source="BAN"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="SUBSCRIBER_NO" source="SUBSCRIBER_NO"/>
@@ -382,156 +400,6 @@
         <mapping xsi:type="Calculation:AttributeMapping" target="TRANSACTION_TYPE" source="TRANSACTION_TYPE"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="CR_DR_IND" source="CR_DR_IND"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="HP_NM1_BILLING_PK" source="HP_NM1_BILLING_PK"/>
-      </input>
-    </calculationView>
-    <calculationView xsi:type="Calculation:JoinView" id="JOIN_BILLING_MAP" dynamic="false" joinOrder="OUTSIDE_IN" joinType="leftOuter">
-      <descriptions>
-        <comment text="Join errors will be raised as IS_30202206."/>
-      </descriptions>
-      <viewAttributes>
-        <viewAttribute id="BUKRS"/>
-        <viewAttribute id="WAERS"/>
-        <viewAttribute id="SRCDOC_COMP"/>
-        <viewAttribute id="SRCDOC_LOGSYS"/>
-        <viewAttribute id="SRCDOC_TYPE"/>
-        <viewAttribute id="LOB_RIGHT"/>
-        <viewAttribute id="BAN"/>
-        <viewAttribute id="SUBSCRIBER_NO"/>
-        <viewAttribute id="AMOUNT"/>
-        <viewAttribute id="SOC"/>
-        <viewAttribute id="FEATURE_CODE"/>
-        <viewAttribute id="PRD_CVRG_STRT_DATE"/>
-        <viewAttribute id="PRD_CVRG_END_DATE"/>
-        <viewAttribute id="CHARGE_TYPE"/>
-        <viewAttribute id="BATCH_ID"/>
-        <viewAttribute id="EFFECTIVE_DATE"/>
-        <viewAttribute id="ADJ_REASON_CODE"/>
-        <viewAttribute id="ACTV_RSN_CODE"/>
-        <viewAttribute id="ACTV_CODE"/>
-        <viewAttribute id="KUNNR_SID"/>
-        <viewAttribute id="CC_REFID"/>
-        <viewAttribute id="CC_LOB"/>
-        <viewAttribute id="CC_SRCDOC_TMP"/>
-        <viewAttribute id="REFERENCE_ID"/>
-        <viewAttribute id="ENTITY_SEQ_NO"/>
-        <viewAttribute id="JOURNALIZATION_DATE"/>
-        <viewAttribute id="GL_ACCOUNT_NUMBER"/>
-        <viewAttribute id="IS_30202201"/>
-        <viewAttribute id="IS_30202202"/>
-        <viewAttribute id="IS_30202203"/>
-        <viewAttribute id="IS_30202204"/>
-        <viewAttribute id="IS_30202205"/>
-        <viewAttribute id="CC_ZZ_BRANDACT"/>
-        <viewAttribute id="CC_ZZBILLER"/>
-        <viewAttribute id="CC_ZZBUVIEW"/>
-        <viewAttribute id="CC_ZZ_TXJCD"/>
-        <viewAttribute id="CC_ZZ_BKTXT"/>
-        <viewAttribute id="CC_ZZ_XBLNR"/>
-        <viewAttribute id="CC_PL_ACCOUNT"/>
-        <viewAttribute id="CC_ZZ_MWSKZ"/>
-        <viewAttribute id="CC_ZZ_AUFNR"/>
-        <viewAttribute id="CC_ZZ_ZUONR"/>
-        <viewAttribute id="CC_ZZ_ICHKONT"/>
-        <viewAttribute id="CC_ZZ_KOSTL"/>
-        <viewAttribute id="CC_ZZ_SGTXT"/>
-        <viewAttribute id="CC_ZZ_LEGACY"/>
-        <viewAttribute id="CC_ZZ_BUKRS"/>
-        <viewAttribute id="CC_ZZ_BLDAT"/>
-        <viewAttribute id="CC_ZZ_BUDAT"/>
-        <viewAttribute id="CC_ZZ_VBUND"/>
-        <viewAttribute id="CC_GL_ACCOUNT_NUMBER"/>
-        <viewAttribute id="IS_30202101"/>
-        <viewAttribute id="IS_30202102"/>
-        <viewAttribute id="IS_30202103"/>
-        <viewAttribute id="IS_30202104"/>
-        <viewAttribute id="IS_30202105"/>
-        <viewAttribute id="IS_30202106"/>
-        <viewAttribute id="IS_30202108"/>
-        <viewAttribute id="IS_30202109"/>
-        <viewAttribute id="GL_JURISDICTION_CODE"/>
-        <viewAttribute id="IS_30202110"/>
-        <viewAttribute id="IS_30202111"/>
-        <viewAttribute id="IS_30202112"/>
-        <viewAttribute id="IS_30202113"/>
-        <viewAttribute id="IS_30202114"/>
-        <viewAttribute id="TRANSACTION_TYPE"/>
-        <viewAttribute id="CR_DR_IND"/>
-        <viewAttribute id="HP_NM1_BILLING_PK"/>
-      </viewAttributes>
-      <calculatedViewAttributes>
-        <calculatedViewAttribute datatype="NVARCHAR" id="IS_30202206" length="1" expressionLanguage="COLUMN_ENGINE">
-          <formula>if( isNull(&quot;LOB_RIGHT&quot;), '1', '0')</formula>
-        </calculatedViewAttribute>
-        <calculatedViewAttribute datatype="NVARCHAR" id="CC_PRD_CVRG_START_DATE" length="8" expressionLanguage="COLUMN_ENGINE">
-          <formula>format(&quot;PRD_CVRG_STRT_DATE&quot;,'YYYYMMDD')</formula>
-        </calculatedViewAttribute>
-        <calculatedViewAttribute datatype="NVARCHAR" id="CC_PRD_CVRG_END_DATE" length="8" expressionLanguage="COLUMN_ENGINE">
-          <formula>format(&quot;PRD_CVRG_END_DATE&quot;,'YYYYMMDD')</formula>
-        </calculatedViewAttribute>
-      </calculatedViewAttributes>
-      <input node="#Aggregation_1">
-        <mapping xsi:type="Calculation:AttributeMapping" target="HP_NM1_BILLING_PK" source="HP_NM1_BILLING_PK"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="CR_DR_IND" source="CR_DR_IND"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="TRANSACTION_TYPE" source="TRANSACTION_TYPE"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30202114" source="IS_30202114"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30202113" source="IS_30202113"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30202112" source="IS_30202112"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30202111" source="IS_30202111"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30202110" source="IS_30202110"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="GL_JURISDICTION_CODE" source="GL_JURISDICTION_CODE"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30202109" source="IS_30202109"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30202108" source="IS_30202108"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30202106" source="IS_30202106"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30202105" source="IS_30202105"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30202104" source="IS_30202104"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30202103" source="IS_30202103"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30202102" source="IS_30202102"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30202101" source="IS_30202101"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="CC_GL_ACCOUNT_NUMBER" source="CC_GL_ACCOUNT_NUMBER"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="CC_ZZ_VBUND" source="CC_ZZ_VBUND"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="CC_ZZ_BUDAT" source="CC_ZZ_BUDAT"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="CC_ZZ_BLDAT" source="CC_ZZ_BLDAT"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="CC_ZZ_BUKRS" source="CC_ZZ_BUKRS"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="CC_ZZ_LEGACY" source="CC_ZZ_LEGACY"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="CC_ZZ_SGTXT" source="CC_ZZ_SGTXT"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="CC_ZZ_KOSTL" source="CC_ZZ_KOSTL"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="CC_ZZ_ICHKONT" source="CC_ZZ_ICHKONT"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="CC_ZZ_ZUONR" source="CC_ZZ_ZUONR"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="CC_ZZ_AUFNR" source="CC_ZZ_AUFNR"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="CC_ZZ_MWSKZ" source="CC_ZZ_MWSKZ"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="CC_PL_ACCOUNT" source="CC_PL_ACCOUNT"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="CC_ZZ_XBLNR" source="CC_ZZ_XBLNR"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="CC_ZZ_BKTXT" source="CC_ZZ_BKTXT"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="CC_ZZ_TXJCD" source="CC_ZZ_TXJCD"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="CC_ZZBUVIEW" source="CC_ZZBUVIEW"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="CC_ZZBILLER" source="CC_ZZBILLER"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="CC_ZZ_BRANDACT" source="CC_ZZ_BRANDACT"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30202205" source="IS_30202205"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30202204" source="IS_30202204"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30202203" source="IS_30202203"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30202202" source="IS_30202202"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="IS_30202201" source="IS_30202201"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="GL_ACCOUNT_NUMBER" source="GL_ACCOUNT_NUMBER"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="JOURNALIZATION_DATE" source="JOURNALIZATION_DATE"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="ENTITY_SEQ_NO" source="ENTITY_SEQ_NO"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_ID" source="REFERENCE_ID"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="CC_SRCDOC_TMP" source="CC_SRCDOC_TMP"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="CC_LOB" source="CC_LOB"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="CC_REFID" source="CC_REFID"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="KUNNR_SID" source="KUNNR_SID"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="ACTV_CODE" source="ACTV_CODE"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="ACTV_RSN_CODE" source="ACTV_RSN_CODE"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="ADJ_REASON_CODE" source="ADJ_REASON_CODE"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="EFFECTIVE_DATE" source="EFFECTIVE_DATE"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="BATCH_ID" source="BATCH_ID"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="CHARGE_TYPE" source="CHARGE_TYPE"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="PRD_CVRG_END_DATE" source="PRD_CVRG_END_DATE"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="PRD_CVRG_STRT_DATE" source="PRD_CVRG_STRT_DATE"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="FEATURE_CODE" source="FEATURE_CODE"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="SOC" source="SOC"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="AMOUNT" source="AMOUNT"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="SUBSCRIBER_NO" source="SUBSCRIBER_NO"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="BAN" source="BAN"/>
       </input>
       <input node="#PROJ_INVC_MAP">
         <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
@@ -773,7 +641,7 @@
         <mapping xsi:type="Calculation:AttributeMapping" target="ZZ_BILLER" source="ZZ_BILLER"/>
       </input>
     </calculationView>
-    <calculationView xsi:type="Calculation:JoinView" id="JOIN_BILLING_VALIDATION" joinOrder="OUTSIDE_IN" joinType="leftOuter">
+    <calculationView xsi:type="Calculation:JoinView" id="JOIN_BILLING_VALIDATION" joinType="leftOuter">
       <descriptions/>
       <viewAttributes>
         <viewAttribute id="BAN"/>
@@ -969,7 +837,7 @@
         <mapping xsi:type="Calculation:AttributeMapping" target="ZZ_BILLER" source="ZZ_BILLER"/>
       </input>
     </calculationView>
-    <calculationView xsi:type="Calculation:JoinView" id="JOIN_GET_EQUP_SRCDOC" joinOrder="OUTSIDE_IN" joinType="leftOuter">
+    <calculationView xsi:type="Calculation:JoinView" id="JOIN_GET_EQUP_SRCDOC" joinType="leftOuter">
       <descriptions/>
       <viewAttributes>
         <viewAttribute id="BAN"/>
@@ -1119,7 +987,7 @@
       </input>
       <joinAttribute name="CC_SRCDOC_TMP"/>
     </calculationView>
-    <calculationView xsi:type="Calculation:JoinView" id="JOIN_CHECK_ORDER" joinOrder="OUTSIDE_IN" joinType="leftOuter">
+    <calculationView xsi:type="Calculation:JoinView" id="JOIN_CHECK_ORDER" joinType="leftOuter">
       <descriptions>
         <comment text="Join Errro will be raised here as IS_30202207"/>
       </descriptions>
@@ -1450,7 +1318,7 @@
         <mapping xsi:type="Calculation:AttributeMapping" target="HP_NM1_BILLING_PK" source="HP_NM1_BILLING_PK"/>
       </input>
     </calculationView>
-    <calculationView xsi:type="Calculation:JoinView" id="JOIN_BILLING_ORDR_MAP" joinOrder="OUTSIDE_IN" joinType="leftOuter">
+    <calculationView xsi:type="Calculation:JoinView" id="JOIN_BILLING_ORDR_MAP" joinType="leftOuter">
       <descriptions>
         <comment text="Join errors will be raised as IS_30202208."/>
       </descriptions>
@@ -1859,7 +1727,7 @@
         </rankThreshold>
       </windowFunction>
     </calculationView>
-    <calculationView xsi:type="Calculation:JoinView" id="JOIN_GET_RAI_ITEM_ID" joinOrder="OUTSIDE_IN" joinType="leftOuter">
+    <calculationView xsi:type="Calculation:JoinView" id="JOIN_GET_RAI_ITEM_ID" joinType="leftOuter">
       <descriptions/>
       <viewAttributes>
         <viewAttribute id="AMOUNT"/>
@@ -2029,7 +1897,7 @@
       </input>
       <joinAttribute name="SUBSCRIBER_NO"/>
     </calculationView>
-    <calculationView xsi:type="Calculation:JoinView" id="JOIN_BILLING_ORDR_VALIDATION" cardinality="C1_1" joinOrder="OUTSIDE_IN" joinType="leftOuter">
+    <calculationView xsi:type="Calculation:JoinView" id="JOIN_BILLING_ORDR_VALIDATION" cardinality="C1_1" joinType="leftOuter">
       <descriptions/>
       <viewAttributes>
         <viewAttribute id="SRCDOC_ID_INVC_ORDR"/>
@@ -2325,7 +2193,7 @@ if(isNull(&quot;SRCDOC_ID_ORDER_EQUIP&quot;),&quot;SRCDOC_ID_ORDER&quot;,&quot;S
         <mapping xsi:type="Calculation:AttributeMapping" target="PARENT_KEY" source="PARENT_KEY"/>
       </input>
     </calculationView>
-    <calculationView xsi:type="Calculation:JoinView" id="JOIN_RAI_LANDING_ERRORS" cardinality="C1_N" joinOrder="OUTSIDE_IN" joinType="leftOuter">
+    <calculationView xsi:type="Calculation:JoinView" id="JOIN_RAI_LANDING_ERRORS" cardinality="C1_N" joinType="leftOuter">
       <descriptions/>
       <viewAttributes>
         <viewAttribute id="AMOUNT"/>
@@ -3380,124 +3248,120 @@ if(&quot;IS_30202231&quot;= '1', '30202231||','') </formula>
   <layout>
     <shapes>
       <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
-        <upperLeftCorner x="558" y="87"/>
+        <upperLeftCorner x="638" y="87"/>
         <rectangleSize height="0" width="0"/>
       </shape>
       <shape expanded="true" modelObjectName="PROJ_BILLING" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="22" y="1245"/>
+        <upperLeftCorner x="22" y="1169"/>
         <rectangleSize height="-1" width="-1"/>
       </shape>
       <shape expanded="true" modelObjectName="PROJ_INVC_MAP" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="176" y="1167"/>
+        <upperLeftCorner x="176" y="1169"/>
         <rectangleSize height="-1" width="-1"/>
       </shape>
       <shape expanded="true" modelObjectName="JOIN_BILLING_MAP" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="99" y="1071"/>
+        <upperLeftCorner x="99" y="1073"/>
         <rectangleSize height="-1" width="-1"/>
       </shape>
       <shape expanded="true" modelObjectName="PROJ_ORDER" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="494" y="975"/>
+        <upperLeftCorner x="494" y="977"/>
         <rectangleSize height="-1" width="-1"/>
       </shape>
       <shape expanded="true" modelObjectName="PROJ_RAI_ORDER" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="109" y="1397"/>
+        <upperLeftCorner x="109" y="1399"/>
         <rectangleSize height="-1" width="-1"/>
       </shape>
       <shape expanded="true" modelObjectName="PROJ_RAR_RAW" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="263" y="1397"/>
+        <upperLeftCorner x="263" y="1399"/>
         <rectangleSize height="-1" width="-1"/>
       </shape>
       <shape expanded="true" modelObjectName="PROJ_RAR_PROCESSABLE" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="417" y="1397"/>
+        <upperLeftCorner x="417" y="1399"/>
         <rectangleSize height="-1" width="-1"/>
       </shape>
       <shape expanded="true" modelObjectName="PROJ_RAR_PROCESSED" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="571" y="1397"/>
+        <upperLeftCorner x="571" y="1399"/>
         <rectangleSize height="-1" width="-1"/>
       </shape>
       <shape expanded="true" modelObjectName="UNION_RAR" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="340" y="1245"/>
+        <upperLeftCorner x="340" y="1247"/>
         <rectangleSize height="0" width="0"/>
       </shape>
       <shape expanded="true" modelObjectName="RANK_GET_ORDR_SRCDOC_ID" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="340" y="1167"/>
+        <upperLeftCorner x="340" y="1169"/>
         <rectangleSize height="0" width="0"/>
       </shape>
       <shape expanded="true" modelObjectName="PROJ_SERVICE" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="253" y="1071"/>
+        <upperLeftCorner x="253" y="1073"/>
         <rectangleSize height="0" width="0"/>
       </shape>
       <shape expanded="true" modelObjectName="JOIN_BILLING_VALIDATION" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="186" y="975"/>
+        <upperLeftCorner x="186" y="977"/>
         <rectangleSize height="-1" width="-1"/>
       </shape>
       <shape expanded="true" modelObjectName="AGGR_HP_NM1_ORDER" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="494" y="879"/>
+        <upperLeftCorner x="494" y="881"/>
         <rectangleSize height="-1" width="-1"/>
       </shape>
       <shape expanded="true" modelObjectName="PROJ_EQUIPMENT" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="340" y="975"/>
+        <upperLeftCorner x="340" y="977"/>
         <rectangleSize height="-1" width="-1"/>
       </shape>
       <shape expanded="true" modelObjectName="JOIN_GET_EQUP_SRCDOC" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="340" y="879"/>
+        <upperLeftCorner x="340" y="881"/>
         <rectangleSize height="0" width="0"/>
       </shape>
       <shape expanded="true" modelObjectName="JOIN_CHECK_ORDER" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="412" y="783"/>
+        <upperLeftCorner x="412" y="785"/>
         <rectangleSize height="0" width="0"/>
       </shape>
       <shape expanded="true" modelObjectName="PROJ_ORDR_MAP" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="566" y="705"/>
+        <upperLeftCorner x="566" y="707"/>
         <rectangleSize height="-1" width="-1"/>
       </shape>
       <shape expanded="true" modelObjectName="PROJ_CALC_RAI_ITEM" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="412" y="705"/>
+        <upperLeftCorner x="412" y="707"/>
         <rectangleSize height="-1" width="-1"/>
       </shape>
       <shape expanded="true" modelObjectName="JOIN_BILLING_ORDR_MAP" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="484" y="609"/>
+        <upperLeftCorner x="485" y="611"/>
         <rectangleSize height="-1" width="-1"/>
       </shape>
       <shape expanded="true" modelObjectName="PROJ_INVC_ORDR_VIEW" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="713" y="435"/>
+        <upperLeftCorner x="715" y="437"/>
         <rectangleSize height="-1" width="-1"/>
       </shape>
       <shape expanded="true" modelObjectName="RANK_GENERATE_RANK" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="484" y="531"/>
+        <upperLeftCorner x="485" y="533"/>
         <rectangleSize height="0" width="0"/>
       </shape>
       <shape expanded="false" modelObjectName="PROJ_NDB_PROCESSED" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="638" y="609"/>
+        <upperLeftCorner x="639" y="611"/>
         <rectangleSize height="-1" width="-1"/>
       </shape>
       <shape expanded="true" modelObjectName="RANK_MAX_RAI_ITEM_ID" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="638" y="531"/>
+        <upperLeftCorner x="639" y="533"/>
         <rectangleSize height="0" width="0"/>
       </shape>
       <shape expanded="true" modelObjectName="JOIN_GET_RAI_ITEM_ID" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="559" y="435"/>
+        <upperLeftCorner x="561" y="437"/>
         <rectangleSize height="0" width="0"/>
       </shape>
       <shape expanded="true" modelObjectName="JOIN_BILLING_ORDR_VALIDATION" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="635" y="339"/>
+        <upperLeftCorner x="638" y="341"/>
         <rectangleSize height="0" width="0"/>
       </shape>
       <shape expanded="true" modelObjectName="PROJ_LANDING_ERRORS" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="481" y="339"/>
+        <upperLeftCorner x="830" y="357"/>
         <rectangleSize height="-1" width="-1"/>
       </shape>
       <shape expanded="true" modelObjectName="JOIN_RAI_LANDING_ERRORS" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="558" y="243"/>
+        <upperLeftCorner x="638" y="243"/>
         <rectangleSize height="0" width="0"/>
       </shape>
       <shape expanded="true" modelObjectName="ERROR_SEMANTICS" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="558" y="165"/>
+        <upperLeftCorner x="638" y="165"/>
         <rectangleSize height="-1" width="-1"/>
-      </shape>
-      <shape expanded="true" modelObjectName="Aggregation_1" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="22" y="1167"/>
-        <rectangleSize height="0" width="0"/>
       </shape>
     </shapes>
   </layout>

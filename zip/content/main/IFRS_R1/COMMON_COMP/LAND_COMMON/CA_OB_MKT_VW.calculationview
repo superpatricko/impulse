@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:AccessControl="http://www.sap.com/ndb/SQLCoreModelAccessControl.ecore" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" schemaVersion="2.3" id="CA_OB_MKT_VW" applyPrivilegeType="ANALYTIC_PRIVILEGE" checkAnalyticPrivileges="true" defaultClient="$$client$$" defaultLanguage="$$language$$" hierarchiesSQLEnabled="false" translationRelevant="true" visibility="internal" calculationScenarioType="TREE_BASED" dataCategory="DIMENSION" enforceSqlExecution="false" executionSemantic="UNDEFINED" outputViewType="Projection">
+  <descriptions defaultDescription="CA_OB_MKT_VW">
+    <comment text="Private view on MARKET landing with required columns to populate data into NDB MARKET reference table"/>
+  </descriptions>
+  <localVariables/>
+  <variableMappings/>
+  <informationModelLayout relativeWidthScenario="36"/>
+  <dataSources>
+    <DataSource id="IFRS_R1.LAND::IFRS_OB_MARKET" type="DATA_BASE_TABLE">
+      <viewAttributes allViewAttributes="true"/>
+      <columnObject schemaName="LAND" columnObjectName="IFRS_R1.LAND::IFRS_OB_MARKET"/>
+    </DataSource>
+  </dataSources>
+  <calculationViews>
+    <calculationView xsi:type="Calculation:ProjectionView" id="Projection_1">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="MARKET_CODE"/>
+        <viewAttribute id="MARKET_NAME"/>
+        <viewAttribute id="ALT_MARKET_NAME"/>
+        <viewAttribute id="RELATED_MARKET"/>
+        <viewAttribute id="NDB_TS">
+          <filter xsi:type="AccessControl:SingleValueFilter" operator="NL" including="true"/>
+        </viewAttribute>
+        <viewAttribute id="EFF_DT"/>
+        <viewAttribute id="EXPY_DT"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#IFRS_R1.LAND::IFRS_OB_MARKET">
+        <mapping xsi:type="Calculation:AttributeMapping" target="MARKET_CODE" source="MARKET_CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MARKET_NAME" source="MARKET_NAME"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ALT_MARKET_NAME" source="ALT_MARKET_NAME"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RELATED_MARKET" source="RELATED_MARKET"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NDB_TS" source="NDB_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EFF_DT" source="EFF_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXPY_DT" source="EXPY_DT"/>
+      </input>
+    </calculationView>
+  </calculationViews>
+  <logicalModel id="Projection_1">
+    <descriptions/>
+    <attributes>
+      <attribute id="MARKET_CODE" order="1" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="MARKET_CODE"/>
+        <keyMapping columnObjectName="Projection_1" columnName="MARKET_CODE"/>
+      </attribute>
+      <attribute id="MARKET_NAME" order="2" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="MARKET_NAME"/>
+        <keyMapping columnObjectName="Projection_1" columnName="MARKET_NAME"/>
+      </attribute>
+      <attribute id="ALT_MARKET_NAME" order="3" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ALT_MARKET_NAME"/>
+        <keyMapping columnObjectName="Projection_1" columnName="ALT_MARKET_NAME"/>
+      </attribute>
+      <attribute id="RELATED_MARKET" order="4" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="RELATED_MARKET"/>
+        <keyMapping columnObjectName="Projection_1" columnName="RELATED_MARKET"/>
+      </attribute>
+      <attribute id="EFF_DT" order="5" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="EFF_DT"/>
+        <keyMapping columnObjectName="Projection_1" columnName="EFF_DT"/>
+      </attribute>
+      <attribute id="EXPY_DT" order="6" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="EXPY_DT"/>
+        <keyMapping columnObjectName="Projection_1" columnName="EXPY_DT"/>
+      </attribute>
+    </attributes>
+    <calculatedAttributes/>
+    <privateDataFoundation>
+      <tableProxies/>
+      <joins/>
+      <layout>
+        <shapes/>
+      </layout>
+    </privateDataFoundation>
+    <baseMeasures/>
+    <calculatedMeasures/>
+    <restrictedMeasures/>
+    <localDimensions/>
+  </logicalModel>
+  <layout>
+    <shapes>
+      <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+        <upperLeftCorner x="40" y="85"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Projection_1" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="40" y="210"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+    </shapes>
+  </layout>
+</Calculation:scenario>

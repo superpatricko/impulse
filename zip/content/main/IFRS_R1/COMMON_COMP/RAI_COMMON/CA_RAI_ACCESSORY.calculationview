@@ -1,0 +1,602 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:AccessControl="http://www.sap.com/ndb/SQLCoreModelAccessControl.ecore" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" schemaVersion="2.3" id="CA_RAI_ACCESSORY" applyPrivilegeType="ANALYTIC_PRIVILEGE" checkAnalyticPrivileges="true" defaultClient="$$client$$" defaultLanguage="$$language$$" hierarchiesSQLEnabled="false" translationRelevant="true" visibility="internal" calculationScenarioType="TREE_BASED" dataCategory="DIMENSION" enforceSqlExecution="false" executionSemantic="UNDEFINED" outputViewType="Projection">
+  <descriptions defaultDescription="CA_RAI_ACCESSORY"/>
+  <localVariables/>
+  <variableMappings/>
+  <informationModelLayout relativeWidthScenario="47"/>
+  <dataSources>
+    <DataSource id="IFRS_R1.COMMON_COMP.NDB_COMMON::P77_TRANS_ACSY" type="DATA_BASE_TABLE">
+      <viewAttributes allViewAttributes="true"/>
+      <columnObject schemaName="NDB_COMMON" columnObjectName="IFRS_R1.COMMON_COMP.NDB_COMMON::P77_TRANS_ACSY"/>
+    </DataSource>
+    <DataSource id="IFRS_R1.COMMON_COMP.RAI_COMMON::RAI_COMMON_ORDR_MAP" type="DATA_BASE_TABLE">
+      <viewAttributes allViewAttributes="true"/>
+      <columnObject schemaName="RAI_COMMON" columnObjectName="IFRS_R1.COMMON_COMP.RAI_COMMON::RAI_COMMON_ORDR_MAP"/>
+    </DataSource>
+    <DataSource id="IFRS_R1.COMMON_COMP.RAI_COMMON::RAI_COMMON_INV_MAP" type="DATA_BASE_TABLE">
+      <viewAttributes allViewAttributes="true"/>
+      <columnObject schemaName="RAI_COMMON" columnObjectName="IFRS_R1.COMMON_COMP.RAI_COMMON::RAI_COMMON_INV_MAP"/>
+    </DataSource>
+  </dataSources>
+  <calculationViews>
+    <calculationView xsi:type="Calculation:ProjectionView" id="P77_TRANS_ASCY">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="COMPANY_CD"/>
+        <viewAttribute id="CURRN"/>
+        <viewAttribute id="KUNNR_SID">
+          <filter xsi:type="AccessControl:SingleValueFilter" operator="NL" including="false"/>
+        </viewAttribute>
+        <viewAttribute id="FINAL_TRANS_PRC"/>
+        <viewAttribute id="SCENARIO_IDENTIFIER"/>
+        <viewAttribute id="REVNU_GL"/>
+        <viewAttribute id="BATCH_ID"/>
+        <viewAttribute id="RAI_ITEM_ID"/>
+        <viewAttribute id="ACT_POST_DT"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CC_PORTFOLIO" length="80" expressionLanguage="COLUMN_ENGINE">
+          <formula>&quot;KUNNR_SID&quot;</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CC_OLD" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isNull(&quot;BATCH_ID&quot;),0,1)</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#IFRS_R1.COMMON_COMP.NDB_COMMON::P77_TRANS_ACSY">
+        <mapping xsi:type="Calculation:AttributeMapping" target="COMPANY_CD" source="COMPANY_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CURRN" source="CURRN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KUNNR_SID" source="KUNNR_SID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FINAL_TRANS_PRC" source="FINAL_TRANS_PRC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SCENARIO_IDENTIFIER" source="SCENARIO_IDENTIFIER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REVNU_GL" source="REVNU_GL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BATCH_ID" source="BATCH_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RAI_ITEM_ID" source="RAI_ITEM_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACT_POST_DT" source="ACT_POST_DT"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="P77_TRANS_OLD">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="CC_OLD">
+          <filter xsi:type="AccessControl:SingleValueFilter" including="true" value="1"/>
+        </viewAttribute>
+        <viewAttribute id="CC_PORTFOLIO"/>
+        <viewAttribute id="RAI_ITEM_ID"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#P77_TRANS_ASCY">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_OLD" source="CC_OLD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_PORTFOLIO" source="CC_PORTFOLIO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RAI_ITEM_ID" source="RAI_ITEM_ID"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="P77_TRANS_NEW">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="FINAL_TRANS_PRC"/>
+        <viewAttribute id="CURRN"/>
+        <viewAttribute id="COMPANY_CD"/>
+        <viewAttribute id="KUNNR_SID"/>
+        <viewAttribute id="SCENARIO_IDENTIFIER">
+          <filter xsi:type="AccessControl:SingleValueFilter" including="true" value="ACSY"/>
+        </viewAttribute>
+        <viewAttribute id="CC_PORTFOLIO"/>
+        <viewAttribute id="CC_OLD">
+          <filter xsi:type="AccessControl:SingleValueFilter" including="true" value="0"/>
+        </viewAttribute>
+        <viewAttribute id="REVNU_GL"/>
+        <viewAttribute id="ACT_POST_DT"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CC_SRCDOCID_TMP" length="30" expressionLanguage="COLUMN_ENGINE">
+          <formula>&quot;KUNNR_SID&quot;+STRING(format(&quot;ACT_POST_DT&quot;,'DDMMYYYY'))</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#P77_TRANS_ASCY">
+        <mapping xsi:type="Calculation:AttributeMapping" target="FINAL_TRANS_PRC" source="FINAL_TRANS_PRC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CURRN" source="CURRN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="COMPANY_CD" source="COMPANY_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KUNNR_SID" source="KUNNR_SID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SCENARIO_IDENTIFIER" source="SCENARIO_IDENTIFIER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_PORTFOLIO" source="CC_PORTFOLIO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_OLD" source="CC_OLD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REVNU_GL" source="REVNU_GL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACT_POST_DT" source="ACT_POST_DT"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="RAI_COMM_ORDR">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="LOB"/>
+        <viewAttribute id="SRCDOC_COMP"/>
+        <viewAttribute id="SRCDOC_LOGSYS"/>
+        <viewAttribute id="SRCDOC_TYPE"/>
+        <viewAttribute id="REFERENCE_TYPE"/>
+        <viewAttribute id="BUKRS"/>
+        <viewAttribute id="WAERS"/>
+        <viewAttribute id="RECEIV_ACCOUNT"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#IFRS_R1.COMMON_COMP.RAI_COMMON::RAI_COMMON_ORDR_MAP">
+        <mapping xsi:type="Calculation:AttributeMapping" target="LOB" source="LOB"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SRCDOC_COMP" source="SRCDOC_COMP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SRCDOC_LOGSYS" source="SRCDOC_LOGSYS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SRCDOC_TYPE" source="SRCDOC_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_TYPE" source="REFERENCE_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WAERS" source="WAERS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RECEIV_ACCOUNT" source="RECEIV_ACCOUNT"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="P77_TRANS_PROC">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="CC_PORTFOLIO"/>
+        <viewAttribute id="RAI_ITEM_ID"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="INTEGER" id="CC_RAI_ITEM_ID" expressionLanguage="COLUMN_ENGINE">
+          <formula>IF(isNull(&quot;RAI_ITEM_ID&quot;),0,INT(&quot;RAI_ITEM_ID&quot;))</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#P77_TRANS_OLD">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_PORTFOLIO" source="CC_PORTFOLIO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RAI_ITEM_ID" source="RAI_ITEM_ID"/>
+      </input>
+      <input node="#P77_TRANS_NEW">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_PORTFOLIO" source="CC_PORTFOLIO"/>
+      </input>
+      <joinAttribute name="CC_PORTFOLIO"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:AggregationView" id="AGGREGATE_AMOUNT">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="KUNNR_SID"/>
+        <viewAttribute id="COMPANY_CD"/>
+        <viewAttribute id="CC_PORTFOLIO"/>
+        <viewAttribute id="CC_SRCDOCID_TMP"/>
+        <viewAttribute id="CURRN"/>
+        <viewAttribute aggregationType="sum" id="FINAL_TRANS_PRC"/>
+        <viewAttribute id="SCENARIO_IDENTIFIER"/>
+        <viewAttribute id="ACT_POST_DT"/>
+        <viewAttribute id="REVNU_GL"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#P77_TRANS_NEW">
+        <mapping xsi:type="Calculation:AttributeMapping" target="KUNNR_SID" source="KUNNR_SID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="COMPANY_CD" source="COMPANY_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_PORTFOLIO" source="CC_PORTFOLIO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_SRCDOCID_TMP" source="CC_SRCDOCID_TMP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CURRN" source="CURRN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FINAL_TRANS_PRC" source="FINAL_TRANS_PRC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SCENARIO_IDENTIFIER" source="SCENARIO_IDENTIFIER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACT_POST_DT" source="ACT_POST_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REVNU_GL" source="REVNU_GL"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:AggregationView" id="MAX_ITEM_ID">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="CC_PORTFOLIO"/>
+        <viewAttribute aggregationType="max" id="CC_RAI_ITEM_ID"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#P77_TRANS_PROC">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_PORTFOLIO" source="CC_PORTFOLIO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_RAI_ITEM_ID" source="CC_RAI_ITEM_ID"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="JOIN_AGGREAGTION" joinType="leftOuter">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="CC_RAI_ITEM_ID"/>
+        <viewAttribute id="KUNNR_SID"/>
+        <viewAttribute id="CC_PORTFOLIO"/>
+        <viewAttribute id="CC_SRCDOCID_TMP"/>
+        <viewAttribute id="CURRN"/>
+        <viewAttribute id="FINAL_TRANS_PRC"/>
+        <viewAttribute id="SCENARIO_IDENTIFIER"/>
+        <viewAttribute id="COMPANY_CD"/>
+        <viewAttribute id="ACT_POST_DT"/>
+        <viewAttribute id="REVNU_GL"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="INTEGER" id="CC_RAI_ITEM_MAX" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isnull(&quot;CC_RAI_ITEM_ID&quot;),0,&quot;CC_RAI_ITEM_ID&quot;)</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#AGGREGATE_AMOUNT">
+        <mapping xsi:type="Calculation:AttributeMapping" target="KUNNR_SID" source="KUNNR_SID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_PORTFOLIO" source="CC_PORTFOLIO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_SRCDOCID_TMP" source="CC_SRCDOCID_TMP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CURRN" source="CURRN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FINAL_TRANS_PRC" source="FINAL_TRANS_PRC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SCENARIO_IDENTIFIER" source="SCENARIO_IDENTIFIER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="COMPANY_CD" source="COMPANY_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACT_POST_DT" source="ACT_POST_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REVNU_GL" source="REVNU_GL"/>
+      </input>
+      <input node="#MAX_ITEM_ID">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_RAI_ITEM_ID" source="CC_RAI_ITEM_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_PORTFOLIO" source="CC_PORTFOLIO"/>
+      </input>
+      <joinAttribute name="CC_PORTFOLIO"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:RankView" id="SORT_ON_ITEM_ID">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="CC_RAI_ITEM_ID"/>
+        <viewAttribute id="KUNNR_SID"/>
+        <viewAttribute id="CC_PORTFOLIO"/>
+        <viewAttribute id="CC_SRCDOCID_TMP"/>
+        <viewAttribute id="CURRN"/>
+        <viewAttribute id="FINAL_TRANS_PRC"/>
+        <viewAttribute id="SCENARIO_IDENTIFIER"/>
+        <viewAttribute id="CC_RAI_ITEM_MAX"/>
+        <viewAttribute id="COMPANY_CD"/>
+        <viewAttribute id="ACT_POST_DT"/>
+        <viewAttribute id="REVNU_GL"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#JOIN_AGGREAGTION">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_RAI_ITEM_ID" source="CC_RAI_ITEM_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KUNNR_SID" source="KUNNR_SID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_PORTFOLIO" source="CC_PORTFOLIO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_SRCDOCID_TMP" source="CC_SRCDOCID_TMP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CURRN" source="CURRN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FINAL_TRANS_PRC" source="FINAL_TRANS_PRC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SCENARIO_IDENTIFIER" source="SCENARIO_IDENTIFIER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_RAI_ITEM_MAX" source="CC_RAI_ITEM_MAX"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="COMPANY_CD" source="COMPANY_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACT_POST_DT" source="ACT_POST_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REVNU_GL" source="REVNU_GL"/>
+      </input>
+      <windowFunction>
+        <partitionViewAttributeName>CC_PORTFOLIO</partitionViewAttributeName>
+        <order byViewAttributeName="CC_SRCDOCID_TMP" direction="ASC"/>
+        <rankThreshold>
+          <value>100000</value>
+        </rankThreshold>
+        <rankViewAttributeName>Rank_Column</rankViewAttributeName>
+      </windowFunction>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="CALC_ITEM_ID_NEW">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="KUNNR_SID"/>
+        <viewAttribute id="CC_PORTFOLIO"/>
+        <viewAttribute id="CC_SRCDOCID_TMP"/>
+        <viewAttribute id="CURRN"/>
+        <viewAttribute id="FINAL_TRANS_PRC"/>
+        <viewAttribute id="SCENARIO_IDENTIFIER"/>
+        <viewAttribute id="CC_RAI_ITEM_MAX"/>
+        <viewAttribute id="Rank_Column"/>
+        <viewAttribute id="COMPANY_CD"/>
+        <viewAttribute id="ACT_POST_DT"/>
+        <viewAttribute id="REVNU_GL"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="INTEGER" id="CC_RAI_ITEM_ID" expressionLanguage="COLUMN_ENGINE">
+          <formula>INT(&quot;CC_RAI_ITEM_MAX&quot;) + &quot;Rank_Column&quot;</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CC_LOB" length="3" expressionLanguage="COLUMN_ENGINE">
+          <formula>'ZMO'</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CC_SRCDOC_ID" length="35" expressionLanguage="COLUMN_ENGINE">
+          <formula>&quot;CC_SRCDOCID_TMP&quot;+'-'+STRING(&quot;CC_RAI_ITEM_ID&quot;)</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#SORT_ON_ITEM_ID">
+        <mapping xsi:type="Calculation:AttributeMapping" target="KUNNR_SID" source="KUNNR_SID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_PORTFOLIO" source="CC_PORTFOLIO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_SRCDOCID_TMP" source="CC_SRCDOCID_TMP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CURRN" source="CURRN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FINAL_TRANS_PRC" source="FINAL_TRANS_PRC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SCENARIO_IDENTIFIER" source="SCENARIO_IDENTIFIER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_RAI_ITEM_MAX" source="CC_RAI_ITEM_MAX"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Rank_Column" source="Rank_Column"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="COMPANY_CD" source="COMPANY_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACT_POST_DT" source="ACT_POST_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REVNU_GL" source="REVNU_GL"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="RAI_COMMON_INV">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="LOB"/>
+        <viewAttribute id="SRCDOC_COMP"/>
+        <viewAttribute id="SRCDOC_LOGSYS"/>
+        <viewAttribute id="SRCDOC_TYPE"/>
+        <viewAttribute id="BUKRS"/>
+        <viewAttribute id="WAERS"/>
+        <viewAttribute id="ORIGDOC_COMP"/>
+        <viewAttribute id="ORIGDOC_LOGSYS"/>
+        <viewAttribute id="ORIGDOC_TYPE"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#IFRS_R1.COMMON_COMP.RAI_COMMON::RAI_COMMON_INV_MAP">
+        <mapping xsi:type="Calculation:AttributeMapping" target="LOB" source="LOB"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SRCDOC_COMP" source="SRCDOC_COMP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SRCDOC_LOGSYS" source="SRCDOC_LOGSYS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SRCDOC_TYPE" source="SRCDOC_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WAERS" source="WAERS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ORIGDOC_COMP" source="ORIGDOC_COMP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ORIGDOC_LOGSYS" source="ORIGDOC_LOGSYS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ORIGDOC_TYPE" source="ORIGDOC_TYPE"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="JOIN_ORDR_INV_MAP">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="LOB"/>
+        <viewAttribute id="SRCDOC_COMP"/>
+        <viewAttribute id="SRCDOC_LOGSYS"/>
+        <viewAttribute id="SRCDOC_TYPE"/>
+        <viewAttribute id="BUKRS"/>
+        <viewAttribute id="WAERS"/>
+        <viewAttribute id="ORIGDOC_COMP"/>
+        <viewAttribute id="ORIGDOC_LOGSYS"/>
+        <viewAttribute id="ORIGDOC_TYPE"/>
+        <viewAttribute id="REFERENCE_TYPE"/>
+        <viewAttribute hidden="true" id="JOIN$LOB$LOB"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#RAI_COMM_ORDR">
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_TYPE" source="REFERENCE_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$LOB$LOB" source="LOB"/>
+      </input>
+      <input node="#RAI_COMMON_INV">
+        <mapping xsi:type="Calculation:AttributeMapping" target="LOB" source="LOB"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SRCDOC_COMP" source="SRCDOC_COMP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SRCDOC_LOGSYS" source="SRCDOC_LOGSYS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SRCDOC_TYPE" source="SRCDOC_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WAERS" source="WAERS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ORIGDOC_COMP" source="ORIGDOC_COMP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ORIGDOC_LOGSYS" source="ORIGDOC_LOGSYS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ORIGDOC_TYPE" source="ORIGDOC_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$LOB$LOB" source="LOB"/>
+      </input>
+      <joinAttribute name="JOIN$LOB$LOB"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="JOIN_MAP_BILLING">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="SRCDOC_COMP"/>
+        <viewAttribute id="SRCDOC_LOGSYS"/>
+        <viewAttribute id="SRCDOC_TYPE"/>
+        <viewAttribute id="BUKRS"/>
+        <viewAttribute id="WAERS"/>
+        <viewAttribute id="ORIGDOC_COMP"/>
+        <viewAttribute id="ORIGDOC_LOGSYS"/>
+        <viewAttribute id="ORIGDOC_TYPE"/>
+        <viewAttribute id="REFERENCE_TYPE"/>
+        <viewAttribute id="CC_SRCDOC_ID"/>
+        <viewAttribute id="CC_RAI_ITEM_ID"/>
+        <viewAttribute id="Rank_Column"/>
+        <viewAttribute id="CC_RAI_ITEM_MAX"/>
+        <viewAttribute id="SCENARIO_IDENTIFIER"/>
+        <viewAttribute id="FINAL_TRANS_PRC"/>
+        <viewAttribute id="CURRN"/>
+        <viewAttribute id="CC_PORTFOLIO"/>
+        <viewAttribute id="KUNNR_SID"/>
+        <viewAttribute id="COMPANY_CD"/>
+        <viewAttribute id="ACT_POST_DT"/>
+        <viewAttribute id="REVNU_GL"/>
+        <viewAttribute hidden="true" id="JOIN$LOB$CC_LOB"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CC_ZZ_MATNR_GRP" length="20" expressionLanguage="COLUMN_ENGINE">
+          <formula>IF(&quot;SCENARIO_IDENTIFIER&quot;= 'ACSY', 'ACCESSORIES',IF(&quot;SCENARIO_IDENTIFIER&quot;='DBT-MEMO','DEBIT MEMOS','?'))</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#JOIN_ORDR_INV_MAP">
+        <mapping xsi:type="Calculation:AttributeMapping" target="SRCDOC_COMP" source="SRCDOC_COMP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SRCDOC_LOGSYS" source="SRCDOC_LOGSYS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SRCDOC_TYPE" source="SRCDOC_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BUKRS" source="BUKRS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="WAERS" source="WAERS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ORIGDOC_COMP" source="ORIGDOC_COMP"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ORIGDOC_LOGSYS" source="ORIGDOC_LOGSYS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ORIGDOC_TYPE" source="ORIGDOC_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_TYPE" source="REFERENCE_TYPE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$LOB$CC_LOB" source="LOB"/>
+      </input>
+      <input node="#CALC_ITEM_ID_NEW">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_SRCDOC_ID" source="CC_SRCDOC_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_RAI_ITEM_ID" source="CC_RAI_ITEM_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Rank_Column" source="Rank_Column"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_RAI_ITEM_MAX" source="CC_RAI_ITEM_MAX"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SCENARIO_IDENTIFIER" source="SCENARIO_IDENTIFIER"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FINAL_TRANS_PRC" source="FINAL_TRANS_PRC"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CURRN" source="CURRN"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_PORTFOLIO" source="CC_PORTFOLIO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="KUNNR_SID" source="KUNNR_SID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="COMPANY_CD" source="COMPANY_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ACT_POST_DT" source="ACT_POST_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REVNU_GL" source="REVNU_GL"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$LOB$CC_LOB" source="CC_LOB"/>
+      </input>
+      <joinAttribute name="JOIN$LOB$CC_LOB"/>
+    </calculationView>
+  </calculationViews>
+  <logicalModel id="JOIN_MAP_BILLING">
+    <descriptions/>
+    <attributes>
+      <attribute id="SRCDOC_COMP" order="1" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SRCDOC_COMP"/>
+        <keyMapping columnObjectName="JOIN_MAP_BILLING" columnName="SRCDOC_COMP"/>
+      </attribute>
+      <attribute id="SRCDOC_LOGSYS" order="2" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SRCDOC_LOGSYS"/>
+        <keyMapping columnObjectName="JOIN_MAP_BILLING" columnName="SRCDOC_LOGSYS"/>
+      </attribute>
+      <attribute id="SRCDOC_TYPE" order="3" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SRCDOC_TYPE"/>
+        <keyMapping columnObjectName="JOIN_MAP_BILLING" columnName="SRCDOC_TYPE"/>
+      </attribute>
+      <attribute id="BUKRS" order="4" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="BUKRS"/>
+        <keyMapping columnObjectName="JOIN_MAP_BILLING" columnName="BUKRS"/>
+      </attribute>
+      <attribute id="WAERS" order="5" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="WAERS"/>
+        <keyMapping columnObjectName="JOIN_MAP_BILLING" columnName="WAERS"/>
+      </attribute>
+      <attribute id="ORIGDOC_COMP" order="6" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ORIGDOC_COMP"/>
+        <keyMapping columnObjectName="JOIN_MAP_BILLING" columnName="ORIGDOC_COMP"/>
+      </attribute>
+      <attribute id="ORIGDOC_LOGSYS" order="7" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ORIGDOC_LOGSYS"/>
+        <keyMapping columnObjectName="JOIN_MAP_BILLING" columnName="ORIGDOC_LOGSYS"/>
+      </attribute>
+      <attribute id="ORIGDOC_TYPE" order="8" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ORIGDOC_TYPE"/>
+        <keyMapping columnObjectName="JOIN_MAP_BILLING" columnName="ORIGDOC_TYPE"/>
+      </attribute>
+      <attribute id="REFERENCE_TYPE" order="9" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="REFERENCE_TYPE"/>
+        <keyMapping columnObjectName="JOIN_MAP_BILLING" columnName="REFERENCE_TYPE"/>
+      </attribute>
+      <attribute id="CC_SRCDOC_ID" order="10" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CC_SRCDOC_ID"/>
+        <keyMapping columnObjectName="JOIN_MAP_BILLING" columnName="CC_SRCDOC_ID"/>
+      </attribute>
+      <attribute id="CC_RAI_ITEM_ID" order="11" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CC_RAI_ITEM_ID"/>
+        <keyMapping columnObjectName="JOIN_MAP_BILLING" columnName="CC_RAI_ITEM_ID"/>
+      </attribute>
+      <attribute id="Rank_Column" order="12" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Rank_Column"/>
+        <keyMapping columnObjectName="JOIN_MAP_BILLING" columnName="Rank_Column"/>
+      </attribute>
+      <attribute id="CC_RAI_ITEM_MAX" order="13" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CC_RAI_ITEM_MAX"/>
+        <keyMapping columnObjectName="JOIN_MAP_BILLING" columnName="CC_RAI_ITEM_MAX"/>
+      </attribute>
+      <attribute id="SCENARIO_IDENTIFIER" order="14" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SCENARIO_IDENTIFIER"/>
+        <keyMapping columnObjectName="JOIN_MAP_BILLING" columnName="SCENARIO_IDENTIFIER"/>
+      </attribute>
+      <attribute id="FINAL_TRANS_PRC" order="15" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="FINAL_TRANS_PRC"/>
+        <keyMapping columnObjectName="JOIN_MAP_BILLING" columnName="FINAL_TRANS_PRC"/>
+      </attribute>
+      <attribute id="CURRN" order="16" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CURRN"/>
+        <keyMapping columnObjectName="JOIN_MAP_BILLING" columnName="CURRN"/>
+      </attribute>
+      <attribute id="CC_PORTFOLIO" order="17" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CC_PORTFOLIO"/>
+        <keyMapping columnObjectName="JOIN_MAP_BILLING" columnName="CC_PORTFOLIO"/>
+      </attribute>
+      <attribute id="KUNNR_SID" order="18" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="KUNNR_SID"/>
+        <keyMapping columnObjectName="JOIN_MAP_BILLING" columnName="KUNNR_SID"/>
+      </attribute>
+      <attribute id="COMPANY_CD" order="21" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="COMPANY_CD"/>
+        <keyMapping columnObjectName="JOIN_MAP_BILLING" columnName="COMPANY_CD"/>
+      </attribute>
+      <attribute id="CC_ZZ_MATNR_GRP" order="22" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CC_ZZ_MATNR_GRP"/>
+        <keyMapping columnObjectName="JOIN_MAP_BILLING" columnName="CC_ZZ_MATNR_GRP"/>
+      </attribute>
+      <attribute id="ACT_POST_DT" order="23" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ACT_POST_DT"/>
+        <keyMapping columnObjectName="JOIN_MAP_BILLING" columnName="ACT_POST_DT"/>
+      </attribute>
+      <attribute id="REVNU_GL" order="24" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="REVNU_GL"/>
+        <keyMapping columnObjectName="JOIN_MAP_BILLING" columnName="REVNU_GL"/>
+      </attribute>
+    </attributes>
+    <calculatedAttributes>
+      <calculatedAttribute id="CC_SRCDOC_ID_INV" hidden="false" order="19" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CC_SRCDOCID_INV"/>
+        <keyCalculation datatype="NVARCHAR" expressionLanguage="COLUMN_ENGINE" length="35">
+          <formula>&quot;CC_SRCDOC_ID&quot;+'INV'</formula>
+        </keyCalculation>
+      </calculatedAttribute>
+      <calculatedAttribute id="CC_REFID" hidden="false" order="20" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CC_REFID"/>
+        <keyCalculation datatype="NVARCHAR" expressionLanguage="COLUMN_ENGINE" length="35">
+          <formula>&quot;KUNNR_SID&quot;+'01'</formula>
+        </keyCalculation>
+      </calculatedAttribute>
+    </calculatedAttributes>
+    <privateDataFoundation>
+      <tableProxies/>
+      <joins/>
+      <layout>
+        <shapes/>
+      </layout>
+    </privateDataFoundation>
+    <baseMeasures/>
+    <calculatedMeasures/>
+    <restrictedMeasures/>
+    <localDimensions/>
+  </logicalModel>
+  <layout>
+    <shapes>
+      <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+        <upperLeftCorner x="253" y="87"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+      <shape expanded="true" modelObjectName="P77_TRANS_ASCY" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="329" y="783"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="P77_TRANS_OLD" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="406" y="705"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="P77_TRANS_NEW" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="252" y="705"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="RAI_COMM_ORDR" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="22" y="357"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="P77_TRANS_PROC" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="406" y="609"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="AGGREGATE_AMOUNT" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="252" y="531"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="MAX_ITEM_ID" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="406" y="531"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="JOIN_AGGREAGTION" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="330" y="435"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="SORT_ON_ITEM_ID" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="330" y="357"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="CALC_ITEM_ID_NEW" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="330" y="261"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="RAI_COMMON_INV" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="176" y="357"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="JOIN_ORDR_INV_MAP" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="176" y="261"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="JOIN_MAP_BILLING" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="253" y="165"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+    </shapes>
+  </layout>
+</Calculation:scenario>

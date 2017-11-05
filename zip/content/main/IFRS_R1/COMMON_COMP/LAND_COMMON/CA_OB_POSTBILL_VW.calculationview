@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" schemaVersion="2.3" id="CA_OB_POSTBILL_VW" applyPrivilegeType="ANALYTIC_PRIVILEGE" checkAnalyticPrivileges="true" defaultClient="$$client$$" defaultLanguage="$$language$$" hierarchiesSQLEnabled="false" translationRelevant="true" visibility="internal" calculationScenarioType="TREE_BASED" dataCategory="DIMENSION" enforceSqlExecution="false" executionSemantic="UNDEFINED" outputViewType="Projection">
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:AccessControl="http://www.sap.com/ndb/SQLCoreModelAccessControl.ecore" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" schemaVersion="2.3" id="CA_OB_POSTBILL_VW" applyPrivilegeType="ANALYTIC_PRIVILEGE" checkAnalyticPrivileges="true" defaultClient="$$client$$" defaultLanguage="$$language$$" hierarchiesSQLEnabled="false" translationRelevant="true" visibility="internal" calculationScenarioType="TREE_BASED" dataCategory="DIMENSION" enforceSqlExecution="false" executionSemantic="UNDEFINED" outputViewType="Projection">
   <descriptions defaultDescription="CA_OB_POSTBILL_VW">
     <comment text="Private view on POSTBILLING landing with required columns to populate data into NDB POSTBILLING table"/>
   </descriptions>
@@ -13,7 +13,7 @@
     </DataSource>
   </dataSources>
   <calculationViews>
-    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_OB_POSTBILL" filterExpressionLanguage="COLUMN_ENGINE">
+    <calculationView xsi:type="Calculation:ProjectionView" id="Projection_1">
       <descriptions/>
       <viewAttributes>
         <viewAttribute id="ACCRUAL_IND"/>
@@ -51,7 +51,9 @@
         <viewAttribute id="ISSUE_DATE"/>
         <viewAttribute id="JOURNALIZATION_DATE"/>
         <viewAttribute id="LEGACY_CHARGE_TYPE"/>
-        <viewAttribute id="LEGACY_IND"/>
+        <viewAttribute id="LEGACY_IND">
+          <filter xsi:type="AccessControl:SingleValueFilter" including="true" value="3"/>
+        </viewAttribute>
         <viewAttribute id="LEGACY_SEQ_NO"/>
         <viewAttribute id="LEGACY_SUBNO"/>
         <viewAttribute id="OVER_USAGE_INDICATOR"/>
@@ -66,7 +68,9 @@
         <viewAttribute id="TRANSACTION_TYPE"/>
         <viewAttribute id="UOM_CODE"/>
         <viewAttribute id="UOM_OVR_QUANTITY"/>
-        <viewAttribute id="NDB_TS"/>
+        <viewAttribute id="NDB_TS">
+          <filter xsi:type="AccessControl:SingleValueFilter" operator="NL" including="true"/>
+        </viewAttribute>
         <viewAttribute id="POST_BILLING_ID"/>
         <viewAttribute id="AR_ACTV"/>
         <viewAttribute id="CR_DR_IND"/>
@@ -132,231 +136,230 @@
         <mapping xsi:type="Calculation:AttributeMapping" target="IFRS_ENT_SEQ_NO" source="IFRS_ENT_SEQ_NO"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="REALLOCATION_IND" source="REALLOCATION_IND"/>
       </input>
-      <filter>(isNull(&quot;NDB_TS&quot;))</filter>
     </calculationView>
   </calculationViews>
-  <logicalModel id="PROJ_OB_POSTBILL">
+  <logicalModel id="Projection_1">
     <descriptions/>
     <attributes>
       <attribute id="ACCRUAL_IND" order="1" attributeHierarchyActive="false" displayAttribute="false">
         <descriptions defaultDescription="ACCRUAL_IND"/>
-        <keyMapping columnObjectName="PROJ_OB_POSTBILL" columnName="ACCRUAL_IND"/>
+        <keyMapping columnObjectName="Projection_1" columnName="ACCRUAL_IND"/>
       </attribute>
       <attribute id="ACTV_CODE" order="2" attributeHierarchyActive="false" displayAttribute="false">
         <descriptions defaultDescription="ACTV_CODE"/>
-        <keyMapping columnObjectName="PROJ_OB_POSTBILL" columnName="ACTV_CODE"/>
+        <keyMapping columnObjectName="Projection_1" columnName="ACTV_CODE"/>
       </attribute>
       <attribute id="ACTV_DATE" order="3" attributeHierarchyActive="false" displayAttribute="false">
         <descriptions defaultDescription="ACTV_DATE"/>
-        <keyMapping columnObjectName="PROJ_OB_POSTBILL" columnName="ACTV_DATE"/>
+        <keyMapping columnObjectName="Projection_1" columnName="ACTV_DATE"/>
       </attribute>
       <attribute id="ACTV_REASON_CODE" order="4" attributeHierarchyActive="false" displayAttribute="false">
         <descriptions defaultDescription="ACTV_REASON_CODE"/>
-        <keyMapping columnObjectName="PROJ_OB_POSTBILL" columnName="ACTV_REASON_CODE"/>
+        <keyMapping columnObjectName="Projection_1" columnName="ACTV_REASON_CODE"/>
       </attribute>
       <attribute id="ADJ_REASON_CODE" order="5" attributeHierarchyActive="false" displayAttribute="false">
         <descriptions defaultDescription="ADJ_REASON_CODE"/>
-        <keyMapping columnObjectName="PROJ_OB_POSTBILL" columnName="ADJ_REASON_CODE"/>
+        <keyMapping columnObjectName="Projection_1" columnName="ADJ_REASON_CODE"/>
       </attribute>
       <attribute id="AMOUNT" order="6" attributeHierarchyActive="false" displayAttribute="false">
         <descriptions defaultDescription="AMOUNT"/>
-        <keyMapping columnObjectName="PROJ_OB_POSTBILL" columnName="AMOUNT"/>
+        <keyMapping columnObjectName="Projection_1" columnName="AMOUNT"/>
       </attribute>
       <attribute id="AREA_IND" order="7" attributeHierarchyActive="false" displayAttribute="false">
         <descriptions defaultDescription="AREA_IND"/>
-        <keyMapping columnObjectName="PROJ_OB_POSTBILL" columnName="AREA_IND"/>
+        <keyMapping columnObjectName="Projection_1" columnName="AREA_IND"/>
       </attribute>
       <attribute id="BALANCE_IMPACT_CODE" order="8" attributeHierarchyActive="false" displayAttribute="false">
         <descriptions defaultDescription="BALANCE_IMPACT_CODE"/>
-        <keyMapping columnObjectName="PROJ_OB_POSTBILL" columnName="BALANCE_IMPACT_CODE"/>
+        <keyMapping columnObjectName="Projection_1" columnName="BALANCE_IMPACT_CODE"/>
       </attribute>
       <attribute id="BAN" order="9" attributeHierarchyActive="false" displayAttribute="false">
         <descriptions defaultDescription="BAN"/>
-        <keyMapping columnObjectName="PROJ_OB_POSTBILL" columnName="BAN"/>
+        <keyMapping columnObjectName="Projection_1" columnName="BAN"/>
       </attribute>
       <attribute id="BILL_DATE" order="10" attributeHierarchyActive="false" displayAttribute="false">
         <descriptions defaultDescription="BILL_DATE"/>
-        <keyMapping columnObjectName="PROJ_OB_POSTBILL" columnName="BILL_DATE"/>
+        <keyMapping columnObjectName="Projection_1" columnName="BILL_DATE"/>
       </attribute>
       <attribute id="BILL_FIXED_TEXT" order="11" attributeHierarchyActive="false" displayAttribute="false">
         <descriptions defaultDescription="BILL_FIXED_TEXT"/>
-        <keyMapping columnObjectName="PROJ_OB_POSTBILL" columnName="BILL_FIXED_TEXT"/>
+        <keyMapping columnObjectName="Projection_1" columnName="BILL_FIXED_TEXT"/>
       </attribute>
       <attribute id="BILL_SEQ_NO" order="12" attributeHierarchyActive="false" displayAttribute="false">
         <descriptions defaultDescription="BILL_SEQ_NO"/>
-        <keyMapping columnObjectName="PROJ_OB_POSTBILL" columnName="BILL_SEQ_NO"/>
+        <keyMapping columnObjectName="Projection_1" columnName="BILL_SEQ_NO"/>
       </attribute>
       <attribute id="BL_IGNORE_IND" order="13" attributeHierarchyActive="false" displayAttribute="false">
         <descriptions defaultDescription="BL_IGNORE_IND"/>
-        <keyMapping columnObjectName="PROJ_OB_POSTBILL" columnName="BL_IGNORE_IND"/>
+        <keyMapping columnObjectName="Projection_1" columnName="BL_IGNORE_IND"/>
       </attribute>
       <attribute id="BUSINESS_ID" order="14" attributeHierarchyActive="false" displayAttribute="false">
         <descriptions defaultDescription="BUSINESS_ID"/>
-        <keyMapping columnObjectName="PROJ_OB_POSTBILL" columnName="BUSINESS_ID"/>
+        <keyMapping columnObjectName="Projection_1" columnName="BUSINESS_ID"/>
       </attribute>
       <attribute id="CHARGE_SEQ_NO" order="15" attributeHierarchyActive="false" displayAttribute="false">
         <descriptions defaultDescription="CHARGE_SEQ_NO"/>
-        <keyMapping columnObjectName="PROJ_OB_POSTBILL" columnName="CHARGE_SEQ_NO"/>
+        <keyMapping columnObjectName="Projection_1" columnName="CHARGE_SEQ_NO"/>
       </attribute>
       <attribute id="CHARGE_TYPE" order="16" attributeHierarchyActive="false" displayAttribute="false">
         <descriptions defaultDescription="CHARGE_TYPE"/>
-        <keyMapping columnObjectName="PROJ_OB_POSTBILL" columnName="CHARGE_TYPE"/>
+        <keyMapping columnObjectName="Projection_1" columnName="CHARGE_TYPE"/>
       </attribute>
       <attribute id="CURR_CODE" order="17" attributeHierarchyActive="false" displayAttribute="false">
         <descriptions defaultDescription="CURR_CODE"/>
-        <keyMapping columnObjectName="PROJ_OB_POSTBILL" columnName="CURR_CODE"/>
+        <keyMapping columnObjectName="Projection_1" columnName="CURR_CODE"/>
       </attribute>
       <attribute id="CYCLE_CODE" order="18" attributeHierarchyActive="false" displayAttribute="false">
         <descriptions defaultDescription="CYCLE_CODE"/>
-        <keyMapping columnObjectName="PROJ_OB_POSTBILL" columnName="CYCLE_CODE"/>
+        <keyMapping columnObjectName="Projection_1" columnName="CYCLE_CODE"/>
       </attribute>
       <attribute id="CYCLE_END_DATE" order="19" attributeHierarchyActive="false" displayAttribute="false">
         <descriptions defaultDescription="CYCLE_END_DATE"/>
-        <keyMapping columnObjectName="PROJ_OB_POSTBILL" columnName="CYCLE_END_DATE"/>
+        <keyMapping columnObjectName="Projection_1" columnName="CYCLE_END_DATE"/>
       </attribute>
       <attribute id="CYCLE_RUN_MONTH" order="20" attributeHierarchyActive="false" displayAttribute="false">
         <descriptions defaultDescription="CYCLE_RUN_MONTH"/>
-        <keyMapping columnObjectName="PROJ_OB_POSTBILL" columnName="CYCLE_RUN_MONTH"/>
+        <keyMapping columnObjectName="Projection_1" columnName="CYCLE_RUN_MONTH"/>
       </attribute>
       <attribute id="CYCLE_RUN_YEAR" order="21" attributeHierarchyActive="false" displayAttribute="false">
         <descriptions defaultDescription="CYCLE_RUN_YEAR"/>
-        <keyMapping columnObjectName="PROJ_OB_POSTBILL" columnName="CYCLE_RUN_YEAR"/>
+        <keyMapping columnObjectName="Projection_1" columnName="CYCLE_RUN_YEAR"/>
       </attribute>
       <attribute id="CYCLE_START_DATE" order="22" attributeHierarchyActive="false" displayAttribute="false">
         <descriptions defaultDescription="CYCLE_START_DATE"/>
-        <keyMapping columnObjectName="PROJ_OB_POSTBILL" columnName="CYCLE_START_DATE"/>
+        <keyMapping columnObjectName="Projection_1" columnName="CYCLE_START_DATE"/>
       </attribute>
       <attribute id="DISCOUNT_CODE" order="23" attributeHierarchyActive="false" displayAttribute="false">
         <descriptions defaultDescription="DISCOUNT_CODE"/>
-        <keyMapping columnObjectName="PROJ_OB_POSTBILL" columnName="DISCOUNT_CODE"/>
+        <keyMapping columnObjectName="Projection_1" columnName="DISCOUNT_CODE"/>
       </attribute>
       <attribute id="DISCOUNT_FROM_AMT" order="24" attributeHierarchyActive="false" displayAttribute="false">
         <descriptions defaultDescription="DISCOUNT_FROM_AMT"/>
-        <keyMapping columnObjectName="PROJ_OB_POSTBILL" columnName="DISCOUNT_FROM_AMT"/>
+        <keyMapping columnObjectName="Projection_1" columnName="DISCOUNT_FROM_AMT"/>
       </attribute>
       <attribute id="DISCOUNT_PCT" order="25" attributeHierarchyActive="false" displayAttribute="false">
         <descriptions defaultDescription="DISCOUNT_PCT"/>
-        <keyMapping columnObjectName="PROJ_OB_POSTBILL" columnName="DISCOUNT_PCT"/>
+        <keyMapping columnObjectName="Projection_1" columnName="DISCOUNT_PCT"/>
       </attribute>
       <attribute id="EFFECTIVE_DATE" order="26" attributeHierarchyActive="false" displayAttribute="false">
         <descriptions defaultDescription="EFFECTIVE_DATE"/>
-        <keyMapping columnObjectName="PROJ_OB_POSTBILL" columnName="EFFECTIVE_DATE"/>
+        <keyMapping columnObjectName="Projection_1" columnName="EFFECTIVE_DATE"/>
       </attribute>
       <attribute id="EFF_DT" order="27" attributeHierarchyActive="false" displayAttribute="false">
         <descriptions defaultDescription="EFF_DT"/>
-        <keyMapping columnObjectName="PROJ_OB_POSTBILL" columnName="EFF_DT"/>
+        <keyMapping columnObjectName="Projection_1" columnName="EFF_DT"/>
       </attribute>
       <attribute id="ENTITY_SEQ_NO" order="28" attributeHierarchyActive="false" displayAttribute="false">
         <descriptions defaultDescription="ENTITY_SEQ_NO"/>
-        <keyMapping columnObjectName="PROJ_OB_POSTBILL" columnName="ENTITY_SEQ_NO"/>
+        <keyMapping columnObjectName="Projection_1" columnName="ENTITY_SEQ_NO"/>
       </attribute>
       <attribute id="EXPY_DT" order="29" attributeHierarchyActive="false" displayAttribute="false">
         <descriptions defaultDescription="EXPY_DT"/>
-        <keyMapping columnObjectName="PROJ_OB_POSTBILL" columnName="EXPY_DT"/>
+        <keyMapping columnObjectName="Projection_1" columnName="EXPY_DT"/>
       </attribute>
       <attribute id="FEATURE_CODE" order="30" attributeHierarchyActive="false" displayAttribute="false">
         <descriptions defaultDescription="FEATURE_CODE"/>
-        <keyMapping columnObjectName="PROJ_OB_POSTBILL" columnName="FEATURE_CODE"/>
+        <keyMapping columnObjectName="Projection_1" columnName="FEATURE_CODE"/>
       </attribute>
       <attribute id="FTR_REVENUE_CODE" order="31" attributeHierarchyActive="false" displayAttribute="false">
         <descriptions defaultDescription="FTR_REVENUE_CODE"/>
-        <keyMapping columnObjectName="PROJ_OB_POSTBILL" columnName="FTR_REVENUE_CODE"/>
+        <keyMapping columnObjectName="Projection_1" columnName="FTR_REVENUE_CODE"/>
       </attribute>
       <attribute id="GL_ACCOUNT_NUMBER" order="32" attributeHierarchyActive="false" displayAttribute="false">
         <descriptions defaultDescription="GL_ACCOUNT_NUMBER"/>
-        <keyMapping columnObjectName="PROJ_OB_POSTBILL" columnName="GL_ACCOUNT_NUMBER"/>
+        <keyMapping columnObjectName="Projection_1" columnName="GL_ACCOUNT_NUMBER"/>
       </attribute>
       <attribute id="ISSUE_DATE" order="33" attributeHierarchyActive="false" displayAttribute="false">
         <descriptions defaultDescription="ISSUE_DATE"/>
-        <keyMapping columnObjectName="PROJ_OB_POSTBILL" columnName="ISSUE_DATE"/>
+        <keyMapping columnObjectName="Projection_1" columnName="ISSUE_DATE"/>
       </attribute>
       <attribute id="JOURNALIZATION_DATE" order="34" attributeHierarchyActive="false" displayAttribute="false">
         <descriptions defaultDescription="JOURNALIZATION_DATE"/>
-        <keyMapping columnObjectName="PROJ_OB_POSTBILL" columnName="JOURNALIZATION_DATE"/>
+        <keyMapping columnObjectName="Projection_1" columnName="JOURNALIZATION_DATE"/>
       </attribute>
       <attribute id="LEGACY_CHARGE_TYPE" order="35" attributeHierarchyActive="false" displayAttribute="false">
         <descriptions defaultDescription="LEGACY_CHARGE_TYPE"/>
-        <keyMapping columnObjectName="PROJ_OB_POSTBILL" columnName="LEGACY_CHARGE_TYPE"/>
+        <keyMapping columnObjectName="Projection_1" columnName="LEGACY_CHARGE_TYPE"/>
       </attribute>
       <attribute id="LEGACY_IND" order="36" attributeHierarchyActive="false" displayAttribute="false">
         <descriptions defaultDescription="LEGACY_IND"/>
-        <keyMapping columnObjectName="PROJ_OB_POSTBILL" columnName="LEGACY_IND"/>
+        <keyMapping columnObjectName="Projection_1" columnName="LEGACY_IND"/>
       </attribute>
       <attribute id="LEGACY_SEQ_NO" order="37" attributeHierarchyActive="false" displayAttribute="false">
         <descriptions defaultDescription="LEGACY_SEQ_NO"/>
-        <keyMapping columnObjectName="PROJ_OB_POSTBILL" columnName="LEGACY_SEQ_NO"/>
+        <keyMapping columnObjectName="Projection_1" columnName="LEGACY_SEQ_NO"/>
       </attribute>
       <attribute id="LEGACY_SUBNO" order="38" attributeHierarchyActive="false" displayAttribute="false">
         <descriptions defaultDescription="LEGACY_SUBNO"/>
-        <keyMapping columnObjectName="PROJ_OB_POSTBILL" columnName="LEGACY_SUBNO"/>
+        <keyMapping columnObjectName="Projection_1" columnName="LEGACY_SUBNO"/>
       </attribute>
       <attribute id="OVER_USAGE_INDICATOR" order="39" attributeHierarchyActive="false" displayAttribute="false">
         <descriptions defaultDescription="OVER_USAGE_INDICATOR"/>
-        <keyMapping columnObjectName="PROJ_OB_POSTBILL" columnName="OVER_USAGE_INDICATOR"/>
+        <keyMapping columnObjectName="Projection_1" columnName="OVER_USAGE_INDICATOR"/>
       </attribute>
       <attribute id="PLAN_TYPE" order="40" attributeHierarchyActive="false" displayAttribute="false">
         <descriptions defaultDescription="PLAN_TYPE"/>
-        <keyMapping columnObjectName="PROJ_OB_POSTBILL" columnName="PLAN_TYPE"/>
+        <keyMapping columnObjectName="Projection_1" columnName="PLAN_TYPE"/>
       </attribute>
       <attribute id="PRD_CVRG_END_DATE" order="41" attributeHierarchyActive="false" displayAttribute="false">
         <descriptions defaultDescription="PRD_CVRG_END_DATE"/>
-        <keyMapping columnObjectName="PROJ_OB_POSTBILL" columnName="PRD_CVRG_END_DATE"/>
+        <keyMapping columnObjectName="Projection_1" columnName="PRD_CVRG_END_DATE"/>
       </attribute>
       <attribute id="PRD_CVRG_STRT_DATE" order="42" attributeHierarchyActive="false" displayAttribute="false">
         <descriptions defaultDescription="PRD_CVRG_STRT_DATE"/>
-        <keyMapping columnObjectName="PROJ_OB_POSTBILL" columnName="PRD_CVRG_STRT_DATE"/>
+        <keyMapping columnObjectName="Projection_1" columnName="PRD_CVRG_STRT_DATE"/>
       </attribute>
       <attribute id="PROVINCE_CODE" order="43" attributeHierarchyActive="false" displayAttribute="false">
         <descriptions defaultDescription="PROVINCE_CODE"/>
-        <keyMapping columnObjectName="PROJ_OB_POSTBILL" columnName="PROVINCE_CODE"/>
+        <keyMapping columnObjectName="Projection_1" columnName="PROVINCE_CODE"/>
       </attribute>
       <attribute id="SOC" order="44" attributeHierarchyActive="false" displayAttribute="false">
         <descriptions defaultDescription="SOC"/>
-        <keyMapping columnObjectName="PROJ_OB_POSTBILL" columnName="SOC"/>
+        <keyMapping columnObjectName="Projection_1" columnName="SOC"/>
       </attribute>
       <attribute id="SUBSCRIBER_NO" order="45" attributeHierarchyActive="false" displayAttribute="false">
         <descriptions defaultDescription="SUBSCRIBER_NO"/>
-        <keyMapping columnObjectName="PROJ_OB_POSTBILL" columnName="SUBSCRIBER_NO"/>
+        <keyMapping columnObjectName="Projection_1" columnName="SUBSCRIBER_NO"/>
       </attribute>
       <attribute id="THIRD_PARTY_CHG_IND" order="46" attributeHierarchyActive="false" displayAttribute="false">
         <descriptions defaultDescription="THIRD_PARTY_CHG_IND"/>
-        <keyMapping columnObjectName="PROJ_OB_POSTBILL" columnName="THIRD_PARTY_CHG_IND"/>
+        <keyMapping columnObjectName="Projection_1" columnName="THIRD_PARTY_CHG_IND"/>
       </attribute>
       <attribute id="TRANSACTION_DATE" order="47" attributeHierarchyActive="false" displayAttribute="false">
         <descriptions defaultDescription="TRANSACTION_DATE"/>
-        <keyMapping columnObjectName="PROJ_OB_POSTBILL" columnName="TRANSACTION_DATE"/>
+        <keyMapping columnObjectName="Projection_1" columnName="TRANSACTION_DATE"/>
       </attribute>
       <attribute id="TRANSACTION_TYPE" order="48" attributeHierarchyActive="false" displayAttribute="false">
         <descriptions defaultDescription="TRANSACTION_TYPE"/>
-        <keyMapping columnObjectName="PROJ_OB_POSTBILL" columnName="TRANSACTION_TYPE"/>
+        <keyMapping columnObjectName="Projection_1" columnName="TRANSACTION_TYPE"/>
       </attribute>
       <attribute id="UOM_CODE" order="49" attributeHierarchyActive="false" displayAttribute="false">
         <descriptions defaultDescription="UOM_CODE"/>
-        <keyMapping columnObjectName="PROJ_OB_POSTBILL" columnName="UOM_CODE"/>
+        <keyMapping columnObjectName="Projection_1" columnName="UOM_CODE"/>
       </attribute>
       <attribute id="UOM_OVR_QUANTITY" order="50" attributeHierarchyActive="false" displayAttribute="false">
         <descriptions defaultDescription="UOM_OVR_QUANTITY"/>
-        <keyMapping columnObjectName="PROJ_OB_POSTBILL" columnName="UOM_OVR_QUANTITY"/>
+        <keyMapping columnObjectName="Projection_1" columnName="UOM_OVR_QUANTITY"/>
       </attribute>
       <attribute id="POST_BILLING_ID" order="51" attributeHierarchyActive="false" displayAttribute="false">
         <descriptions defaultDescription="POST_BILLING_ID"/>
-        <keyMapping columnObjectName="PROJ_OB_POSTBILL" columnName="POST_BILLING_ID"/>
+        <keyMapping columnObjectName="Projection_1" columnName="POST_BILLING_ID"/>
       </attribute>
       <attribute id="AR_ACTV" order="52" attributeHierarchyActive="false" displayAttribute="false">
         <descriptions defaultDescription="AR_ACTV"/>
-        <keyMapping columnObjectName="PROJ_OB_POSTBILL" columnName="AR_ACTV"/>
+        <keyMapping columnObjectName="Projection_1" columnName="AR_ACTV"/>
       </attribute>
       <attribute id="CR_DR_IND" order="53" attributeHierarchyActive="false" displayAttribute="false">
         <descriptions defaultDescription="CR_DR_IND"/>
-        <keyMapping columnObjectName="PROJ_OB_POSTBILL" columnName="CR_DR_IND"/>
+        <keyMapping columnObjectName="Projection_1" columnName="CR_DR_IND"/>
       </attribute>
       <attribute id="IFRS_ENT_SEQ_NO" order="54" attributeHierarchyActive="false" displayAttribute="false">
         <descriptions defaultDescription="IFRS_ENT_SEQ_NO"/>
-        <keyMapping columnObjectName="PROJ_OB_POSTBILL" columnName="IFRS_ENT_SEQ_NO"/>
+        <keyMapping columnObjectName="Projection_1" columnName="IFRS_ENT_SEQ_NO"/>
       </attribute>
       <attribute id="REALLOCATION_IND" order="55" attributeHierarchyActive="false" displayAttribute="false">
         <descriptions defaultDescription="REALLOCATION_IND"/>
-        <keyMapping columnObjectName="PROJ_OB_POSTBILL" columnName="REALLOCATION_IND"/>
+        <keyMapping columnObjectName="Projection_1" columnName="REALLOCATION_IND"/>
       </attribute>
     </attributes>
     <calculatedAttributes/>
@@ -375,11 +378,11 @@
   <layout>
     <shapes>
       <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
-        <upperLeftCorner x="22" y="87"/>
+        <upperLeftCorner x="40" y="85"/>
         <rectangleSize height="0" width="0"/>
       </shape>
-      <shape expanded="true" modelObjectName="PROJ_OB_POSTBILL" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="22" y="165"/>
+      <shape expanded="true" modelObjectName="Projection_1" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="40" y="210"/>
         <rectangleSize height="-1" width="-1"/>
       </shape>
     </shapes>

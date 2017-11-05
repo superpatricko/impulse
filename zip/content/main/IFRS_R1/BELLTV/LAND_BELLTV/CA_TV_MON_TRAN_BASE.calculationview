@@ -76,7 +76,11 @@
         <viewAttribute id="SRC_TS"/>
         <viewAttribute id="PROCESS_ID"/>
       </viewAttributes>
-      <calculatedViewAttributes/>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CC_TRAN_CD" length="4" expressionLanguage="COLUMN_ENGINE">
+          <formula>rtrim(&quot;TRAN_CD&quot;)</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
       <input node="#IFRS_R1.LAND::TV_MON_TRAN_BASE">
         <mapping xsi:type="Calculation:AttributeMapping" target="EXTR_DT" source="EXTR_DT"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="EXTR_TM" source="EXTR_TM"/>
@@ -132,7 +136,7 @@
         <mapping xsi:type="Calculation:AttributeMapping" target="SRC_TS" source="SRC_TS"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="PROCESS_ID" source="PROCESS_ID"/>
       </input>
-      <filter>(not (in(&quot;TRAN_CD&quot;,'256','253B') and (&quot;EVNT_SERV_CD&quot;='Z8'))) and (  in(&quot;PRIN_NUM&quot;,'1000','4000','7000','8000','9000') ) and  (not (&quot;TRAN_CD&quot;='253A' and &quot;SERV_TY&quot;='P')) and (isNull(&quot;NDB_TS&quot;)) and   (&quot;CYCL_ID&quot; &lt;= '$$IP_CYCL_ID$$')</filter>
+      <filter>(not (in(&quot;CC_TRAN_CD&quot;,'256','253B') and (&quot;EVNT_SERV_CD&quot;='Z8'))) and (  in(&quot;PRIN_NUM&quot;,'1000','4000','7000','8000','9000') ) and  (not (&quot;CC_TRAN_CD&quot;='253A' and &quot;SERV_TY&quot;='P')) and (isNull(&quot;NDB_TS&quot;)) and   (&quot;CYCL_ID&quot; &lt;= '$$IP_CYCL_ID$$')</filter>
     </calculationView>
   </calculationViews>
   <logicalModel id="PROJ_MON_TRAN_BASE">
@@ -346,9 +350,9 @@
         <descriptions defaultDescription="PROCESS_ID"/>
         <keyMapping columnObjectName="PROJ_MON_TRAN_BASE" columnName="PROCESS_ID"/>
       </attribute>
-      <attribute id="TRAN_CD" order="53" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
-        <descriptions/>
-        <keyMapping columnObjectName="PROJ_MON_TRAN_BASE" columnName="TRAN_CD"/>
+      <attribute id="TRAN_CD" order="53" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="TRAN_CD"/>
+        <keyMapping columnObjectName="PROJ_MON_TRAN_BASE" columnName="CC_TRAN_CD"/>
       </attribute>
     </attributes>
     <calculatedAttributes/>

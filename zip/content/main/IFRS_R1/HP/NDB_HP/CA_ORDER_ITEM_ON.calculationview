@@ -18,7 +18,7 @@
       <localVariable>#IP_CYCL_ID</localVariable>
     </mapping>
   </variableMappings>
-  <informationModelLayout relativeWidthScenario="52"/>
+  <informationModelLayout relativeWidthScenario="50"/>
   <dataSources>
     <DataSource id="CA_ORDER_ITEM_ON_CONS" type="CALCULATION_VIEW">
       <viewAttributes allViewAttributes="true"/>
@@ -177,7 +177,7 @@
         <mapping xsi:type="Calculation:AttributeMapping" target="POB_EFFC_DATE" source="POB_EFFC_DATE"/>
       </input>
     </calculationView>
-    <calculationView xsi:type="Calculation:JoinView" id="JOIN_INCOMING_RECORDS_WITH_EH" joinOrder="OUTSIDE_IN" joinType="leftOuter">
+    <calculationView xsi:type="Calculation:JoinView" id="JOIN_INCOMING_RECORDS_WITH_EH" joinType="leftOuter">
       <descriptions/>
       <viewAttributes>
         <viewAttribute id="CONTRACT_UNIQUE_IDENTIFIER_EH"/>
@@ -258,7 +258,7 @@
         <mapping xsi:type="Calculation:AttributeMapping" target="IS_20300814" source="IS_20300814"/>
       </input>
     </calculationView>
-    <calculationView xsi:type="Calculation:JoinView" id="JOIN_EH_ORDER" joinOrder="OUTSIDE_IN" joinType="leftOuter">
+    <calculationView xsi:type="Calculation:JoinView" id="JOIN_EH_ORDER" joinType="leftOuter">
       <descriptions/>
       <viewAttributes>
         <viewAttribute id="CONTRACT_UNIQUE_IDENTIFIER"/>
@@ -364,7 +364,7 @@
       <joinAttribute name="CC_ITEM_TN"/>
       <joinAttribute name="ITEM_ID"/>
     </calculationView>
-    <calculationView xsi:type="Calculation:JoinView" id="JOIN_SRC_NDB" joinOrder="OUTSIDE_IN" joinType="leftOuter">
+    <calculationView xsi:type="Calculation:JoinView" id="JOIN_SRC_NDB" joinType="leftOuter">
       <descriptions>
         <comment text="This Join is performed with the Target NDB Table to Identify New Records vs. Existing Records. This information will be used to Insert / Update Records into the Target NDB Table&#xD;&#xA;EH Entry exist error will be handled as 20301101"/>
       </descriptions>
@@ -843,10 +843,6 @@ if(&quot;IS_20301101&quot;='1', '20301101||','')</formula>
         <descriptions defaultDescription="CONTRACT_UNIQUE_IDENTIFIER"/>
         <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="CONTRACT_UNIQUE_IDENTIFIER"/>
       </attribute>
-      <attribute id="POB_END_DATE" order="2" attributeHierarchyActive="false" displayAttribute="false">
-        <descriptions defaultDescription="POB_END_DATE"/>
-        <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="POB_END_DATE"/>
-      </attribute>
       <attribute id="POB_EFFC_DATE" order="3" attributeHierarchyActive="false" displayAttribute="false">
         <descriptions defaultDescription="POB_EFFC_DATE"/>
         <keyMapping columnObjectName="ERROR_SEMANTICS" columnName="POB_EFFC_DATE"/>
@@ -1037,6 +1033,10 @@ if(&quot;IS_20301101&quot;='1', '20301101||','')</formula>
       </layout>
     </privateDataFoundation>
     <baseMeasures>
+      <measure id="POB_END_DATE" order="2" aggregationType="min" measureType="simple">
+        <descriptions defaultDescription="POB_END_DATE"/>
+        <measureMapping columnObjectName="ERROR_SEMANTICS" columnName="POB_END_DATE"/>
+      </measure>
       <measure id="ITEM_QUANTITY" order="10" aggregationType="sum" measureType="simple">
         <descriptions defaultDescription="ITEM_QUANTITY"/>
         <measureMapping columnObjectName="ERROR_SEMANTICS" columnName="ITEM_QUANTITY"/>

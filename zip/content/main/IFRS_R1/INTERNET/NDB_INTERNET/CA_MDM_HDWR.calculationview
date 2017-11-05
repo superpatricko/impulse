@@ -1,0 +1,260 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" xmlns:Variable="http://www.sap.com/ndb/BiModelVariable.ecore" schemaVersion="2.3" id="CA_MDM_HDWR" applyPrivilegeType="NONE" checkAnalyticPrivileges="false" defaultClient="$$client$$" defaultLanguage="$$language$$" hierarchiesSQLEnabled="false" translationRelevant="true" visibility="internal" calculationScenarioType="TREE_BASED" dataCategory="DIMENSION" enforceSqlExecution="false" executionSemantic="UNDEFINED" outputViewType="Projection">
+  <descriptions defaultDescription="CA_MDM_HDWR"/>
+  <localVariables>
+    <variable id="IP_CYCL_ID" parameter="true">
+      <descriptions defaultDescription="IP_CYCL_ID"/>
+      <variableProperties datatype="NVARCHAR" defaultValue="999" length="3" mandatory="false">
+        <valueDomain type="empty"/>
+        <selection multiLine="false" type="SingleValue"/>
+      </variableProperties>
+    </variable>
+  </localVariables>
+  <variableMappings>
+    <mapping xsi:type="Variable:VariableMapping" dataSource="#CA_MDM_HDWR">
+      <targetVariable name="IP_CYCL_ID" resourceUri="/IFRS_R1.INTERNET.LAND_INTERNET/calculationviews/CA_MDM_HDWR"/>
+      <localVariable>#IP_CYCL_ID</localVariable>
+    </mapping>
+  </variableMappings>
+  <informationModelLayout relativeWidthScenario="52"/>
+  <dataSources>
+    <DataSource id="CA_MDM_HDWR" type="CALCULATION_VIEW">
+      <viewAttributes allViewAttributes="true"/>
+      <resourceUri>/IFRS_R1.INTERNET.LAND_INTERNET/calculationviews/CA_MDM_HDWR</resourceUri>
+    </DataSource>
+    <DataSource id="IFRS_R1.INTERNET.NDB_INTERNET::MDM_HDWR" type="DATA_BASE_TABLE">
+      <viewAttributes allViewAttributes="true"/>
+      <columnObject schemaName="NDB_INTERNET" columnObjectName="IFRS_R1.INTERNET.NDB_INTERNET::MDM_HDWR"/>
+    </DataSource>
+  </dataSources>
+  <calculationViews>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_CA_MDM_HDWR">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="STRT_SELL_DT"/>
+        <viewAttribute id="CYCL_ID"/>
+        <viewAttribute id="CHRG_ID"/>
+        <viewAttribute id="SRC_TS"/>
+        <viewAttribute id="PROFSNL_INSTLTN_CD"/>
+        <viewAttribute id="CLASS"/>
+        <viewAttribute id="HDWR_CD"/>
+        <viewAttribute id="SEQ_ID"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="DATE" id="CC_REFERENCE_EXPIRY_DT" expressionLanguage="COLUMN_ENGINE">
+          <formula>'99991231'</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="DATE" id="CC_REFERENCE_EFFECTIVE_DT" expressionLanguage="COLUMN_ENGINE">
+          <formula>&quot;SRC_TS&quot;</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#CA_MDM_HDWR">
+        <mapping xsi:type="Calculation:AttributeMapping" target="STRT_SELL_DT" source="STRT_SELL_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CHRG_ID" source="CHRG_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SRC_TS" source="SRC_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROFSNL_INSTLTN_CD" source="PROFSNL_INSTLTN_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CLASS" source="CLASS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="HDWR_CD" source="HDWR_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SEQ_ID" source="SEQ_ID"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_NDB_MDM_HDWR" filterExpressionLanguage="COLUMN_ENGINE">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="CLASS"/>
+        <viewAttribute id="HDWR_CD"/>
+        <viewAttribute id="PROFSNL_INSTLTN_CD"/>
+        <viewAttribute id="REFERENCE_EFFECTIVE_DT"/>
+        <viewAttribute id="REFERENCE_EXPIRY_DT"/>
+        <viewAttribute id="CHRG_ID"/>
+        <viewAttribute id="INSRT_TS"/>
+        <viewAttribute id="MODIFIED_TS"/>
+        <viewAttribute id="EXECUTION_ID"/>
+        <viewAttribute id="CONVERSION_IND"/>
+        <viewAttribute id="BATCH_ID"/>
+        <viewAttribute id="STRT_SELL_DT"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#IFRS_R1.INTERNET.NDB_INTERNET::MDM_HDWR">
+        <mapping xsi:type="Calculation:AttributeMapping" target="CLASS" source="CLASS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="HDWR_CD" source="HDWR_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROFSNL_INSTLTN_CD" source="PROFSNL_INSTLTN_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_EFFECTIVE_DT" source="REFERENCE_EFFECTIVE_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_EXPIRY_DT" source="REFERENCE_EXPIRY_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CHRG_ID" source="CHRG_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="INSRT_TS" source="INSRT_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="MODIFIED_TS" source="MODIFIED_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EXECUTION_ID" source="EXECUTION_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONVERSION_IND" source="CONVERSION_IND"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="BATCH_ID" source="BATCH_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="STRT_SELL_DT" source="STRT_SELL_DT"/>
+      </input>
+      <filter>(&quot;REFERENCE_EXPIRY_DT&quot; ='9999-12-31')</filter>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="JOIN" joinType="leftOuter">
+      <descriptions>
+        <comment text="We are not raising any ERRORs ,as we want to find the Existing Records."/>
+      </descriptions>
+      <viewAttributes>
+        <viewAttribute id="STRT_SELL_DT"/>
+        <viewAttribute id="CYCL_ID"/>
+        <viewAttribute id="CHRG_ID"/>
+        <viewAttribute id="PROFSNL_INSTLTN_CD"/>
+        <viewAttribute id="CLASS"/>
+        <viewAttribute id="HDWR_CD"/>
+        <viewAttribute id="HDWR_CD_RIGHT"/>
+        <viewAttribute id="REFERENCE_EXPIRY_DT"/>
+        <viewAttribute id="REFERENCE_EFFECTIVE_DT"/>
+        <viewAttribute id="SRC_TS"/>
+        <viewAttribute id="SEQ_ID"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#PROJ_CA_MDM_HDWR">
+        <mapping xsi:type="Calculation:AttributeMapping" target="STRT_SELL_DT" source="STRT_SELL_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CHRG_ID" source="CHRG_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROFSNL_INSTLTN_CD" source="PROFSNL_INSTLTN_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CLASS" source="CLASS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="HDWR_CD" source="HDWR_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_EXPIRY_DT" source="CC_REFERENCE_EXPIRY_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_EFFECTIVE_DT" source="CC_REFERENCE_EFFECTIVE_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SRC_TS" source="SRC_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SEQ_ID" source="SEQ_ID"/>
+      </input>
+      <input node="#PROJ_NDB_MDM_HDWR">
+        <mapping xsi:type="Calculation:AttributeMapping" target="HDWR_CD_RIGHT" source="HDWR_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CHRG_ID" source="CHRG_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="HDWR_CD" source="HDWR_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="STRT_SELL_DT" source="STRT_SELL_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_EFFECTIVE_DT" source="REFERENCE_EFFECTIVE_DT"/>
+      </input>
+      <joinAttribute name="CHRG_ID"/>
+      <joinAttribute name="HDWR_CD"/>
+      <joinAttribute name="STRT_SELL_DT"/>
+      <joinAttribute name="REFERENCE_EFFECTIVE_DT"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_INSERT_UPDATE">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="STRT_SELL_DT"/>
+        <viewAttribute id="CYCL_ID"/>
+        <viewAttribute id="CHRG_ID"/>
+        <viewAttribute id="PROFSNL_INSTLTN_CD"/>
+        <viewAttribute id="CLASS"/>
+        <viewAttribute id="HDWR_CD"/>
+        <viewAttribute id="REFERENCE_EXPIRY_DT"/>
+        <viewAttribute id="REFERENCE_EFFECTIVE_DT"/>
+        <viewAttribute id="HDWR_CD_RIGHT"/>
+        <viewAttribute id="SRC_TS"/>
+        <viewAttribute id="SEQ_ID"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CC_EXISTING_RECORD" length="1" expressionLanguage="COLUMN_ENGINE">
+          <formula>if(isNULL(&quot;HDWR_CD_RIGHT&quot;) , 'I' , 'U')</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="DATE" id="CC_EFFECTIVE_DATE_PREV_DAY" expressionLanguage="COLUMN_ENGINE">
+          <formula>adddays(&quot;SRC_TS&quot;,-1)</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#JOIN">
+        <mapping xsi:type="Calculation:AttributeMapping" target="STRT_SELL_DT" source="STRT_SELL_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CYCL_ID" source="CYCL_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CHRG_ID" source="CHRG_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROFSNL_INSTLTN_CD" source="PROFSNL_INSTLTN_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CLASS" source="CLASS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="HDWR_CD" source="HDWR_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_EXPIRY_DT" source="REFERENCE_EXPIRY_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="REFERENCE_EFFECTIVE_DT" source="REFERENCE_EFFECTIVE_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="HDWR_CD_RIGHT" source="HDWR_CD_RIGHT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SRC_TS" source="SRC_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SEQ_ID" source="SEQ_ID"/>
+      </input>
+    </calculationView>
+  </calculationViews>
+  <logicalModel id="PROJ_INSERT_UPDATE">
+    <descriptions/>
+    <attributes>
+      <attribute id="CLASS" order="1" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CLASS"/>
+        <keyMapping columnObjectName="PROJ_INSERT_UPDATE" columnName="CLASS"/>
+      </attribute>
+      <attribute id="HDWR_CD" order="2" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="HDWR_CD"/>
+        <keyMapping columnObjectName="PROJ_INSERT_UPDATE" columnName="HDWR_CD"/>
+      </attribute>
+      <attribute id="PROFSNL_INSTLTN_CD" order="3" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="PROFSNL_INSTLTN_CD"/>
+        <keyMapping columnObjectName="PROJ_INSERT_UPDATE" columnName="PROFSNL_INSTLTN_CD"/>
+      </attribute>
+      <attribute id="REFERENCE_EFFECTIVE_DT" order="4" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="REFERENCE_EFFECTIVE_DT"/>
+        <keyMapping columnObjectName="PROJ_INSERT_UPDATE" columnName="REFERENCE_EFFECTIVE_DT"/>
+      </attribute>
+      <attribute id="REFERENCE_EXPIRY_DT" order="5" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="REFERENCE_EXPIRY_DT"/>
+        <keyMapping columnObjectName="PROJ_INSERT_UPDATE" columnName="REFERENCE_EXPIRY_DT"/>
+      </attribute>
+      <attribute id="CHRG_ID" order="6" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CHRG_ID"/>
+        <keyMapping columnObjectName="PROJ_INSERT_UPDATE" columnName="CHRG_ID"/>
+      </attribute>
+      <attribute id="STRT_SELL_DT" order="7" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="STRT_SELL_DT"/>
+        <keyMapping columnObjectName="PROJ_INSERT_UPDATE" columnName="STRT_SELL_DT"/>
+      </attribute>
+      <attribute id="CYCL_ID" order="8" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CYCL_ID"/>
+        <keyMapping columnObjectName="PROJ_INSERT_UPDATE" columnName="CYCL_ID"/>
+      </attribute>
+      <attribute id="FLAG_EXISTING_RECORD" order="9" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="FLAG_EXISTING_RECORD"/>
+        <keyMapping columnObjectName="PROJ_INSERT_UPDATE" columnName="CC_EXISTING_RECORD"/>
+      </attribute>
+      <attribute id="EFFECTIVE_DATE_PREV_DAY" order="10" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="EFFECTIVE_DATE_PREV_DAY"/>
+        <keyMapping columnObjectName="PROJ_INSERT_UPDATE" columnName="CC_EFFECTIVE_DATE_PREV_DAY"/>
+      </attribute>
+      <attribute id="SEQ_ID" order="11" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SEQ_ID"/>
+        <keyMapping columnObjectName="PROJ_INSERT_UPDATE" columnName="SEQ_ID"/>
+      </attribute>
+    </attributes>
+    <calculatedAttributes/>
+    <privateDataFoundation>
+      <tableProxies/>
+      <joins/>
+      <layout>
+        <shapes/>
+      </layout>
+    </privateDataFoundation>
+    <baseMeasures/>
+    <calculatedMeasures/>
+    <restrictedMeasures/>
+    <localDimensions/>
+  </logicalModel>
+  <layout>
+    <shapes>
+      <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+        <upperLeftCorner x="99" y="87"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_CA_MDM_HDWR" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="22" y="339"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_NDB_MDM_HDWR" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="176" y="339"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="JOIN" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="99" y="243"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="PROJ_INSERT_UPDATE" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="99" y="165"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+    </shapes>
+  </layout>
+</Calculation:scenario>

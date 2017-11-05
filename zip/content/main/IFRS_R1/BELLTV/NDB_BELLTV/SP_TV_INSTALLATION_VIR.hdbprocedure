@@ -410,7 +410,18 @@ FOR C_INST_VIR AS CUR_INSTALL_VIR DO
   END IF;
 
 END FOR;
-					   			    			
+					   			    
+--------------------------------------------------------------------------------------------------
+-- Update Landing Tables
+-------------------------------------------------------------------------------------------------- \
+
+ 	UPDATE "NDB_TV"."IFRS_R1.BELLTV.NDB_BELLTV::TV_CUSTOMER"  A 
+	    FROM  "NDB_TV"."IFRS_R1.BELLTV.NDB_BELLTV::TV_CUSTOMER"  A
+	    INNER JOIN 	#UPDATE_TV_CUST  B
+	    ON  A."ACCT_NUM" = B."ACCT_NUM"
+		SET INST_CRD_IND = 'X'
+		WHERE INST_CRD_IND IS NULL; 
+			
 --------------------------------------------------------------------------------------------------
 -- Update Error Table
 --------------------------------------------------------------------------------------------------

@@ -18,7 +18,7 @@
       <localVariable>#IP_EFF_DT</localVariable>
     </mapping>
   </variableMappings>
-  <informationModelLayout relativeWidthScenario="53"/>
+  <informationModelLayout relativeWidthScenario="58"/>
   <dataSources>
     <DataSource id="IFRS_R1.MOBILITY.NDB_MOBILITY::MOBL_POST_ORDER" type="DATA_BASE_TABLE">
       <viewAttributes allViewAttributes="true"/>
@@ -72,7 +72,6 @@
         <viewAttribute id="REV_CD"/>
         <viewAttribute id="DLR_CD"/>
         <viewAttribute id="PRODUCT_TYPE"/>
-        <viewAttribute id="CONTR_TRANS_DT"/>
       </viewAttributes>
       <calculatedViewAttributes/>
       <input node="#IFRS_R1.MOBILITY.NDB_MOBILITY::MOBL_POST_ORDER">
@@ -111,9 +110,8 @@
         <mapping xsi:type="Calculation:AttributeMapping" target="REV_CD" source="REV_CD"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="DLR_CD" source="DLR_CD"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT_TYPE" source="PRODUCT_TYPE"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="CONTR_TRANS_DT" source="CONTR_TRANS_DT"/>
       </input>
-      <filter>&quot;ITEM_GRP_CD&quot; != 'HANDSET' AND &quot;BASE_OPT_SERV_IND&quot; = 'BASE'</filter>
+      <filter>((&quot;CONTR_STRT_DT&quot;>=&quot;ITEM_STRT_DT&quot;)and (&quot;CONTR_STRT_DT&quot;&lt;=&quot;POB_END_DT&quot;)) and (&quot;ITEM_GRP_CD&quot; != 'HANDSET')</filter>
     </calculationView>
     <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_ORDER_CUST_CONTRACT">
       <descriptions/>
@@ -404,8 +402,6 @@
         <viewAttribute id="IS_20401402"/>
         <viewAttribute id="IS_20401403"/>
         <viewAttribute id="IS_20401404"/>
-        <viewAttribute id="CONTR_TRANS_DT"/>
-        <viewAttribute id="POB_END_DT"/>
       </viewAttributes>
       <calculatedViewAttributes>
         <calculatedViewAttribute datatype="NVARCHAR" id="IS_20401301" length="1" expressionLanguage="COLUMN_ENGINE">
@@ -470,138 +466,13 @@
         <mapping xsi:type="Calculation:AttributeMapping" target="BAN_RIGHT" source="BAN"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="DLR_CD" source="DLR_CD"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT_TYPE" source="PRODUCT_TYPE"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="CONTR_TRANS_DT" source="CONTR_TRANS_DT"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="POB_END_DT" source="POB_END_DT"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="BAN" source="BAN"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="SUBCR_NO" source="SUBSCR_NO"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTR_STRT_DT" source="CONTR_STRT_DT"/>
       </input>
       <joinAttribute name="BAN"/>
       <joinAttribute name="SUBCR_NO"/>
-    </calculationView>
-    <calculationView xsi:type="Calculation:ProjectionView" id="PROJ_TEMPORAL_FILTER" filterExpressionLanguage="COLUMN_ENGINE">
-      <descriptions/>
-      <viewAttributes>
-        <viewAttribute id="ACTV_CD"/>
-        <viewAttribute id="ACTV_RSN_CD"/>
-        <viewAttribute id="CONTR_TY"/>
-        <viewAttribute id="BAN"/>
-        <viewAttribute id="BYRS_RMRS"/>
-        <viewAttribute id="CONTR_END_DT"/>
-        <viewAttribute id="CONTR_STRT_DT"/>
-        <viewAttribute id="CONTR_TERM"/>
-        <viewAttribute id="CONTR_TIER"/>
-        <viewAttribute id="CONTR_ID"/>
-        <viewAttribute id="EI_GRP_SEQ_NO"/>
-        <viewAttribute id="SUBCR_NO"/>
-        <viewAttribute id="TRX_SEQ_NO"/>
-        <viewAttribute id="BASE_OPT_SERV_IND"/>
-        <viewAttribute id="BSE_SOC"/>
-        <viewAttribute id="BSE_SOC_AMT"/>
-        <viewAttribute id="CHRG_TY_CLASSIF"/>
-        <viewAttribute id="COST_CENTRE"/>
-        <viewAttribute id="EQP_SRC"/>
-        <viewAttribute id="EQP_TY"/>
-        <viewAttribute id="GL_ACCOUNT"/>
-        <viewAttribute id="GL_TAX_CD"/>
-        <viewAttribute id="ITEM_END_DT"/>
-        <viewAttribute id="ITEM_GRP_CD"/>
-        <viewAttribute id="ITEM_ID"/>
-        <viewAttribute id="ITEM_STRT_DT"/>
-        <viewAttribute id="ITEM_SUB_ID"/>
-        <viewAttribute id="ITEM_TRANS_DT"/>
-        <viewAttribute id="JURISD_CD"/>
-        <viewAttribute id="MIN_TIER_PRC"/>
-        <viewAttribute id="PROMO_CD"/>
-        <viewAttribute id="PROV_AGR"/>
-        <viewAttribute id="SERV_TIER"/>
-        <viewAttribute id="SOC_LEV_CD"/>
-        <viewAttribute id="STNDLN_SELL_PRC"/>
-        <viewAttribute id="SUBS_AMT"/>
-        <viewAttribute id="SUBS_EFF_DT"/>
-        <viewAttribute id="SUBS_EXP_DT"/>
-        <viewAttribute id="TERM_M2M"/>
-        <viewAttribute id="TRANS_PRC"/>
-        <viewAttribute id="BRND"/>
-        <viewAttribute id="GL_PRICE_PLAN_GRP"/>
-        <viewAttribute id="SUBCR_PROV_CD"/>
-        <viewAttribute id="REV_CD"/>
-        <viewAttribute id="KUNNR_SID"/>
-        <viewAttribute id="TRANS_DT"/>
-        <viewAttribute id="BAN_RIGHT"/>
-        <viewAttribute id="CONTR_EXPY_DT"/>
-        <viewAttribute id="IS_20401401"/>
-        <viewAttribute id="IS_20401402"/>
-        <viewAttribute id="IS_20401403"/>
-        <viewAttribute id="IS_20401301"/>
-        <viewAttribute id="CONTR_DEALER_CODE"/>
-        <viewAttribute id="DLR_CD"/>
-        <viewAttribute id="PRODUCT_TYPE"/>
-        <viewAttribute id="IS_20401404"/>
-        <viewAttribute id="CONTR_TRANS_DT"/>
-        <viewAttribute id="POB_END_DT"/>
-      </viewAttributes>
-      <calculatedViewAttributes/>
-      <input node="#JOIN_ORDER_IMPACTED_WITH_UPDATES">
-        <mapping xsi:type="Calculation:AttributeMapping" target="ACTV_CD" source="ACTV_CD"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="ACTV_RSN_CD" source="ACTV_RSN_CD"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="CONTR_TY" source="CONTR_TY"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="BAN" source="BAN"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="BYRS_RMRS" source="BYRS_RMRS"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="CONTR_END_DT" source="CONTR_END_DT"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="CONTR_STRT_DT" source="CONTR_STRT_DT"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="CONTR_TERM" source="CONTR_TERM"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="CONTR_TIER" source="CONTR_TIER"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="CONTR_ID" source="CONTR_ID"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="EI_GRP_SEQ_NO" source="EI_GRP_SEQ_NO"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="SUBCR_NO" source="SUBCR_NO"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="TRX_SEQ_NO" source="TRX_SEQ_NO"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="BASE_OPT_SERV_IND" source="BASE_OPT_SERV_IND"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="BSE_SOC" source="BSE_SOC"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="BSE_SOC_AMT" source="BSE_SOC_AMT"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="CHRG_TY_CLASSIF" source="CHRG_TY_CLASSIF"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="COST_CENTRE" source="COST_CENTRE"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="EQP_SRC" source="EQP_SRC"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="EQP_TY" source="EQP_TY"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="GL_ACCOUNT" source="GL_ACCOUNT"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="GL_TAX_CD" source="GL_TAX_CD"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_END_DT" source="ITEM_END_DT"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_GRP_CD" source="ITEM_GRP_CD"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_ID" source="ITEM_ID"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_STRT_DT" source="ITEM_STRT_DT"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_SUB_ID" source="ITEM_SUB_ID"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_TRANS_DT" source="ITEM_TRANS_DT"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="JURISD_CD" source="JURISD_CD"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="MIN_TIER_PRC" source="MIN_TIER_PRC"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="PROMO_CD" source="PROMO_CD"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="PROV_AGR" source="PROV_AGR"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="SERV_TIER" source="SERV_TIER"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="SOC_LEV_CD" source="SOC_LEV_CD"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="STNDLN_SELL_PRC" source="STNDLN_SELL_PRC"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="SUBS_AMT" source="SUBS_AMT"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="SUBS_EFF_DT" source="SUBS_EFF_DT"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="SUBS_EXP_DT" source="SUBS_EXP_DT"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="TERM_M2M" source="TERM_M2M"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="TRANS_PRC" source="TRANS_PRC"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="BRND" source="BRND"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="GL_PRICE_PLAN_GRP" source="GL_PRICE_PLAN_GRP"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="SUBCR_PROV_CD" source="SUBCR_PROV_CD"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="REV_CD" source="REV_CD"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="KUNNR_SID" source="KUNNR_SID"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="TRANS_DT" source="TRANS_DT"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="BAN_RIGHT" source="BAN_RIGHT"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="CONTR_EXPY_DT" source="CONTR_EXPY_DT"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20401401" source="IS_20401401"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20401402" source="IS_20401402"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20401403" source="IS_20401403"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20401301" source="IS_20401301"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="CONTR_DEALER_CODE" source="CONTR_DEALER_CODE"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="DLR_CD" source="DLR_CD"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT_TYPE" source="PRODUCT_TYPE"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="IS_20401404" source="IS_20401404"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="CONTR_TRANS_DT" source="CONTR_TRANS_DT"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="POB_END_DT" source="POB_END_DT"/>
-      </input>
-      <filter>&quot;IS_20401301&quot; = '1' OR (&quot;TRANS_DT&quot; >= &quot;CONTR_TRANS_DT&quot; AND &quot;TRANS_DT&quot; &lt;= &quot;POB_END_DT&quot; AND isNull(&quot;ITEM_END_DT&quot;))</filter>
+      <joinAttribute name="CONTR_STRT_DT"/>
     </calculationView>
     <calculationView xsi:type="Calculation:RankView" id="RANK">
       <descriptions/>
@@ -664,7 +535,7 @@
         <viewAttribute id="IS_20401404"/>
       </viewAttributes>
       <calculatedViewAttributes/>
-      <input node="#PROJ_TEMPORAL_FILTER">
+      <input node="#JOIN_ORDER_IMPACTED_WITH_UPDATES">
         <mapping xsi:type="Calculation:AttributeMapping" target="ACTV_CD" source="ACTV_CD"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="ACTV_RSN_CD" source="ACTV_RSN_CD"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="CONTR_TY" source="CONTR_TY"/>
@@ -1307,55 +1178,51 @@ if(&quot;IS_20401404&quot; = '1', '20401404||','')</formula>
   <layout>
     <shapes>
       <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
-        <upperLeftCorner x="316" y="87"/>
+        <upperLeftCorner x="158" y="87"/>
         <rectangleSize height="0" width="0"/>
       </shape>
       <shape expanded="true" modelObjectName="PROJ_MOBL_POST_ORDER" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="374" y="573"/>
+        <upperLeftCorner x="22" y="495"/>
         <rectangleSize height="64" width="219"/>
       </shape>
       <shape expanded="true" modelObjectName="PROJ_ORDER_CUST_CONTRACT" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="176" y="921"/>
+        <upperLeftCorner x="211" y="843"/>
         <rectangleSize height="64" width="229"/>
       </shape>
       <shape expanded="true" modelObjectName="PROJ_ERROR" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="22" y="921"/>
+        <upperLeftCorner x="57" y="843"/>
         <rectangleSize height="-1" width="-1"/>
       </shape>
       <shape expanded="true" modelObjectName="JOIN_INCOMING_RECORDS_WITH_EH" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="133" y="825"/>
+        <upperLeftCorner x="168" y="747"/>
         <rectangleSize height="0" width="0"/>
       </shape>
       <shape expanded="true" modelObjectName="PROJ_FILTER_INCOMMING_RECORDS" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="133" y="747"/>
+        <upperLeftCorner x="168" y="669"/>
         <rectangleSize height="0" width="0"/>
       </shape>
       <shape expanded="true" modelObjectName="AGGR_DISTINCT" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="133" y="669"/>
+        <upperLeftCorner x="168" y="591"/>
         <rectangleSize height="0" width="0"/>
       </shape>
       <shape expanded="true" modelObjectName="JOIN_CA_ERROR" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="220" y="573"/>
+        <upperLeftCorner x="255" y="495"/>
         <rectangleSize height="0" width="0"/>
       </shape>
       <shape expanded="true" modelObjectName="JOIN_ORDER_IMPACTED_WITH_UPDATES" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="258" y="477"/>
+        <upperLeftCorner x="100" y="399"/>
         <rectangleSize height="82" width="257"/>
       </shape>
-      <shape expanded="true" modelObjectName="PROJ_TEMPORAL_FILTER" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="316" y="399"/>
-        <rectangleSize height="0" width="0"/>
-      </shape>
       <shape expanded="true" modelObjectName="RANK" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="316" y="321"/>
+        <upperLeftCorner x="158" y="321"/>
         <rectangleSize height="0" width="0"/>
       </shape>
       <shape expanded="true" modelObjectName="PROJ_ORDER_IMPACTED_WITH_UPDATES" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="277" y="243"/>
+        <upperLeftCorner x="119" y="243"/>
         <rectangleSize height="64" width="219"/>
       </shape>
       <shape expanded="true" modelObjectName="PROJ_ERROR_SEMANTICS" modelObjectNameSpace="CalculationView">
-        <upperLeftCorner x="291" y="165"/>
+        <upperLeftCorner x="133" y="165"/>
         <rectangleSize height="66" width="191"/>
       </shape>
     </shapes>

@@ -1,10 +1,10 @@
 PROCEDURE "NDB_TV"."IFRS_R1.BELLTV.NDB_BELLTV::SP_TV_PROD_PKG_REF" 
-     (IN IP_CYCL_ID NVARCHAR(3),
-      OUT OP_STATUS  NVARCHAR(100)) 
-	  LANGUAGE SQLSCRIPT
-	  SQL SECURITY INVOKER
-	  
-   AS
+(IN IP_CYCL_ID NVARCHAR(3),
+OUT OP_STATUS  NVARCHAR(100)) 
+	LANGUAGE SQLSCRIPT
+	SQL SECURITY INVOKER
+	AS
+
 BEGIN
 
 --------------------------------------------------------------------------------------------------
@@ -46,32 +46,32 @@ DECLARE CURRENT_ERROR		NVARCHAR(100);
 --------------------------------------------------------------------------------------------------
 
 DECLARE CURSOR CUR_PKG FOR
-     SELECT "SERV_CD",
-		    "PRIN_NUM",
-		    "AGNT_NUM",
-		    "PKG_CD",
-		    "PKG_CD_AMT",
-		    "PKG_CD_AMT_EXP_DT",
-		    "FEAT_CD",
-		    "IDR_PROD_CD",
-		    "NEW_PKG_CD_AMT",
-		    "NEW_SERV_CD_AMT",
-		    "SERV_CD_AMT",
-		    "SERV_CD_AMT_EXP_DT",
-		    "SERV_CD_SUBTY",
-		    "SERV_CD_TY",
-		    "PROCESS_ID",
-		    "SEQ_ID",
-		    "CYCL_ID",
-		    "REC_ACTN",
-		    "REFERENCE_EFFECTIVE_DT",
-		    "REFERENCE_EXPIRY_DT",
-		    "REFERENCE_EFFECTIVE_DATE_PREV_DAY",
-		    "ERROR_STATUS",
-		    "ERROR_CODE" 
-       FROM "_SYS_BIC"."IFRS_R1.BELLTV.NDB_BELLTV/CA_TV_PROD_REF_PKG_CD"
-            (PLACEHOLDER."$$IP_CYCL_ID$$" => :IP_CYCL_ID)
-             ORDER BY "CYCL_ID", "SEQ_ID" ;
+  SELECT "SERV_CD",
+		 "PRIN_NUM",
+		 "AGNT_NUM",
+		 "PKG_CD",
+		 "PKG_CD_AMT",
+		 "PKG_CD_AMT_EXP_DT",
+		 "FEAT_CD",
+		 "IDR_PROD_CD",
+		 "NEW_PKG_CD_AMT",
+		 "NEW_SERV_CD_AMT",
+		 "SERV_CD_AMT",
+		 "SERV_CD_AMT_EXP_DT",
+		 "SERV_CD_SUBTY",
+		 "SERV_CD_TY",
+		 "PROCESS_ID",
+		 "SEQ_ID",
+		 "CYCL_ID",
+		 "REC_ACTN",
+		 "REFERENCE_EFFECTIVE_DT",
+		 "REFERENCE_EXPIRY_DT",
+		 "REFERENCE_EFFECTIVE_DATE_PREV_DAY",
+		 "ERROR_STATUS",
+		 "ERROR_CODE" 
+   FROM "_SYS_BIC"."IFRS_R1.BELLTV.NDB_BELLTV/CA_TV_PROD_REF_PKG_CD"
+         (PLACEHOLDER."$$IP_CYCL_ID$$" => :IP_CYCL_ID)
+        ORDER BY "CYCL_ID", "SEQ_ID" ;
         
 --------------------------------------------------------------------------------------------------
 -- Local Temporary Tables Declaration
@@ -86,16 +86,16 @@ CREATE LOCAL TEMPORARY TABLE #UPDATE_EH_DELETION (SERV_CD NVARCHAR(5), PRIN_NUM 
 
 FOR CUR_PKG_CD AS CUR_PKG DO
 
--- Define Exit Handler
+--  Define Exit Handler
 	DECLARE EXIT HANDLER FOR SQLEXCEPTION 
 	BEGIN AUTONOMOUS TRANSACTION 
 
--- Define Exit Handler
+--  Define Exit Handler
 	DECLARE EXIT HANDLER FOR SQLEXCEPTION 
 	BEGIN AUTONOMOUS TRANSACTION 
 END;
 	
--- Insert record into error table
+--  Insert record into error table
     	INSERT INTO "NDB_TV"."IFRS_R1.BELLTV.NDB_BELLTV::TV_PROD_PKG_REF_EH"(
     	            "AGNT_NUM",
 					"EXECUTION_ID",
@@ -142,12 +142,13 @@ END;
 		  
 		LV_ERROR_FLAG := 'Y';
 		  
+	
 	END;
 	
 	
 IF CUR_PKG_CD.ERROR_STATUS = 1 THEN
 	
--- Call the Stored Procedure to split the concatenated Error Messages into Error Rows
+--  Call the Stored Procedure to split the concatenated Error Messages into Error Rows
 		CALL "NDB_COMMON"."IFRS_R1.COMMON_COMP.EH::SP_EH_SPLIT_ERRORS"(CUR_PKG_CD."ERROR_CODE", ERROR_TAB, RECORD_COUNT);
 
 -- Loop through the Error Records
@@ -157,71 +158,75 @@ IF CUR_PKG_CD.ERROR_STATUS = 1 THEN
 			CURRENT_ERROR = :ERROR_TAB."ERROR_CODE"[:i];
 			
 -- Insert into the Error Table
-	  INSERT INTO "NDB_TV"."IFRS_R1.BELLTV.NDB_BELLTV::TV_PROD_PKG_REF_EH"(
-    	          "AGNT_NUM",
-			      "EXECUTION_ID",
-				  "FEAT_CD",
-				  "IDR_PROD_CD",
-				  "INSERT_TS",
-				  "NEW_PKG_CD_AMT",
-				  "NEW_SERV_CD_AMT",
-				  "PKG_CD",
-				  "PKG_CD_AMT",
-				  "PKG_CD_AMT_EXP_DT",
-				  "PRIN_NUM",
-				  "REFERENCE_EFFECTIVE_DT",
-				  "REFERENCE_EXPIRY_DT",
-				  "SERV_CD",
-				  "SERV_CD_AMT",
-				  "SERV_CD_AMT_EXP_DT",
-				  "SERV_CD_SUBTY",
-				  "SERV_CD_TY",
-				  "ERROR_CODE",
-				  "ERROR_CREATE_TS")              
-	       VALUES (CUR_PKG_CD."AGNT_NUM",
-				   CUR_PKG_CD."PROCESS_ID",
-				   CUR_PKG_CD."FEAT_CD",
-				   CUR_PKG_CD."IDR_PROD_CD",
-				   LV_CUR_UTC,
-				   CUR_PKG_CD."NEW_PKG_CD_AMT",
-				   CUR_PKG_CD."NEW_SERV_CD_AMT",
-				   CUR_PKG_CD."PKG_CD",
-				   CUR_PKG_CD."PKG_CD_AMT",
-				   CUR_PKG_CD."PKG_CD_AMT_EXP_DT",
-				   CUR_PKG_CD."PRIN_NUM",
-				   CUR_PKG_CD."REFERENCE_EFFECTIVE_DT",
-				   CUR_PKG_CD."REFERENCE_EXPIRY_DT",
-				   CUR_PKG_CD."SERV_CD",
-				   CUR_PKG_CD."SERV_CD_AMT",
-				   CUR_PKG_CD."SERV_CD_AMT_EXP_DT",
-				   CUR_PKG_CD."SERV_CD_SUBTY",
-				   CUR_PKG_CD."SERV_CD_TY",
-				   :CURRENT_ERROR,
-			       LV_CUR_UTC); 	  
+		    INSERT INTO "NDB_TV"."IFRS_R1.BELLTV.NDB_BELLTV::TV_PROD_PKG_REF_EH"(
+    	            "AGNT_NUM",
+					"EXECUTION_ID",
+					"FEAT_CD",
+					"IDR_PROD_CD",
+					"INSERT_TS",
+					"NEW_PKG_CD_AMT",
+					"NEW_SERV_CD_AMT",
+					"PKG_CD",
+					"PKG_CD_AMT",
+					"PKG_CD_AMT_EXP_DT",
+					"PRIN_NUM",
+					"REFERENCE_EFFECTIVE_DT",
+					"REFERENCE_EXPIRY_DT",
+					"SERV_CD",
+					"SERV_CD_AMT",
+					"SERV_CD_AMT_EXP_DT",
+					"SERV_CD_SUBTY",
+					"SERV_CD_TY",
+					"ERROR_CODE",
+					"ERROR_CREATE_TS")              
+			VALUES (CUR_PKG_CD."AGNT_NUM",
+					CUR_PKG_CD."PROCESS_ID",
+					CUR_PKG_CD."FEAT_CD",
+					CUR_PKG_CD."IDR_PROD_CD",
+					LV_CUR_UTC,
+					CUR_PKG_CD."NEW_PKG_CD_AMT",
+					CUR_PKG_CD."NEW_SERV_CD_AMT",
+					CUR_PKG_CD."PKG_CD",
+					CUR_PKG_CD."PKG_CD_AMT",
+					CUR_PKG_CD."PKG_CD_AMT_EXP_DT",
+					CUR_PKG_CD."PRIN_NUM",
+					CUR_PKG_CD."REFERENCE_EFFECTIVE_DT",
+					CUR_PKG_CD."REFERENCE_EXPIRY_DT",
+					CUR_PKG_CD."SERV_CD",
+					CUR_PKG_CD."SERV_CD_AMT",
+					CUR_PKG_CD."SERV_CD_AMT_EXP_DT",
+					CUR_PKG_CD."SERV_CD_SUBTY",
+					CUR_PKG_CD."SERV_CD_TY",
+					:CURRENT_ERROR,
+			        LV_CUR_UTC); 	  
 				     
 -- Set Error Flag				        
 			LV_ERROR_FLAG := 'Y';
 			
 		END FOR;
 
+
 -- Processing for Successful Records
    ELSE
+
+	
 
 -- If Record exists in the Target NDB Table
 	 IF CUR_PKG_CD."REC_ACTN" = 'DELETE' THEN
 	 
 	 	UPDATE "NDB_TV"."IFRS_R1.BELLTV.NDB_BELLTV::TV_PROD_PKG_REF" NDB
-	 		SET NDB."REFERENCE_EXPIRY_DT"   = CUR_PKG_CD."REFERENCE_EFFECTIVE_DATE_PREV_DAY",
-	 			NDB.MODIFIED_TS             = LV_CUR_UTC
-	 	  WHERE NDB.SERV_CD                 = CUR_PKG_CD.SERV_CD  
-			AND NDB.PRIN_NUM                = CUR_PKG_CD.PRIN_NUM
-			AND NDB.AGNT_NUM                = CUR_PKG_CD.AGNT_NUM
-			AND NDB.PKG_CD                  = CUR_PKG_CD.PKG_CD
-			AND NDB.REFERENCE_EXPIRY_DT     = '9999-12-31';
-			
--- Insert PK of successfully processed Records into Local Temp Tables 
--- For Updating NDB_TS in corresponding Landing Tables records
+	 		SET NDB."REFERENCE_EXPIRY_DT" = CUR_PKG_CD."REFERENCE_EFFECTIVE_DATE_PREV_DAY",
+	 			NDB.MODIFIED_TS = LV_CUR_UTC
+	 	  WHERE NDB.SERV_CD   = CUR_PKG_CD.SERV_CD  
+			AND NDB.PRIN_NUM    = CUR_PKG_CD.PRIN_NUM
+			AND NDB.AGNT_NUM    = CUR_PKG_CD.AGNT_NUM
+			AND NDB.PKG_CD      = CUR_PKG_CD.PKG_CD
+			AND NDB.REFERENCE_EXPIRY_DT = '9999-12-31'
+			;
 
+
+--  Insert PK of successfully processed Records into Local Temp Tables 
+--  For Updating NDB_TS in corresponding Landing Tables records
 		   INSERT INTO #UPDATE_TV_PROD_PKG_REF
 					   ("SERV_CD", 
 					    "PRIN_NUM", 
@@ -245,19 +250,18 @@ IF CUR_PKG_CD.ERROR_STATUS = 1 THEN
      ELSE IF CUR_PKG_CD."REC_ACTN" = 'UPDATE' THEN
   	  BEGIN AUTONOMOUS TRANSACTION 
      
--- Update the target NDB table
-
+--  Update the target NDB table
 	   UPDATE "NDB_TV"."IFRS_R1.BELLTV.NDB_BELLTV::TV_PROD_PKG_REF" NDB
-	 	  SET NDB."REFERENCE_EXPIRY_DT" = CUR_PKG_CD."REFERENCE_EFFECTIVE_DATE_PREV_DAY",
-	 		  NDB.MODIFIED_TS           = LV_CUR_UTC
-	 	WHERE NDB.SERV_CD               = CUR_PKG_CD.SERV_CD  
-		  AND NDB.PRIN_NUM              = CUR_PKG_CD.PRIN_NUM
-		  AND NDB.PKG_CD                = CUR_PKG_CD.PKG_CD
-		  AND NDB.AGNT_NUM              = CUR_PKG_CD.AGNT_NUM
-		  AND NDB.REFERENCE_EXPIRY_DT   = '9999-12-31';
+	 		SET NDB."REFERENCE_EXPIRY_DT" = CUR_PKG_CD."REFERENCE_EFFECTIVE_DATE_PREV_DAY",
+	 			NDB.MODIFIED_TS = LV_CUR_UTC
+	 		WHERE NDB.SERV_CD   = CUR_PKG_CD.SERV_CD  
+			AND NDB.PRIN_NUM    = CUR_PKG_CD.PRIN_NUM
+			AND NDB.PKG_CD      = CUR_PKG_CD.PKG_CD
+			AND NDB.AGNT_NUM    = CUR_PKG_CD.AGNT_NUM
+			AND NDB.REFERENCE_EXPIRY_DT = '9999-12-31'
+			;
 			 
--- Insert the new records having FLAG_EXISTING_RECORD = 'U'
-
+--  Insert the new records having FLAG_EXISTING_RECORD = 'U'
         INSERT INTO "NDB_TV"."IFRS_R1.BELLTV.NDB_BELLTV::TV_PROD_PKG_REF"(
                     "AGNT_NUM",
 					"EXECUTION_ID",
@@ -296,9 +300,8 @@ IF CUR_PKG_CD.ERROR_STATUS = 1 THEN
 					CUR_PKG_CD."SERV_CD_SUBTY",
 					CUR_PKG_CD."SERV_CD_TY"); 
 		END;			  
--- Insert PK of successfully processed Records into Local Temp Tables 
--- For Updating NDB_TS in corresponding Landing Tables records
-
+--  Insert PK of successfully processed Records into Local Temp Tables 
+--  For Updating NDB_TS in corresponding Landing Tables records
 		 INSERT INTO #UPDATE_TV_PROD_PKG_REF
 					   ("SERV_CD", 
 					    "PRIN_NUM", 
@@ -363,7 +366,6 @@ IF CUR_PKG_CD.ERROR_STATUS = 1 THEN
      
 -- Insert PK of successfully processed Records into Local Temp Tables 
 -- For Updating NDB_TS in corresponding Landing Tables records
-
 		  INSERT INTO #UPDATE_TV_PROD_PKG_REF
 					   ("SERV_CD", 
 					    "PRIN_NUM", 
@@ -397,36 +399,37 @@ END FOR;
 
 -- Update Landing Table IFRS_R1.LAND::TV_PROD_REF_PKG_CD
 
-      UPDATE "LAND"."IFRS_R1.LAND::TV_PROD_REF_PKG_CD" A
- 	    FROM "LAND"."IFRS_R1.LAND::TV_PROD_REF_PKG_CD" A
-  INNER JOIN #UPDATE_TV_PROD_PKG_REF B 
- 	      ON A.SERV_CD            = B.SERV_CD 
- 	     AND A.PRIN_NUM           = B.PRIN_NUM
- 	     AND A.AGNT_NUM           = B.AGNT_NUM
- 	     AND A.PKG_CD             = B.PKG_CD
- 	     SET A.NDB_TS             = LV_CUR_UTC
- 	   WHERE A.NDB_TS IS NULL;
+ 	
+ 	UPDATE "LAND"."IFRS_R1.LAND::TV_PROD_REF_PKG_CD" A
+ 	  FROM "LAND"."IFRS_R1.LAND::TV_PROD_REF_PKG_CD" A
+ INNER JOIN #UPDATE_TV_PROD_PKG_REF B 
+ 	     ON A.SERV_CD = B.SERV_CD 
+ 	   AND  A.PRIN_NUM =  B.PRIN_NUM
+ 	   AND  A.AGNT_NUM =  B.AGNT_NUM
+ 	    AND A.PKG_CD    = B.PKG_CD
+ 	    SET A.NDB_TS = LV_CUR_UTC
+ 	  WHERE A.NDB_TS IS NULL;
  
 
 --------------------------------------------------------------------------------------------------
 -- Update Error Table
 --------------------------------------------------------------------------------------------------
 
-     UPDATE "NDB_TV"."IFRS_R1.BELLTV.NDB_BELLTV::TV_PROD_PKG_REF_EH" A
-       FROM "NDB_TV"."IFRS_R1.BELLTV.NDB_BELLTV::TV_PROD_PKG_REF_EH" A 
+    UPDATE "NDB_TV"."IFRS_R1.BELLTV.NDB_BELLTV::TV_PROD_PKG_REF_EH" A
+      FROM "NDB_TV"."IFRS_R1.BELLTV.NDB_BELLTV::TV_PROD_PKG_REF_EH" A 
  INNER JOIN #UPDATE_EH_DELETION B
-         ON A.SERV_CD               = B.SERV_CD 
-        AND A.PRIN_NUM              = B.PRIN_NUM
-        AND A.AGNT_NUM              = B.AGNT_NUM 
-        AND A.PKG_CD                = B.PKG_CD
-        SET (DELETE_DATE, DELETED)  = (CURRENT_DATE, 1);
+         ON A.SERV_CD = B.SERV_CD 
+        AND A.PRIN_NUM =  B.PRIN_NUM
+        AND A.AGNT_NUM =  B.AGNT_NUM 
+        AND A.PKG_CD   = B.PKG_CD
+        SET (DELETE_DATE, DELETED) = (CURRENT_DATE, 1);
 
 --------------------------------------------------------------------------------------------------
 -- Set Overall Status
 -------------------------------------------------------------------------------------------------- 
 
--- STATUS 0: Send the success message to scheduling tool to confirm this procedure has been
--- executed successfully
+--  STATUS 0: Send the success message to scheduling tool to confirm this procedure has been
+--  executed successfully
     IF(LV_ERROR_FLAG = 'Y') THEN		
 
      OP_STATUS := LC_ERROR_TEXT; 
@@ -438,3 +441,31 @@ END FOR;
 	END IF;
 		
 END;     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+

@@ -1,0 +1,148 @@
+PROCEDURE "NDB_INTERNET"."IFRS_R1.INTERNET.NDB_INTERNET::SP_INT_OFFR_TY"
+(OUT OP_STATUS NVARCHAR(100)) 
+	LANGUAGE SQLSCRIPT
+	SQL SECURITY INVOKER
+	AS
+
+BEGIN
+--------------------------------------------------------------------------------------------------
+-- Procedure Title : SP_INT_OFFR_TY
+-- Created By      : BC_EY96110 (Arpit)       
+-- Create Date     : 06-01-2017
+-- Description     : DUOTRIO_IND updated using Calculation View - CA_INT_PB_OFFR_TY
+--                   in NDB Table - INT_POSTBILLING Using this stored procedure.
+-- Project         : Bell Canada
+-- Release         : R1 / IFRS
+--------------------------------------------------------------------------------------------------
+--   M O D I F I C A T I O N   H I S T O R Y
+--------------------------------------------------------------------------------------------------
+-- Date        | User ID          | Modification History/Release
+--------------------------------------------------------------------------------------------------
+--             |                  | 
+--------------------------------------------------------------------------------------------------
+-- Description Of the changes 
+--------------------------------------------------------------------------------------------------
+-- Modification Number          : <Assign Some Number> 
+-- Description of Changes Made> : <Description of Changes>       
+--------------------------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------------------------
+-- Local Variables Declaration
+--------------------------------------------------------------------------------------------------
+
+DECLARE LC_ERROR_TEXT 		NVARCHAR(70) DEFAULT 'OUT STATUS IS 1 : INSERT/UPDATE FOR ONE OR MORE RECORD FAILED';
+DECLARE LC_SUCCESS_TEXT 	NVARCHAR(70) DEFAULT 'OUT STATUS IS 0 : INSERT/UPDATE EXECUTION SUCCESSFUL';
+DECLARE LV_ERROR_FLAG 		NVARCHAR(1) := 'N';
+DECLARE LV_CUR_UTC 			TIMESTAMP := CURRENT_TIMESTAMP;
+DECLARE ERROR_TAB 			TABLE (ERROR_CODE NVARCHAR(100));
+DECLARE i					INTEGER;
+DECLARE RECORD_COUNT		INTEGER;
+DECLARE CURRENT_ERROR		NVARCHAR(100);  
+
+--------------------------------------------------------------------------------------------------
+-- Cursors Declaration
+-------------------------------------------------------------------------------------------------- 
+
+DECLARE CURSOR C_OFFR_TY FOR
+	 SELECT  "BAN",
+			 "ENT_SEQ_NO",
+	 		 "ACTV_SEQ_NO",
+	 		 "DUOTRIO_IND",
+	 		 "A_B_SRVC" 
+	   FROM "_SYS_BIC"."IFRS_R1.INTERNET.NDB_INTERNET/CA_INT_PB_OFFR_TY";		
+    
+--------------------------------------------------------------------------------------------------
+-- Local Temporary Tables Declaration
+-------------------------------------------------------------------------------------------------- 
+
+CREATE LOCAL TEMPORARY TABLE #UPDATE_EH_DELETION (BAN NVARCHAR(9), ENT_SEQ_NO INTEGER , ACTV_SEQ_NO INTEGER);   
+    
+--------------------------------------------------------------------------------------------------
+-- Cursors Loop
+--------------------------------------------------------------------------------------------------
+
+FOR CUR_OFFR_TY AS C_OFFR_TY DO
+
+--  Define Exit Handler
+	DECLARE EXIT HANDLER FOR SQLEXCEPTION 
+	BEGIN AUTONOMOUS TRANSACTION 
+	
+		--  Define Exit Handler
+		DECLARE EXIT HANDLER FOR SQLEXCEPTION 
+		BEGIN AUTONOMOUS TRANSACTION
+		
+		END;
+				
+	   -- Insert record into error table
+	   	  INSERT INTO "NDB_INTERNET"."IFRS_R1.INTERNET.NDB_INTERNET::INT_POSTBILLING_EH"(
+	   	              "BAN",
+			 		  "ENT_SEQ_NO",
+	 		 		  "ACTV_SEQ_NO",
+	 		          "DUOTRIO_IND",
+	 		          "A_B_SRVC",
+	   	              "ERROR_CODE",
+			          "TECHNICAL_MESSAGE",
+			          "ERROR_CREATE_TS")
+	   	  	   VALUES (CUR_OFFR_TY."BAN",
+			 		   CUR_OFFR_TY."ENT_SEQ_NO",
+	 		 		   CUR_OFFR_TY."ACTV_SEQ_NO",
+	 		 		   CUR_OFFR_TY."DUOTRIO_IND",
+	 		 		   CUR_OFFR_TY."A_B_SRVC",
+	   	  	   		  ::SQL_ERROR_CODE,
+			          ::SQL_ERROR_MESSAGE,
+			           LV_CUR_UTC);
+	   	  	   
+	      LV_ERROR_FLAG := 'Y';
+	      
+      END;      
+  
+--    Update the target NDB table
+	  UPDATE "NDB_INTERNET"."IFRS_R1.INTERNET.NDB_INTERNET::INT_POSTBILLING" NDB 
+		 SET  NDB.DUOTRIO_IND   = CUR_OFFR_TY.DUOTRIO_IND,
+		 	  NDB."A_B_SRVC"	= CUR_OFFR_TY."A_B_SRVC"        
+	   WHERE  CUR_OFFR_TY."BAN" = NDB."BAN"
+	   AND    CUR_OFFR_TY."ENT_SEQ_NO" = NDB."ENT_SEQ_NO"
+	   AND    CUR_OFFR_TY."ACTV_SEQ_NO" = NDB."ACTV_SEQ_NO";
+	   
+	   
+--    Insert PK of successfully processed Records into Error Temp Table 
+	  INSERT INTO #UPDATE_EH_DELETION
+		          (BAN, 
+			       ENT_SEQ_NO,
+			       ACTV_SEQ_NO) 
+		   VALUES (CUR_OFFR_TY."BAN", 
+			       CUR_OFFR_TY."ENT_SEQ_NO",
+			       CUR_OFFR_TY."ACTV_SEQ_NO"
+			       );
+			           
+END FOR;   		
+		
+--------------------------------------------------------------------------------------------------
+-- Update Error Table
+--------------------------------------------------------------------------------------------------
+
+UPDATE "NDB_INTERNET"."IFRS_R1.INTERNET.NDB_INTERNET::INT_POSTBILLING_EH" A
+  FROM "NDB_INTERNET"."IFRS_R1.INTERNET.NDB_INTERNET::INT_POSTBILLING_EH" A 
+ INNER JOIN #UPDATE_EH_DELETION B
+    ON  A."BAN"         = B."BAN" AND 
+    	A."ENT_SEQ_NO"  = B."ENT_SEQ_NO" AND
+    	A."ACTV_SEQ_NO" = B."ACTV_SEQ_NO"
+   SET  (DELETE_DATE, DELETED) = (CURRENT_DATE, 1);
+
+--------------------------------------------------------------------------------------------------
+-- Set Overall Status
+-------------------------------------------------------------------------------------------------- 
+
+--  STATUS 0: Send the success message to scheduling tool to confirm this procedure has been
+--  executed successfully
+    IF(LV_ERROR_FLAG = 'Y') THEN		
+
+     OP_STATUS := LC_ERROR_TEXT; 
+			
+    ELSE
+
+  	 OP_STATUS := LC_SUCCESS_TEXT; 	
+			
+	END IF;
+  
+END;

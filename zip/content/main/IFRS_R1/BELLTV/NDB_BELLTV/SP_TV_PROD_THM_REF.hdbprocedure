@@ -1,10 +1,10 @@
 PROCEDURE "NDB_TV"."IFRS_R1.BELLTV.NDB_BELLTV::SP_TV_PROD_THM_REF"  
-    (IN IP_CYCL_ID INTEGER,
-     OUT OP_STATUS NVARCHAR(100)) 
-	 LANGUAGE SQLSCRIPT
-	 SQL SECURITY INVOKER
-	 
-   AS
+ (IN IP_CYCL_ID INTEGER,
+OUT OP_STATUS NVARCHAR(100)) 
+	LANGUAGE SQLSCRIPT
+	SQL SECURITY INVOKER
+	AS
+
 BEGIN 
  --------------------------------------------------------------------------------------------------
 -- Procedure Title : SP_TV_CUST
@@ -43,7 +43,7 @@ DECLARE CURRENT_ERROR		NVARCHAR(100);
 --------------------------------------------------------------------------------------------------
 -- Cursors Declaration
 --------------------------------------------------------------------------------------------------
-  DECLARE CURSOR C_THM_REF FOR 
+		DECLARE CURSOR C_THM_REF FOR 
  		 SELECT  "REC_TY_ID",
 				 "REC_ACTN",
 				 "THM_CLASS_SERV_CD",
@@ -58,9 +58,9 @@ DECLARE CURRENT_ERROR		NVARCHAR(100);
 				 "REFERENCE_EFFECTIVE_DATE_PREV_DAY",
 				 "ERROR_STATUS",
 				 "ERROR_CODE"
-		    FROM "_SYS_BIC"."IFRS_R1.BELLTV.NDB_BELLTV/CA_TV_PROD_REF_THM_CLASS"
-                (PLACEHOLDER."$$IP_CYCL_ID$$" => :IP_CYCL_ID)
-                 ORDER BY "CYCL_ID", "SEQ_ID";	
+		  FROM "_SYS_BIC"."IFRS_R1.BELLTV.NDB_BELLTV/CA_TV_PROD_REF_THM_CLASS"
+               (PLACEHOLDER."$$IP_CYCL_ID$$" => :IP_CYCL_ID)
+               ORDER BY "CYCL_ID", "SEQ_ID";	
 --------------------------------------------------------------------------------------------------
 -- Local Temporary Tables Declaration
 --------------------------------------------------------------------------------------------------  
@@ -99,7 +99,7 @@ FOR CUR_THM_REF AS C_THM_REF DO
 				   CUR_THM_REF."PROCESS_ID",
 				   LV_CUR_UTC,
 				   CUR_THM_REF."PRIN_NUM",
-			   	   CUR_THM_REF."REFERENCE_EFFECTIVE_DT",
+				   CUR_THM_REF."REFERENCE_EFFECTIVE_DT",
 				   CUR_THM_REF."REFERENCE_EXPIRY_DT",
 				   CUR_THM_REF."SERV_CD",
 				   CUR_THM_REF."THM_CLASS_SERV_CD",
@@ -168,9 +168,8 @@ FOR CUR_THM_REF AS C_THM_REF DO
 	       AND  NDB.AGNT_NUM=            CUR_THM_REF.AGNT_NUM
 	       AND  NDB.REFERENCE_EXPIRY_DT = '9999-12-31';
 
---Insert PK of successfully processed Records into Local Temp Tables 
---for Updating NDB_TS in corresponding Landing Tables records
-
+--         Insert PK of successfully processed Records into Local Temp Tables 
+--         for Updating NDB_TS in corresponding Landing Tables records
 		   INSERT INTO #UPDATE_TV_PROD_REF_THM_CLASS
 		             (THM_CLASS_SERV_CD, 
 		              SERV_CD,  
@@ -250,14 +249,14 @@ FOR CUR_THM_REF AS C_THM_REF DO
 					"INSERT_TS",
 					"REFERENCE_EXPIRY_DT",
 					"REFERENCE_EFFECTIVE_DT")
-		     VALUES (CUR_THM_REF."SERV_CD",
-					 CUR_THM_REF."PRIN_NUM",
-					 CUR_THM_REF."AGNT_NUM",
-					 CUR_THM_REF."THM_CLASS_SERV_CD",
-					 CUR_THM_REF."PROCESS_ID",
-					 LV_CUR_UTC,
-					 CUR_THM_REF."REFERENCE_EXPIRY_DT",
-					 CUR_THM_REF."REFERENCE_EFFECTIVE_DT"); 
+		    VALUES (CUR_THM_REF."SERV_CD",
+					CUR_THM_REF."PRIN_NUM",
+					CUR_THM_REF."AGNT_NUM",
+					CUR_THM_REF."THM_CLASS_SERV_CD",
+					CUR_THM_REF."PROCESS_ID",
+					LV_CUR_UTC,
+					CUR_THM_REF."REFERENCE_EXPIRY_DT",
+					CUR_THM_REF."REFERENCE_EFFECTIVE_DT"); 
 
 --Insert PK of successfully processed Records into Local Temp Tables 
 --for Updating NDB_TS in corresponding Landing Tables records
@@ -294,27 +293,27 @@ END FOR;
 -------------------------------------------------------------------------------------------------- 
 
 --  Update Landing Table IFRS_R1.LAND::TV_ACCT_CONTR_GENL
-      UPDATE "LAND"."IFRS_R1.LAND::TV_PROD_REF_THM_CLASS" A
-        FROM "LAND"."IFRS_R1.LAND::TV_PROD_REF_THM_CLASS" A 
-  INNER JOIN #UPDATE_TV_PROD_REF_THM_CLASS B 
-          ON A."THM_CLASS_SERV_CD" = B."THM_CLASS_SERV_CD"
-         AND A."SERV_CD" = B."SERV_CD"
-         AND A."PRIN_NUM"=B."PRIN_NUM"
-         AND A."AGNT_NUM"=B."AGNT_NUM"
-         SET NDB_TS = LV_CUR_UTC
-       WHERE A.NDB_TS IS NULL;
+UPDATE "LAND"."IFRS_R1.LAND::TV_PROD_REF_THM_CLASS" A
+  FROM "LAND"."IFRS_R1.LAND::TV_PROD_REF_THM_CLASS" A 
+ INNER JOIN #UPDATE_TV_PROD_REF_THM_CLASS B 
+    ON A."THM_CLASS_SERV_CD" = B."THM_CLASS_SERV_CD"
+   AND A."SERV_CD" = B."SERV_CD"
+   AND A."PRIN_NUM"=B."PRIN_NUM"
+   AND A."AGNT_NUM"=B."AGNT_NUM"
+   SET NDB_TS = LV_CUR_UTC
+ WHERE A.NDB_TS IS NULL;
  --------------------------------------------------------------------------------------------------
 -- Update Error Table
 --------------------------------------------------------------------------------------------------
 
-    UPDATE "NDB_TV"."IFRS_R1.BELLTV.NDB_BELLTV::TV_PROD_THM_REF_EH" A
-      FROM "NDB_TV"."IFRS_R1.BELLTV.NDB_BELLTV::TV_PROD_THM_REF_EH" A 
-INNER JOIN #UPDATE_EH_DELETION B
-        ON A."SERV_CD" = B."SERV_CD"
-       AND A."PRIN_NUM" = B."PRIN_NUM"
-       AND A."AGNT_NUM" = B."AGNT_NUM"
-       AND A."THM_CLASS_SERV_CD" = B."THM_CLASS_SERV_CD"
-      SET (DELETE_DATE, DELETED) = (CURRENT_DATE, 1);
+UPDATE "NDB_TV"."IFRS_R1.BELLTV.NDB_BELLTV::TV_PROD_THM_REF_EH" A
+  FROM "NDB_TV"."IFRS_R1.BELLTV.NDB_BELLTV::TV_PROD_THM_REF_EH" A 
+ INNER JOIN #UPDATE_EH_DELETION B
+    ON A."SERV_CD" = B."SERV_CD"
+   AND A."PRIN_NUM" = B."PRIN_NUM"
+   AND A."AGNT_NUM" = B."AGNT_NUM"
+   AND A."THM_CLASS_SERV_CD" = B."THM_CLASS_SERV_CD"
+   SET (DELETE_DATE, DELETED) = (CURRENT_DATE, 1);
 
 --------------------------------------------------------------------------------------------------
 -- Set Overall Status

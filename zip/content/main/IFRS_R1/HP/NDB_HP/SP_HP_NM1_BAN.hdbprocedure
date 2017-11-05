@@ -40,8 +40,7 @@ DECLARE i					INTEGER;
 DECLARE RECORD_COUNT		INTEGER;
 DECLARE CURRENT_ERROR		NVARCHAR(100);
 DECLARE LV_PREV_DAY         DATE;
-
-
+  
 --------------------------------------------------------------------------------------------------
 -- Cursors Declaration
 -------------------------------------------------------------------------------------------------- 
@@ -99,7 +98,7 @@ DECLARE LV_PREV_DAY         DATE;
 -- Local Temporary Tables Declaration
 --------------------------------------------------------------------------------------------------  
 
-CREATE LOCAL TEMPORARY TABLE #UPDATE_NM1_EDW_BAN(BAN NVARCHAR(9));
+CREATE LOCAL TEMPORARY TABLE #UPDATE_NM1_EDW_BAN(BAN NVARCHAR(9), TRANS_DT DATE );
 CREATE LOCAL TEMPORARY TABLE #UPDATE_EH_DELETION(BAN NVARCHAR(9), TRANS_DT DATE);	
 
 --------------------------------------------------------------------------------------------------
@@ -332,8 +331,10 @@ FOR CURR_BAN AS C_BAN DO
 --         for Updating NDB_TS in corresponding Landing Tables records
 
 		   INSERT INTO #UPDATE_NM1_EDW_BAN
-		   			   (BAN)
-		   		VALUES (CURR_BAN.BAN);
+		   			   (BAN,
+		   			    TRANS_DT)
+		   		VALUES (CURR_BAN.BAN,
+		   			 	CURR_BAN.TRANS_DT);
 		   		
 --         Add record to Delete the error from the error table if it exists
 
@@ -442,8 +443,10 @@ FOR CURR_BAN AS C_BAN DO
 --         for Updating NDB_TS in corresponding Landing Tables records
 
 		   INSERT INTO #UPDATE_NM1_EDW_BAN
-		   			   (BAN)
-		   		VALUES (CURR_BAN.BAN);
+		   			   (BAN,
+		   			    TRANS_DT)
+		   		VALUES (CURR_BAN.BAN,
+		   			 	CURR_BAN.TRANS_DT);
 		   		
 --         Add record to Delete the error from the error table if it exists
 
@@ -468,6 +471,7 @@ UPDATE "LAND"."IFRS_R1.LAND::NM1_EDW_BAN" A
   FROM "LAND"."IFRS_R1.LAND::NM1_EDW_BAN" A 
  INNER JOIN #UPDATE_NM1_EDW_BAN B
     ON A.BAN             = B.BAN 
+   AND A.EFF_DT          = B.TRANS_DT
    SET SP_HP_NM1_BAN_TS  = LV_CUR_UTC
  WHERE A.SP_HP_NM1_BAN_TS IS NULL;
  

@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:AccessControl="http://www.sap.com/ndb/SQLCoreModelAccessControl.ecore" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" schemaVersion="2.3" id="CA_TV_INVC_ORDR_PROD_MSTR" applyPrivilegeType="NONE" checkAnalyticPrivileges="false" defaultClient="$$client$$" defaultLanguage="$$language$$" hierarchiesSQLEnabled="false" translationRelevant="true" visibility="internal" calculationScenarioType="TREE_BASED" dataCategory="DIMENSION" enforceSqlExecution="false" executionSemantic="UNDEFINED" outputViewType="Projection">
   <descriptions defaultDescription="CA_TV_INVC_ORDR_PROD_MSTR"/>
-  <metadata changedAt="2017-06-15 13:04:51.397"/>
   <localVariables/>
   <variableMappings/>
   <informationModelLayout relativeWidthScenario="49"/>
@@ -439,15 +438,15 @@
           <filter xsi:type="AccessControl:SingleValueFilter" including="true" value="TV"/>
         </viewAttribute>
         <viewAttribute id="CODE"/>
+        <viewAttribute id="FEATURECODE"/>
         <viewAttribute id="NONDISTFLAG"/>
-        <viewAttribute id="FTR_ADJ_RSN_CD"/>
       </viewAttributes>
       <calculatedViewAttributes/>
       <input node="#ZNON_DISTINCT">
         <mapping xsi:type="Calculation:AttributeMapping" target="LOB" source="LOB"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="CODE" source="CODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FEATURECODE" source="FEATURECODE"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="NONDISTFLAG" source="NONDISTFLAG"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="FTR_ADJ_RSN_CD" source="FTR_ADJ_RSN_CD"/>
       </input>
     </calculationView>
     <calculationView xsi:type="Calculation:JoinView" id="JOIN_NON_DISTINCT3" joinType="leftOuter">
@@ -516,11 +515,11 @@ If(&quot;MATKL&quot;='OTHER','O1',string(null)))))))))))&#xD;
         <viewAttribute id="TP"/>
         <viewAttribute id="MATKL"/>
         <viewAttribute id="NONDISTFLAG"/>
+        <viewAttribute id="FEATURECODE_RIGHT"/>
         <viewAttribute datatype="NVARCHAR" id="IS_30101101" length="1" scale="0"/>
         <viewAttribute datatype="NVARCHAR" id="IS_30101102" length="1" scale="0"/>
         <viewAttribute datatype="NVARCHAR" id="IS_30101103" length="1" scale="0"/>
         <viewAttribute datatype="NVARCHAR" id="IS_30101104" length="1" scale="0"/>
-        <viewAttribute id="FTR_ADJ_RSN_CD_RIGHT"/>
       </viewAttributes>
       <calculatedViewAttributes>
         <calculatedViewAttribute datatype="NVARCHAR" id="CC_RULE_PATH" length="2" expressionLanguage="COLUMN_ENGINE">
@@ -537,7 +536,7 @@ if(&quot;MATKL&quot;='OTHER','O1',string(null)))))))))))&#xD;
 </formula>
         </calculatedViewAttribute>
         <calculatedViewAttribute datatype="NVARCHAR" id="IS_30101105" length="1" expressionLanguage="COLUMN_ENGINE">
-          <formula>if(isNull(&quot;FTR_ADJ_RSN_CD_RIGHT&quot;),'1','0')</formula>
+          <formula>if(isNull(&quot;FEATURECODE_RIGHT&quot;),'1','0')</formula>
         </calculatedViewAttribute>
       </calculatedViewAttributes>
       <input node="#PROJ_FEATURE_CD">
@@ -553,8 +552,8 @@ if(&quot;MATKL&quot;='OTHER','O1',string(null)))))))))))&#xD;
       </input>
       <input node="#PROJ_NON_DISTINCT">
         <mapping xsi:type="Calculation:AttributeMapping" target="NONDISTFLAG" source="NONDISTFLAG"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="FTR_ADJ_RSN_CD_RIGHT" source="FTR_ADJ_RSN_CD"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_ID" source="FTR_ADJ_RSN_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="FEATURECODE_RIGHT" source="FEATURECODE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_ID" source="FEATURECODE"/>
       </input>
       <joinAttribute name="ITEM_ID"/>
     </calculationView>
@@ -609,11 +608,11 @@ If(&quot;MATKL&quot;='OTHER','O1',string(null)))))))))))&#xD;
       <input node="#PROJ_NON_DISTINCT">
         <mapping xsi:type="Calculation:AttributeMapping" target="CODE_RIGHT" source="CODE"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="NONDISTFLAG" source="NONDISTFLAG"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_ID" source="FEATURECODE"/>
         <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$EVNT_ID$CODE" source="CODE"/>
-        <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_ID" source="FTR_ADJ_RSN_CD"/>
       </input>
-      <joinAttribute name="JOIN$EVNT_ID$CODE"/>
       <joinAttribute name="ITEM_ID"/>
+      <joinAttribute name="JOIN$EVNT_ID$CODE"/>
     </calculationView>
     <calculationView xsi:type="Calculation:UnionView" id="UNION_RULE_PATH">
       <descriptions/>

@@ -79,8 +79,7 @@ DECLARE CURSOR C_P77_ARTCL_MASTER FOR
 			 "ACTIVE_INDICATOR",
 			 "EFFECTIVE_DATE_PREV_DAY"
 	    FROM "_SYS_BIC"."IFRS_R1.COMMON_COMP.NDB_COMMON/CA_P77_ARTCL_MSTR"
-			 (PLACEHOLDER."$$IP_CYCL_ID$$" => :IP_CYCL_ID) 
-			 ORDER BY "CYCLE_NUM";
+			 (PLACEHOLDER."$$IP_CYCL_ID$$" => :IP_CYCL_ID); 
 
 --------------------------------------------------------------------------------------------------
 -- Local Temporary Tables Declaration
@@ -275,7 +274,7 @@ FOR C_ARTCL AS C_P77_ARTCL_MASTER DO
 				    VALUES (C_ARTCL."ARTCL_NUM", 
 						    C_ARTCL."VEND");
 
-    ELSE
+    ELSEIF C_ARTCL.FLAG_EXISTING_RECORD = 'I' THEN
     
 --    Insert Records into the target NDB table
       INSERT INTO "NDB_COMMON"."IFRS_R1.COMMON_COMP.NDB_COMMON::P77_ARTICLE_MASTER"(

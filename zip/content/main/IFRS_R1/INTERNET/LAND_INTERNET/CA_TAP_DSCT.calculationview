@@ -1,0 +1,340 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:AccessControl="http://www.sap.com/ndb/SQLCoreModelAccessControl.ecore" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" xmlns:Variable="http://www.sap.com/ndb/BiModelVariable.ecore" schemaVersion="2.3" id="CA_TAP_DSCT" applyPrivilegeType="NONE" checkAnalyticPrivileges="false" defaultClient="$$client$$" defaultLanguage="$$language$$" hierarchiesSQLEnabled="false" translationRelevant="true" visibility="internal" calculationScenarioType="TREE_BASED" dataCategory="DIMENSION" enforceSqlExecution="false" executionSemantic="UNDEFINED" outputViewType="Projection">
+  <descriptions defaultDescription="Landing View - Table TAP_DSCT"/>
+  <localVariables>
+    <variable id="IP_CID_DATE" parameter="true">
+      <descriptions defaultDescription="IP_CID_DATE"/>
+      <variableProperties datatype="DATE" defaultValue="" mandatory="false">
+        <valueDomain type="Date"/>
+        <selection multiLine="false" type="SingleValue"/>
+      </variableProperties>
+    </variable>
+  </localVariables>
+  <variableMappings>
+    <mapping xsi:type="Variable:ConstantVariableMapping" dataSource="#CA_EH_ERROR_TABLE" value="1083">
+      <targetVariable name="IP_JOB_ID" resourceUri="/IFRS_R1.LAND.EH/calculationviews/CA_EH_ERROR_TABLE"/>
+    </mapping>
+  </variableMappings>
+  <informationModelLayout relativeWidthScenario="45"/>
+  <dataSources>
+    <DataSource id="IFRS_R1.LAND::TAP_DSCT" type="DATA_BASE_TABLE">
+      <viewAttributes allViewAttributes="true"/>
+      <columnObject schemaName="LAND" columnObjectName="IFRS_R1.LAND::TAP_DSCT"/>
+    </DataSource>
+    <DataSource id="CA_EH_ERROR_TABLE" type="CALCULATION_VIEW">
+      <viewAttributes allViewAttributes="true"/>
+      <resourceUri>/IFRS_R1.LAND.EH/calculationviews/CA_EH_ERROR_TABLE</resourceUri>
+    </DataSource>
+  </dataSources>
+  <calculationViews>
+    <calculationView xsi:type="Calculation:ProjectionView" id="Proj_TAP_DSCT" filterExpressionLanguage="COLUMN_ENGINE">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="ALTN_CONTR_NUM"/>
+        <viewAttribute id="CONTR_UNQ_ID"/>
+        <viewAttribute id="DSCT_STATE"/>
+        <viewAttribute id="DSCT_END_DT"/>
+        <viewAttribute id="DSCT_STRT_DT"/>
+        <viewAttribute id="PROMO_OFFG_PD_END_DT"/>
+        <viewAttribute id="PROMO_OFFG_PD_STRT_DT"/>
+        <viewAttribute id="SERV_CD"/>
+        <viewAttribute id="RT_PLN_END_DT"/>
+        <viewAttribute id="RT_PLN_STRT_DT"/>
+        <viewAttribute id="RT_PLN_CD"/>
+        <viewAttribute id="PROMO_CD"/>
+        <viewAttribute id="PRC_STRC_STRT_DT"/>
+        <viewAttribute id="PRC_STRC_END_DT"/>
+        <viewAttribute id="PRM_CONTR_CUST"/>
+        <viewAttribute id="EVNT_ID"/>
+        <viewAttribute id="NDB_TS"/>
+        <viewAttribute id="SRC_TS"/>
+        <viewAttribute id="DSCT_ID"/>
+        <viewAttribute id="SERV_SUB_ID"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="DATE" id="CC_CID_DATE" expressionLanguage="COLUMN_ENGINE">
+          <formula>leftstr(rightstr(&quot;CONTR_UNQ_ID&quot;,14),8)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="NVARCHAR" id="CC_PARENT_KEY" length="200" expressionLanguage="COLUMN_ENGINE">
+          <formula>&quot;PRM_CONTR_CUST&quot;+'|'+&quot;CONTR_UNQ_ID&quot;</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#IFRS_R1.LAND::TAP_DSCT">
+        <mapping xsi:type="Calculation:AttributeMapping" target="ALTN_CONTR_NUM" source="ALTN_CONTR_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTR_UNQ_ID" source="CONTR_UNQ_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DSCT_STATE" source="DSCT_STATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DSCT_END_DT" source="DSCT_END_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DSCT_STRT_DT" source="DSCT_STRT_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROMO_OFFG_PD_END_DT" source="PROMO_OFFG_PD_END_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROMO_OFFG_PD_STRT_DT" source="PROMO_OFFG_PD_STRT_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SERV_CD" source="SERV_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RT_PLN_END_DT" source="RT_PLN_END_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RT_PLN_STRT_DT" source="RT_PLN_STRT_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RT_PLN_CD" source="RT_PLN_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROMO_CD" source="PROMO_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRC_STRC_STRT_DT" source="PRC_STRC_STRT_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRC_STRC_END_DT" source="PRC_STRC_END_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRM_CONTR_CUST" source="PRM_CONTR_CUST"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EVNT_ID" source="EVNT_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NDB_TS" source="NDB_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SRC_TS" source="SRC_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DSCT_ID" source="DSCT_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SERV_SUB_ID" source="SERV_SUB_ID"/>
+      </input>
+      <filter>(isNull(&quot;NDB_TS&quot;)) AND (&quot;CC_CID_DATE&quot;&lt;='$$IP_CID_DATE$$')</filter>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="Proj_ERROR_TABLE">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="PARENT_KEY"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#CA_EH_ERROR_TABLE">
+        <mapping xsi:type="Calculation:AttributeMapping" target="PARENT_KEY" source="PARENT_KEY"/>
+      </input>
+    </calculationView>
+    <calculationView xsi:type="Calculation:JoinView" id="Join" joinType="leftOuter">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="ALTN_CONTR_NUM"/>
+        <viewAttribute id="CONTR_UNQ_ID"/>
+        <viewAttribute id="DSCT_STATE"/>
+        <viewAttribute id="DSCT_END_DT"/>
+        <viewAttribute id="DSCT_STRT_DT"/>
+        <viewAttribute id="PROMO_OFFG_PD_END_DT"/>
+        <viewAttribute id="PROMO_OFFG_PD_STRT_DT"/>
+        <viewAttribute id="SERV_CD"/>
+        <viewAttribute id="RT_PLN_END_DT"/>
+        <viewAttribute id="RT_PLN_STRT_DT"/>
+        <viewAttribute id="RT_PLN_CD"/>
+        <viewAttribute id="PROMO_CD"/>
+        <viewAttribute id="PRC_STRC_STRT_DT"/>
+        <viewAttribute id="PRC_STRC_END_DT"/>
+        <viewAttribute id="PRM_CONTR_CUST"/>
+        <viewAttribute id="EVNT_ID"/>
+        <viewAttribute id="NDB_TS"/>
+        <viewAttribute id="SRC_TS"/>
+        <viewAttribute id="CC_CID_DATE"/>
+        <viewAttribute id="PARENT_KEY_ERROR"/>
+        <viewAttribute id="CC_PARENT_KEY"/>
+        <viewAttribute id="DSCT_ID"/>
+        <viewAttribute id="SERV_SUB_ID"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#Proj_TAP_DSCT">
+        <mapping xsi:type="Calculation:AttributeMapping" target="ALTN_CONTR_NUM" source="ALTN_CONTR_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTR_UNQ_ID" source="CONTR_UNQ_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DSCT_STATE" source="DSCT_STATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DSCT_END_DT" source="DSCT_END_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DSCT_STRT_DT" source="DSCT_STRT_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROMO_OFFG_PD_END_DT" source="PROMO_OFFG_PD_END_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROMO_OFFG_PD_STRT_DT" source="PROMO_OFFG_PD_STRT_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SERV_CD" source="SERV_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RT_PLN_END_DT" source="RT_PLN_END_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RT_PLN_STRT_DT" source="RT_PLN_STRT_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RT_PLN_CD" source="RT_PLN_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROMO_CD" source="PROMO_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRC_STRC_STRT_DT" source="PRC_STRC_STRT_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRC_STRC_END_DT" source="PRC_STRC_END_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRM_CONTR_CUST" source="PRM_CONTR_CUST"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EVNT_ID" source="EVNT_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NDB_TS" source="NDB_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SRC_TS" source="SRC_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_CID_DATE" source="CC_CID_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_PARENT_KEY" source="CC_PARENT_KEY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DSCT_ID" source="DSCT_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SERV_SUB_ID" source="SERV_SUB_ID"/>
+      </input>
+      <input node="#Proj_ERROR_TABLE">
+        <mapping xsi:type="Calculation:AttributeMapping" target="PARENT_KEY_ERROR" source="PARENT_KEY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_PARENT_KEY" source="PARENT_KEY"/>
+      </input>
+      <joinAttribute name="CC_PARENT_KEY"/>
+    </calculationView>
+    <calculationView xsi:type="Calculation:ProjectionView" id="Proj_ERROR_FILTER">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="ALTN_CONTR_NUM"/>
+        <viewAttribute id="CONTR_UNQ_ID"/>
+        <viewAttribute id="DSCT_STATE"/>
+        <viewAttribute id="DSCT_END_DT"/>
+        <viewAttribute id="DSCT_STRT_DT"/>
+        <viewAttribute id="PROMO_OFFG_PD_END_DT"/>
+        <viewAttribute id="PROMO_OFFG_PD_STRT_DT"/>
+        <viewAttribute id="SERV_CD"/>
+        <viewAttribute id="RT_PLN_END_DT"/>
+        <viewAttribute id="RT_PLN_STRT_DT"/>
+        <viewAttribute id="RT_PLN_CD"/>
+        <viewAttribute id="PROMO_CD"/>
+        <viewAttribute id="PRC_STRC_STRT_DT"/>
+        <viewAttribute id="PRC_STRC_END_DT"/>
+        <viewAttribute id="PRM_CONTR_CUST"/>
+        <viewAttribute id="EVNT_ID"/>
+        <viewAttribute id="NDB_TS"/>
+        <viewAttribute id="SRC_TS"/>
+        <viewAttribute id="CC_CID_DATE"/>
+        <viewAttribute id="PARENT_KEY_ERROR">
+          <filter xsi:type="AccessControl:SingleValueFilter" operator="NL" including="true"/>
+        </viewAttribute>
+        <viewAttribute id="CC_PARENT_KEY"/>
+        <viewAttribute id="DSCT_ID"/>
+        <viewAttribute id="SERV_SUB_ID"/>
+      </viewAttributes>
+      <calculatedViewAttributes/>
+      <input node="#Join">
+        <mapping xsi:type="Calculation:AttributeMapping" target="ALTN_CONTR_NUM" source="ALTN_CONTR_NUM"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CONTR_UNQ_ID" source="CONTR_UNQ_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DSCT_STATE" source="DSCT_STATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DSCT_END_DT" source="DSCT_END_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DSCT_STRT_DT" source="DSCT_STRT_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROMO_OFFG_PD_END_DT" source="PROMO_OFFG_PD_END_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROMO_OFFG_PD_STRT_DT" source="PROMO_OFFG_PD_STRT_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SERV_CD" source="SERV_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RT_PLN_END_DT" source="RT_PLN_END_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RT_PLN_STRT_DT" source="RT_PLN_STRT_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="RT_PLN_CD" source="RT_PLN_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PROMO_CD" source="PROMO_CD"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRC_STRC_STRT_DT" source="PRC_STRC_STRT_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRC_STRC_END_DT" source="PRC_STRC_END_DT"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PRM_CONTR_CUST" source="PRM_CONTR_CUST"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="EVNT_ID" source="EVNT_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="NDB_TS" source="NDB_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SRC_TS" source="SRC_TS"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_CID_DATE" source="CC_CID_DATE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="PARENT_KEY_ERROR" source="PARENT_KEY_ERROR"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="CC_PARENT_KEY" source="CC_PARENT_KEY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="DSCT_ID" source="DSCT_ID"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="SERV_SUB_ID" source="SERV_SUB_ID"/>
+      </input>
+    </calculationView>
+  </calculationViews>
+  <logicalModel id="Proj_ERROR_FILTER">
+    <descriptions/>
+    <attributes>
+      <attribute id="ALTN_CONTR_NUM" key="true" order="1" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="ALTN_CONTR_NUM"/>
+        <keyMapping columnObjectName="Proj_ERROR_FILTER" columnName="ALTN_CONTR_NUM"/>
+      </attribute>
+      <attribute id="CONTR_UNQ_ID" key="true" order="2" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CONTR_UNQ_ID"/>
+        <keyMapping columnObjectName="Proj_ERROR_FILTER" columnName="CONTR_UNQ_ID"/>
+      </attribute>
+      <attribute id="DSCT_STATE" order="3" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="DSCT_STATE"/>
+        <keyMapping columnObjectName="Proj_ERROR_FILTER" columnName="DSCT_STATE"/>
+      </attribute>
+      <attribute id="DSCT_END_DT" order="4" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="DSCT_END_DT"/>
+        <keyMapping columnObjectName="Proj_ERROR_FILTER" columnName="DSCT_END_DT"/>
+      </attribute>
+      <attribute id="DSCT_STRT_DT" order="5" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="DSCT_STRT_DT"/>
+        <keyMapping columnObjectName="Proj_ERROR_FILTER" columnName="DSCT_STRT_DT"/>
+      </attribute>
+      <attribute id="PROMO_OFFG_PD_END_DT" order="6" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="PROMO_OFFG_PD_END_DT"/>
+        <keyMapping columnObjectName="Proj_ERROR_FILTER" columnName="PROMO_OFFG_PD_END_DT"/>
+      </attribute>
+      <attribute id="PROMO_OFFG_PD_STRT_DT" order="7" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="PROMO_OFFG_PD_STRT_DT"/>
+        <keyMapping columnObjectName="Proj_ERROR_FILTER" columnName="PROMO_OFFG_PD_STRT_DT"/>
+      </attribute>
+      <attribute id="SERV_CD" order="8" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SERV_CD"/>
+        <keyMapping columnObjectName="Proj_ERROR_FILTER" columnName="SERV_CD"/>
+      </attribute>
+      <attribute id="RT_PLN_END_DT" order="9" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="RT_PLN_END_DT"/>
+        <keyMapping columnObjectName="Proj_ERROR_FILTER" columnName="RT_PLN_END_DT"/>
+      </attribute>
+      <attribute id="RT_PLN_STRT_DT" order="10" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="RT_PLN_STRT_DT"/>
+        <keyMapping columnObjectName="Proj_ERROR_FILTER" columnName="RT_PLN_STRT_DT"/>
+      </attribute>
+      <attribute id="RT_PLN_CD" order="11" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="RT_PLN_CD"/>
+        <keyMapping columnObjectName="Proj_ERROR_FILTER" columnName="RT_PLN_CD"/>
+      </attribute>
+      <attribute id="PROMO_CD" order="12" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="PROMO_CD"/>
+        <keyMapping columnObjectName="Proj_ERROR_FILTER" columnName="PROMO_CD"/>
+      </attribute>
+      <attribute id="PRC_STRC_STRT_DT" order="13" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="PRC_STRC_STRT_DT"/>
+        <keyMapping columnObjectName="Proj_ERROR_FILTER" columnName="PRC_STRC_STRT_DT"/>
+      </attribute>
+      <attribute id="PRC_STRC_END_DT" order="14" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="PRC_STRC_END_DT"/>
+        <keyMapping columnObjectName="Proj_ERROR_FILTER" columnName="PRC_STRC_END_DT"/>
+      </attribute>
+      <attribute id="PRM_CONTR_CUST" key="true" order="15" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="PRM_CONTR_CUST"/>
+        <keyMapping columnObjectName="Proj_ERROR_FILTER" columnName="PRM_CONTR_CUST"/>
+      </attribute>
+      <attribute id="EVNT_ID" key="true" order="16" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="EVNT_ID"/>
+        <keyMapping columnObjectName="Proj_ERROR_FILTER" columnName="EVNT_ID"/>
+      </attribute>
+      <attribute id="NDB_TS" order="17" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="NDB_TS"/>
+        <keyMapping columnObjectName="Proj_ERROR_FILTER" columnName="NDB_TS"/>
+      </attribute>
+      <attribute id="SRC_TS" order="18" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SRC_TS"/>
+        <keyMapping columnObjectName="Proj_ERROR_FILTER" columnName="SRC_TS"/>
+      </attribute>
+      <attribute id="CC_CID_DATE" order="19" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CC_CID_DATE"/>
+        <keyMapping columnObjectName="Proj_ERROR_FILTER" columnName="CC_CID_DATE"/>
+      </attribute>
+      <attribute id="CC_PARENT_KEY" order="20" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="CC_PARENT_KEY"/>
+        <keyMapping columnObjectName="Proj_ERROR_FILTER" columnName="CC_PARENT_KEY"/>
+      </attribute>
+      <attribute id="DSCT_ID" key="true" order="21" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="DSCT_ID"/>
+        <keyMapping columnObjectName="Proj_ERROR_FILTER" columnName="DSCT_ID"/>
+      </attribute>
+      <attribute id="SERV_SUB_ID" key="true" order="22" semanticType="empty" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="SERV_SUB_ID"/>
+        <keyMapping columnObjectName="Proj_ERROR_FILTER" columnName="SERV_SUB_ID"/>
+      </attribute>
+    </attributes>
+    <calculatedAttributes/>
+    <privateDataFoundation>
+      <tableProxies/>
+      <joins/>
+      <layout>
+        <shapes/>
+      </layout>
+    </privateDataFoundation>
+    <baseMeasures/>
+    <calculatedMeasures/>
+    <restrictedMeasures/>
+    <localDimensions/>
+  </logicalModel>
+  <layout>
+    <shapes>
+      <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+        <upperLeftCorner x="99" y="87"/>
+        <rectangleSize height="0" width="0"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Proj_TAP_DSCT" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="22" y="339"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Proj_ERROR_TABLE" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="180" y="370"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Join" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="99" y="243"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+      <shape expanded="true" modelObjectName="Proj_ERROR_FILTER" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="99" y="165"/>
+        <rectangleSize height="-1" width="-1"/>
+      </shape>
+    </shapes>
+  </layout>
+</Calculation:scenario>
